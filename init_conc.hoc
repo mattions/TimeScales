@@ -1,0 +1,17 @@
+// Simple file to test an hoc implementation
+
+
+create soma
+insert hh // Insert the HH channel just for have something moving
+//insert concTest
+load_file("conc.ses")
+
+objref time, k_conc
+
+time = new Vector()
+k_conc = new Vector()
+
+time.record(&t)
+k_conc.record(&soma.ki(0.5))
+
+

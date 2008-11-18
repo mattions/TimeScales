@@ -1,0 +1,15 @@
+/// Recording in hoc
+
+
+objref ca_in, time, ca_out, k_in
+
+time = new Vector()
+ca_in = new Vector()
+ca_out = new Vector()
+k_in = new Vector()
+
+time.record(&t)
+ca_in.record(&MSP_Cell[0].soma.cai(0.5))
+ca_out.record(&MSP_Cell[0].soma.cao(0.5))
+k_in.record(&MSP_Cell[0].soma.ki(0.5))
+

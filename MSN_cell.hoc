@@ -1,0 +1,188 @@
+proc celldef() {
+  topol()
+  subsets()
+  geom()
+  biophys()
+  geom_nseg()
+}
+
+create soma, prx_d[4], mdl_d[8], dst_d[16]
+
+proc topol() { local i
+  for i = 0, 1 connect prx_d[i](0), soma(1)
+  for i = 2, 3 connect prx_d[i](0), soma(0)
+  for i = 0, 1 connect mdl_d[i](0), prx_d(1)
+  for i = 2, 3 connect mdl_d[i](0), prx_d[1](1)
+  for i = 4, 5 connect mdl_d[i](0), prx_d[2](1)
+  for i = 6, 7 connect mdl_d[i](0), prx_d[3](1)
+  for i = 0, 1 connect dst_d[i](0), mdl_d[1](1)
+  for i = 2, 3 connect dst_d[i](0), mdl_d(1)
+  for i = 4, 5 connect dst_d[i](0), mdl_d[6](1)
+  for i = 6, 7 connect dst_d[i](0), mdl_d[7](1)
+  for i = 8, 9 connect dst_d[i](0), mdl_d[5](1)
+  for i = 10, 11 connect dst_d[i](0), mdl_d[4](1)
+  for i = 12, 13 connect dst_d[i](0), mdl_d[3](1)
+  for i = 14, 15 connect dst_d[i](0), mdl_d[2](1)
+  basic_shape()
+}
+proc basic_shape() {
+  soma {pt3dclear() pt3dadd(0, 0, 0, 1) pt3dadd(15, 0, 0, 1)}
+  prx_d {pt3dclear() pt3dadd(15, 0, 0, 1) pt3dadd(45, 45, 0, 1)}
+  prx_d[1] {pt3dclear() pt3dadd(15, 0, 0, 1) pt3dadd(60, -44, 0, 1)}
+  prx_d[2] {pt3dclear() pt3dadd(0, 0, 0, 1) pt3dadd(-29, -29, 0, 1)}
+  prx_d[3] {pt3dclear() pt3dadd(0, 0, 0, 1) pt3dadd(-44, 30, 0, 1)}
+  mdl_d {pt3dclear() pt3dadd(45, 45, 0, 1) pt3dadd(60, 90, 0, 1)}
+  mdl_d[1] {pt3dclear() pt3dadd(45, 45, 0, 1) pt3dadd(75, 30, 0, 1)}
+  mdl_d[2] {pt3dclear() pt3dadd(60, -44, 0, 1) pt3dadd(105, -59, 0, 1)}
+  mdl_d[3] {pt3dclear() pt3dadd(60, -44, 0, 1) pt3dadd(90, -89, 0, 1)}
+  mdl_d[4] {pt3dclear() pt3dadd(-29, -29, 0, 1) pt3dadd(-29, -74, 0, 1)}
+  mdl_d[5] {pt3dclear() pt3dadd(-29, -29, 0, 1) pt3dadd(-74, -44, 0, 1)}
+  mdl_d[6] {pt3dclear() pt3dadd(-44, 30, 0, 1) pt3dadd(-29, 60, 0, 1)}
+  mdl_d[7] {pt3dclear() pt3dadd(-44, 30, 0, 1) pt3dadd(-74, 45, 0, 1)}
+  dst_d {pt3dclear() pt3dadd(75, 30, 0, 1) pt3dadd(150, 30, 0, 1)}
+  dst_d[1] {pt3dclear() pt3dadd(75, 30, 0, 1) pt3dadd(150, 45, 0, 1)}
+  dst_d[2] {pt3dclear() pt3dadd(60, 90, 0, 1) pt3dadd(135, 150, 0, 1)}
+  dst_d[3] {pt3dclear() pt3dadd(60, 90, 0, 1) pt3dadd(90, 135, 0, 1)}
+  dst_d[4] {pt3dclear() pt3dadd(-29, 60, 0, 1) pt3dadd(-14, 120, 0, 1)}
+  dst_d[5] {pt3dclear() pt3dadd(-29, 60, 0, 1) pt3dadd(-29, 120, 0, 1)}
+  dst_d[6] {pt3dclear() pt3dadd(-74, 45, 0, 1) pt3dadd(-104, 75, 0, 1)}
+  dst_d[7] {pt3dclear() pt3dadd(-74, 45, 0, 1) pt3dadd(-119, 45, 0, 1)}
+  dst_d[8] {pt3dclear() pt3dadd(-74, -44, 0, 1) pt3dadd(-149, -59, 0, 1)}
+  dst_d[9] {pt3dclear() pt3dadd(-74, -44, 0, 1) pt3dadd(-134, -74, 0, 1)}
+  dst_d[10] {pt3dclear() pt3dadd(-29, -74, 0, 1) pt3dadd(-44, -119, 0, 1)}
+  dst_d[11] {pt3dclear() pt3dadd(-29, -74, 0, 1) pt3dadd(-14, -119, 0, 1)}
+  dst_d[12] {pt3dclear() pt3dadd(90, -89, 0, 1) pt3dadd(105, -149, 0, 1)}
+  dst_d[13] {pt3dclear() pt3dadd(90, -89, 0, 1) pt3dadd(120, -149, 0, 1)}
+  dst_d[14] {pt3dclear() pt3dadd(105, -59, 0, 1) pt3dadd(165, -74, 0, 1)}
+  dst_d[15] {pt3dclear() pt3dadd(105, -59, 0, 1) pt3dadd(195, -119, 0, 1)}
+}
+
+objref all, Middle_dend, Distal_dend, Prox_dend, Dend, Soma_and_Prox, Middle_and_Dist
+proc subsets() { local i
+  objref all, Middle_dend, Distal_dend, Prox_dend, Dend, Soma_and_Prox, Middle_and_Dist
+  all = new SectionList()
+    soma all.append()
+    for i=0, 3 prx_d[i] all.append()
+    for i=0, 7 mdl_d[i] all.append()
+    for i=0, 15 dst_d[i] all.append()
+
+  Middle_dend = new SectionList()
+    for i=0, 7 mdl_d[i] Middle_dend.append()
+
+  Distal_dend = new SectionList()
+    for i=0, 15 dst_d[i] Distal_dend.append()
+
+  Prox_dend = new SectionList()
+    for i=0, 3 prx_d[i] Prox_dend.append()
+
+  Dend = new SectionList()
+    for i=0, 3 prx_d[i] Dend.append()
+    for i=0, 7 mdl_d[i] Dend.append()
+    for i=0, 15 dst_d[i] Dend.append()
+
+  Soma_and_Prox = new SectionList()
+    soma Soma_and_Prox.append()
+    for i=0, 3 prx_d[i] Soma_and_Prox.append()
+
+  Middle_and_Dist = new SectionList()
+    for i=0, 7 mdl_d[i] Middle_and_Dist.append()
+    for i=0, 15 dst_d[i] Middle_and_Dist.append()
+
+}
+proc geom() {
+  forsec all {  L = 20  diam = 2.25  }
+  forsec Middle_dend {  L = 24.23  diam = 1.1  }
+  forsec Distal_dend {  L = 392.2  diam = 0.72  }
+  soma {  L = 60  diam = 16  }
+}
+proc geom_nseg() {
+}
+proc biophys() {
+  forsec all {
+    Ra = 100
+    cm = 1
+    insert pas
+      g_pas = 1.15e-05
+      e_pas = -70
+    insert krp
+      gkbar_krp = 0.001
+    insert bkkca
+      gkbar_bkkca = 0.001
+      q_bkkca = 1
+    insert skkca
+      stau_skkca = 1
+      qfact_skkca = 1
+      gkbar_skkca = 0.145
+      abar_skkca = 0.48
+      bbar_skkca = 0.28
+    insert caL
+      pbar_caL = 6.7e-06
+      mshift_caL = 0
+      hshift_caL = 0
+    insert caL13
+      pcaLbar_caL13 = 6.7e-06
+      mshift_caL13 = 0
+      hshift_caL13 = 0
+      qfact_caL13 = 3
+      hqfact_caL13 = 3
+    insert cadyn
+      drive_cadyn = 10000
+      cainf_cadyn = 1e-05
+      taur_cadyn = 43
+      pump_cadyn = 0.02
+    insert caldyn
+      drive_caldyn = 10000
+      cainf_caldyn = 1e-05
+      taur_caldyn = 43
+      pump_caldyn = 0.02
+    insert can
+      pbar_can = 1e-05
+    insert caq
+      pcaqbar_caq = 6e-06
+    insert car
+      pcarbar_car = 2.6e-05
+    insert cat
+      pcatbar_cat = 4e-07
+  }
+  forsec Dend {
+    insert naf
+      gnabar_naf = 1.5
+      mshift_naf = 0
+      hshift_naf = 0
+    insert nap
+      gnabar_nap = 4e-05
+  }
+  forsec Soma_and_Prox {
+    insert kas
+      gkbar_kas = 0.225
+    insert kaf
+      gkbar_kaf = 0.225
+      mshift_kaf = 0
+      hshift_kaf = 0
+  }
+  forsec Middle_and_Dist {
+    insert kas
+      gkbar_kas = 0.00095142
+    insert kaf
+      gkbar_kaf = 0.020584
+      mshift_kaf = 0
+      hshift_kaf = 0
+  }
+  soma {
+    insert naf
+      gnabar_naf = 1.5
+      mshift_naf = 0
+      hshift_naf = 0
+    insert nap
+      gnabar_nap = 4e-05
+    insert kir
+      gkbar_kir = 0.00015
+      mvhalf_kir = -52
+      mslope_kir = 13
+      mshift_kir = 30
+      qfact_kir = 0.5
+  }
+}
+access soma
+
+celldef()

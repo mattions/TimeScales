@@ -1,0 +1,172 @@
+/* This is the primary file for creating the MSP cell - this file calls all
+	of the hoc files necessary to build one cell and sets the default
+	parameter values.
+	
+	Usually this file is called by a hoc file in /input_params/.
+	
+	Jason Moyer 2005 - jtmoyer@seas.upenn.edu
+*/
+	
+
+//****************************************************************************
+//Load all the baseline parameters to start with
+
+sprint(dirstr, "%s/baseline_values.txt", preface)
+
+xopen(dirstr)
+load_file("baseline_values.txt")
+print "loaded baselines values"
+//****************************************************************************
+
+
+
+//****************************************************************************
+// all_tau_vecs.hoc loads the tables used to define the taus for many channels
+
+sprint(dirstr, "%s/all_tau_vecs.hoc", preface)
+//print dirstr
+xopen(dirstr)
+//load_file("all_tau_vecs.hoc")
+//****************************************************************************
+
+
+
+//****************************************************************************
+//load the templates for the synapses - AMPA, GABA, and NMDA
+
+sprint(dirstr, "%s/synapse_templates.hoc", preface)
+xopen(dirstr)
+//load_file("synapse_templates.hoc")
+//****************************************************************************
+
+
+
+
+//****************************************************************************
+// load cell template - builds the cell topology, including inserting
+// channels and synapses; dlambda code is in here (under geom()) along 
+// with code to output the number of compartments in cell
+
+sprint(dirstr, "%s/msp_template.hoc", preface)
+xopen(dirstr)
+//load_file ("msp_template.hoc")
+//****************************************************************************
+
+
+
+create acell_home_
+
+
+
+//****************************************************************************
+// load netstims template, sets default interval, number, noise
+
+sprint(dirstr, "%s/netstims_template.hoc", preface)
+xopen(dirstr)
+//load_file("netstims_template.hoc")
+//****************************************************************************
+
+
+
+//****************************************************************************
+// create msp cells using cell_append(), nc_append()
+// set number of segments using geom_nseg() (in fixnseg.hoc)
+// create shunt for sharp electrode
+
+sprint(dirstr, "%s/create_mspcells.hoc", preface)
+xopen(dirstr)
+//load_file("create_mspcells.hoc")
+//****************************************************************************
+
+
+
+
+
+//**********************************************************************
+// calculate membrane area, access soma by default
+A1 = 0
+Ad = 0
+
+forsec "dend._.*" {
+	for i = 1, nseg {
+		Ad = Ad + area( i/(nseg+1) )
+	}
+}
+
+forsec "MSP_Cell[0]"  {
+	for i = 1, nseg {
+		A1 = A1 + area( i/(nseg+1) )
+	}
+}
+
+Ap = A1 - Ad
+
+print "Total cell membrane area = ", A1		// equals whole cell membrane area
+print "Mid + Dist mem area = ", Ad
+print "Soma + Prox mem area = ", Ap 
+
+//**********************************************************************
+
+
+
+
+
+//****************************************************************************
+// specify cell's active properties using constants listed in
+// input_params/baseline_values.txt
+//
+
+sprint(dirstr, "%s/basic_procs.hoc", preface)
+xopen(dirstr)
+
+set_pas(G_PAS)
+
+set_naf(G_NAF)
+set_nafd(G_NAFD)
+set_nap(G_NAP)
+set_napd(G_NAPD)
+
+set_kir(G_KIR)
+set_kas(G_KAS)
+set_kasd(G_KASD)
+set_kaf(G_KAF)
+set_kafd(G_KAFD)
+set_krp(G_KRP)
+set_bkkca(G_BKKCA)
+set_skkca(G_SKKCA)
+
+set_caL(P_CAL)
+set_caL13(P_CAL13)
+set_can(P_CAN)
+set_caq(P_CAQ)
+set_car(P_CAR)
+set_cat(P_CAT)
+
+set_cainf(CAINF)
+set_taur(TAUR)
+set_cadrive(CA_DRIVE)
+set_pump(CA_PUMP)
+
+set_ek(EK)
+forsec "MSP_Cell" {Ra = RA    cm = CM}
+
+//****************************************************************************
+
+
+
+
+//*************************************************************************
+// create and set netstims using champawt(), chnmdawt(), chint()
+
+sprint(dirstr, "%s/make_netstims.hoc", preface)
+xopen(dirstr)
+
+//*************************************************************************
+
+
+
+access MSP_Cell[0].soma
+
+
+
+

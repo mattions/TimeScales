@@ -1,0 +1,759 @@
+//**************************************************************************
+// Begin cell template for MSP_Cell
+// load cell template - builds the cell topology, including inserting
+// channels and synapses
+
+begintemplate MSP_Cell
+public is_art
+public init, topol, basic_shape, subsets, geom, memb
+public synlist, x, y, z, position, connect2target
+
+public soma, dend1, dend2, dend3, dend4, dend1_1, dend1_2
+public dend2_1, dend2_2, dend4_1, dend4_2, dend3_2, dend3_1
+public all, Prox_Dend, Mid_Dend, Dist_Dend
+public leaf
+public gaba, ampa, nmda
+
+create soma, dend1, dend2, dend3, dend4, dend1_1[3], dend1_2[3]
+create dend2_1[3], dend2_2[3], dend4_1[3], dend4_2[3], dend3_2[3], dend3_1[3]
+
+objref synlist, leaf, gaba[300], ampa[300], nmda[300]
+
+proc init() { 
+	topol()
+	subsets()
+	geom()
+	biophys()
+	
+	forall {Ra = $1 CM = $2}
+	geom_nseg()
+	compts = 0
+	forall {print secname(), " ", nseg  compts = compts + nseg}
+	print compts, " compartments"
+
+	synlist = new List()
+	leaf    = new List()
+	
+	synloops()
+	x = y = z = 0 // only change via position
+}
+
+
+proc topol() { local i
+  connect dend1(0), soma(1)
+  connect dend2(0), soma(1)
+  connect dend3(0), soma(0)
+  connect dend4(0), soma(0)
+  connect dend1_1(0), dend1(1)
+  for i = 1, 2 connect dend1_1[i](0), dend1_1(1)
+  connect dend1_2(0), dend1(1)
+  for i = 1, 2 connect dend1_2[i](0), dend1_2(1)
+  connect dend2_1(0), dend2(1)
+  for i = 1, 2 connect dend2_1[i](0), dend2_1(1)
+  connect dend2_2(0), dend2(1)
+  for i = 1, 2 connect dend2_2[i](0), dend2_2(1)
+  connect dend4_1(0), dend4(1)
+  for i = 1, 2 connect dend4_1[i](0), dend4_1(1)
+  connect dend4_2(0), dend4(1)
+  for i = 1, 2 connect dend4_2[i](0), dend4_2(1)
+  connect dend3_2(0), dend3(1)
+  for i = 1, 2 connect dend3_2[i](0), dend3_2(1)
+  connect dend3_1(0), dend3(1)
+  for i = 1, 2 connect dend3_1[i](0), dend3_1(1)
+  basic_shape()
+}
+
+proc basic_shape() {
+  soma {pt3dclear() pt3dadd(0, 0, 0, 1) pt3dadd(15, 0, 0, 1)}
+  dend1 {pt3dclear() pt3dadd(15, 0, 0, 1) pt3dadd(45, -29, 0, 1)}
+  dend2 {pt3dclear() pt3dadd(15, 0, 0, 1) pt3dadd(45, 30, 0, 1)}
+  dend3 {pt3dclear() pt3dadd(0, 0, 0, 1) pt3dadd(-29, -29, 0, 1)}
+  dend4 {pt3dclear() pt3dadd(0, 0, 0, 1) pt3dadd(-29, 30, 0, 1)}
+  dend1_1 {pt3dclear() pt3dadd(45, -29, 0, 1) pt3dadd(45, -59, 0, 1)}
+  dend1_2 {pt3dclear() pt3dadd(45, -29, 0, 1) pt3dadd(90, -29, 0, 1)}
+  dend2_1 {pt3dclear() pt3dadd(45, 30, 0, 1) pt3dadd(90, 30, 0, 1)}
+  dend2_2 {pt3dclear() pt3dadd(45, 30, 0, 1) pt3dadd(60, 75, 0, 1)}
+  dend4_1 {pt3dclear() pt3dadd(-29, 30, 0, 1) pt3dadd(-44, 75, 0, 1)}
+  dend4_2 {pt3dclear() pt3dadd(-29, 30, 0, 1) pt3dadd(-74, 30, 0, 1)}
+  dend3_2 {pt3dclear() pt3dadd(-29, -29, 0, 1) pt3dadd(-74, -29, 0, 1)}
+  dend3_1 {pt3dclear() pt3dadd(-29, -29, 0, 1) pt3dadd(-44, -59, 0, 1)}
+  dend1_1[1] {pt3dclear() pt3dadd(45, -59, 0, 1) pt3dadd(30, -89, 0, 1)}
+  dend1_1[2] {pt3dclear() pt3dadd(45, -59, 0, 1) pt3dadd(75, -74, 0, 1)}
+  dend1_2[1] {pt3dclear() pt3dadd(90, -29, 0, 1) pt3dadd(120, -14, 0, 1)}
+  dend1_2[2] {pt3dclear() pt3dadd(90, -29, 0, 1) pt3dadd(120, -59, 0, 1)}
+  dend2_1[1] {pt3dclear() pt3dadd(90, 30, 0, 1) pt3dadd(120, 15, 0, 1)}
+  dend2_1[2] {pt3dclear() pt3dadd(90, 30, 0, 1) pt3dadd(105, 60, 0, 1)}
+  dend2_2[1] {pt3dclear() pt3dadd(60, 75, 0, 1) pt3dadd(90, 90, 0, 1)}
+  dend2_2[2] {pt3dclear() pt3dadd(60, 75, 0, 1) pt3dadd(45, 105, 0, 1)}
+  dend4_1[1] {pt3dclear() pt3dadd(-44, 75, 0, 1) pt3dadd(-14, 105, 0, 1)}
+  dend4_1[2] {pt3dclear() pt3dadd(-44, 75, 0, 1) pt3dadd(-74, 90, 0, 1)}
+  dend4_2[1] {pt3dclear() pt3dadd(-74, 30, 0, 1) pt3dadd(-89, 60, 0, 1)}
+  dend4_2[2] {pt3dclear() pt3dadd(-74, 30, 0, 1) pt3dadd(-104, 15, 0, 1)}
+  dend3_2[1] {pt3dclear() pt3dadd(-74, -29, 0, 1) pt3dadd(-104, -14, 0, 1)}
+  dend3_2[2] {pt3dclear() pt3dadd(-74, -29, 0, 1) pt3dadd(-104, -59, 0, 1)}
+  dend3_1[1] {pt3dclear() pt3dadd(-44, -59, 0, 1) pt3dadd(-29, -89, 0, 1)}
+  dend3_1[2] {pt3dclear() pt3dadd(-44, -59, 0, 1) pt3dadd(-89, -74, 0, 1)}
+}
+
+objref all, Prox_Dend, Mid_Dend, Dist_Dend
+
+proc subsets() { local i
+  objref all, Prox_Dend, Mid_Dend, Dist_Dend
+  all = new SectionList()
+    soma all.append()
+    dend1 all.append()
+    dend2 all.append()
+    dend3 all.append()
+    dend4 all.append()
+    for i=0, 2 dend1_1[i] all.append()
+    for i=0, 2 dend1_2[i] all.append()
+    for i=0, 2 dend2_1[i] all.append()
+    for i=0, 2 dend2_2[i] all.append()
+    for i=0, 2 dend4_1[i] all.append()
+    for i=0, 2 dend4_2[i] all.append()
+    for i=0, 2 dend3_2[i] all.append()
+    for i=0, 2 dend3_1[i] all.append()
+
+  Prox_Dend = new SectionList()
+    dend1 Prox_Dend.append()
+    dend2 Prox_Dend.append()
+    dend3 Prox_Dend.append()
+    dend4 Prox_Dend.append()
+
+  Mid_Dend = new SectionList()
+    dend1_1 Mid_Dend.append()
+    dend1_2 Mid_Dend.append()
+    dend2_1 Mid_Dend.append()
+    dend2_2 Mid_Dend.append()
+    dend4_1 Mid_Dend.append()
+    dend4_2 Mid_Dend.append()
+    dend3_2 Mid_Dend.append()
+    dend3_1 Mid_Dend.append()
+
+  Dist_Dend = new SectionList()
+    for i=1, 2 dend1_1[i] Dist_Dend.append()
+    for i=1, 2 dend1_2[i] Dist_Dend.append()
+    for i=1, 2 dend2_1[i] Dist_Dend.append()
+    for i=1, 2 dend2_2[i] Dist_Dend.append()
+    for i=1, 2 dend4_1[i] Dist_Dend.append()
+    for i=1, 2 dend4_2[i] Dist_Dend.append()
+    for i=1, 2 dend3_2[i] Dist_Dend.append()
+    for i=1, 2 dend3_1[i] Dist_Dend.append()
+
+}
+
+// Wilson 1992 Single Neuron Computation
+// dendritic diam(um) * (1+spine/dend ratio)
+// also O'Donnell 1993 Synapse
+// Koch/Segev Methods in Neuronal Modeling pg 122-3, 1998
+proc geom() {
+  forsec Prox_Dend { L = 20     diam = 2.25 }	
+  forsec Mid_Dend  {L = 24.23	diam = 1.10}	// { L = 20		diam = 1 * (1+0.3) }	
+  forsec Dist_Dend {L = 395.2	diam = 0.72}	// { L = 190	diam = 0.5 * (1+2) } 
+  soma {  L = 16  diam = 16  }
+}
+
+
+
+
+//**********
+// use d_lambda function (see neuron website) to assign segments/nodes
+
+func lambda_f() { local i, x1, x2, d1, d2, lam
+        if (n3d() < 2) {
+                return 1e5*sqrt(diam/(4*PI*$1*Ra*cm))
+        }
+		// above was too inaccurate with large variation in 3d diameter
+		// so now we use all 3-d points to get a better approximate lambda
+
+        x1 = arc3d(0)
+        d1 = diam3d(0)
+        lam = 0
+        for i=1, n3d()-1 {
+                x2 = arc3d(i)
+                d2 = diam3d(i)
+                lam += (x2 - x1)/sqrt(d1 + d2)
+                x1 = x2   d1 = d2
+        }
+
+        //  length of the section in units of lambda
+        lam *= sqrt(2) * 1e-5*sqrt(4*PI*$1*Ra*cm)
+
+        return L/lam
+}
+
+proc geom_nseg() {
+	freq = 100      // Hz, frequency at which AC length constant will be computed
+	d_lambda = 0.15
+
+	forall { nseg = int((L/(d_lambda*lambda_f(freq))+0.9)/2)*2 + 1  }
+}
+//**********
+
+
+
+proc biophys() {
+  
+  forsec Prox_Dend {
+	insert pas
+
+	insert naf
+	insert nap
+
+	insert kir
+	insert kas
+	insert kaf
+	insert bkkca
+	insert skkca
+
+	insert caldyn
+	insert caL
+	insert caL13
+
+	insert cadyn
+	insert can
+	insert caq
+	insert car
+	insert cat
+  }
+
+  forsec Mid_Dend {
+	insert pas
+
+	insert naf
+	insert nap
+
+	insert kir
+	insert kas
+	insert kaf
+	insert bkkca
+	insert skkca
+
+	insert caldyn
+	insert caL
+   	insert caL13
+
+	insert cadyn
+	insert can
+	insert caq
+	insert car
+	insert cat
+}
+
+  forsec Dist_Dend {
+	insert pas
+
+	insert naf
+	insert nap
+
+	insert kir
+	insert kas
+	insert kaf
+	insert bkkca
+	insert skkca
+
+	insert caldyn
+	insert caL
+   	insert caL13
+
+	insert cadyn
+	insert can
+	insert caq
+	insert car
+	insert cat
+  }
+
+  soma {
+	insert pas
+
+	insert naf
+	insert nap
+
+	insert kir
+	insert kas
+	insert kaf
+	insert krp
+	insert bkkca
+	insert skkca
+	
+	insert caldyn
+	insert caL
+	insert caL13
+
+	insert cadyn
+	insert can
+	insert caq
+	insert car	
+	insert cat
+ 
+ }
+}
+
+proc position() { local i
+  soma for i = 0, n3d()-1 {
+    pt3dchange(i, $1-x+x3d(i), $2-y+y3d(i), $3-z+z3d(i), diam3d(i))
+  }
+  x = $1  y = $2  z = $3
+}
+
+proc connect2target() { //$o1 target point process, $o2 returned NetCon
+  soma $o2 = new NetCon(&v(1), $o1)
+}
+
+func is_art() { return 0 }
+
+
+
+proc synloops() {
+	//***************************
+	//Build AMPA synapses
+	// Inner dends AMPA
+	for i = 0, 0  {		// 0 in soma, 1 in each prox dend
+			dend1 ampa[i] = new AMPAt(0.5)    synlist.append(ampa[i]) 
+	}
+	
+	for i = 0, 0  {
+			dend2 ampa[i] = new AMPAt(0.5)  synlist.append(ampa[i]) 
+	}
+	
+	for i = 0, 0 {
+			dend3 ampa[i] = new AMPAt(0.5)  synlist.append(ampa[i]) 
+	}
+	
+	for i = 0, 0  {
+			dend4 ampa[i] = new AMPAt(0.5)  synlist.append(ampa[i]) 
+	}
+	
+	//Second level dends
+	for i = 0, 1  {				// 2 in each mid dend
+			onode = (i+1)/3		// 0.33, 0.66
+			dend1_1 ampa[i] = new AMPAt(onode)  synlist.append(ampa[i]) 
+	}
+	
+	for i = 0, 1  {
+			onode = (i+1)/3
+			dend1_2 ampa[i] = new AMPAt(onode)  synlist.append(ampa[i]) 
+	}
+	
+	for i = 0, 1  {
+			onode = (i+1)/3
+			dend2_1 ampa[i] = new AMPAt(onode)  synlist.append(ampa[i]) 
+	}
+	
+	for i = 0, 1  {
+			onode = (i+1)/3
+			dend2_2 ampa[i] = new AMPAt(onode)  synlist.append(ampa[i]) 
+	}
+	
+	for i = 0, 1  {
+			onode = (i+1)/3
+			dend3_1 ampa[i] = new AMPAt(onode)  synlist.append(ampa[i]) 
+	}
+	
+	for i = 0, 1  {
+			onode = (i+1)/3
+			dend3_2 ampa[i] = new AMPAt(onode)  synlist.append(ampa[i]) 
+	}
+	
+	for i = 0, 1  {
+			onode = (i+1)/3
+			dend4_1 ampa[i] = new AMPAt(onode)  synlist.append(ampa[i]) 
+	}
+	
+	for i = 0, 1  {
+			onode = (i+1)/3
+			dend4_2 ampa[i] = new AMPAt(onode)  synlist.append(ampa[i]) 
+	}
+	
+	//Outer_level Dends
+	
+	for i = 0, 3  {				// 4 in each distal dend
+			onode = (i+1)/5		// 0.2, 0.4, 0.6, 0.8
+			dend1_1[1] ampa[i] = new AMPAt(onode)   synlist.append(ampa[i]) 
+	}
+	
+	for i = 0, 3  {
+			onode = (i+1)/5
+			dend1_1[2] ampa[i] = new AMPAt(onode)   synlist.append(ampa[i]) 
+	}
+	
+	for i = 0, 3  {
+			onode = (i+1)/5
+			dend1_2[1] ampa[i] = new AMPAt(onode)   synlist.append(ampa[i]) 
+	}
+	
+	for i = 0, 3  {
+			onode = (i+1)/5
+			dend1_2[2] ampa[i] = new AMPAt(onode)   synlist.append(ampa[i]) 
+	}
+	
+	for i = 0, 3  {
+			onode = (i+1)/5
+			dend2_1[1] ampa[i] = new AMPAt(onode)   synlist.append(ampa[i]) 
+	}
+	
+	for i = 0, 3  {
+			onode = (i+1)/5
+			dend2_1[2] ampa[i] = new AMPAt(onode)   synlist.append(ampa[i]) 
+	}
+	
+	for i = 0, 3  {
+			onode = (i+1)/5
+			dend2_2[1] ampa[i] = new AMPAt(onode)   synlist.append(ampa[i]) 
+	}
+	
+	for i = 0, 3  {
+			onode = (i+1)/5
+			dend2_2[2] ampa[i] = new AMPAt(onode)   synlist.append(ampa[i]) 
+	}
+	
+	for i = 0, 3  {
+			onode = (i+1)/5
+			dend3_1[1] ampa[i] = new AMPAt(onode)   synlist.append(ampa[i]) 
+	}
+	
+	for i = 0, 3  {
+			onode = (i+1)/5
+			dend3_1[2] ampa[i] = new AMPAt(onode)   synlist.append(ampa[i]) 
+	}
+	
+	for i = 0, 3  {
+			onode = (i+1)/5
+			dend3_2[1] ampa[i] = new AMPAt(onode)   synlist.append(ampa[i])
+	}
+	
+	for i = 0, 3  {
+			onode = (i+1)/5
+			dend3_2[2] ampa[i] = new AMPAt(onode)  synlist.append(ampa[i])
+	}
+	 
+	for i = 0, 3  {
+			onode = (i+1)/5
+			dend4_1[1] ampa[i] = new AMPAt(onode)   synlist.append(ampa[i])
+	}
+	
+	for i = 0, 3  {
+			onode = (i+1)/5
+			dend4_1[2] ampa[i] = new AMPAt(onode)   synlist.append(ampa[i])
+	}
+	
+	for i = 0, 3  {
+			onode = (i+1)/5
+			dend4_2[1] ampa[i] = new AMPAt(onode)   synlist.append(ampa[i])
+	}
+	
+	for i = 0, 3  {
+			onode = (i+1)/5
+			dend4_2[2] ampa[i] = new AMPAt(onode)   synlist.append(ampa[i])
+	}
+	//***************************
+	
+	
+	
+	
+	//***************************
+	//Build NMDA synapses
+	// Inner dends NMDA
+	for i = 0, 0  { 	// 0 in soma, 1 in each prox dend
+			dend1 nmda[i] = new NMDAt(0.5)    synlist.append(nmda[i]) 
+	}
+	
+	for i = 0, 0  { 
+			dend2 nmda[i] = new NMDAt(0.5)  synlist.append(nmda[i]) 
+	}
+	
+	for i = 0, 0  {
+			dend3 nmda[i] = new NMDAt(0.5)  synlist.append(nmda[i]) 
+	}
+	
+	for i = 0, 0  {
+			dend4 nmda[i] = new NMDAt(0.5)  synlist.append(nmda[i]) 
+	}
+	
+	//Second level dends
+	
+	for i = 0, 1  {		// 2 in each mid dend
+			onode = (i+1)/3	
+			dend1_1 nmda[i] = new NMDAt(onode)  synlist.append(nmda[i]) 
+	}
+	
+	for i = 0, 1  {
+			onode = (i+1)/3
+			dend1_2 nmda[i] = new NMDAt(onode)  synlist.append(nmda[i]) 
+	}
+	
+	for i = 0, 1  {
+			onode = (i+1)/3
+			dend2_1 nmda[i] = new NMDAt(onode)  synlist.append(nmda[i]) 
+	}
+	
+	for i = 0, 1  {
+			onode = (i+1)/3
+			dend2_2 nmda[i] = new NMDAt(onode)  synlist.append(nmda[i]) 
+	}
+	
+	for i = 0, 1  {
+			onode = (i+1)/3
+			dend3_1 nmda[i] = new NMDAt(onode)  synlist.append(nmda[i]) 
+	}
+	
+	for i = 0, 1  {
+			onode = (i+1)/3
+			dend3_2 nmda[i] = new NMDAt(onode)  synlist.append(nmda[i]) 
+	}
+	
+	for i = 0, 1  {
+			onode = (i+1)/3
+			dend4_1 nmda[i] = new NMDAt(onode)  synlist.append(nmda[i]) 
+	}
+	
+	for i = 0, 1  {
+			onode = (i+1)/3
+			dend4_2 nmda[i] = new NMDAt(onode)  synlist.append(nmda[i]) 
+	}
+	
+	//Outer_level Dends
+	
+	for i = 0, 3  {		// 4 in each dist dend
+			onode = (i+1)/5		// 0.2, 0.4, 0.6, 0.8
+			dend1_1[1] nmda[i] = new NMDAt(onode)   synlist.append(nmda[i]) 
+	}
+	
+	for i = 0, 3  {
+			onode = (i+1)/5		// 0.2, 0.4, 0.6, 0.8
+			dend1_1[2] nmda[i] = new NMDAt(onode)   synlist.append(nmda[i]) 
+	}
+	synloops_1() // continue in next proc to avoid to large a proc error
+}  //end synloops
+proc synloops_1() {
+	for i = 0, 3  {
+			onode = (i+1)/5		// 0.2, 0.4, 0.6, 0.8
+			dend1_2[1] nmda[i] = new NMDAt(onode)   synlist.append(nmda[i]) 
+	}
+	
+	for i = 0, 3  {
+			onode = (i+1)/5		// 0.2, 0.4, 0.6, 0.8
+			dend1_2[2] nmda[i] = new NMDAt(onode)   synlist.append(nmda[i]) 
+	}
+	
+	for i = 0, 3  {
+			onode = (i+1)/5		// 0.2, 0.4, 0.6, 0.8
+			dend2_1[1] nmda[i] = new NMDAt(onode)   synlist.append(nmda[i]) 
+	}
+	
+	for i = 0, 3  {
+			onode = (i+1)/5		// 0.2, 0.4, 0.6, 0.8
+			dend2_1[2] nmda[i] = new NMDAt(onode)   synlist.append(nmda[i]) 
+	}
+	
+	for i = 0, 3  {
+			onode = (i+1)/5		// 0.2, 0.4, 0.6, 0.8
+			dend2_2[1] nmda[i] = new NMDAt(onode)   synlist.append(nmda[i]) 
+	}
+	
+	for i = 0, 3  {
+			onode = (i+1)/5		// 0.2, 0.4, 0.6, 0.8
+			dend2_2[2] nmda[i] = new NMDAt(onode)   synlist.append(nmda[i]) 
+	}
+	
+	for i = 0, 3  {
+			onode = (i+1)/5		// 0.2, 0.4, 0.6, 0.8
+			dend3_1[1] nmda[i] = new NMDAt(onode)   synlist.append(nmda[i]) 
+	}
+	
+	for i = 0, 3  {
+			onode = (i+1)/5		// 0.2, 0.4, 0.6, 0.8
+			dend3_1[2] nmda[i] = new NMDAt(onode)   synlist.append(nmda[i]) 
+	}
+	
+	for i = 0, 3  {
+			onode = (i+1)/5		// 0.2, 0.4, 0.6, 0.8
+			dend3_2[1] nmda[i] = new NMDAt(onode)   synlist.append(nmda[i])
+	}
+	
+	for i = 0, 3  {
+			onode = (i+1)/5		// 0.2, 0.4, 0.6, 0.8
+			dend3_2[2] nmda[i] = new NMDAt(onode)  synlist.append(nmda[i])
+	}
+	 
+	for i = 0, 3  {
+			onode = (i+1)/5		// 0.2, 0.4, 0.6, 0.8
+			dend4_1[1] nmda[i] = new NMDAt(onode)   synlist.append(nmda[i])
+	}
+	
+	for i = 0, 3  {
+			onode = (i+1)/5		// 0.2, 0.4, 0.6, 0.8
+			dend4_1[2] nmda[i] = new NMDAt(onode)   synlist.append(nmda[i])
+	}
+	
+	for i = 0, 3  {
+			onode = (i+1)/5		// 0.2, 0.4, 0.6, 0.8
+			dend4_2[1] nmda[i] = new NMDAt(onode)   synlist.append(nmda[i])
+	}
+	
+	for i = 0, 3  {
+			onode = (i+1)/5		// 0.2, 0.4, 0.6, 0.8
+			dend4_2[2] nmda[i] = new NMDAt(onode)   synlist.append(nmda[i])
+	}
+	//***************************
+	
+	
+	
+	
+	
+	//***************************
+	//Build GABA synapses
+	// soma GABA
+	for i = 0, 15 {		// 16 in soma
+			soma gaba[i] = new GABAt(0.5) 	synlist.append(gaba[i])
+	}
+	
+	// Inner dends GABA
+	for i = 0, 2  {	// 3 each
+			dend1 gaba[i] = new GABAt(0.5)    synlist.append(gaba[i]) 
+	}
+	
+	for i = 0, 2  {
+			dend2 gaba[i] = new GABAt(0.5)  synlist.append(gaba[i]) 
+	
+	}
+	
+	for i = 0, 2 {
+			dend3 gaba[i] = new GABAt(0.5)  synlist.append(gaba[i]) 
+	
+	}
+	
+	for i = 0, 2  {
+			dend4 gaba[i] = new GABAt(0.5)  synlist.append(gaba[i]) 
+	
+	}
+	
+	//Second level dends
+	for i = 0, 2  {	// 3 each
+			dend1_1 gaba[i] = new GABAt(0.5)  synlist.append(gaba[i]) 
+	
+	}
+	
+	for i = 0, 2  {
+			dend1_2 gaba[i] = new GABAt(0.5)  synlist.append(gaba[i]) 
+	
+	}
+	
+	for i = 0, 2  {
+			dend2_1 gaba[i] = new GABAt(0.5)  synlist.append(gaba[i]) 
+	
+	}
+	
+	for i = 0, 2  {
+			dend2_2 gaba[i] = new GABAt(0.5)  synlist.append(gaba[i]) 
+	
+	}
+	
+	for i = 0, 2  {
+			dend3_1 gaba[i] = new GABAt(0.5)  synlist.append(gaba[i]) 
+	
+	}
+	
+	for i = 0, 2  {
+			dend3_2 gaba[i] = new GABAt(0.5)  synlist.append(gaba[i]) 
+	
+	}
+	
+	for i = 0, 2  {
+			dend4_1 gaba[i] = new GABAt(0.5)  synlist.append(gaba[i]) 
+	
+	}
+	
+	for i = 0, 2  {
+			dend4_2 gaba[i] = new GABAt(0.5)  synlist.append(gaba[i]) 
+	
+	}
+	
+	//Outer_level Dends
+	for i = 0, 1  {			// 2 each
+			onode = (i+1)/3		// 0.33, 0.66
+			dend1_1[1] gaba[i] = new GABAt(onode)   synlist.append(gaba[i]) 
+	}
+	
+	for i = 0, 1  {
+			onode = (i+1)/3
+			dend1_1[2] gaba[i] = new GABAt(onode)   synlist.append(gaba[i]) 
+	}
+	
+	for i = 0, 1  {
+			onode = (i+1)/3
+			dend1_2[1] gaba[i] = new GABAt(onode)   synlist.append(gaba[i]) 
+	}
+	
+	for i = 0, 1  {
+			onode = (i+1)/3
+			dend1_2[2] gaba[i] = new GABAt(onode)   synlist.append(gaba[i]) 
+	}
+	
+	for i = 0, 1  {
+			onode = (i+1)/3
+			dend2_1[1] gaba[i] = new GABAt(onode)   synlist.append(gaba[i]) 
+	}
+	
+	for i = 0, 1  {
+			onode = (i+1)/3
+			dend2_1[2] gaba[i] = new GABAt(onode)   synlist.append(gaba[i]) 
+	}
+	
+	for i = 0, 1  {
+			onode = (i+1)/3
+			dend2_2[1] gaba[i] = new GABAt(onode)   synlist.append(gaba[i]) 
+	}
+	
+	for i = 0, 1  {
+			onode = (i+1)/3
+			dend2_2[2] gaba[i] = new GABAt(onode)   synlist.append(gaba[i]) 
+	}
+	
+	for i = 0, 1  {
+			onode = (i+1)/3
+			dend3_1[1] gaba[i] = new GABAt(onode)   synlist.append(gaba[i]) 
+	}
+	
+	for i = 0, 1  {
+			onode = (i+1)/3
+			dend3_1[2] gaba[i] = new GABAt(onode)   synlist.append(gaba[i]) 
+	}
+	
+	for i = 0, 1  {
+			onode = (i+1)/3
+			dend3_2[1] gaba[i] = new GABAt(onode)   synlist.append(gaba[i])
+	}
+	
+	for i = 0, 1  {
+			onode = (i+1)/3
+			dend3_2[2] gaba[i] = new GABAt(onode)  synlist.append(gaba[i])
+	}
+	 
+	for i = 0, 1  {
+			onode = (i+1)/3
+			dend4_1[1] gaba[i] = new GABAt(onode)   synlist.append(gaba[i])
+	}
+	
+	for i = 0, 1  {
+			onode = (i+1)/3
+			dend4_1[2] gaba[i] = new GABAt(onode)   synlist.append(gaba[i])
+	}
+	
+	for i = 0, 1  {
+			onode = (i+1)/3
+			dend4_2[1] gaba[i] = new GABAt(onode)   synlist.append(gaba[i])
+	}
+	
+	for i = 0, 1  {
+			onode = (i+1)/3
+			dend4_2[2] gaba[i] = new GABAt(onode)   synlist.append(gaba[i])
+	}
+	//**************************
+}	// end synloops()
+
+
+endtemplate MSP_Cell
+
+//**************************************************************************
+
