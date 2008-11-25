@@ -12,7 +12,7 @@ class COPASISim:
         self.datamodel = COPASI.CCopasiDataModel.GLOBAL
         # BUG submitted
         # http://www.copasi.org/tracker/show_bug.cgi?id=1112
-        #filename = "testSimple_.xml" 
+        filename = "testSimple.xml" 
         self.datamodel.importSBML(filename)
         self.useConc = useConc
         

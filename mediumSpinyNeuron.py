@@ -46,10 +46,10 @@ class MediumSpinyNeuron:
         self.h = neuron.h
         
         # Load the baseline
-        h.load_file("baseline_values.txt")
+        self.h.load_file("baseline_values.txt")
         
         # Load the taus for many channels
-        h.load_file("all_tau_vecs_mod.hoc")
+        self.h.load_file("all_tau_vecs_mod.hoc")
         
         self.topology()
         for branch in self.branches:
@@ -276,9 +276,9 @@ class MediumSpinyNeuron:
                     dend.insert('car')
                     dend.insert('cat')
 
-
-def loadBaseline():
-    self.h.load            
+    
+    
+    
         
 if __name__ == "__main__":
     msn = MediumSpinyNeuron()
