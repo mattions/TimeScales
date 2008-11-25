@@ -71,17 +71,22 @@ class MediumSpinyNeuron:
 
                 
     def geom(self, branch):
-        
+        """Wilson 1992 Single Neuron Computation
+           dendritic diam(um) * (1+spine/dend ratio)
+           also O'Donnell 1993 Synapse
+           Koch/Segev Methods in Neuronal Modeling pg 122-3, 1998
+           
+           """
         # Soma
         self.setGeoms(self.soma, 16, 16)
         # Prox
-        self.setGeoms(branch.prox, 20, 2.25)
+        self.setGeoms(branch.prox, 20, 2.25) 
         # Mid
         for mid in branch.mid:
-            self.setGeoms(mid, 24.23, 1.10)
+            self.setGeoms(mid, 24.23, 1.10) # L = 20        diam = 1 * (1+0.3)
         # Dist
         for dist in branch.dist:
-            self.setGeoms(dist, 395.2, 0.72)
+            self.setGeoms(dist, 395.2, 0.72) #L = 190    diam = 0.5 * (1+2) 
 
     def calcCoords(self, r, phi, theta):
         x = r * sin (radians(phi)) * cos (radians(theta))
