@@ -46,11 +46,13 @@ class MediumSpinyNeuron:
         self.h = neuron.h
         self.topology()
         for branch in self.branches:
-            self.geom(branch)
+            self.geom(branch)       
+        # TODO Set the 3D geometry properly
         #self.shape3d() # Disabled untill BUG fixed
         
-        # TODO Set the 3D geometry properly
+        # TODO Set the nseg correctly
         
+        self.biophys()
         
     def topology(self):
         self.soma = self.h.Section()
@@ -76,6 +78,8 @@ class MediumSpinyNeuron:
            also O'Donnell 1993 Synapse
            Koch/Segev Methods in Neuronal Modeling pg 122-3, 1998
            
+           Changed the lenght obtainend adding the spines areas with the real lenght. 
+           The other one should be obtained with adding the spines itself
            """
         # Soma
         self.setGeoms(self.soma, 16, 16)
@@ -169,9 +173,105 @@ class MediumSpinyNeuron:
         return coord
             
     def setGeoms(self, sec, lenght, diam):
+        """Set the lenght of the section and the diam of all the segs"""
         sec.L = lenght
         for seg in sec:
             seg.diam = diam
+    
+    def biophys(self):
+        """Insert all the channels required"""
+        
+        self.soma.push()
+        self.h('insert pas')
+        self.h('insert naf')
+        self.h('insert nap')
+        self.h('insert kir')
+        self.h('insert kas')
+        self.h('insert kaf')
+        self.h('insert krp')
+        self.h('insert bkkca')
+        self.h('insert skkca')
+        self.h('insert caldyn')
+        self.h('insert caL')
+        self.h('insert caL13')
+        self.h('insert cadyn')
+        self.h('insert can')
+        self.h('insert caq')
+        self.h('insert car')    
+        self.h('insert cat')
+        self.h.pop_section()
+
+        
+        for branch in self.branches:
+            # Prox Dends
+            branch.prox.push()
+            
+            self.h('insert pas')
+            self.h('insert naf')
+            self.h('insert nap')            
+            self.h('insert kir')
+            self.h('insert kas')
+            self.h('insert kaf')
+            self.h('insert bkkca')
+            self.h('insert skkca')            
+            self.h('insert caldyn')
+            self.h('insert caL')
+            self.h('insert caL13')
+            self.h('insert cadyn')
+            self.h('insert can')
+            self.h('insert caq')
+            self.h('insert car')
+            self.h('insert cat')
+            
+            self.h.pop_section()
+
+            # Mid dends
+            for dend in branch.mid:
+                dend.push()
+                
+                self.h('insert pas')
+                self.h('insert naf')
+                self.h('insert nap')
+                self.h('insert kir')
+                self.h('insert kas')
+                self.h('insert kaf')
+                self.h('insert bkkca')
+                self.h('insert skkca')
+                self.h('insert caldyn')
+                self.h('insert caL')
+                self.h('insert caL13')
+                self.h('insert cadyn')
+                self.h('insert can')
+                self.h('insert caq')
+                self.h('insert car')
+                self.h('insert cat')
+                
+                self.h.pop_section()
+            
+            for dend in branch.dist:
+                dend.push()
+                
+                self.h('insert pas')
+                self.h('insert naf')
+                self.h('insert nap')
+                self.h('insert kir')
+                self.h('insert kas')
+                self.h('insert kaf')
+                self.h('insert bkkca')
+                self.h('insert skkca')
+                self.h('insert caldyn')
+                self.h('insert caL')
+                self.h('insert caL13')
+                self.h('insert cadyn')
+                self.h('insert can')
+                self.h('insert caq')
+                self.h('insert car')
+                self.h('insert cat')
+                self.h.pop_section()
+
+
+
+            
         
 if __name__ == "__main__":
     msn = MediumSpinyNeuron()
