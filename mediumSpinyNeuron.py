@@ -181,95 +181,93 @@ class MediumSpinyNeuron:
     def biophys(self):
         """Insert all the channels required"""
         
-        self.soma.push()
-        self.h('insert pas')
-        self.h('insert naf')
-        self.h('insert nap')
-        self.h('insert kir')
-        self.h('insert kas')
-        self.h('insert kaf')
-        self.h('insert krp')
-        self.h('insert bkkca')
-        self.h('insert skkca')
-        self.h('insert caldyn')
-        self.h('insert caL')
-        self.h('insert caL13')
-        self.h('insert cadyn')
-        self.h('insert can')
-        self.h('insert caq')
-        self.h('insert car')    
-        self.h('insert cat')
-        self.h.pop_section()
+        self.soma.insert('pas')
+        self.soma.insert('naf')
+        self.soma.insert('nap')
+        self.soma.insert('kir')
+        self.soma.insert('kas')
+        self.soma.insert('kaf')
+        self.soma.insert('krp')
+        self.soma.insert('bkkca')
+        self.soma.insert('skkca')
+        self.soma.insert('caldyn')
+        self.soma.insert('caL')
+        self.soma.insert('caL13')
+        self.soma.insert('cadyn')
+        self.soma.insert('can')
+        self.soma.insert('caq')
+        self.soma.insert('car')    
+        self.soma.insert('cat')
+
 
         
         for branch in self.branches:
             # Prox Dends
-            branch.prox.push()
-            
-            self.h('insert pas')
-            self.h('insert naf')
-            self.h('insert nap')            
-            self.h('insert kir')
-            self.h('insert kas')
-            self.h('insert kaf')
-            self.h('insert bkkca')
-            self.h('insert skkca')            
-            self.h('insert caldyn')
-            self.h('insert caL')
-            self.h('insert caL13')
-            self.h('insert cadyn')
-            self.h('insert can')
-            self.h('insert caq')
-            self.h('insert car')
-            self.h('insert cat')
-            
-            self.h.pop_section()
+            branch.prox.insert('pas')
+        
+            branch.prox.insert('naf')
+            branch.prox.insert('nap')
+        
+            branch.prox.insert('kir')
+            branch.prox.insert('kas')
+            branch.prox.insert('kaf')
+            branch.prox.insert('bkkca')
+            branch.prox.insert('skkca')
+        
+            branch.prox.insert('caldyn')
+            branch.prox.insert('caL')
+            branch.prox.insert('caL13')
+        
+            branch.prox.insert('cadyn')
+            branch.prox.insert('can')
+            branch.prox.insert('caq')
+            branch.prox.insert('car')
+            branch.prox.insert('cat')
+
 
             # Mid dends
             for dend in branch.mid:
-                dend.push()
-                
-                self.h('insert pas')
-                self.h('insert naf')
-                self.h('insert nap')
-                self.h('insert kir')
-                self.h('insert kas')
-                self.h('insert kaf')
-                self.h('insert bkkca')
-                self.h('insert skkca')
-                self.h('insert caldyn')
-                self.h('insert caL')
-                self.h('insert caL13')
-                self.h('insert cadyn')
-                self.h('insert can')
-                self.h('insert caq')
-                self.h('insert car')
-                self.h('insert cat')
-                
-                self.h.pop_section()
+                dend.insert('pas')
             
+                dend.insert('naf')
+                dend.insert('nap')
+            
+                dend.insert('kir')
+                dend.insert('kas')
+                dend.insert('kaf')
+                dend.insert('bkkca')
+                dend.insert('skkca')
+            
+                dend.insert('caldyn')
+                dend.insert('caL')
+                dend.insert('caL13')
+                dend.insert('cadyn')
+                dend.insert('can')
+                dend.insert('caq')
+                dend.insert('car')
+                dend.insert('cat')
+
+            #Dist
             for dend in branch.dist:
-                dend.push()
+                    dend.insert('pas')
+
+                    dend.insert('naf')
+                    dend.insert('nap')
                 
-                self.h('insert pas')
-                self.h('insert naf')
-                self.h('insert nap')
-                self.h('insert kir')
-                self.h('insert kas')
-                self.h('insert kaf')
-                self.h('insert bkkca')
-                self.h('insert skkca')
-                self.h('insert caldyn')
-                self.h('insert caL')
-                self.h('insert caL13')
-                self.h('insert cadyn')
-                self.h('insert can')
-                self.h('insert caq')
-                self.h('insert car')
-                self.h('insert cat')
-                self.h.pop_section()
-
-
+                    dend.insert('kir')
+                    dend.insert('kas')
+                    dend.insert('kaf')
+                    dend.insert('bkkca')
+                    dend.insert('skkca')
+                
+                    dend.insert('caldyn')
+                    dend.insert('caL')
+                    dend.insert('caL13')
+                    dend.insert('cadyn')
+                    dend.insert('can')
+                    dend.insert('caq')
+                    dend.insert('car')
+                    dend.insert('cat')
 
             
         
