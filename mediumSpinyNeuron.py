@@ -83,10 +83,10 @@ class MediumSpinyNeuron:
         self.setGeoms(branch.prox, 20, 2.25) 
         # Mid
         for mid in branch.mid:
-            self.setGeoms(mid, 24.23, 1.10) # L = 20        diam = 1 * (1+0.3)
+            self.setGeoms(mid, 20, 1) # L = 24.23        diam = 1 * (1+0.3)
         # Dist
         for dist in branch.dist:
-            self.setGeoms(dist, 395.2, 0.72) #L = 190    diam = 0.5 * (1+2) 
+            self.setGeoms(dist, 190, 0.72) #L = 395.2     diam = 0.5 * (1+2) 
 
     def calcCoords(self, r, phi, theta):
         x = r * sin (radians(phi)) * cos (radians(theta))
