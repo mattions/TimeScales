@@ -44,8 +44,7 @@ ASSIGNED {
 
 	countflag		: start/stop counting spikes delivered
 	spkcnt			: counts number of events delivered to synapse
-	scale			: scale allows the current to be scaled by weight
-}					: so NetCon(...,2) gives 2*the current as NetCon(...,1)
+}					
 
 
 STATE { 
@@ -55,7 +54,6 @@ STATE {
 
 INITIAL {
   	y1_add = 0
-	scale = 0
 	spkcnt = 0
 	countflag = 0
 	t1 = 0
@@ -76,7 +74,7 @@ DERIVATIVE betadyn {
 	y2' = y1 - y2 / (tau_r/qfact)
 }
 
-NET_RECEIVE( weight, y1_loc (/ms) ) {
+NET_RECEIVE( weight, t1 (ms), y1_loc (/ms) ) {
 	: updating the local y1 variable
 	y1_loc = y1_loc*exp( -(t - t1) / (tau_d/qfact) )
 
