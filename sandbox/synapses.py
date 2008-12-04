@@ -72,7 +72,9 @@ for s in h.allsec():
 
 # run
 initialized = False
-run (1000, initialized)
+run (100, initialized)
+
+
 
 #=+++++++++ Plotting ++++++++=#
 
@@ -95,7 +97,7 @@ def inputsGraph(t, inputs):
                 inputs_event[indx] = 1
     masked = numpy.ma.masked_where(inputs_event == 0, inputs_event)
     #figure()
-    plot(t, masked, 'ro')
+    plot(t, masked, 'r|')
 
     
 #plot
