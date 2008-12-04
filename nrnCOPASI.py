@@ -6,13 +6,13 @@
 #import neuron
 
 import pylab
-import CopasiSim
+import copasiSim
 
 
 
 if __name__ == "__main__":
     
-    copSim = CopasiSim.COPASISim(useConc=True)
+    copSim = copasiSim.COPASISim(useConc=True)
     initialCondition = True # use initial Condition
     tStop = 10.0
     data = copSim.createGraph(tStop, initialCondition)
