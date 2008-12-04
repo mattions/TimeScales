@@ -42,8 +42,8 @@ class Branch:
 
 class MediumSpinyNeuron:
     
-    def __init__(self):
-        self.h = neuron.h
+    def __init__(self, hoc):
+        self.h = hoc
         
         # Load the baseline
         self.h.load_file("baseline_values.txt")
@@ -51,17 +51,17 @@ class MediumSpinyNeuron:
         # Load the taus for many channels
         self.h.load_file("all_tau_vecs_mod.hoc")
         
-        self.topology()
+        self.__topology()
         for branch in self.branches:
-            self.geom(branch)       
+            self.__geom(branch)       
         # TODO Set the 3D geometry properly
         #self.shape3d() # Disabled untill BUG fixed
         
         # TODO Set the nseg correctly
         
-        self.biophys()
+        self.__biophys()
         
-    def topology(self):
+    def __topology(self):
         self.soma = self.h.Section()
         self.branches = []
         numProxDends = 4 # Proximal Dends
@@ -79,7 +79,7 @@ class MediumSpinyNeuron:
         
 
                 
-    def geom(self, branch):
+    def __geom(self, branch):
         """Wilson 1992 Single Neuron Computation
            dendritic diam(um) * (1+spine/dend ratio)
            also O'Donnell 1993 Synapse
@@ -89,17 +89,17 @@ class MediumSpinyNeuron:
            The other one should be obtained with adding the spines itself
            """
         # Soma
-        self.setGeoms(self.soma, 16, 16)
+        self.__setGeoms(self.soma, 16, 16)
         # Prox
-        self.setGeoms(branch.prox, 20, 2.25) 
+        self.__setGeoms(branch.prox, 20, 2.25) 
         # Mid
         for mid in branch.mid:
-            self.setGeoms(mid, 20, 1) # L = 24.23        diam = 1 * (1+0.3)
+            self.__setGeoms(mid, 20, 1) # L = 24.23        diam = 1 * (1+0.3)
         # Dist
         for dist in branch.dist:
-            self.setGeoms(dist, 190, 0.72) #L = 395.2     diam = 0.5 * (1+2) 
+            self.__setGeoms(dist, 190, 0.72) #L = 395.2     diam = 0.5 * (1+2) 
 
-    def calcCoords(self, r, phi, theta):
+    def __calcCoords(self, r, phi, theta):
         x = r * sin (radians(phi)) * cos (radians(theta))
         y = r * sin (radians(phi)) * sin (radians(theta))
         z = r * cos(radians(phi))
@@ -109,7 +109,7 @@ class MediumSpinyNeuron:
         coords = (x,y,z)
         return x,y,z
     
-    def add3dpoint(self, sec, x_start, y_start, z_start, x,y,z):
+    def __add3dpoint(self, sec, x_start, y_start, z_start, x,y,z):
         sec.push()
         #self.h.pt3dclear()
         self.h.pt3dadd(x_start,y_start, z_start, sec.L)
@@ -118,7 +118,7 @@ class MediumSpinyNeuron:
         print "%s x0: %f y0: %f z0: %f x: %f y: %f z: %f" %(sec.name(), x_start, 
                                                             y_start, z_start, x, y, z)
     
-    def shape3d(self):
+    def __shape3d(self):
         
         # Soma
         self.add3dpoint(self.soma, 0, 0, 0, 15, 0, 0)
@@ -171,7 +171,7 @@ class MediumSpinyNeuron:
                     print "i: %d j: %d k: %d theta: %d m_theta: %d d_theta: %d" %(i, j, k, theta,
                                                                                   m_theta, d_theta)
         
-    def sumCoords(self, old, new):
+    def __sumCoords(self, old, new):
         if new < 0:
             coord = fabs(old) + fabs(new)
             coord = - coord
@@ -179,13 +179,13 @@ class MediumSpinyNeuron:
             coord = old + new
         return coord
             
-    def setGeoms(self, sec, lenght, diam):
+    def __setGeoms(self, sec, lenght, diam):
         """Set the lenght of the section and the diam of all the segs"""
         sec.L = lenght
         for seg in sec:
             seg.diam = diam
     
-    def biophys(self):
+    def __biophys(self):
         """Insert all the channels required"""
         
         self.soma.insert('pas')
@@ -281,7 +281,8 @@ class MediumSpinyNeuron:
     
         
 if __name__ == "__main__":
-    msn = MediumSpinyNeuron()
+    h = neuron.h
+    msn = MediumSpinyNeuron(h)
         
             
         

@@ -4,17 +4,18 @@
 import neuron
 import mediumSpinyNeuron
 
-class neuronSim():
+class NeuronSim():
     def __init__(self):
         h = neuron.h 
-        msn = mediumSpinyNeuron.mediumSpinyNeuron(h)
+        msn = mediumSpinyNeuron.MediumSpinyNeuron(h)
         self.setup()
         
     def setup(self):
-
+        pass
         
     def run(self, tStop):    
-        if 
+        pass
+    
     def rig1():
         # Creating an ICLAMP just for testing
         iClamp = self.h.IClamp(soma, 0.5)
@@ -32,4 +33,4 @@ class neuronSim():
         print "Created vectors ca_in_s"
 
 if __name__ == "__main__":
-    nrnSim = neuronSim()
+    nrnSim = NeuronSim()
