@@ -189,23 +189,20 @@ class MediumSpinyNeuron:
     def __biophys(self):
         """Insert all the channels required and intialize the values"""
         
-        self.soma.insert('krp') # Inserting this only in the soma.
-        self.soma(0.5).krp.gbar = 0.001 # 0.004 # S/cm2
-        
         # Membrane mech present in all the section
         mechs = [
                  'pas', # done
-                 'naf',
-                 'nap',
+                 'naf', # done
+                 'nap', # done
                  'kir', # done
-                 'kas',
-                 'kaf',
-                 'krp',
+                 'kas', # done
+                 'kaf', # done
+                 'krp', # done
                  'bkkca', # done
                  'skkca', # done
-                 'caldyn',
-                 'caL', 
-                 'caL13',
+                 'caldyn', # pump set in NMOL
+                 'caL',  #done
+                 'caL13', #done
                  'can', # done
                  'caq', # done
                  'car', # done
@@ -217,33 +214,57 @@ class MediumSpinyNeuron:
         for sec in self.h.allsec():
             for mec in mechs:
                 sec.insert(mec)
-                # Shared value
-                if mec is 'pas':
-                    sec(0.5).pas.g =  1.15e-5 # S/cm2
-                    sec(0.5).pas.e = -70 # mV
-                elif mec is 'kir':
-                    sec(0.5).kir.gkbar = 0.00015 # S/cm2
-                elif mec is 'bkkca':
-                    sec(0.5).bkkca.gkbar = 0.001 # S/cm2
-                elif mec is 'skkca':
-                    sec(0.5).skkca.gkbar = 0.145
-                elif mec is 'can':
-                    sec(0.5).can.pbar = 1.0e-5 # cm/s
-                elif mec is 'caq':
-                    sec(0.5).caq.pbar = 6.0e-6 #cm/s
-                elif mec is 'car':
-                    sec(0.5).car.pbar = 2.6e-5 # cm/s
-                elif mec is 'cat':
-                    sec(0.5).cat.pbar = 4e-7 #cm/s
-        
-                    
-                    
+                # Value common for all the section
+
+                sec(0.5).pas.g =  1.15e-5 # S/cm2
+                sec(0.5).pas.e = -70 # mV
+                sec(0.5).kir.gkbar = 0.00015 # S/cm2
+                sec(0.5).bkkca.gkbar = 0.001 # S/cm2
+                sec(0.5).skkca.gkbar = 0.145
+                sec(0.5).can.pbar = 1.0e-5 # cm/s
+                sec(0.5).caq.pcaqbar = 6.0e-6 # cm/s
+                sec(0.5).car.pcarbar = 2.6e-5 # cm/s
+                sec(0.5).cat.pcatbar = 4e-7 # m/s
+                sec(0.5).caL.pbar = 6.7e-6 # cm/s
+                sec(0.5).caL13.pbar = 4.25e-7 # cm/s
 
         
-        # Value common for all the section
+        # Soma Only
+        self.soma.insert('krp') # Inserting this only in the soma.
+        self.soma(0.5).krp.gkbar = 0.001 # 0.004 # S/cm2
+        
+        self.soma(0.5).naf.gnabar = 1.5 # S/cm2
+        self.soma(0.5).nap.gnabar = 4e-5 # S/cm2
+        
+        # Dends only
+        allDends = []
+        somaAndProx = [self.soma]
+        midAndDist = []
+        for branch in self.branches: 
+           allDends.extend(branch.prox)
+           allDends.extend(branch.mid)
+           allDends.extend(branch.dist)
+        
+           somaAndProx.extend(branch.prox)
+           midAndDist.extend(branch.mid, branch.dist)
+           
+        for sec in allDends:
+            sec(0.5).naf.gnabar = 0.0195
+            sec(0.5).nap.gnabar = 1.3802e-7
+            
+        # Soma + Prox
+        for sec in somaAndProx:
+            sec(0.5).kas.gkbar = 0.0104 # S/cm2
+            sec(0.5).kaf.gkbar = 0.225 # S/cm2
+            
+        # Mid + Dist
+        for sec in midAndDist:
+            sec(0.5).kas.gkbar = 0.00095142 # S/cm2
+            sec(0.5).kaf.gkbar = 0.020584 # S/cm2
+
         
         
-        
+            
         
 if __name__ == "__main__":
     h = neuron.h
