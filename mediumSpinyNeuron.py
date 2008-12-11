@@ -13,6 +13,7 @@ class Branch:
     
     def __init__(self, hoc):
         self.h = hoc
+        self.prox = None # Will be a Section
         self.mid = []
         self.dist = []
     
@@ -186,99 +187,63 @@ class MediumSpinyNeuron:
             seg.diam = diam
     
     def __biophys(self):
-        """Insert all the channels required"""
+        """Insert all the channels required and intialize the values"""
         
-        self.soma.insert('pas')
-        self.soma.insert('naf')
-        self.soma.insert('nap')
-        self.soma.insert('kir')
-        self.soma.insert('kas')
-        self.soma.insert('kaf')
-        self.soma.insert('krp')
-        self.soma.insert('bkkca')
-        self.soma.insert('skkca')
-        self.soma.insert('caldyn')
-        self.soma.insert('caL')
-        self.soma.insert('caL13')
-        self.soma.insert('cadyn')
-        self.soma.insert('can')
-        self.soma.insert('caq')
-        self.soma.insert('car')    
-        self.soma.insert('cat')
+        self.soma.insert('krp') # Inserting this only in the soma.
+        self.soma(0.5).krp.gbar = 0.001 # 0.004 # S/cm2
+        
+        # Membrane mech present in all the section
+        mechs = [
+                 'pas', # done
+                 'naf',
+                 'nap',
+                 'kir', # done
+                 'kas',
+                 'kaf',
+                 'krp',
+                 'bkkca', # done
+                 'skkca', # done
+                 'caldyn',
+                 'caL', 
+                 'caL13',
+                 'can', # done
+                 'caq', # done
+                 'car', # done
+                 'cat' # done
+                 ]
 
+
+        # Inserting the mechanism in all the section
+        for sec in self.h.allsec():
+            for mec in mechs:
+                sec.insert(mec)
+                # Shared value
+                if mec is 'pas':
+                    sec(0.5).pas.g =  1.15e-5 # S/cm2
+                    sec(0.5).pas.e = -70 # mV
+                elif mec is 'kir':
+                    sec(0.5).kir.gkbar = 0.00015 # S/cm2
+                elif mec is 'bkkca':
+                    sec(0.5).bkkca.gkbar = 0.001 # S/cm2
+                elif mec is 'skkca':
+                    sec(0.5).skkca.gkbar = 0.145
+                elif mec is 'can':
+                    sec(0.5).can.pbar = 1.0e-5 # cm/s
+                elif mec is 'caq':
+                    sec(0.5).caq.pbar = 6.0e-6 #cm/s
+                elif mec is 'car':
+                    sec(0.5).car.pbar = 2.6e-5 # cm/s
+                elif mec is 'cat':
+                    sec(0.5).cat.pbar = 4e-7 #cm/s
+        
+                    
+                    
 
         
-        for branch in self.branches:
-            # Prox Dends
-            branch.prox.insert('pas')
+        # Value common for all the section
         
-            branch.prox.insert('naf')
-            branch.prox.insert('nap')
         
-            branch.prox.insert('kir')
-            branch.prox.insert('kas')
-            branch.prox.insert('kaf')
-            branch.prox.insert('bkkca')
-            branch.prox.insert('skkca')
         
-            branch.prox.insert('caldyn')
-            branch.prox.insert('caL')
-            branch.prox.insert('caL13')
-        
-            branch.prox.insert('cadyn')
-            branch.prox.insert('can')
-            branch.prox.insert('caq')
-            branch.prox.insert('car')
-            branch.prox.insert('cat')
-
-
-            # Mid dends
-            for dend in branch.mid:
-                dend.insert('pas')
-            
-                dend.insert('naf')
-                dend.insert('nap')
-            
-                dend.insert('kir')
-                dend.insert('kas')
-                dend.insert('kaf')
-                dend.insert('bkkca')
-                dend.insert('skkca')
-            
-                dend.insert('caldyn')
-                dend.insert('caL')
-                dend.insert('caL13')
-                dend.insert('cadyn')
-                dend.insert('can')
-                dend.insert('caq')
-                dend.insert('car')
-                dend.insert('cat')
-
-            #Dist
-            for dend in branch.dist:
-                    dend.insert('pas')
-
-                    dend.insert('naf')
-                    dend.insert('nap')
-                
-                    dend.insert('kir')
-                    dend.insert('kas')
-                    dend.insert('kaf')
-                    dend.insert('bkkca')
-                    dend.insert('skkca')
-                
-                    dend.insert('caldyn')
-                    dend.insert('caL')
-                    dend.insert('caL13')
-                    dend.insert('cadyn')
-                    dend.insert('can')
-                    dend.insert('caq')
-                    dend.insert('car')
-                    dend.insert('cat')
-
-    
-    
-    
         
 if __name__ == "__main__":
     h = neuron.h
