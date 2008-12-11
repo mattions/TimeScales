@@ -212,21 +212,22 @@ class MediumSpinyNeuron:
 
         # Inserting the mechanism in all the section
         for sec in self.h.allsec():
+            
             for mec in mechs:
                 sec.insert(mec)
-                # Value common for all the section
-
-                sec(0.5).pas.g =  1.15e-5 # S/cm2
-                sec(0.5).pas.e = -70 # mV
-                sec(0.5).kir.gkbar = 0.00015 # S/cm2
-                sec(0.5).bkkca.gkbar = 0.001 # S/cm2
-                sec(0.5).skkca.gkbar = 0.145
-                sec(0.5).can.pbar = 1.0e-5 # cm/s
-                sec(0.5).caq.pcaqbar = 6.0e-6 # cm/s
-                sec(0.5).car.pcarbar = 2.6e-5 # cm/s
-                sec(0.5).cat.pcatbar = 4e-7 # m/s
-                sec(0.5).caL.pbar = 6.7e-6 # cm/s
-                sec(0.5).caL13.pbar = 4.25e-7 # cm/s
+                
+            # Value common for all the section
+            sec(0.5).pas.g =  1.15e-5 # S/cm2
+            sec(0.5).pas.e = -70 # mV
+            sec(0.5).kir.gkbar = 0.00015 # S/cm2
+            sec(0.5).bkkca.gkbar = 0.001 # S/cm2
+            sec(0.5).skkca.gkbar = 0.145
+            sec(0.5).can.pbar = 1.0e-5 # cm/s
+            sec(0.5).caq.pcaqbar = 6.0e-6 # cm/s
+            sec(0.5).car.pcarbar = 2.6e-5 # cm/s
+            sec(0.5).cat.pcatbar = 4e-7 # m/s
+            sec(0.5).caL.pbar = 6.7e-6 # cm/s
+            sec(0.5).caL13.pcaLbar = 4.25e-7 # cm/s
 
         
         # Soma Only
@@ -241,12 +242,13 @@ class MediumSpinyNeuron:
         somaAndProx = [self.soma]
         midAndDist = []
         for branch in self.branches: 
-           allDends.extend(branch.prox)
+           allDends.append(branch.prox) # Append because is a Section not a ListOF
            allDends.extend(branch.mid)
            allDends.extend(branch.dist)
         
-           somaAndProx.extend(branch.prox)
-           midAndDist.extend(branch.mid, branch.dist)
+           somaAndProx.append(branch.prox) # Append because is a Section not a ListOF
+           midAndDist.extend(branch.mid)
+           midAndDist.extend(branch.dist)
            
         for sec in allDends:
             sec(0.5).naf.gnabar = 0.0195
