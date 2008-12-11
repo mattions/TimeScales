@@ -3,6 +3,8 @@
 
 import neuron
 import mediumSpinyNeuron
+import numpy
+from pylab import *
 
 class NeuronSim():
     def __init__(self):
@@ -44,15 +46,28 @@ class NeuronSim():
         vectors['v_soma'] = v_soma
         print "Created vectors v_soma"
         
-        ca_in_s = self.h.Vector()
-        ca_in_s.record(self.msn.soma(0.5)._ref_cai)
-        vectors['ca_in_s'] = ca_in_s
-        print "Created vectors ca_in_s"
+#        ca_in_s = self.h.Vector()
+#        ca_in_s.record(self.msn.soma(0.5)._ref_cai)
+#        vectors['ca_in_s'] = ca_in_s
+#        print "Created vectors ca_in_s"
         
         return vectors
+    
+    def plotVecs(self, vectors):
+        # The vecs are transformed in numpy array and then plotted
+        t = numpy.array(vectors['time'])
+        t = numpy.round(t, decimals=9) # round
+        
+        vSoma = numpy.array(vectors['v_soma'])
+        
+        plot(t, vSoma)
 
 if __name__ == "__main__":
     nrnSim = NeuronSim()
     vectors = nrnSim.rec()
     #nrnSim.rig1()
-    nrnSim.run(20)
+    nrnSim.run(150)
+    nrnSim.plotVecs(vectors)
+    show()
+    
+    
