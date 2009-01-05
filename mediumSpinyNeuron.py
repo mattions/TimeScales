@@ -192,21 +192,21 @@ class MediumSpinyNeuron:
         # Membrane mech present in all the section
         mechs = [
                  'pas', # done
-                 #'naf', # done
-                 #'nap', # done
-                 #'kir', # done
-                 #'kas', # done
-                 #'kaf', # done
-                 #'krp', # done
-                 #'bkkca', # done
-                 #'skkca', # done
-                 #'caldyn', # pump set in NMOL
-                 #'caL',  #done
-                 #'caL13', #done
-                 #'can', # done
-                 #'caq', # done
-                 #'car', # done
-                 #'cat' # done
+                 'naf', # done
+                 'nap', # done
+                 'kir', # done
+                 'kas', # done
+                 'kaf', # done
+                 'krp', # done
+                 'bkkca', # done
+                 'skkca', # done
+                 'caldyn', # pump set in NMOL
+                 'caL',  #done
+                 'caL13', #done
+                 'can', # done
+                 'caq', # done
+                 'car', # done
+                 'cat' # done
                  ]
 
 
@@ -220,23 +220,26 @@ class MediumSpinyNeuron:
             
             sec(0.5).pas.g =  1.15e-5 # S/cm2
             sec(0.5).pas.e = -70 # mV
-#            sec(0.5).kir.gkbar = 0.00015 # S/cm2
-#            sec(0.5).bkkca.gkbar = 0.001 # S/cm2
-#            sec(0.5).skkca.gkbar = 0.145
-#            sec(0.5).can.pbar = 1.0e-5 # cm/s
-#            sec(0.5).caq.pcaqbar = 6.0e-6 # cm/s
-#            sec(0.5).car.pcarbar = 2.6e-5 # cm/s
-#            sec(0.5).cat.pcatbar = 4e-7 # m/s
-#            sec(0.5).caL.pbar = 6.7e-6 # cm/s
-#            sec(0.5).caL13.pcaLbar = 4.25e-7 # cm/s
+            sec(0.5).kir.gkbar = 0.00015 # S/cm2
+            sec(0.5).bkkca.gkbar = 0.001 # S/cm2
+            sec(0.5).skkca.gkbar = 0.145
+            sec(0.5).can.pbar = 1.0e-5 # cm/s
+            sec(0.5).caq.pcaqbar = 6.0e-6 # cm/s
+            sec(0.5).car.pcarbar = 2.6e-5 # cm/s
+            sec(0.5).cat.pcatbar = 4e-7 # m/s
+            sec(0.5).caL.pbar = 6.7e-6 # cm/s
+            sec(0.5).caL13.pcaLbar = 4.25e-7 # cm/s
+            sec(0.5).ek = -90
+            sec(0.5).ena = 50
+            
 
         
         # Soma Only
-#        self.soma.insert('krp') # Inserting this only in the soma.
-#        self.soma(0.5).krp.gkbar = 0.001 # 0.004 # S/cm2
+        self.soma.insert('krp') # Inserting this only in the soma.
+        self.soma(0.5).krp.gkbar = 0.001 # 0.004 # S/cm2
         
-#        self.soma(0.5).naf.gnabar = 1.5 # S/cm2
-#        self.soma(0.5).nap.gnabar = 4e-5 # S/cm2
+        self.soma(0.5).naf.gnabar = 1.5 # S/cm2
+        self.soma(0.5).nap.gnabar = 4e-5 # S/cm2
         
         # Dends only
         allDends = []
@@ -251,20 +254,23 @@ class MediumSpinyNeuron:
            midAndDist.extend(branch.mid)
            midAndDist.extend(branch.dist)
            
-#        for sec in allDends:
-#            sec(0.5).naf.gnabar = 0.0195
-#            sec(0.5).nap.gnabar = 1.3802e-7
+        for sec in allDends:
+            sec(0.5).naf.gnabar = 0.0195
+            sec(0.5).nap.gnabar = 1.3802e-7
             
         # Soma + Prox
-#        for sec in somaAndProx:
-#            sec(0.5).kas.gkbar = 0.0104 # S/cm2
-#            sec(0.5).kaf.gkbar = 0.225 # S/cm2
+        for sec in somaAndProx:
+            sec(0.5).kas.gkbar = 0.0104 # S/cm2
+            sec(0.5).kaf.gkbar = 0.225 # S/cm2
             
         # Mid + Dist
-#        for sec in midAndDist:
-#            sec(0.5).kas.gkbar = 0.00095142 # S/cm2
-#            sec(0.5).kaf.gkbar = 0.020584 # S/cm2
-
+        for sec in midAndDist:
+            sec(0.5).kas.gkbar = 0.00095142 # S/cm2
+            sec(0.5).kaf.gkbar = 0.020584 # S/cm2
+            
+        #Reversal potential
+        
+        
         
         
             
