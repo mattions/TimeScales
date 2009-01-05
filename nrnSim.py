@@ -14,14 +14,19 @@ class NeuronSim():
         
     def run(self, tStop):
         """Run the simulation untill tStop"""
-        if not self.initialized: 
-            self.h.finitialize(-87.75)
-            self.initialized = True
-        
         while (self.h.t < tStop):
             self.h.fadvance()
             
-    
+    def init(self, v_init=-87.75):
+        """Initialize the system"""
+        self.h.finitialize(v_init)
+        self.initialized = True
+        
+    def initAndRun(self, tStop):
+        """Initialize and run the simulation untill tStop""" 
+        self.init()
+        self.run(tStop)
+        
     def rig1(self):
         """Creating an IClamp in the soma"""
         # Creating an ICLAMP just for testing
@@ -29,9 +34,11 @@ class NeuronSim():
         iClamp = self.h.IClamp(0.5)
         self.h.pop_section()
         
-        iClamp.delay = 10
-        iClamp.dur = 10
-        iClamp.amp = 0.3
+        iClamp.delay = 100
+        iClamp.dur = 500
+        iClamp.amp = 0.2481
+        
+        return iClamp
     
     def rec(self):
         
@@ -46,11 +53,13 @@ class NeuronSim():
         vectors['v_soma'] = v_soma
         print "Created vectors v_soma"
         
-#        ca_in_s = self.h.Vector()
-#        ca_in_s.record(self.msn.soma(0.5)._ref_cai)
-#        vectors['ca_in_s'] = ca_in_s
-#        print "Created vectors ca_in_s"
+        ca_in_s = self.h.Vector()
+        ca_in_s.record(self.msn.soma(0.5)._ref_cai)
+        vectors['ca_in_s'] = ca_in_s
+        print "Created vectors ca_in_s"
         
+#        i_kas = self.h.Vector()
+#        i_kas.record(self.msn.soma(0.5).ref_ik)
         return vectors
     
     def plotVecs(self, vectors):
@@ -64,9 +73,12 @@ class NeuronSim():
 
 if __name__ == "__main__":
     nrnSim = NeuronSim()
+    h = nrnSim.h # Unpacking the variable for easy access in the console
+    msn = nrnSim.msn # Unpacking the variable for easy access in the console
     vectors = nrnSim.rec()
-    #nrnSim.rig1()
-    nrnSim.run(150)
+    iClamp = nrnSim.rig1()
+    #msn.all_zero()
+    nrnSim.initAndRun(800)
     nrnSim.plotVecs(vectors)
     show()
     

@@ -6,7 +6,7 @@
 #===============================================================================
 
 import neuron
-from math import cos, sin, fabs, pi, radians
+from math import cos, sin, fabs, pi, radians, sqrt
 
 
 class Branch:
@@ -58,10 +58,22 @@ class MediumSpinyNeuron:
         # TODO Set the 3D geometry properly
         #self.shape3d() # Disabled untill BUG fixed
         
-        # TODO Set the nseg correctly
+        # Set the nseg correctly
+        self.__geom_nseg()
         
         self.__biophys()
         
+    def __geom_nseg(self):
+        """ Setting the number of segment according to the lambda rule"""
+        for sec in self.h.allsec():
+
+            nseg = int(( sec.L / (0.1 * self.__lambda_f(100, sec)) + 0.9 ) / 2 ) * 2 + 1
+            sec.nseg = nseg
+
+    
+    def __lambda_f(self, freq, sec):
+        return 1e5 * sqrt (sec(0.5).diam / ( 4 * pi * freq * sec.Ra * sec(0.5).cm))
+
     def __topology(self):
         self.soma = self.h.Section()
         self.branches = []
@@ -188,6 +200,12 @@ class MediumSpinyNeuron:
     
     def __biophys(self):
         """Insert all the channels required and intialize the values"""
+        # Global variable
+        self.h.celsius = 35 # degC
+        self.h.cai0_ca_ion = 0.001        # mM, Churchill 1998
+        self.h.cao0_ca_ion = 5            # mM, Churchill 1998 - gives eca = 100 mV
+        self.h.cali0_cal_ion = 0.001      # mM, Churchill 1998
+        self.h.calo0_cal_ion = 5          # mM, Churchill 1998 - gives eca = 100 mV
         
         # Membrane mech present in all the section
         mechs = [
@@ -197,10 +215,10 @@ class MediumSpinyNeuron:
                  'kir', # done
                  'kas', # done
                  'kaf', # done
-                 'krp', # done
                  'bkkca', # done
                  'skkca', # done
-                 'caldyn', # pump set in NMOL
+                 'caldyn', # pump calcium dynamics for L-type calcium channels (HVA & LVA)
+                 'cadyn', # pump calcium dynamics for N, P/Q, R calcium
                  'caL',  #done
                  'caL13', #done
                  'can', # done
@@ -220,7 +238,7 @@ class MediumSpinyNeuron:
             
             sec(0.5).pas.g =  1.15e-5 # S/cm2
             sec(0.5).pas.e = -70 # mV
-            sec(0.5).kir.gkbar = 0.00015 # S/cm2
+            sec(0.5).kir.gkbar = 0.00014 # S/cm2
             sec(0.5).bkkca.gkbar = 0.001 # S/cm2
             sec(0.5).skkca.gkbar = 0.145
             sec(0.5).can.pbar = 1.0e-5 # cm/s
@@ -231,7 +249,7 @@ class MediumSpinyNeuron:
             sec(0.5).caL13.pcaLbar = 4.25e-7 # cm/s
             sec(0.5).ek = -90
             sec(0.5).ena = 50
-            
+            sec.Ra = 100 # ohm-cm 
 
         
         # Soma Only
@@ -267,13 +285,6 @@ class MediumSpinyNeuron:
         for sec in midAndDist:
             sec(0.5).kas.gkbar = 0.00095142 # S/cm2
             sec(0.5).kaf.gkbar = 0.020584 # S/cm2
-            
-        #Reversal potential
-        
-        
-        
-        
-            
         
 if __name__ == "__main__":
     h = neuron.h
