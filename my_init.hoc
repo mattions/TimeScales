@@ -80,7 +80,7 @@ proc init() {
 
 
 
-
+/*
 //****************************************************************************
 // Define the user interface
 xpanel("cell settings")
@@ -113,7 +113,7 @@ xlabel("--------------------")
 xstatebutton("play netstims",&playstim, "init()")
 xlabel("--------------------")
 xpanel(1162,22)
-
+*/
 
 
 

@@ -77,7 +77,7 @@ if __name__ == "__main__":
     msn = nrnSim.msn # Unpacking the variable for easy access in the console
     vectors = nrnSim.rec()
     
-    iClamp = nrnSim.rig1()
+    #iClamp = nrnSim.rig1()
     #msn.all_zero()
     #nrnSim.initAndRun(800)
     #nrnSim.plotVecs(vectors)
