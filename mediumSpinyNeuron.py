@@ -60,15 +60,18 @@ class MediumSpinyNeuron:
         
         # Set the nseg correctly
         self.__geom_nseg()
-        
         self.__biophys()
         
     def __geom_nseg(self):
         """ Setting the number of segment according to the lambda rule"""
-        for sec in self.h.allsec():
-
-            nseg = int(( sec.L / (0.1 * self.__lambda_f(100, sec)) + 0.9 ) / 2 ) * 2 + 1
-            sec.nseg = nseg
+#        for sec in self.h.allsec():
+#            scal_factor = 2 # Scale factor to have the same number of segments in Wolf
+#            nseg = int(( sec.L / (0.1 * self.__lambda_f(100, sec)) + 0.9 ) / 2 ) * 2 + 1
+#            sec.nseg = nseg
+#            print sec.name(), nseg
+        for branch in self.branches:
+            for dist in branch.dist:
+                dist.nseg = 11
 
     
     def __lambda_f(self, freq, sec):

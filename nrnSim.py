@@ -76,10 +76,15 @@ if __name__ == "__main__":
     h = nrnSim.h # Unpacking the variable for easy access in the console
     msn = nrnSim.msn # Unpacking the variable for easy access in the console
     vectors = nrnSim.rec()
+    
     iClamp = nrnSim.rig1()
     #msn.all_zero()
-    nrnSim.initAndRun(800)
-    nrnSim.plotVecs(vectors)
-    show()
+    #nrnSim.initAndRun(800)
+    #nrnSim.plotVecs(vectors)
+    #show()
+    
+    # Using the neuron gui
+    import neuron.gui
+    h.load_file("guiRig.ses")
     
     
