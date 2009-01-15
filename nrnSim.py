@@ -77,14 +77,14 @@ if __name__ == "__main__":
     msn = nrnSim.msn # Unpacking the variable for easy access in the console
     vectors = nrnSim.rec()
     
-    #iClamp = nrnSim.rig1()
-    #msn.all_zero()
+    iClamp = nrnSim.rig1()
+    
     #nrnSim.initAndRun(800)
     #nrnSim.plotVecs(vectors)
     #show()
     
     # Using the neuron gui
     import neuron.gui
-    h.load_file("guiRig.ses")
+    h.load_file("guiPython.ses")
     
     

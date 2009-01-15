@@ -27,6 +27,7 @@ print "Created vectors ca_in_s"
 ca_in_d = h.Vector()
 ca_in_d.record(h.MSP_Cell[0].dend1_1[0](0.5)._ref_cai)
 
+
 import neuron.gui
 h.load_file("guiRig.ses")
 
