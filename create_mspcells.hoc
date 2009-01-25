@@ -25,6 +25,7 @@ func nc_append() {//srcindex, target cell index, synindex
 //L=0
 
 cell_number = 1
-/*MSP1*/ cell_append(new MSP_Cell(RA,CM), -270,90,0) 
+// *MSP1*/ cell_append(new MSP_Cell(RA,CM), -270,90,0) 
+/*MSP1*/ cell_append(new MSN(RA,CM), -270,90,0) 
 //****************************************************************************
 

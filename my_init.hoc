@@ -7,8 +7,43 @@ print "loaded baselines values"
 load_file("all_tau_vecs_mod.hoc")
 print "Load tau Values"
 
-load_file ("msp_template2.hoc")
+load_file("synapse_templates.hoc")
+
+load_file ("msp_template.hoc")
 
 objref msn
 
-msn = new MSN(RA, CM)
+msn = new MSP_Cell(RA, CM)
+
+xopen("basic_procs.hoc")
+
+set_pas(G_PAS)
+
+set_naf(G_NAF)
+set_nafd(G_NAFD)
+set_nap(G_NAP)
+set_napd(G_NAPD)
+
+set_kir(G_KIR)
+set_kas(G_KAS)
+set_kasd(G_KASD)
+set_kaf(G_KAF)
+set_kafd(G_KAFD)
+set_krp(G_KRP)
+set_bkkca(G_BKKCA)
+set_skkca(G_SKKCA)
+
+set_caL(P_CAL)
+set_caL13(P_CAL13)
+set_can(P_CAN)
+set_caq(P_CAQ)
+set_car(P_CAR)
+set_cat(P_CAT)
+
+set_cainf(CAINF)
+set_taur(TAUR)
+set_cadrive(CA_DRIVE)
+set_pump(CA_PUMP)
+
+set_ek(EK)
+forsec "MSP_Cell" {Ra = RA    cm = CM}
