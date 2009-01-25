@@ -59,7 +59,7 @@ class MediumSpinyNeuron:
         #self.shape3d() # Disabled untill BUG fixed
         
         # Set the nseg correctly
-        self.__geom_nseg()
+        self.__geom_nseg() # This influence the voltage of the neuron
         self.__biophys()
         
     def __geom_nseg(self):
