@@ -1,123 +1,14 @@
-// _run_me.hoc runs a current clamp experiment
-// "play_netstims" activates synaptic input - the current clamp will be turned
-//    - ampa, gaba, and nmda weight can be changed in the panel
-
-//****************************************************************************
-// create cells, load appropriate session file
-strdef preface, dirstr
-preface = "."
- 
-xopen("./main.hoc")
-print "main hoc loaded"
-
-//xopen("./current_clamp.ses")
-
-//****************************************************************************
+// Main file  
 
 
+load_file("baseline_values.txt")
+print "loaded baselines values"
 
+load_file("all_tau_vecs_mod.hoc")
+print "Load tau Values"
 
-//****************************************************************************
+load_file ("msp_template2.hoc")
 
-NSYN = 168
-maxcol = 21
+objref msn
 
-strdef input_file
-objref stimx, stimxout
-
-stimx = new Matrix(NSYN, maxcol)
-sprint(input_file,"./stimxout_jns_sqwave.dat")		// input file with 
-													// synaptic input times
-
-proc play_stimx() {							// turns on synaptic inputs
-	stimxout = new File()
-	stimxout.ropen(input_file)				// read in input times
-	stimx.scanf(stimxout,NSYN,maxcol-1)
-	stimxout.close()
-
-
-	for cntrw = 0, NSYN-1 {					// assign spike times to synapses
-		cntcl = 0
-		while (stimx.x[cntrw][cntcl] > 0) {
-			ConnectFAKE_[cntrw].event(stimx.x[cntrw][cntcl])
-			cntcl = cntcl + 1
-		}
-	}
-}
-
-/*
-proc init() {
-	finitialize(v_init)
-
-	// play synaptic input
-	if (playstim == 1) {
-		setnetn(0)
-		play_stimx()
-		recordstim = 0
-		IClamp[0].amp = 0
-		tstop = 2000
-	} else { setnetn(1e7) }
-	
-	frecord_init()
-
-	if (cvode.active()) {
-		cvode.re_init()
-	} else {
-		fcurrent()
-	}
-}
-*/
-//****************************************************************************
-
-
-
-// intialize some variables
-//cvode.active(1)
-//dt = 0.025
-//IClamp[0].amp = 0.2481		// 0.271
-//tstop = 800	
-//playstim = 0
-
-
-
-/*
-//****************************************************************************
-// Define the user interface
-xpanel("cell settings")
-xvalue("prox naf bar","nG_NAF", 1,"set_naf(nG_NAF)", 1, 1 )
-xvalue("distal naf bar","nG_NAFD", 1,"set_nafd(nG_NAFD)", 1, 1 )
-xvalue("prox nap bar","nG_NAP", 1,"set_nap(nG_NAP)", 1, 1 )
-xvalue("distal nap bar","nG_NAPD", 1,"set_napd(nG_NAPD)", 1, 1 )
-xlabel("--------------------")
-xvalue("gkbar_kir","nG_KIR", 1,"set_kir(nG_KIR)", 1, 1 )
-xvalue("prox kas bar","nG_KAS", 1,"set_kas(nG_KAS)", 1, 1 )
-xvalue("distal kas bar","nG_KASD", 1,"set_kasd(nG_KASD)", 1, 1 )
-xvalue("prox kaf bar","nG_KAF", 1,"set_kaf(nG_KAF)", 1, 1 )
-xvalue("distal kaf bar","nG_KAFD", 1,"set_kafd(nG_KAFD)", 1, 1 )
-xvalue("gkbar_krp","nG_KRP", 1,"set_krp(nG_KRP)", 1, 1 )
-xvalue("gkbar_bkkca","nG_BKKCA", 1,"set_bkkca(nG_BKKCA)", 1, 1 )
-xvalue("gkbar_skkca","nG_SKKCA",1,"set_skkca(nG_SKKCA)",1,1)
-xlabel("--------------------")
-xvalue("g_pas","nG_PAS", 1,"set_pas(nG_PAS)", 1, 1 )
-xvalue("P_CAL","nP_CAL", 1,"set_caL(nP_CAL)", 1, 1 )
-xvalue("P_CAL13","nP_CAL13", 1,"set_caL13(nP_CAL13)", 1, 1 )
-xvalue("P_CAN","nP_CAN", 1,"set_can(nP_CAN)", 1, 1 )
-xvalue("P_CAQ","nP_CAQ", 1,"set_caq(nP_CAQ)", 1, 1 )
-xvalue("P_CAR","nP_CAR", 1,"set_car(nP_CAR)", 1, 1 )
-xvalue("P_CAT","nP_CAT", 1,"set_cat(nP_CAT)", 1, 1 )
-xlabel("--------------------")
-xvalue("ampa weight","nAMPA_WT", 1,"champawt(nAMPA_WT)", 1, 1 )
-xvalue("nmda weight","nNMDA_WT", 1,"chnmdawt(nNMDA_WT)", 1, 1 )
-xvalue("gaba weight","nGABA_WT", 1,"chgabawt(nGABA_WT)", 1, 1 )
-xlabel("--------------------")
-xstatebutton("play netstims",&playstim, "init()")
-xlabel("--------------------")
-xpanel(1162,22)
-*/
-
-
-
-//run()
-
-
-
+msn = new MSN(RA, CM)
