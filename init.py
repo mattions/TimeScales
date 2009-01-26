@@ -8,6 +8,12 @@ h = neuron.h
 
 h.load_file("my_init.hoc")
 
+def createSpine():
+    """ Create a spine"""
+    import spine
+    spine = spine.Spine(h)
+    spine.connect(h.MSP_Cell[0].dend1)
+    
 
 ####### RIG 
 
