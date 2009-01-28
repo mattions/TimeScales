@@ -14,7 +14,8 @@ class Spine(nrn.Section):
         # dia = (sqrt (V/(pi*h))) * 2
         self.L = 1
         self.diam =  0.3742
-        self.nseg = 7 
+        self.nseg = 7
+        self.Ra = 150 # Used by Grunditz et al 2008 (see supplemental material) 
         debug = True
         if debug:
             import math
@@ -53,3 +54,9 @@ class Spine(nrn.Section):
         synVecs["i"].record(syn["syn"]._ref_i)
         
         return synVecs
+    
+    def attach(self, parentSec, parentx, childx):
+        """Attach a spine to a parentSec and store the parentSec into an attribute.
+        Just anhandy variation of the connect method"""
+        self.parent = parentSec
+        self.connect(parentSec, parentx, childx)

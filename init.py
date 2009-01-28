@@ -95,7 +95,7 @@ def stimulGraph(t, stimul):
 
 from spine import *   
 spine = Spine()
-spine.connect(h.MSP_Cell[0].dend1_1[0], 0.5, 0)
+spine.attach(h.MSP_Cell[0].dend1_1[0], 0.5, 0)
 
 ampa = spine.createAMPASyn()
 synVecs = spine.createSynapseVecs(ampa)
@@ -119,11 +119,11 @@ def createVecs(spine):
     vecs["ca_soma"].record(h.MSP_Cell[0].soma(0.5)._ref_cai)
     
     vecs["ca_dend"] = h.Vector()
-    vecs["ca_dend"].record(h.MSP_Cell[0].dend1_1[0](0.5)._ref_cai)
+    vecs["ca_dend"].record(spine.parent(0.5)._ref_cai)
 
     vecs["v_dend"] = h.Vector()
     #vecs["v_dend"].record(spine.parent(0.5)._ref_v)
-    vecs["v_dend"].record(h.MSP_Cell[0].dend1_1[0](0.5)._ref_v)
+    vecs["v_dend"].record(spine.parent(0.5)._ref_v)
     
     vecs["v_spine"] = h.Vector()
     vecs["v_spine"].record(spine(0.5)._ref_v)
