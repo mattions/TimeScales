@@ -21,59 +21,7 @@ class MyNetStim(neuron.hclass(h.NetStim)):
 
 h.load_file("my_init.hoc")
 
-#def createSpine():
-#    """ Create a spine"""
-#    import spine
-#    spine = spine.Spine(h)
-#    return spine
 
-#def createSpine():
-#    """Create a spine"""
-#    spine = h.Section()
-#    # Volume of a spine ~ 0.11 um 
-#    # dia = (sqrt (V/(pi*h))) * 2
-#    spine.L = 1
-#    spine.diam =  0.3742
-#    debug = True
-#    if debug:
-#        import math
-#        vol = spine.L * (spine.diam/2) * (spine.diam/2) * math.pi
-#        print "Volume of the spine %f" % vol
-#    
-#    return spine
-
-#def createAMPASyn(section, position=0.5):
-#    """Insert an ampa synapse in the section
-#    
-#    return syn dictionary where there are:
-#    stim -> MyNetStim class
-#    ampa -> h.ampa class
-#    nc -> h.NetCon class"""
-#    
-#    syn = {}
-#    syn["netStim"] = h.NetStim()
-#    syn["netStim"].number = 10
-#    syn["netStim"].start = 50
-#    syn["netStim"].noise = 0
-#    
-#    syn["syn"] = h.ampa(position, sec = section)
-#    
-#    syn["netCon"] = h.NetCon(syn["netStim"], syn["syn"])
-#    syn["netCon"].weight[0] = 10
-#    
-#    return syn
-
-#def createSynapseVecs(syn):
-#    """Create the vector to measure the activity of the synapse"""
-#    
-#    synVecs = {}
-#    synVecs["stimul"] = h.Vector()
-#    syn["netCon"].record(synVecs["stimul"]) # Record the input 
-#    
-#    synVecs["i"] = h.Vector()
-#    synVecs["i"].record(syn["syn"]._ref_i)
-#    
-#    return synVecs
 
 def stimulGraph(t, stimul):
     """Create a vector of the inputs given to the synapse"""
@@ -95,7 +43,7 @@ def stimulGraph(t, stimul):
 
 from spine import *   
 spine = Spine()
-spine.attach(h.MSP_Cell[0].dend1_1[0], 0.5, 0)
+spine.attach(h.MSP_Cell[0].dend1_1[1], 0.5, 0)
 
 ampa = spine.createAMPASyn()
 synVecs = spine.createSynapseVecs(ampa)
@@ -154,7 +102,9 @@ h.load_file("guiRig2.ses")
 
 
 vecs = createVecs(spine)
-h.run()
 
-plotVoltage(vecs, synVecs)
-show()
+def go():
+    """Just run the model for the time"""
+    h.run()
+    plotVoltage(vecs, synVecs)
+    show()
