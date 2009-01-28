@@ -7,16 +7,17 @@ import pylab
 
 class COPASISim:
     """Wrapper Class to use the COPASI Simulator"""
-    def __init__(self, filename="biochemical_circuits/testSimple.xml", useConc=False):
+    def __init__(self, filename="testSimple.xml"):
         """Load the SBML file"""
         self.datamodel = COPASI.CCopasiDataModel.GLOBAL
         # BUG submitted
+        # Complex path not submitted ex.: biochemical_circuits/testSimple.xml
         # http://www.copasi.org/tracker/show_bug.cgi?id=1112
-        filename = "testSimple.xml" 
+        #filename = "testSimple.xml" 
         self.datamodel.importSBML(filename)
-        self.useConc = useConc
         
-    def advance(self, tStop, initialCondition):
+        
+    def advance(self, tStop, initialCondition = False):
         """Advanced the simulation until tStepStop
             :param:
                 tStepStop 
@@ -84,14 +85,19 @@ class COPASISim:
             
             # TODO Raise an Error if the task is not found or return None?
     
-    def createVector(self, timeSeries):
+    def createVector(self, timeSeries, useConc=True):
+        """Data vector in numpy
+        The shape steps x (row) and num of variables (column)
+        
+        :Parameters
+            timeSeries: the timeSeries to conver in numpy format
+        """
         variables = timeSeries.getNumVariables()
         steps = timeSeries.getRecordedSteps()
-        print "\nSimulation ended. \nVariables: %s, Steps recorded: %f " %(variables, steps)
         data = numpy.zeros( (steps, variables) ) 
         for var in xrange(variables): #iterate over the values
             for step in xrange(steps): #iterate over the time
-                if self.useConc:
+                if useConc:
                     data[step,var] = timeSeries.getConcentrationData(step, var)
                 else:
                     data[step,var] = timeSeries.getData(step, var)
@@ -105,6 +111,19 @@ class COPASISim:
         pylab.plot(data[:,0],data[:,1])
         pylab.plot(data[:,0],data[:,2])
         pylab.plot(data[:,0],data[:,3])
+        
+    def createSBML2Var(self, timeSeries):
+        """Get the species of the SBML we want to plot"""
+        # We build a dictionary to do that
+        sbmlId2Var = {}
+        variables = timeSeries.getNumVariables()
+        for var in range(variables):
+            sbmlId = timeSeries.getSBMLId(var)
+            sbmlId2Var[sbmlId] = var
+        self.sbmlId2Var = sbmlId2Var # store as class attribute
+        
+        
+        
         
     def createGraph(self, tStop, initialCondition):
         """
@@ -120,3 +139,47 @@ class COPASISim:
         data = self.createVector(timeSeries)
         self.plotSim(data)
         return data
+    
+    def plotSBMLId(self, data, sbmlId, name):
+        """Plot the sbmlId"""
+        time = data[:,0] # Selecting the column of the time
+        var = data[:,self.sbmlId2Var[sbmlId]] # Selecting the column of the sbml var
+        pylab.plot(time,var, label = name)
+        
+    def stackData(self, data, data2):
+        """Stacking data together"""
+        dataTot = numpy.vstack((data, data2))
+        return dataTot
+    
+if __name__ == "__main__":
+    
+    def plotSpeces(interestingSpecies, data):
+        for sbmlId, name in interestingSpecies.iteritems():
+            cop.plotSBMLId(data, sbmlId, name)
+            
+            
+    cop = COPASISim(filename="BIOMD0000000183.xml")
+    interestingSpecies = {"parameter_28" : "CaMKIIbar",
+                          "parameter_34": "PP2Bbar",
+                          "species_1" : "Ca"
+                          }
+    
+    timeSeries = cop.advance(100, initialCondition=True)
+    cop.createSBML2Var(timeSeries)
+    data = cop.createVector(timeSeries)
+    
+    ## Insert the Calcium
+    
+    
+    timeSeries2 = cop.advance(50)
+    data2 = cop.createVector(timeSeries2)
+    
+    dataTot = cop.stackData(data, data2)
+    plotSpeces(interestingSpecies, dataTot)
+    
+    
+    
+    pylab.show()
+    
+
+    
