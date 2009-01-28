@@ -9,7 +9,7 @@ print "Load tau Values"
 
 load_file("synapse_templates.hoc")
 
-load_file ("msp_template.hoc")
+load_file ("msp_template2.hoc")
 
 objref msn
 

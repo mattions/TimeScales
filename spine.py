@@ -2,22 +2,26 @@
 # Mon Jan 26 05:54:30 GMT 2009
 
 import nrn
+from neuron import h
 
 class Spine(nrn.Section):
     """Class spine. Extend the section class"""
-    def __init__(self, ):
-        """ Create a spine with a standard volume of ~0.11 um"""
+    def __init__(self):
+        """ Create a spine with a standard volume of ~0.11 um
+        the h is the reference to the main hoc interpreter"""
+        nrn.Section.__init__(self) # Calling the init of the 
         # Volume of a spine ~ 0.11 um 
         # dia = (sqrt (V/(pi*h))) * 2
         self.L = 1
         self.diam =  0.3742
+        self.nseg = 7 
         debug = True
         if debug:
             import math
-            vol = spine.L * (spine.diam/2) * (spine.diam/2) * math.pi
+            vol = self.L * (self.diam/2) * (self.diam/2) * math.pi
             print "Volume of the spine %f" % vol
             
-    def createAMPASyn(self, section, position=0.5):
+    def createAMPASyn(self, position=0.5):
         """Insert an ampa synapse in the section
         
         return syn dictionary where there are:
@@ -31,14 +35,14 @@ class Spine(nrn.Section):
         syn["netStim"].start = 50
         syn["netStim"].noise = 0
         
-        syn["syn"] = h.ampa(position, sec = section)
+        syn["syn"] = h.ampa(position, sec = self)
         
-        syn["netCon"] = h.NetCon(syn["syn"], syn["netStim"])
+        syn["netCon"] = h.NetCon(syn["netStim"], syn["syn"])
         syn["netCon"].weight[0] = 10
         
         return syn
     
-    def createSynapseVecs(syn):
+    def createSynapseVecs(self, syn):
         """Create the vector to measure the activity of the synapse"""
         
         synVecs = {}
@@ -47,3 +51,5 @@ class Spine(nrn.Section):
         
         synVecs["i"] = h.Vector()
         synVecs["i"].record(syn["syn"]._ref_i)
+        
+        return synVecs

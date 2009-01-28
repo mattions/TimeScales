@@ -3,7 +3,7 @@
 // load cell template - builds the cell topology, including inserting
 // channels and synapses
 
-begintemplate MSN
+begintemplate MSP_Cell
 public is_art
 public init, topol, basic_shape, subsets, geom, memb
 public synlist, x, y, z, position, connect2target
@@ -295,7 +295,7 @@ proc position() { local i
 func is_art() { return 0 }
 
 
-endtemplate MSN
+endtemplate MSP_Cell
 
 //**************************************************************************
 
