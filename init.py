@@ -19,10 +19,6 @@ class MyNetStim(neuron.hclass(h.NetStim)):
         print "Start: %d\tInterval:%d\tNoise:%d\tNumber:%d" %(self.start, self.interval,
                                                               self.noise, self.number)
 
-h.load_file("my_init.hoc")
-
-
-
 def stimulGraph(t, stimul):
     """Create a vector of the inputs given to the synapse"""
         # Transforming the vecotr in numpy
@@ -40,16 +36,6 @@ def stimulGraph(t, stimul):
     #return masked
     plot(t, masked, 'k.', label = "stimul")   
     
-
-from spine import *   
-spine = Spine()
-spine.attach(h.MSP_Cell[0].dend1_1[1], 0.5, 0)
-
-ampa = spine.createAMPASyn()
-synVecs = spine.createSynapseVecs(ampa)
-
-
-
 ####### RIG 
 
 def createVecs(spine):
@@ -97,14 +83,22 @@ def plotVoltage(vecs, synVecs):
     ax1.legend(loc=0)
     return ax1 # No really needed but handy
 
-import neuron.gui
-h.load_file("guiRig2.ses")
-
-
-vecs = createVecs(spine)
-
 def go():
     """Just run the model for the time"""
     h.run()
     plotVoltage(vecs, synVecs)
     show()
+
+if __name__ == "__main__":
+    
+    h.load_file("my_init.hoc")
+    from spine import *   
+    spine = Spine()
+    spine.attach(h.MSP_Cell[0].dend1_1[1], 0.5, 0)
+    ampa = spine.createAMPASyn()
+    synVecs = spine.createSynapseVecs(ampa)
+    
+    import neuron.gui
+    h.load_file("guiRig2.ses")
+    
+    vecs = createVecs(spine)
