@@ -151,9 +151,12 @@ class COPASISim:
         dataTot = numpy.vstack((data, data2))
         return dataTot
     
+    def updateModel(self, data):
+        pass
+    
 if __name__ == "__main__":
     
-    def plotSpeces(interestingSpecies, data):
+    def plotSpecies(interestingSpecies, data):
         for sbmlId, name in interestingSpecies.iteritems():
             cop.plotSBMLId(data, sbmlId, name)
             
@@ -164,18 +167,19 @@ if __name__ == "__main__":
                           "species_1" : "Ca"
                           }
     
-    timeSeries = cop.advance(100, initialCondition=True)
+    timeSeries = cop.advance(1, initialCondition=True)
     cop.createSBML2Var(timeSeries)
     data = cop.createVector(timeSeries)
     
     ## Insert the Calcium
+    model = cop.datamodel.getModel()
     
     
-    timeSeries2 = cop.advance(50)
-    data2 = cop.createVector(timeSeries2)
-    
-    dataTot = cop.stackData(data, data2)
-    plotSpeces(interestingSpecies, dataTot)
+#    timeSeries2 = cop.advance(5)
+#    data2 = cop.createVector(timeSeries2)
+#    
+#    dataTot = cop.stackData(data, data2)
+#    plotSpecies(interestingSpecies, dataTot)
     
     
     
