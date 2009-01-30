@@ -49,14 +49,13 @@ def createVecs(spine):
     vecs["v_soma"] = h.Vector()
     vecs["v_soma"].record(h.MSP_Cell[0].soma(0.5)._ref_v)
     
-    vecs["ca_soma"] = h.Vector()
-    vecs["ca_soma"].record(h.MSP_Cell[0].soma(0.5)._ref_cai)
+    vecs["cai_soma"] = h.Vector()
+    vecs["cai_soma"].record(h.MSP_Cell[0].soma(0.5)._ref_cai)
     
-    vecs["ca_dend"] = h.Vector()
-    vecs["ca_dend"].record(spine.parent(0.5)._ref_cai)
+    vecs["cai_dend"] = h.Vector()
+    vecs["cai_dend"].record(spine.parent(0.5)._ref_cai)
 
     vecs["v_dend"] = h.Vector()
-    #vecs["v_dend"].record(spine.parent(0.5)._ref_v)
     vecs["v_dend"].record(spine.parent(0.5)._ref_v)
     
     vecs["v_spine"] = h.Vector()
@@ -71,8 +70,8 @@ def plotVoltage(vecs, synVecs):
     plot(vecs["t"], vecs["v_soma"], label="soma voltage")
     plot(vecs["t"], vecs["v_dend"], label="dendrite voltage")
     plot(vecs["t"], vecs["v_spine"], label="spine voltage")
-    ylabel("voltage [mV]")
-    xlabel("time [ms]")
+    ylabel("Voltage [mV]")
+    xlabel("Time [ms]")
     ax2 = ax1.twinx()
     stimulGraph(vecs["t"], synVecs["stimul"])
     ax2.set_ylim(0,4)
@@ -83,11 +82,22 @@ def plotVoltage(vecs, synVecs):
     ax1.legend(loc=0)
     return ax1 # No really needed but handy
 
+def plotCalcium(vecs):
+    figure()
+    plot(vecs["t"], vecs["cai_soma"], label = "soma")
+    plot(vecs["t"], vecs["cai_dend"], label = "dend")
+    xlabel("Time [ms]")
+    ylabel("Concentration [mM]")
+    legend(loc=0)
+        
 def go():
     """Just run the model for the time"""
     h.run()
     plotVoltage(vecs, synVecs)
+    plotCalcium(vecs)
     show()
+
+
 
 if __name__ == "__main__":
     
@@ -102,3 +112,5 @@ if __name__ == "__main__":
     h.load_file("guiRig2.ses")
     
     vecs = createVecs(spine)
+    
+    ampa["netCon"].weight[0] = 1000
