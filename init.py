@@ -49,17 +49,23 @@ def createVecs(spine):
     vecs["v_soma"] = h.Vector()
     vecs["v_soma"].record(h.MSP_Cell[0].soma(0.5)._ref_v)
     
-    vecs["cai_soma"] = h.Vector()
-    vecs["cai_soma"].record(h.MSP_Cell[0].soma(0.5)._ref_cai)
-    
-    vecs["cai_dend"] = h.Vector()
-    vecs["cai_dend"].record(spine.parent(0.5)._ref_cai)
-
     vecs["v_dend"] = h.Vector()
     vecs["v_dend"].record(spine.parent(0.5)._ref_v)
     
     vecs["v_spine"] = h.Vector()
     vecs["v_spine"].record(spine(0.5)._ref_v)
+    
+    vecs["cai_soma"] = h.Vector()
+    vecs["cai_soma"].record(h.MSP_Cell[0].soma(0.5)._ref_cai)
+    
+    vecs["cai_dend"] = h.Vector()
+    vecs["cai_dend"].record(spine.parent(0.5)._ref_cai)
+    
+    vecs["ica_dend"] = h.Vector()
+    vecs["ica_dend"].record(spine.parent(0.5)._ref_cai)
+    
+    vecs["ical_dend"] = h.Vector()
+    vecs["ical_dend"].record(spine.parent(0.5)._ref_cali)
     
     return vecs
     
@@ -89,14 +95,30 @@ def plotCalcium(vecs):
     xlabel("Time [ms]")
     ylabel("Concentration [mM]")
     legend(loc=0)
+    
+def plotCalciumCurrent(vecs):
+    figure()
+    plot(vecs["t"], vecs["ica_dend"], label = "ica dend")
+    plot(vecs["t"], vecs["ical_dend"], label = "ical dend")
+    xlabel("Time [ms]")
+    ylabel("Concentration [nA]")
+    legend(loc=0)
         
 def go():
     """Just run the model for the time"""
     h.run()
     plotVoltage(vecs, synVecs)
     plotCalcium(vecs)
+    
+    for mech in spine.parent(0.5):
+        print mech.name()
+    plotCalciumCurrent(vecs)
     show()
 
+    
+            
+def plotChannelCurrent():
+    pass
 
 
 if __name__ == "__main__":
@@ -114,3 +136,4 @@ if __name__ == "__main__":
     vecs = createVecs(spine)
     
     ampa["netCon"].weight[0] = 1000
+    
