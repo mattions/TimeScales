@@ -12,7 +12,7 @@ import copasiSim
 
 if __name__ == "__main__":
     
-    copSim = copasiSim.COPASISim(useConc=True)
+    copSim = copasiSim.COPASISim()
     initialCondition = True # use initial Condition
     tStop = 10.0
     data = copSim.createGraph(tStop, initialCondition)

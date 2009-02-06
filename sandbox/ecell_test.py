@@ -1,14 +1,14 @@
 # Author Michele Mattioni
 # Fri Jan 30 15:57:01 GMT 2009
 
-import ecell
+import ecell.Session
 
 
 class EcellManager():
     
     def __init__(self, model="../biochemical_circuits/biomd183.eml"):
         
-        self.ses = ecell.Session()
+        self.ses = ecell.Session.Session()
         
         # Load the model
         self.ses.loadModel(model)

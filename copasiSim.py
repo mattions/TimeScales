@@ -167,13 +167,15 @@ if __name__ == "__main__":
                           "species_1" : "Ca"
                           }
     
-    timeSeries = cop.advance(1, initialCondition=True)
+    timeSeries = cop.advance(60, initialCondition=True)
     cop.createSBML2Var(timeSeries)
     data = cop.createVector(timeSeries)
+    plotSpecies(interestingSpecies, data)
+    
     
     ## Insert the Calcium
     model = cop.datamodel.getModel()
-    
+
     
 #    timeSeries2 = cop.advance(5)
 #    data2 = cop.createVector(timeSeries2)
