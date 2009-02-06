@@ -1,7 +1,7 @@
 # Example given by Lu to run E-Cell
 
-loadModel("modelFile/model_20081212/biomd183_latest2.eml")
-
+#loadModel("modelFile/model_20081212/biomd183_latest2.eml")
+loadModel("../biochemical_circuits/biomd183.eml")
 
 ca =  createEntityStub( 'Variable:/Spine:ca' )
 ca_in = createEntityStub('Process:/Spine:ca_in')
@@ -48,7 +48,7 @@ from ecell.ECDDataFile import *
 
 for aVariableName in List:
 	aDataFile = ECDDataFile( Dict[ aVariableName ].getData() )
-	aDataFile.save("../../Result/result_sameCatotal/"+aVariableName+"_00"+str(iteration)+".ecd")
+	aDataFile.save(aVariableName + ".ecd")
 
 # you MUST write _ca+aNumber
 

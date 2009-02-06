@@ -4,23 +4,27 @@
 import pysces
 import sys
 import numpy
+import pylab
 
-
+name2sbmlId = {"CaMKIIbar" : "parameter_28",
+                              "PP2Bbar" : "parameter_34",
+                              "Ca" : "species_1"
+                              }
 def test1():
-    mod = pysces.model('BIOMD0000000183.xml.psc', 
-                       dir="/home/mattions/Work/model/MSN/Time_scales/trunk/biochemical_circuits")
+    mod = pysces.model('BIOMD0000000183_altered.xml.psc', 
+                       dir="/home/mattions/Work/model/MSN/\
+                       Time_scales/trunk/biochemical_circuits")
     mod.doLoad()
     
     mod.mode_integrator = "CVODE"
     
-    name2sbmlId = {"CaMKIIbar" : "parameter_28",
-                              "PP2Bbar" : "parameter_34",
-                              "Ca" : "species_1"
-                              }
     
-    #c2i = pysces.PyscesInterfaces.Core2interfaces()
+    mod.CVODE_extra_output= [name2sbmlId["CaMKIIbar"], name2sbmlId["PP2Bbar"]]
+    mod.sim_end = 8000
+    mod.sim_points = 100
+    mod.Simulate()
+    return mod
     
-    mod.doSim()
 
 def setupTest():
     mod = pysces.model("testSimple.xml.psc")
@@ -40,11 +44,16 @@ def setupTest():
 #def changeSpecies1(mod):
 #    mod.s1 = 1000
 #    
-    
-    
-mod = setup()    
+#mod = setup()    
 #changeSpecies(mod)
 #mod.sim_end = 10
 #mod.Simulate(userinit=3)
     
-    
+
+        
+mod = test1()
+data = mod.data_sim.getSimData(name2sbmlId["CaMKIIbar"], name2sbmlId["PP2Bbar"])
+pylab.plot(data[:,0], data[:,1], label= "CaMKIIbar")
+pylab.plot(data[:,0], data[:,2], label= "PP2Bbar")
+pylab.show()
+
