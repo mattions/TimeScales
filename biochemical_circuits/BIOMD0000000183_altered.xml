@@ -46,7 +46,7 @@
           <dcterms:W3CDTF>2009-02-09T18:45:50+00:00</dcterms:W3CDTF>
         </dcterms:created>
         <dcterms:modified rdf:parseType="Resource">
-          <dcterms:W3CDTF>2009-02-09T18:45:49+00:00</dcterms:W3CDTF>
+          <dcterms:W3CDTF>2009-02-09T18:52:24+00:00</dcterms:W3CDTF>
         </dcterms:modified>
         <bqmodel:is>
           <rdf:Bag>
@@ -1298,8 +1298,8 @@
     <parameter id="parameter_51" metaid="metaid_0000080" name="KRB" value="1.66e-08"/>
     <parameter id="parameter_52" metaid="metaid_0000081" name="KRC" value="1.74e-05"/>
     <parameter id="parameter_53" metaid="metaid_0000082" name="KRD" value="1.45e-08"/>
-    <parameter constant="false" id="parameter_54" metaid="metaid_0000083" name="alpha"/>
-    <parameter constant="false" id="parameter_55" metaid="metaid_0000084" name="beta"/>
+    
+    
     <parameter constant="false" id="parameter_56" metaid="metaid_0000085" name="gamma"/>
     <parameter constant="false" id="parameter_57" metaid="metaid_0000086" name="delta"/>
     <parameter constant="false" id="parameter_58" metaid="metaid_0000087" name="epsilon" value="4.84976478640786e-05"/>
@@ -1760,15 +1760,7 @@
       </math>
     </assignmentRule>
     
-    <assignmentRule metaid="metaid_0000198" variable="parameter_55">
-      <math xmlns="http://www.w3.org/1998/Math/MathML">
-        <apply>
-          <divide/>
-          <ci> parameter_19 </ci>
-          <ci> parameter_21 </ci>
-        </apply>
-      </math>
-    </assignmentRule>
+    
     <assignmentRule metaid="metaid_0000199" variable="parameter_56">
       <math xmlns="http://www.w3.org/1998/Math/MathML">
         <apply>
