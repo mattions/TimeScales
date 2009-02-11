@@ -161,7 +161,7 @@ if __name__ == "__main__":
             cop.plotSBMLId(data, sbmlId, name)
             
             
-    cop = COPASISim(filename="BIOMD0000000183.xml")
+    cop = COPASISim(filename="BIOMD0000000183_altered.xml")
     interestingSpecies = {"parameter_28" : "CaMKIIbar",
                           "parameter_34": "PP2Bbar",
                           "species_1" : "Ca"
@@ -171,7 +171,8 @@ if __name__ == "__main__":
     cop.createSBML2Var(timeSeries)
     data = cop.createVector(timeSeries)
     plotSpecies(interestingSpecies, data)
-    
+    pylab.legend(loc=0)
+    pylab.title("COPASI")
     
     ## Insert the Calcium
     model = cop.datamodel.getModel()
