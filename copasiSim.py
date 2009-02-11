@@ -167,7 +167,7 @@ if __name__ == "__main__":
                           "species_1" : "Ca"
                           }
     
-    timeSeries = cop.advance(10, initialCondition=True)
+    timeSeries = cop.advance(80, initialCondition=True)
     cop.createSBML2Var(timeSeries)
     data = cop.createVector(timeSeries)
     plotSpecies(interestingSpecies, data)

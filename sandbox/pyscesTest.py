@@ -18,9 +18,10 @@ def test1():
     
     mod.mode_integrator = "CVODE"
     
-    
+    mod.__settings__['cvode_stats'  ] = True
+    mod.__settings__['cvode_stats'  ] = True
     mod.CVODE_extra_output= [name2sbmlId["CaMKIIbar"], name2sbmlId["PP2Bbar"]]
-    mod.sim_end = 8000
+    mod.sim_end = 80
     mod.sim_points = 100
     mod.Simulate()
     return mod
@@ -53,7 +54,7 @@ def setupTest():
         
 mod = test1()
 data = mod.data_sim.getSimData(name2sbmlId["CaMKIIbar"], name2sbmlId["PP2Bbar"])
-pylab.plot(data[:,0], data[:,1], label= "CaMKIIbar")
 pylab.plot(data[:,0], data[:,2], label= "PP2Bbar")
+pylab.plot(data[:,0], data[:,1], label= "CaMKIIbar")
 pylab.show()
 
