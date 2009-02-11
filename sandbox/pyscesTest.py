@@ -41,8 +41,20 @@ def test2():
     mod = pysces.model("testSimple.xml.psc")
     mod.doLoad()
     mod.mode_integrator = "CVODE"
-    mod.sim_end = 30
+    
+    ev1 = pysces.PyscesModel.Event("s1_influx2", mod)
+    timeInflux = 75
+    ev1.setTrigger( ev1._TIME_ >= timeInflux)
+    ev1.setAssignment("s1", "100")
+
+    mod.sim_end = 10
     mod.Simulate(userinit=0)
+    
+    #Change the specie with an event
+    
+
+    mod.sim_end = 100
+    mod.Simulate()
     
     # Change the species
 #    data = mod.data_sim.getSpecies()
