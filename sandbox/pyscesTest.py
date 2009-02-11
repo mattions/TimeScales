@@ -40,29 +40,34 @@ def test2():
     """Test the change of speces"""
     mod = pysces.model("testSimple.xml.psc")
     mod.doLoad()
-    mod.sim_end = 10
+    mod.mode_integrator = "CVODE"
+    mod.sim_end = 30
     mod.Simulate(userinit=0)
     
     # Change the species
-    data = mod.data_sim.getSpecies()
-    species = data[:,1:] # grab everything except the time
-    species[-1:,1] = 10
-    mod.data_sim.setSpecies(species)
-    mod.__settings__['mod_sim_init'] = 3
-    mod.sim_start = mod.sim_end
-    mod.sim_end = 20
-    mod.Simulate(userinit=0)
-    
-    data2 = mod.data_sim.getSpecies()
-    pylab.plot(data[:,0], data[:,1])
-    pylab.plot(data[:,0], data[:,2])
-    pylab.plot(data2[:,0], data2[:,1])
-    pylab.plot(data2[:,0], data2[:,2])
+#    data = mod.data_sim.getSpecies()
+#    species = data[:,1:] # grab everything except the time
+#    species[-1:,1] = 10
+#    mod.data_sim.setSpecies(species)
+#    mod.__settings__['mod_sim_init'] = 3
+#    mod.sim_start = mod.sim_end
+#    mod.sim_end = 20
+#    mod.Simulate(userinit=0)
+#    
+#    data2 = mod.data_sim.getSpecies()
+
+    data = mod.data_sim.getSimData("s1", "s3")
+    pylab.plot(data[:,0], data[:,1], label="s1")
+    pylab.plot(data[:,0], data[:,2], label="s3")
+    pylab.legend(loc=0)
+#    pylab.plot(data2[:,0], data2[:,1])
+#    pylab.plot(data2[:,0], data2[:,2])
 
     return mod
     
 
 
         
-mod = test1() #Unpacking to work in ipython
+#mod = test1() #Unpacking to work in ipython
+mod = test2()
 pylab.show()
