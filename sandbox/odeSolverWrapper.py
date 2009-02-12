@@ -17,7 +17,8 @@ elif os.sys.platform == 'darwin' or os.name == 'mac':
     sbmlOdeSolver = CT.CDLL('/usr/lib/libsbml.dylib', CT.RTLD_GLOBAL)
 else:
     print 'Here be penguins.'
-    sbmlOdeSolver = CT.CDLL('/usr/lib/libsbml.so')
+    #sbmlOdeSolver = CT.CDLL('/usr/lib/libsbml.so')
+    sbmlOdeSolver = CT.CDLL('/usr/local/lib/libODES.so')
 
 #cpath = os.path.dirname(os.path.abspath(os.sys.argv[0]))
 #sbmlF = os.path.join(cpath, 'test_ctypes_libsbml.xml')
