@@ -57,8 +57,17 @@ def getResults(doc, settings):
         sbmlOdeSolver.SolverError_dumpAndClearErrors()
         return results
     
-if __name__ == "__main__":
+def integrate():
+    """Replicate the integrate example using BIOMD183 as model to integrate"""
     #doc = loadModel(model="../biochemical_circuits/testSimple.xml")
-    doc = loadModel(model="../biochemical_circuits/MPAK.xml")
-    settings = settingIntegrationParameter(time=100, printstep=1000)
+    doc = loadModel(model="../biochemical_circuits/BIOMD0000000183_altered.xml")
+    #doc = loadModel(model="../biochemical_circuits/MAPK.xml")
+    settings = settingIntegrationParameter(time=10, printstep=1000)
     results = getResults(doc, settings)
+    
+if __name__ == "__main__":
+    integrate()
+    
+    
+    
+    
