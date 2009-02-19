@@ -42,57 +42,33 @@ def test2():
     mod.doLoad()
     mod.mode_integrator = "CVODE"
 
-    mod.sim_end = 10
+    mod.sim_end = 20
     mod.Simulate(userinit=0)
     
     #Change the specie with an event
 
-    timeInflux = 75
-    newConcentration = 100
-    
-    event = {'delay' : 0,
-             'name' : 'Flux', 
-             'trigger' : '_TIME_ >= ' + str(timeInflux),
-             'assignment' : {'s1' : str(newConcentration)}
-             } 
-    
-    
-    addEvent(event, mod)
-    print "Initializing event"
-    print "Set the event"
-    
+    time = 30
+    newConcentration = 50
+    assignments = { "s1" : str(newConcentration)}
+    addEvent("ev1", time, assignments, mod)
     mod.sim_end = 100
     mod.Simulate()
-    
-    # Change the species
-#    data = mod.data_sim.getSpecies()
-#    species = data[:,1:] # grab everything except the time
-#    species[-1:,1] = 10
-#    mod.data_sim.setSpecies(species)
-#    mod.__settings__['mod_sim_init'] = 3
-#    mod.sim_start = mod.sim_end
-#    mod.sim_end = 20
-#    mod.Simulate(userinit=0)
-#    
-#    data2 = mod.data_sim.getSpecies()
 
     data = mod.data_sim.getSimData("s1", "s3")
     pylab.plot(data[:,0], data[:,1], label="s1")
     pylab.plot(data[:,0], data[:,2], label="s3")
     pylab.legend(loc=0)
-#    pylab.plot(data2[:,0], data2[:,1])
-#    pylab.plot(data2[:,0], data2[:,2])
 
     return mod
 
-def addEvent(event, mod):
+def addEvent(name, time, assignments, mod, delay=0):
     """Add the event to the list of following event"""
-    mod.__eDict__.update ( {event['name'] : {'delay' : event['delay'], 
-                                               'name' : event['name'],
-                                               'trigger' : event['trigger'],
-                                               'assignments' : event['assignment'],
-                                               'tsymb' : None}
-                                               })
+    mod.__eDict__.update ( {name : {'delay' : delay, 
+                                   'name' : name,
+                                   'trigger' : '_TIME_ >= ' + str(time),
+                                   'assignments' : assignments,
+                                   'tsymb' : None} 
+                                   })
     mod.InitialiseEvents()
 
 
