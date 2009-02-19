@@ -41,13 +41,13 @@ def test2():
     mod = pysces.model("testSimple.xml.psc")
     mod.doLoad()
     mod.mode_integrator = "CVODE"
-
-    mod.sim_end = 20
-    mod.Simulate(userinit=0)
+    mod.sim_points = 1000
+    #mod.sim_end = 20
+    #mod.Simulate(userinit=0)
     
     #Change the specie with an event
 
-    time = 30
+    time = 10.001
     newConcentration = 50
     assignments = { "s1" : str(newConcentration)}
     addEvent("ev1", time, assignments, mod)
