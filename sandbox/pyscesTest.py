@@ -41,18 +41,26 @@ def test2():
     mod = pysces.model("testSimple.xml.psc")
     mod.doLoad()
     mod.mode_integrator = "CVODE"
-    
-    ev1 = pysces.PyscesModel.Event("s1_influx2", mod)
-    timeInflux = 75
-    ev1.setTrigger( ev1._TIME_ >= timeInflux)
-    ev1.setAssignment("s1", "100")
 
     mod.sim_end = 10
     mod.Simulate(userinit=0)
     
     #Change the specie with an event
-    
 
+    timeInflux = 75
+    newConcentration = 100
+    
+    event = {'delay' : 0,
+             'name' : 'Flux', 
+             'trigger' : '_TIME_ >= ' + str(timeInflux),
+             'assignment' : {'s1' : str(newConcentration)}
+             } 
+    
+    
+    addEvent(event, mod)
+    print "Initializing event"
+    print "Set the event"
+    
     mod.sim_end = 100
     mod.Simulate()
     
@@ -76,7 +84,16 @@ def test2():
 #    pylab.plot(data2[:,0], data2[:,2])
 
     return mod
-    
+
+def addEvent(event, mod):
+    """Add the event to the list of following event"""
+    mod.__eDict__.update ( {event['name'] : {'delay' : event['delay'], 
+                                               'name' : event['name'],
+                                               'trigger' : event['trigger'],
+                                               'assignments' : event['assignment'],
+                                               'tsymb' : None}
+                                               })
+    mod.InitialiseEvents()
 
 
         
