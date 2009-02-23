@@ -22,17 +22,18 @@ else:
 ########################################################
 
 
-def loadModel(model):
+def loadModel(filename):
     """Parse the SBML model
     return the doc handle to the model"""
     # Parsing the model with sbml library
     sbmlReader = sbmlOdeSolver.SBMLReader_create()
-    doc = sbmlOdeSolver.SBMLReader_readSBML(sbmlReader, model)
+    doc = sbmlOdeSolver.SBMLReader_readSBML(sbmlReader, filename)
     return doc
 
 def settingIntegrationParameter(time=10, printstep=100):
     """Set the integration parameters and the integration time"""
     settings = sbmlOdeSolver.CvodeSettings_create()
+    print time, printstep
     sbmlOdeSolver.CvodeSettings_setTime(settings, CT.c_double(time), CT.c_int(printstep) )
     absoluteErrorTollerance = CT.c_double(1e-9)
     relativeErrorTollerance = CT.c_double(1e-4)
@@ -53,21 +54,38 @@ def getResults(doc, settings):
         print sbmlOdeSolver.SolverError_dumpAndClearErrors()
         #return sbmlOdeSolver.EXIT_FAILURE
     else:
-        sbmlOdeSolver.SBMLResults_dump(results)
         sbmlOdeSolver.SolverError_dumpAndClearErrors()
         return results
     
 def integrate():
     """Replicate the integrate example using BIOMD183 as model to integrate"""
-    #doc = loadModel(model="../biochemical_circuits/testSimple.xml")
-    doc = loadModel(model="../biochemical_circuits/BIOMD0000000183_altered.xml")
-    #doc = loadModel(model="../biochemical_circuits/MAPK.xml")
-    settings = settingIntegrationParameter(time=10, printstep=1000)
+    doc = loadModel(filename="../biochemical_circuits/testSimple.xml")
+    #doc = loadModel(filename="../biochemical_circuits/BIOMD0000000183_altered.xml")
+    #doc = loadModel(filename="../biochemical_circuits/MAPK.xml")
+    settings = settingIntegrationParameter(time=10, printstep=10)
     results = getResults(doc, settings)
+    return results
+    
     
 if __name__ == "__main__":
-    integrate()
+    results = integrate()
+    # Printing the results of the integration
+    sbmlOdeSolver.SBMLResults_dump(results)
     
+    # Getting the timeCourse
+    #timeCourse = sbmlOdeSolver.SBMLResults_getTimeCourse(results, "MKK_PP")
+    timeCourse = sbmlOdeSolver.SBMLResults_getTimeCourse(results, "s1")
     
+    # Check the name
+    print "\n\n\nName of the variable retrieved: %s" %sbmlOdeSolver.TimeCourse_getName(timeCourse)
     
+    # Get the time points
+    timePoints = sbmlOdeSolver.TimeCourse_getNumValues(timeCourse)
+    print "number of timepoints: %d" %timePoints
     
+    values = []
+    for i in range(timePoints):
+        values.append(sbmlOdeSolver.TimeCourse_getValue(timeCourse, i))
+    
+    print "Values over time:"
+    print values
