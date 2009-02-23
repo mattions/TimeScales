@@ -59,9 +59,9 @@ def getResults(doc, settings):
     
 def integrate():
     """Replicate the integrate example using BIOMD183 as model to integrate"""
-    doc = loadModel(filename="../biochemical_circuits/testSimple.xml")
+    #doc = loadModel(filename="../biochemical_circuits/testSimple.xml")
     #doc = loadModel(filename="../biochemical_circuits/BIOMD0000000183_altered.xml")
-    #doc = loadModel(filename="../biochemical_circuits/MAPK.xml")
+    doc = loadModel(filename="../biochemical_circuits/MAPK.xml")
     settings = settingIntegrationParameter(time=10, printstep=10)
     results = getResults(doc, settings)
     return results
@@ -73,10 +73,11 @@ if __name__ == "__main__":
     sbmlOdeSolver.SBMLResults_dump(results)
     
     # Getting the timeCourse
-    #timeCourse = sbmlOdeSolver.SBMLResults_getTimeCourse(results, "MKK_PP")
-    timeCourse = sbmlOdeSolver.SBMLResults_getTimeCourse(results, "s1")
+    timeCourse = sbmlOdeSolver.SBMLResults_getTimeCourse(results, CT.c_char_p("MKK_PP"))
+    #timeCourse = sbmlOdeSolver.SBMLResults_getTimeCourse(results, "s1")
     
     # Check the name
+    sbmlOdeSolver.TimeCourse_getName.restype = CT.c_char_p
     print "\n\n\nName of the variable retrieved: %s" %sbmlOdeSolver.TimeCourse_getName(timeCourse)
     
     # Get the time points
@@ -84,8 +85,9 @@ if __name__ == "__main__":
     print "number of timepoints: %d" %timePoints
     
     values = []
+    sbmlOdeSolver.TimeCourse_getValue.restype = CT.c_double
     for i in range(timePoints):
-        values.append(sbmlOdeSolver.TimeCourse_getValue(timeCourse, i))
+        values.append(sbmlOdeSolver.TimeCourse_getValue(timeCourse, CT.c_int(i)))
     
     print "Values over time:"
     print values
