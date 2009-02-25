@@ -29,6 +29,8 @@ def setReturnType():
     
     sbmlOdeSolver.TimeCourse_getName.restype = CT.c_char_p # Return a string
     sbmlOdeSolver.TimeCourse_getValue.restype = CT.c_double # Return a double
+    sbmlOdeSolver.IntegratorInstance_getVariableValue.restype = CT.c_double
+    sbmlOdeSolver.IntegratorInstance_getTime.restype = CT.c_double
 
 def loadModel(filename):
     """Parse the SBML model
@@ -88,35 +90,88 @@ def retrieveTimecourses(results, sbmlId):
     val = numpy.array(values)
     return numpy.column_stack((time, val)) # timecourse
     
-def integrate(filename, time, printstep):
+def integrate(filename, time, printstep, variables):
     """Integrate a model"""
     setReturnType()
     doc = loadModel(filename)
     settings = settingIntegrationParameter(time, printstep)
     results = getResults(doc, settings)
+    plotTimeCourses(results, variables)
+ 
     return results
+
+def plotTimeCourses(results, variables):
+       # Getting the timeCourse
+    tcDict = {}
+    for var in variables:
+        tcDict[var] = retrieveTimecourses(results, var)
+        
+    for var, tc in tcDict.iteritems():
+        pylab.plot(tc[:,0], tc[:,1], label=var)
+
+    pylab.legend(loc=0)
+    pylab.show()
     
+    
+def changeValue():
+    pass
     
 if __name__ == "__main__":
-    
-    name2id = {"CaMKIIbar" : "parameter_28",
-                              "PP2Bbar" : "parameter_34",
-                              "Ca" : "species_1"
+    setReturnType()
+    name2id = {"parameter_28" : "CaMKIIbar", 
+               "parameter_34" : "PP2Bbar",
+               "species_1" : "Ca"
                               }
-    filename="../biochemical_circuits/testSimple.xml"
-    #filename="../biochemical_circuits/BIOMD0000000183_altered.xml"
-    time=10
-    printstep=100
-    
-    results = integrate(filename, time, printstep)
-    
-    # Getting the timeCourse
-    tc_s1 = retrieveTimecourses(results, "s1")
-    tc_s3 = retrieveTimecourses(results, "s3")
-    
-    
 
-    pylab.plot(tc_s1[:,0], tc_s1[:,1], label="s1")
-    pylab.plot(tc_s3[:,0], tc_s3[:,1], label="s3")
+    #filename="../biochemical_circuits/BIOMD0000000183_altered.xml"
+    #variables = name2id.keys()
+    
+    filename="../biochemical_circuits/testSimple.xml"
+    variables = ["s1","s3"]
+    
+    #esults = integrate(filename, 500, 500, variables)
+    odeModel = sbmlOdeSolver.ODEModel_createFromFile(filename)
+    s1_idx = sbmlOdeSolver.ODEModel_getVariableIndex(odeModel, "s1")
+    settings = sbmlOdeSolver.CvodeSettings_create()
+    
+    endTime = 200
+    printstep = endTime * 1000 #ms
+    sbmlOdeSolver.CvodeSettings_setTime(settings, CT.c_double(endTime), 
+                                        CT.c_int(printstep))
+    
+    absoluteErrorTollerance = CT.c_double(1e-9)
+    relativeErrorTollerance = CT.c_double(1e-4)
+    mxStep = CT.c_int(1000)
+    sbmlOdeSolver.CvodeSettings_setErrors(settings, absoluteErrorTollerance, 
+                                          relativeErrorTollerance, mxStep)
+    sbmlOdeSolver.CvodeSettings_setSwitches(settings, 1, 0, 0, 0, 1, 0, 0)
+    
+    print "Creating the integrator instance"
+    integratorInstance = sbmlOdeSolver.IntegratorInstance_create(odeModel, settings)
+    
+    
+    print "integrating"
+    s1_l = []
+    for i in range (sbmlOdeSolver.CvodeSettings_getPrintsteps(settings)):
+        sbmlOdeSolver.IntegratorInstance_integrateOneStep(integratorInstance)
+        s1_value = sbmlOdeSolver.IntegratorInstance_getVariableValue(integratorInstance,s1_idx)
+        s1_l.append(s1_value)
+        if i == 50000:
+            sbmlOdeSolver.IntegratorInstance_setVariableValue(integratorInstance, 
+                                                              s1_idx, CT.c_double(0.4))
+        #print s1_value, sbmlOdeSolver.IntegratorInstance_getTime(integratorInstance)
+        
+    print "Out of the for loop"
+    sbmlOdeSolver.IntegratorInstance_dumpSolver(integratorInstance)
+    s1 = numpy.array(s1_l)
+    time = numpy.arange(printstep)
+    
+    pylab.plot(time, s1, label="s1")
     pylab.show()
+    #results = sbmlOdeSolver.SBMLResults_fromIntegrator(odeModel, integratorInstance)
+     
+        
+     
+    
+    #plotTimeCourses(results, variables)
     
