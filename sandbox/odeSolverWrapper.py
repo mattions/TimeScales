@@ -3,6 +3,8 @@
 
 import os
 import ctypes as CT
+import numpy
+import pylab
 
 # in theory this whole thing should be platform independent
 # note: Change the name of the library
@@ -18,9 +20,15 @@ elif os.sys.platform == 'darwin' or os.name == 'mac':
 else:
     print 'Here be penguins.'
     sbmlOdeSolver = CT.CDLL('/usr/local/lib/libODES.so')
+    
 
 ########################################################
 
+def setReturnType(): 
+    """Set the return type in an appropriate way"""
+    
+    sbmlOdeSolver.TimeCourse_getName.restype = CT.c_char_p # Return a string
+    sbmlOdeSolver.TimeCourse_getValue.restype = CT.c_double # Return a double
 
 def loadModel(filename):
     """Parse the SBML model
@@ -30,7 +38,7 @@ def loadModel(filename):
     doc = sbmlOdeSolver.SBMLReader_readSBML(sbmlReader, filename)
     return doc
 
-def settingIntegrationParameter(time=10, printstep=100):
+def settingIntegrationParameter(time, printstep):
     """Set the integration parameters and the integration time"""
     settings = sbmlOdeSolver.CvodeSettings_create()
     print time, printstep
@@ -57,37 +65,58 @@ def getResults(doc, settings):
         sbmlOdeSolver.SolverError_dumpAndClearErrors()
         return results
     
-def integrate():
-    """Replicate the integrate example using BIOMD183 as model to integrate"""
-    #doc = loadModel(filename="../biochemical_circuits/testSimple.xml")
-    #doc = loadModel(filename="../biochemical_circuits/BIOMD0000000183_altered.xml")
-    doc = loadModel(filename="../biochemical_circuits/MAPK.xml")
-    settings = settingIntegrationParameter(time=10, printstep=10)
+def retrieveTimecourses(results, sbmlId):
+    """Return the time and the values of the sbml Variable.
+    :Parameter
+        results: the integration results
+        sbmlId: the sbml variable to retrieve
+    :Return
+        timecourse: numpy array with: 
+            first column: the time points
+            second column: the values"""
+        
+    timeCourse = sbmlOdeSolver.SBMLResults_getTimeCourse(results, sbmlId)
+    timePoints = sbmlOdeSolver.TimeCourse_getNumValues(timeCourse)
+    #print "number of timepoints: %d" %timePoints
+    
+    values = []
+
+    for i in range(timePoints):
+        values.append(sbmlOdeSolver.TimeCourse_getValue(timeCourse, CT.c_int(i)))
+    time = numpy.arange(timePoints)
+    
+    val = numpy.array(values)
+    return numpy.column_stack((time, val)) # timecourse
+    
+def integrate(filename, time, printstep):
+    """Integrate a model"""
+    setReturnType()
+    doc = loadModel(filename)
+    settings = settingIntegrationParameter(time, printstep)
     results = getResults(doc, settings)
     return results
     
     
 if __name__ == "__main__":
-    results = integrate()
-    # Printing the results of the integration
-    sbmlOdeSolver.SBMLResults_dump(results)
+    
+    name2id = {"CaMKIIbar" : "parameter_28",
+                              "PP2Bbar" : "parameter_34",
+                              "Ca" : "species_1"
+                              }
+    filename="../biochemical_circuits/testSimple.xml"
+    #filename="../biochemical_circuits/BIOMD0000000183_altered.xml"
+    time=10
+    printstep=100
+    
+    results = integrate(filename, time, printstep)
     
     # Getting the timeCourse
-    timeCourse = sbmlOdeSolver.SBMLResults_getTimeCourse(results, CT.c_char_p("MKK_PP"))
-    #timeCourse = sbmlOdeSolver.SBMLResults_getTimeCourse(results, "s1")
+    tc_s1 = retrieveTimecourses(results, "s1")
+    tc_s3 = retrieveTimecourses(results, "s3")
     
-    # Check the name
-    sbmlOdeSolver.TimeCourse_getName.restype = CT.c_char_p
-    print "\n\n\nName of the variable retrieved: %s" %sbmlOdeSolver.TimeCourse_getName(timeCourse)
     
-    # Get the time points
-    timePoints = sbmlOdeSolver.TimeCourse_getNumValues(timeCourse)
-    print "number of timepoints: %d" %timePoints
+
+    pylab.plot(tc_s1[:,0], tc_s1[:,1], label="s1")
+    pylab.plot(tc_s3[:,0], tc_s3[:,1], label="s3")
+    pylab.show()
     
-    values = []
-    sbmlOdeSolver.TimeCourse_getValue.restype = CT.c_double
-    for i in range(timePoints):
-        values.append(sbmlOdeSolver.TimeCourse_getValue(timeCourse, CT.c_int(i)))
-    
-    print "Values over time:"
-    print values
