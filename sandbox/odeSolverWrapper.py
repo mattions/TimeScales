@@ -113,8 +113,54 @@ def plotTimeCourses(results, variables):
     pylab.show()
     
     
-def changeValue():
-    pass
+def changeValue(odemodel, settings, var_idx):
+    print "Creating the integrator instance"
+    integratorInstance = sbmlOdeSolver.IntegratorInstance_create(odeModel, settings)
+    
+    vars = var_idx.keys()
+    vars_val = {}
+    for var in vars:
+        vars_val[var] = []
+    printstep = sbmlOdeSolver.CvodeSettings_getPrintsteps(settings)
+    for i in range (printstep):
+        sbmlOdeSolver.IntegratorInstance_integrateOneStep(integratorInstance)
+        for var in var_idx:
+            var_value = sbmlOdeSolver.IntegratorInstance_getVariableValue(integratorInstance, 
+                                                                          var_idx[var]) 
+
+            vars_val[var].append(var_value)
+            if i == 50000:
+                sbmlOdeSolver.IntegratorInstance_setVariableValue(integratorInstance, 
+                                                              var_idx["s1"], CT.c_double(0.4))
+        #print s1_value, sbmlOdeSolver.IntegratorInstance_getTime(integratorInstance)
+        
+    print "Out of the for loop"
+    sbmlOdeSolver.IntegratorInstance_dumpSolver(integratorInstance)
+    return vars_val
+
+def plotVars(vars_val, printstep):
+    time = numpy.arange(printstep)
+    for var in vars_val:
+        var_tc = numpy.array(vars_val[var])
+        pylab.plot(time, var_tc, label=var)
+    
+
+    pylab.show()
+ 
+def setSettings(endtTime):
+    settings = sbmlOdeSolver.CvodeSettings_create()
+    
+    printstep = endTime * 1000 #ms
+    sbmlOdeSolver.CvodeSettings_setTime(settings, CT.c_double(endTime), 
+                                        CT.c_int(printstep))
+    
+    absoluteErrorTollerance = CT.c_double(1e-9)
+    relativeErrorTollerance = CT.c_double(1e-4)
+    mxStep = CT.c_int(1000)
+    sbmlOdeSolver.CvodeSettings_setErrors(settings, absoluteErrorTollerance, 
+                                          relativeErrorTollerance, mxStep)
+    sbmlOdeSolver.CvodeSettings_setSwitches(settings, 1, 0, 0, 0, 1, 0, 0)
+    return settings    
     
 if __name__ == "__main__":
     setReturnType()
@@ -128,46 +174,26 @@ if __name__ == "__main__":
     
     filename="../biochemical_circuits/testSimple.xml"
     variables = ["s1","s3"]
-    
-    #esults = integrate(filename, 500, 500, variables)
+
     odeModel = sbmlOdeSolver.ODEModel_createFromFile(filename)
-    s1_idx = sbmlOdeSolver.ODEModel_getVariableIndex(odeModel, "s1")
-    settings = sbmlOdeSolver.CvodeSettings_create()
+
+    var_idx = {}
+    for var in variables:
+        var_idx[var] = sbmlOdeSolver.ODEModel_getVariableIndex(odeModel, var)
     
     endTime = 200
-    printstep = endTime * 1000 #ms
-    sbmlOdeSolver.CvodeSettings_setTime(settings, CT.c_double(endTime), 
-                                        CT.c_int(printstep))
+    settings = setSettings(endTime)
+    vars_val = changeValue(odeModel, settings, var_idx)
+    printstep = sbmlOdeSolver.CvodeSettings_getPrintsteps(settings)
+    plotVars(vars_val, printstep)
     
-    absoluteErrorTollerance = CT.c_double(1e-9)
-    relativeErrorTollerance = CT.c_double(1e-4)
-    mxStep = CT.c_int(1000)
-    sbmlOdeSolver.CvodeSettings_setErrors(settings, absoluteErrorTollerance, 
-                                          relativeErrorTollerance, mxStep)
-    sbmlOdeSolver.CvodeSettings_setSwitches(settings, 1, 0, 0, 0, 1, 0, 0)
     
-    print "Creating the integrator instance"
-    integratorInstance = sbmlOdeSolver.IntegratorInstance_create(odeModel, settings)
+    
+
     
     
     print "integrating"
-    s1_l = []
-    for i in range (sbmlOdeSolver.CvodeSettings_getPrintsteps(settings)):
-        sbmlOdeSolver.IntegratorInstance_integrateOneStep(integratorInstance)
-        s1_value = sbmlOdeSolver.IntegratorInstance_getVariableValue(integratorInstance,s1_idx)
-        s1_l.append(s1_value)
-        if i == 50000:
-            sbmlOdeSolver.IntegratorInstance_setVariableValue(integratorInstance, 
-                                                              s1_idx, CT.c_double(0.4))
-        #print s1_value, sbmlOdeSolver.IntegratorInstance_getTime(integratorInstance)
-        
-    print "Out of the for loop"
-    sbmlOdeSolver.IntegratorInstance_dumpSolver(integratorInstance)
-    s1 = numpy.array(s1_l)
-    time = numpy.arange(printstep)
-    
-    pylab.plot(time, s1, label="s1")
-    pylab.show()
+
     #results = sbmlOdeSolver.SBMLResults_fromIntegrator(odeModel, integratorInstance)
      
         
