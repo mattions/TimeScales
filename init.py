@@ -61,11 +61,14 @@ def createVecs(spine):
     vecs["cai_dend"] = h.Vector()
     vecs["cai_dend"].record(spine.parent(0.5)._ref_cai)
     
+    vecs["cali_dend"] = h.Vector()
+    vecs["cali_dend"].record(spine.parent(0.5)._ref_cali)
+    
     vecs["ica_dend"] = h.Vector()
-    vecs["ica_dend"].record(spine.parent(0.5)._ref_cai)
+    vecs["ica_dend"].record(spine.parent(0.5)._ref_ica)
     
     vecs["ical_dend"] = h.Vector()
-    vecs["ical_dend"].record(spine.parent(0.5)._ref_cali)
+    vecs["ical_dend"].record(spine.parent(0.5)._ref_ical)
     
     return vecs
     
@@ -91,7 +94,8 @@ def plotVoltage(vecs, synVecs):
 def plotCalcium(vecs):
     figure()
     plot(vecs["t"], vecs["cai_soma"], label = "soma")
-    plot(vecs["t"], vecs["cai_dend"], label = "dend")
+    plot(vecs["t"], vecs["cai_dend"], label = "dend cai")
+    plot(vecs["t"], vecs["cali_dend"], label = "dend cali")
     xlabel("Time [ms]")
     ylabel("Concentration [mM]")
     legend(loc=0)
@@ -101,7 +105,7 @@ def plotCalciumCurrent(vecs):
     plot(vecs["t"], vecs["ica_dend"], label = "ica dend")
     plot(vecs["t"], vecs["ical_dend"], label = "ical dend")
     xlabel("Time [ms]")
-    ylabel("Concentration [nA]")
+    ylabel("Current [nA]")
     legend(loc=0)
         
 def go():
@@ -136,4 +140,5 @@ if __name__ == "__main__":
     vecs = createVecs(spine)
     
     ampa["netCon"].weight[0] = 1000
+    go()
     

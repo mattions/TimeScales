@@ -122,19 +122,26 @@ def changeValue(odemodel, settings, var_idx):
     for var in vars:
         vars_val[var] = []
     printstep = sbmlOdeSolver.CvodeSettings_getPrintsteps(settings)
+    caInput = calciumTrain(60000)
     for i in range (printstep):
         sbmlOdeSolver.IntegratorInstance_integrateOneStep(integratorInstance)
+        
+   #     if i == 50000:
+            #sbmlOdeSolver.IntegratorInstance_setVariableValue(integratorInstance, var_idx["s1"], CT.c_double(0.4))
+  #          sbmlOdeSolver.IntegratorInstance_setVariableValue(integratorInstance, var_idx["species_1"], CT.c_double(0.004))
+    #print s1_value, sbmlOdeSolver.IntegratorInstance_getTime(integratorInstance)
+#        if i == 55000:
+ #           sbmlOdeSolver.IntegratorInstance_setVariableValue(integratorInstance, var_idx["species_1"], CT.c_double(0.008))
+        if i in caInput:
+            sbmlOdeSolver.IntegratorInstance_setVariableValue(integratorInstance, var_idx["species_1"], CT.c_double(0.08))
+            print "input Calcium at time: %d" %i
+            
         for var in var_idx:
             var_value = sbmlOdeSolver.IntegratorInstance_getVariableValue(integratorInstance, 
                                                                           var_idx[var]) 
 
             vars_val[var].append(var_value)
-            if i == 50000:
-                #sbmlOdeSolver.IntegratorInstance_setVariableValue(integratorInstance, var_idx["s1"], CT.c_double(0.4))
-                sbmlOdeSolver.IntegratorInstance_setVariableValue(integratorInstance, var_idx["species_1"], CT.c_double(0.004))
-        #print s1_value, sbmlOdeSolver.IntegratorInstance_getTime(integratorInstance)
-            if i == 55000:
-                sbmlOdeSolver.IntegratorInstance_setVariableValue(integratorInstance, var_idx["species_1"], CT.c_double(0.008))
+
         
     print "Out of the for loop"
     sbmlOdeSolver.IntegratorInstance_dumpSolver(integratorInstance)
@@ -145,10 +152,34 @@ def plotVars(vars_val, printstep):
     for var in vars_val:
         var_tc = numpy.array(vars_val[var])
         pylab.plot(time, var_tc, label=var)
-    
-
     pylab.show()
- 
+    
+def calciumTrain(start, spikes=30, interval=100):
+    caInput = [start]
+    for spike in range(spikes):
+        caInput.append(caInput[-1] + interval)
+    return caInput
+
+def expDecay(ca0, time, k = 4.0e8):
+    """Simple exponential decay
+    k coming from Lu model"""
+    y = ca0 * k  * exp(-time)
+    return y
+
+def calcium_peak(ca_input, time, integratorInstance):
+    """
+    7200 molecules have to go in.
+    """
+    
+    basal = sbmlOdeSolver.IntegratorInstance_getVariableValue(integratorInstance, 
+                                                              var_idx[name2id['Ca']])
+    #basal = ca_in['k']
+    print "basal calcium: %d" %basal
+    sbmlOdeSolver.IntegratorInstance_setVariableValue(integratorInstance, 
+                                                      var_idx[name2id['Ca']], 
+                                                      CT.c_double(expDecay(calConc(7200), time) ))
+    
+    
 def setSettings(endtTime):
     settings = sbmlOdeSolver.CvodeSettings_create()
     
@@ -188,18 +219,4 @@ if __name__ == "__main__":
     vars_val = changeValue(odeModel, settings, var_idx)
     printstep = sbmlOdeSolver.CvodeSettings_getPrintsteps(settings)
     plotVars(vars_val, printstep)
-    
-    
-    
 
-    
-    
-    print "integrating"
-
-    #results = sbmlOdeSolver.SBMLResults_fromIntegrator(odeModel, integratorInstance)
-     
-        
-     
-    
-    #plotTimeCourses(results, variables)
-    
