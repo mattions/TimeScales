@@ -11,6 +11,7 @@ class SOSWrap:
     """Wrapper class built around the SBMLOdeSolver Library"""
     
     def __init__(self):
+        
         # in theory this whole thing should be platform independent
         # note: Change the name of the library
         if os.sys.platform == 'win32':
@@ -79,7 +80,8 @@ class SOSWrap:
         print "integration running till: %d" %printstep
         #print caInput
         for i in range (printstep):
-            
+            self.soslib.IntegratorInstance_setVariableValue(integratorInstance, var_idx["species_1"], 
+                                                            CT.c_double(0.0))
             self.soslib.IntegratorInstance_integrateOneStep(integratorInstance)
             
             #Calcium conc coming from the conc.
@@ -133,34 +135,25 @@ class SOSWrap:
             caInput.append(caInput[-1] + interval)
         return caInput
     
-    def calciumDynamics(self, time, caInput):
-        basal = 0.00006 # What is the basal value?
-        if len(caInput) == 1: # Last term
-            ca = self.calciumPeak(7200, time)
-            print ca, time, basal
-            caInput.pop(0)
-            if ca > basal:
-                return ca
-            else: 
-                return basal
-        elif time >= caInput[0] and time < caInput[1] :
-            ca = self.calcium_peak(7200, time)
-            caInput.pop(0)
-            if ca > basal:
-                return ca
-            else: 
-                return basal
-        else:
-            return basal
+    def calciumDynamics(self, t, caInput):
+        if t in caInput:
+            pass
             
+
+    def calciumSpike(self):
+        ca_tc =[]
+        for t in range(100):
+            ca = self.calciumPeak(7200, t, k)
+            ca_tc.append(ca_tc)
+        return ca_tc
     
-    def calciumPeak(self, ca0, time, k = 4.0e8):
+    def calciumPeak(self, ca0, t, k = 4.0e8):
         """
         7200 molecules have to go in.
         Simple exponential decay
         k coming from Lu model"""
         
-        ca = ca0 * k  * exp(-time)
+        ca = ca0 * k  * pylab.exp(-t)
         return ca
         
     def setSettings(self, endtTime, resolution):
@@ -203,10 +196,18 @@ if __name__ == "__main__":
     for var in variables:
         var_idx[var] = sosWrap.soslib.ODEModel_getVariableIndex(odeModel, var)
     
-    endTime = 10    
-    resolution = 1000 # This determine the timesteps of the model. 1000 = ms
+    endTime = 100
+    resolution = int(1e3) # This determine the timesteps of the model. 1e3 = ms
     settings = sosWrap.setSettings(endTime, resolution)
     vars_val = sosWrap.changeValue(odeModel, settings, var_idx)
     printstep = sosWrap.soslib.CvodeSettings_getPrintsteps(settings)
     sosWrap.plotVars(vars_val, endTime, resolution)
-
+    
+    caInput = sosWrap.calciumTrain(30, 10, 12)
+    ca_tc = []
+    time = numpy.arange(10000)
+    
+    for t in time:
+        ca = sosWrap.calciumDynamics(t, caInput)
+        ca_tc.append(ca)
+    
