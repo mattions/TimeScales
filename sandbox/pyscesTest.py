@@ -21,10 +21,27 @@ def test1():
                        Time_scales/trunk/biochemical_circuits")
     mod.doLoad()
     
+    # CVODE settings
     mod.mode_integrator = "CVODE"
+    mod.__settings__['cvode_abstol'] = 1e-20
+    mod.__settings__['cvode_reltol'] = 1e-10
+    mod.__settings__['mxstep'] = 3000
+    mod.__settings__['cvode_stats'] = True
+    
+    
     mod.CVODE_extra_output= [name2sbmlId["CaMKIIbar"], name2sbmlId["PP2Bbar"]]
-    mod.sim_end = 80
+    mod.sim_end = 4000
     mod.sim_points = 1000
+    
+    ######
+    #
+    # Calcium input
+    newConcentration = 1.19e-5 # 7200 mol
+    assignments = { name2sbmlId['Ca'] : str(newConcentration)}
+    addEvent("calciumInflux", 2000, assignments, mod) #Adding one only Calcium input
+    
+    
+    
     mod.Simulate()
     data = mod.data_sim.getSimData(name2sbmlId["PP2Bbar"], name2sbmlId["CaMKIIbar"], 
                                name2sbmlId['Ca'])
@@ -73,6 +90,6 @@ def addEvent(name, time, assignments, mod, delay=0):
 
 
         
-#mod = test1() #Unpacking to work in ipython
-mod = test2()
+mod = test1() #Unpacking to work in ipython
+#mod = test2()
 pylab.show()

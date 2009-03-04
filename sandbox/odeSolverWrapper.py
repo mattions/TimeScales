@@ -122,24 +122,22 @@ def changeValue(odemodel, settings, var_idx):
     for var in vars:
         vars_val[var] = []
     printstep = sbmlOdeSolver.CvodeSettings_getPrintsteps(settings)
-    caInput = calciumTrain(60000)
+    #caInput = calciumTrain(60000)
     for i in range (printstep):
+        
         sbmlOdeSolver.IntegratorInstance_integrateOneStep(integratorInstance)
         
-   #     if i == 50000:
-            #sbmlOdeSolver.IntegratorInstance_setVariableValue(integratorInstance, var_idx["s1"], CT.c_double(0.4))
-  #          sbmlOdeSolver.IntegratorInstance_setVariableValue(integratorInstance, var_idx["species_1"], CT.c_double(0.004))
+        
     #print s1_value, sbmlOdeSolver.IntegratorInstance_getTime(integratorInstance)
 #        if i == 55000:
  #           sbmlOdeSolver.IntegratorInstance_setVariableValue(integratorInstance, var_idx["species_1"], CT.c_double(0.008))
-        if i in caInput:
-            sbmlOdeSolver.IntegratorInstance_setVariableValue(integratorInstance, var_idx["species_1"], CT.c_double(0.08))
-            print "input Calcium at time: %d" %i
-            
+#        if i in caInput:
+#            sbmlOdeSolver.IntegratorInstance_setVariableValue(integratorInstance, var_idx["species_1"], CT.c_double(0.08))
+#            print "input Calcium at time: %d" %i
+#            
         for var in var_idx:
             var_value = sbmlOdeSolver.IntegratorInstance_getVariableValue(integratorInstance, 
-                                                                          var_idx[var]) 
-
+                                                                          var_idx[var])
             vars_val[var].append(var_value)
 
         
@@ -150,8 +148,10 @@ def changeValue(odemodel, settings, var_idx):
 def plotVars(vars_val, printstep):
     time = numpy.arange(printstep)
     for var in vars_val:
+        pylab.figure()
         var_tc = numpy.array(vars_val[var])
-        pylab.plot(time, var_tc, label=var)
+        pylab.plot(time, var_tc, label=id2name[var])
+        pylab.legend(loc=0)
     pylab.show()
     
 def calciumTrain(start, spikes=30, interval=100):
@@ -160,30 +160,43 @@ def calciumTrain(start, spikes=30, interval=100):
         caInput.append(caInput[-1] + interval)
     return caInput
 
+def calciumDynamics(time, start):
+    basal = 0.00006 # What is the basal value?
+    if time > start: 
+        
+#        NO RIPENSA L'ALGORITMO!
+#    il calcio deve essere scrito solo se  nel picco,
+#    altrimenti dai il basal.
+    
+        ca = calcium_peak(7200, time)
+
 def expDecay(ca0, time, k = 4.0e8):
     """Simple exponential decay
     k coming from Lu model"""
     y = ca0 * k  * exp(-time)
     return y
 
-def calcium_peak(ca_input, time, integratorInstance):
+def calcium_peak(ca0, time):
     """
     7200 molecules have to go in.
-    """
+    Simple exponential decay
+    k coming from Lu model"""
     
-    basal = sbmlOdeSolver.IntegratorInstance_getVariableValue(integratorInstance, 
-                                                              var_idx[name2id['Ca']])
+    ca = ca0 * k  * exp(-time)
+    return ca
+    
     #basal = ca_in['k']
     print "basal calcium: %d" %basal
-    sbmlOdeSolver.IntegratorInstance_setVariableValue(integratorInstance, 
-                                                      var_idx[name2id['Ca']], 
-                                                      CT.c_double(expDecay(calConc(7200), time) ))
+#    sbmlOdeSolver.IntegratorInstance_setVariableValue(integratorInstance, 
+#                                                      var_idx[name2id['Ca']], 
+#                                                      CT.c_double(expDecay(calConc(7200), time) ))
     
     
 def setSettings(endtTime):
     settings = sbmlOdeSolver.CvodeSettings_create()
     
-    printstep = endTime * 1000 #ms
+    #printstep = endTime * 1000 #ms
+    printstep = endtTime
     sbmlOdeSolver.CvodeSettings_setTime(settings, CT.c_double(endTime), 
                                         CT.c_int(printstep))
     
@@ -197,13 +210,15 @@ def setSettings(endtTime):
     
 if __name__ == "__main__":
     setReturnType()
-    name2id = {"parameter_28" : "CaMKIIbar", 
+    id2name = {"parameter_28" : "CaMKIIbar", 
                "parameter_34" : "PP2Bbar",
                "species_1" : "Ca"
                               }
 
+
     filename="../biochemical_circuits/BIOMD0000000183_altered.xml"
-    variables = name2id.keys()
+    #filename="../biochemical_circuits/BIOMD0000000183_altered_no_Calcium.xml"
+    variables = id2name.keys()
     
     #filename="../biochemical_circuits/testSimple.xml"
     #variables = ["s1","s3"]
@@ -214,7 +229,7 @@ if __name__ == "__main__":
     for var in variables:
         var_idx[var] = sbmlOdeSolver.ODEModel_getVariableIndex(odeModel, var)
     
-    endTime = 200
+    endTime = 12000
     settings = setSettings(endTime)
     vars_val = changeValue(odeModel, settings, var_idx)
     printstep = sbmlOdeSolver.CvodeSettings_getPrintsteps(settings)

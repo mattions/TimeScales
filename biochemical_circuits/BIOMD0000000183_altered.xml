@@ -1262,7 +1262,7 @@
     <parameter id="parameter_15" metaid="metaid_0000044" name="konCaMKII" value="3200000"/>
     <parameter id="parameter_16" metaid="metaid_0000045" name="koffCaMKII" value="0.343"/>
     <parameter id="parameter_17" metaid="metaid_0000046" name="konPP2B" value="46000000"/>
-    <parameter id="parameter_18" metaid="metaid_0000047" name="koffPP2B" value="0.0013"/>
+    <parameter id="parameter_18" metaid="metaid_0000047" name="koffPP2B" value="0.4"/>
     <parameter constant="false" id="parameter_19" metaid="metaid_0000048" name="free_camR_ca3_total" value="0"/>
     <parameter constant="false" id="parameter_20" metaid="metaid_0000049" name="free_camT_ca3_total" value="0"/>
     <parameter constant="false" id="parameter_21" metaid="metaid_0000050" name="free_cam_ca3_total" value="0"/>
