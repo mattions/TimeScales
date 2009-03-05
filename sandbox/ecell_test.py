@@ -6,6 +6,8 @@ import ecell.ecs
 import ecell.config
 import ecell.emc
 import os
+import numpy
+import pylab
 
 class EcellManager():
     
@@ -27,15 +29,15 @@ class EcellManager():
         loggers = {}
         #log = ecell.LoggerStub()
         
-        for mol in molToTrack:
+        for mol in self.molToTrack:
             
-            loggers[mol]  = log.createLoggerStub( "Variable:/Spine:" + mol + ":Value" )
+            loggers[mol]  = self.ses.createLoggerStub( "Variable:/Spine:" + mol + ":Value" )
             loggers[mol].create() # This creat the Logger Object in the backend
         
         self.loggers = loggers
         
     
-    def calcium_peak(k_value, duration):
+    def calcium_peak(self, k_value, duration):
         """
         Mimic the calcium peak
         
@@ -44,12 +46,12 @@ class EcellManager():
             duration: Duration of the spike
         """
         
-        basal = ca_in['k']
-        ca_in['k'] = value
-        run(duration)
-        ca_in['k'] = basal
+        basal = self.ca_in['k']
+        self.ca_in['k'] = k_value
+        self.ses.run(duration)
+        self.ca_in['k'] = basal
         
-    def calciumTrain(spikes=30, interval=0.1):
+    def calciumTrain(self, spikes=30, interval=0.1):
         """Create a train of calcium with the specified number of spikes and interval
         
         :Parameter
@@ -57,16 +59,31 @@ class EcellManager():
             interval: Interval between spikes
         """
         for i in range(spikes):
-            calcium_peak(4.0e8, # Magic number from Lu
+            self.calcium_peak(4.0e8, # Magic number from Lu
                          0.00001 #Really fast spike to avoid the overlap
                          )
             self.ses.run(interval)
+    
 
 if __name__ == "__main__":
     
     ecellMan = EcellManager()
     ecellMan.createLoggers()
-    ecellMan.ses.run(800)
+    ecellMan.ses.run(200)
     ecellMan.calciumTrain()
     ecellMan.ses.run(400)
     
+    ca_tc = ecellMan.loggers['ca'].getData() 
+    pylab.plot(ca_tc[:,0], ca_tc[:,1], label="Calcium")
+    pylab.xlabel("Time [s]")
+    pylab.legend(loc=0)
+    
+    bars = ['PP2Bbar', 'CaMKIIbar']
+    pylab.figure()
+    
+    for bar in bars:
+        bar_tc = ecellMan.loggers[bar].getData()
+        pylab.plot(bar_tc[:,0], bar_tc[:,1], label=bar)
+        pylab.xlabel("Time [s]")
+        pylab.legend(loc=0)
+    pylab.show()

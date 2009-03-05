@@ -1,6 +1,7 @@
 # Author: Michele Mattioni
 # Wed Feb 11 17:34:02 GMT 2009
 
+
 import os
 import ctypes as CT
 import numpy
@@ -25,9 +26,14 @@ class SOSWrap:
             self.soslib = CT.CDLL('/usr/lib/libODES.dylib', CT.RTLD_GLOBAL)
         else:
             print 'Here be penguins.'
-            self.soslib = CT.CDLL('/usr/local/lib/libODES.so')
+            libPaths = ['/usr/local/lib/libODES.so', '/ebi/research/software/Linux_x86_64/opt/\
+            stow/SBMLodeSolver-CVS-20090212/lib/libODES.so']
+            for lib in libPaths:
+                if os.path.exists(lib):
+                    self.soslib = CT.CDLL(lib)
+                    print "library located: %s" %lib
+                    break
         self.setReturnType()
-            
         
         ########################################################
     
@@ -200,7 +206,6 @@ if __name__ == "__main__":
     resolution = int(1e3) # This determine the timesteps of the model. 1e3 = ms
     settings = sosWrap.setSettings(endTime, resolution)
     vars_val = sosWrap.changeValue(odeModel, settings, var_idx)
-    printstep = sosWrap.soslib.CvodeSettings_getPrintsteps(settings)
     sosWrap.plotVars(vars_val, endTime, resolution)
     
     caInput = sosWrap.calciumTrain(30, 10, 12)
