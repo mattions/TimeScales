@@ -11,13 +11,13 @@ import pylab
 
 class EcellManager():
     
-    def __init__(self, model="../biochemical_circuits/biomd183.eml"):
+    def __init__(self, filename="../biochemical_circuits/biomd183.eml"):
         ecell.ecs.setDMSearchPath( os.pathsep.join( ecell.config.dm_path ) )
         self.sim = ecell.emc.Simulator()
         self.ses = ecell.Session.Session(self.sim)
         
         # Load the model
-        self.ses.loadModel(model)
+        self.ses.loadModel(filename)
         self.molToTrack = ('ca','moles_bound_ca_per_moles_cam',
                            'Rbar','PP2Bbar','CaMKIIbar')
         self.ca_in = self.ses.createEntityStub('Process:/Spine:ca_in')
@@ -65,15 +65,23 @@ class EcellManager():
             self.ses.run(interval)
     
 
-if __name__ == "__main__":
+##############################################
+# Testing method
+
+def testCalciumTrain(filename="../biochemical_circuits/biomd183.eml"):
+    """Run a test simulation wit a train of calcium input"""
     
-    ecellMan = EcellManager()
-    ecellMan.createLoggers()
-    ecellMan.ses.run(200)
-    ecellMan.calciumTrain()
-    ecellMan.ses.run(400)
+    print "Test the results of a train of calcium"""
+    ecellManager = EcellManager(filename)
+    ecellManager.createLoggers()
+    print "Model loaded, loggers created. Integration start."
+    ecellManager.ses.run(200)
+    print "Calcium Train"
+    ecellManager.calciumTrain()
+    ecellManager.ses.run(400)
+    print "Integration concluded"
     
-    ca_tc = ecellMan.loggers['ca'].getData() 
+    ca_tc = ecellManager.loggers['ca'].getData() 
     pylab.plot(ca_tc[:,0], ca_tc[:,1], label="Calcium")
     pylab.xlabel("Time [s]")
     pylab.legend(loc=0)
@@ -82,8 +90,15 @@ if __name__ == "__main__":
     pylab.figure()
     
     for bar in bars:
-        bar_tc = ecellMan.loggers[bar].getData()
+        bar_tc = ecellManager.loggers[bar].getData()
         pylab.plot(bar_tc[:,0], bar_tc[:,1], label=bar)
         pylab.xlabel("Time [s]")
         pylab.legend(loc=0)
     pylab.show()
+
+
+    
+if __name__ == "__main__":
+    testCalciumTrain()
+    
+    

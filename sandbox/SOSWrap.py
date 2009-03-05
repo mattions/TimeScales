@@ -26,12 +26,12 @@ class SOSWrap:
             self.soslib = CT.CDLL('/usr/lib/libODES.dylib', CT.RTLD_GLOBAL)
         else:
             print 'Here be penguins.'
-            libPaths = ['/usr/local/lib/libODES.so', '/ebi/research/software/Linux_x86_64/opt/\
-            stow/SBMLodeSolver-CVS-20090212/lib/libODES.so']
+            libPaths = ['/usr/local/lib/libODES.so', '/ebi/research/software\
+            /Linux_x86_64/opt/stow/SBMLodeSolver-CVS-20090212/lib/libODES.so']
             for lib in libPaths:
                 if os.path.exists(lib):
                     self.soslib = CT.CDLL(lib)
-                    print "library located: %s" %lib
+                    print "SOSLibrary located: %s" %lib
                     break
         self.setReturnType()
         
