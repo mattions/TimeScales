@@ -20,7 +20,6 @@ class EcellManager():
         self.ses.loadModel(filename)
         self.molToTrack = ('ca','moles_bound_ca_per_moles_cam',
                            'Rbar','PP2Bbar','CaMKIIbar')
-        self.ca_in = self.ses.createEntityStub('Process:/Spine:ca_in')
         # Tracking the calcium
         self.ca =  self.ses.createEntityStub( 'Variable:/Spine:ca' )
     
@@ -64,7 +63,26 @@ class EcellManager():
                          )
             self.ses.run(interval)
     
+    def plotTimeCourses(self):
+        
+        ca_tc = self.loggers['ca'].getData() 
+        pylab.figure()
+        pylab.plot(ca_tc[:,0], ca_tc[:,1], label="Calcium")
+        pylab.xlabel("Time [s]")
+        pylab.legend(loc=0)
+        
+        bars = ['PP2Bbar', 'CaMKIIbar']
+        pylab.figure()
+        
+        for bar in bars:
+            bar_tc = self.loggers[bar].getData()
+            pylab.plot(bar_tc[:,0], bar_tc[:,1], label=bar)
+            pylab.xlabel("Time [s]")
+            pylab.legend(loc=0)
+        pylab.show()
+        
 
+        
 ##############################################
 # Testing method
 
@@ -74,31 +92,46 @@ def testCalciumTrain(filename="../biochemical_circuits/biomd183.eml"):
     print "Test the results of a train of calcium"""
     ecellManager = EcellManager(filename)
     ecellManager.createLoggers()
+    ecellManager.ca_in = ecellManager.ses.createEntityStub('Process:/Spine:ca_in')
     print "Model loaded, loggers created. Integration start."
     ecellManager.ses.run(200)
     print "Calcium Train"
     ecellManager.calciumTrain()
     ecellManager.ses.run(400)
-    print "Integration concluded"
+    print "Integration concluded, Plotting..."
+    ecellManager.plotTimeCourses()
+    print "CalciumTrain Test Concluded\n##################"
+    return ecellManager
     
-    ca_tc = ecellManager.loggers['ca'].getData() 
-    pylab.plot(ca_tc[:,0], ca_tc[:,1], label="Calcium")
-    pylab.xlabel("Time [s]")
-    pylab.legend(loc=0)
+
+
+
+
+def testChangeCalciumValue(filename="../biochemical_circuits/biomd183_noCalcium.eml"):
+    """Run a test simulation changing the calcium value on the fly"""
+    print "Show case of the possibilities to change the level of calcium on the fly"
+    ecellManager = EcellManager(filename)
+    ecellManager.createLoggers()
+    print "Loggers created"
+    ecellManager.ses.run(200)
+    print "immision of Calcium"
+    print "Value of Calcium %f" %ecellManager.ca.getProperty('Value')
+    ecellManager.ca.setProperty('Value', 7200)
+    print "Value of Calcium %f" %ecellManager.ca.getProperty('Value')
+    ecellManager.ses.run(0.020)
+    ecellManager.ca.setProperty('Value', 7)
+    ecellManager.ses.run(200)
+    ecellManager.plotTimeCourses()
+    print "ChangeCalciumValue Test Concluded\n##################"
+    return ecellManager
     
-    bars = ['PP2Bbar', 'CaMKIIbar']
-    pylab.figure()
-    
-    for bar in bars:
-        bar_tc = ecellManager.loggers[bar].getData()
-        pylab.plot(bar_tc[:,0], bar_tc[:,1], label=bar)
-        pylab.xlabel("Time [s]")
-        pylab.legend(loc=0)
-    pylab.show()
 
 
     
 if __name__ == "__main__":
-    testCalciumTrain()
+
+    ecellManager = testChangeCalciumValue()
+    
+    ecellManager2 = testCalciumTrain()
     
     
