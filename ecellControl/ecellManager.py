@@ -122,11 +122,11 @@ def testChangeCalciumValue(filename="../biochemical_circuits/biomd183_noCalcium.
     ecellManager.createLoggers()
     print "Loggers created"
     
-    tstop = 10
+    tstop = 100
     while(ecellManager.ses.getCurrentTime() < tstop):
         ecellManager.ca['Value'] = 7
         ecellManager.ses.run(0.001)
-        print ecellManager.ses.getCurrentTime()
+        #print ecellManager.ses.getCurrentTime()
     
     print "immision of Calcium"
     print "Value of Calcium %f" %ecellManager.ca.getProperty('Value')
@@ -137,19 +137,16 @@ def testChangeCalciumValue(filename="../biochemical_circuits/biomd183_noCalcium.
         ecellManager.ca['Value'] = 7
         ecellManager.ses.run(0.010)
     
-    tstop = tstop+10
+    tstop = tstop+100
     while(ecellManager.ses.getCurrentTime() < tstop):
         ecellManager.ca['Value'] = 7
         ecellManager.ses.run(0.001)
-        print ecellManager.ses.getCurrentTime()
+        #print ecellManager.ses.getCurrentTime()
     
     ecellManager.plotTimeCourses()
     print "ChangeCalciumValue Test Concluded\n##################"
     return ecellManager
-    
-
-
-    
+        
 if __name__ == "__main__":
     from ioHelper import *
     ioH = IOHelper()
