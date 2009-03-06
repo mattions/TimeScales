@@ -64,30 +64,36 @@ class EcellManager():
                          )
             self.ses.run(interval)
     
-    def plotTimeCourses(self):
+    def plotTimeCourses(self, batch=False, dir=None):
         """Plot the default timecourses"""
-        ca_tc = self.loggers['ca'].getData() 
+        ca_tc = self.timeCourses['ca'] 
         pylab.figure()
         pylab.plot(ca_tc[:,0], ca_tc[:,1], label="Calcium")
         pylab.xlabel("Time [s]")
         pylab.legend(loc=0)
         
+        if batch :
+            pylab.savefig(os.path.join(dir, "caInput.png"))
+        
         bars = ['PP2Bbar', 'CaMKIIbar']
         pylab.figure()
-        
         for bar in bars:
-            bar_tc = self.loggers[bar].getData()
+            bar_tc = self.timeCourses[bar]
             pylab.plot(bar_tc[:,0], bar_tc[:,1], label=bar)
             pylab.xlabel("Time [s]")
             pylab.legend(loc=0)
-        pylab.show()
+        
+        if batch :
+            pylab.savefig(os.path.join(dir, "PP2B_and_CaMKII_activation.png"))
+        else:
+            pylab.show()
         
     def converToTimeCourses(self):
         timeCourses = {}
         for key in self.loggers:
             timeCourses[key] = self.loggers[key].getData()
         
-        return timeCourses
+        self.timeCourses = timeCourses
         
 
         
@@ -106,8 +112,7 @@ def testCalciumTrain(filename="../biochemical_circuits/biomd183.eml"):
     print "Calcium Train"
     ecellManager.calciumTrain()
     ecellManager.ses.run(400)
-    print "Integration concluded, Plotting..."
-    ecellManager.plotTimeCourses()
+    ecellManager.converToTimeCourses()
     print "CalciumTrain Test Concluded\n##################"
     return ecellManager
     
@@ -122,10 +127,11 @@ def testChangeCalciumValue(filename="../biochemical_circuits/biomd183_noCalcium.
     ecellManager.createLoggers()
     print "Loggers created"
     
-    tstop = 100
+    tstop = 200
     while(ecellManager.ses.getCurrentTime() < tstop):
         ecellManager.ca['Value'] = 7
         ecellManager.ses.run(0.001)
+        #ecellManager.ses.run(1)
         #print ecellManager.ses.getCurrentTime()
     
     print "immision of Calcium"
@@ -137,23 +143,33 @@ def testChangeCalciumValue(filename="../biochemical_circuits/biomd183_noCalcium.
         ecellManager.ca['Value'] = 7
         ecellManager.ses.run(0.010)
     
-    tstop = tstop+100
+    tstop = tstop+500
     while(ecellManager.ses.getCurrentTime() < tstop):
         ecellManager.ca['Value'] = 7
         ecellManager.ses.run(0.001)
+        #ecellManager.ses.run(1)
         #print ecellManager.ses.getCurrentTime()
-    
-    ecellManager.plotTimeCourses()
+        
+    ecellManager.converToTimeCourses()
     print "ChangeCalciumValue Test Concluded\n##################"
     return ecellManager
         
 if __name__ == "__main__":
     from ioHelper import *
+    import sys
+    
+    batch = True
+    if (len(sys.argv) == 2):
+        option = sys.argv[1]
+        if option == "interactive":
+            batch = False
+         
     ioH = IOHelper()
     ecellManager = testChangeCalciumValue()
-    timeCourses = ecellManager.converToTimeCourses()
-    ioH.saveObj(timeCourses)
+    #ecellManager = testCalciumTrain()
     
-    #ecellManager2 = testCalciumTrain()
-    
-    
+    if batch == True:
+        dir = ioH.saveObj(ecellManager.timeCourses, "timeCourses")
+        ecellManager.plotTimeCourses(batch=batch, dir=dir)
+    else:
+        ecellManager.plotTimeCourses(batch)

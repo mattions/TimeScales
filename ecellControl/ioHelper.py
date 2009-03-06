@@ -43,8 +43,8 @@ class IOHelper():
         FILE = open(filepath, 'w')
         cPickle.dump(ecellManager, FILE, 1)
         FILE.close()
-        print "Python object saved in %s" %filepath
-        return filepath
+        print "Python object saved in %s" %os.path.abspath(filepath)
+        return dir
     
     def loadObj(self, filename):
         
@@ -53,7 +53,7 @@ class IOHelper():
         FILE = open(filename, 'r')
         obj = cPickle.load(FILE)
         FILE.close()
-        print "loaded file %s" %(filename)
+        print "loaded file %s" %os.path.abspath(filename)
         return obj
     
 if __name__ == "__main__":
