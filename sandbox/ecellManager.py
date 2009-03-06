@@ -10,6 +10,7 @@ import numpy
 import pylab
 
 class EcellManager():
+    """Control and instatiate the ecell simulator embedding it in an handy python object"""
     
     def __init__(self, filename="../biochemical_circuits/biomd183.eml"):
         ecell.ecs.setDMSearchPath( os.pathsep.join( ecell.config.dm_path ) )
@@ -64,7 +65,7 @@ class EcellManager():
             self.ses.run(interval)
     
     def plotTimeCourses(self):
-        
+        """Plot the default timecourses"""
         ca_tc = self.loggers['ca'].getData() 
         pylab.figure()
         pylab.plot(ca_tc[:,0], ca_tc[:,1], label="Calcium")
@@ -113,14 +114,29 @@ def testChangeCalciumValue(filename="../biochemical_circuits/biomd183_noCalcium.
     ecellManager = EcellManager(filename)
     ecellManager.createLoggers()
     print "Loggers created"
-    ecellManager.ses.run(200)
+    
+    tstop = 10
+    while(ecellManager.ses.getCurrentTime() < tstop):
+        ecellManager.ca['Value'] = 7
+        ecellManager.ses.run(1)
+        print ecellManager.ses.getCurrentTime()
+        
+    ecellManager.plotTimeCourses()
+    
     print "immision of Calcium"
     print "Value of Calcium %f" %ecellManager.ca.getProperty('Value')
-    ecellManager.ca.setProperty('Value', 7200)
-    print "Value of Calcium %f" %ecellManager.ca.getProperty('Value')
-    ecellManager.ses.run(0.020)
-    ecellManager.ca.setProperty('Value', 7)
-    ecellManager.ses.run(200)
+    spikes = 4
+    for i in range(spikes):
+        ecellManager.ca['Value'] = 7200
+        ecellManager.ses.run(0.020)
+        ecellManager.ca['Value'] = 7
+        ecellManager.ses.run(0.010)
+    
+    tstop = 60
+    while(ecellManager.ses.getCurrentTime() < tstop):
+        ecellManager.ca['Value'] = 7
+        ecellManager.ses.run(1)
+    
     ecellManager.plotTimeCourses()
     print "ChangeCalciumValue Test Concluded\n##################"
     return ecellManager
@@ -132,6 +148,6 @@ if __name__ == "__main__":
 
     ecellManager = testChangeCalciumValue()
     
-    ecellManager2 = testCalciumTrain()
+    #ecellManager2 = testCalciumTrain()
     
     
