@@ -9,7 +9,6 @@ import os
 import numpy
 import pylab
 
-
 class EcellManager():
     """Control and instatiate the ecell simulator embedding it in an handy python object"""
     
