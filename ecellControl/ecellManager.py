@@ -9,6 +9,7 @@ import os
 import numpy
 import pylab
 
+
 class EcellManager():
     """Control and instatiate the ecell simulator embedding it in an handy python object"""
     
@@ -82,6 +83,13 @@ class EcellManager():
             pylab.legend(loc=0)
         pylab.show()
         
+    def converToTimeCourses(self):
+        timeCourses = {}
+        for key in self.loggers:
+            timeCourses[key] = self.loggers[key].getData()
+        
+        return timeCourses
+        
 
         
 ##############################################
@@ -118,10 +126,8 @@ def testChangeCalciumValue(filename="../biochemical_circuits/biomd183_noCalcium.
     tstop = 10
     while(ecellManager.ses.getCurrentTime() < tstop):
         ecellManager.ca['Value'] = 7
-        ecellManager.ses.run(1)
+        ecellManager.ses.run(0.001)
         print ecellManager.ses.getCurrentTime()
-        
-    ecellManager.plotTimeCourses()
     
     print "immision of Calcium"
     print "Value of Calcium %f" %ecellManager.ca.getProperty('Value')
@@ -132,10 +138,11 @@ def testChangeCalciumValue(filename="../biochemical_circuits/biomd183_noCalcium.
         ecellManager.ca['Value'] = 7
         ecellManager.ses.run(0.010)
     
-    tstop = 60
+    tstop = tstop+10
     while(ecellManager.ses.getCurrentTime() < tstop):
         ecellManager.ca['Value'] = 7
-        ecellManager.ses.run(1)
+        ecellManager.ses.run(0.001)
+        print ecellManager.ses.getCurrentTime()
     
     ecellManager.plotTimeCourses()
     print "ChangeCalciumValue Test Concluded\n##################"
@@ -145,8 +152,11 @@ def testChangeCalciumValue(filename="../biochemical_circuits/biomd183_noCalcium.
 
     
 if __name__ == "__main__":
-
+    from ioHelper import *
+    ioH = IOHelper()
     ecellManager = testChangeCalciumValue()
+    timeCourses = ecellManager.converToTimeCourses()
+    ioH.saveObj(timeCourses)
     
     #ecellManager2 = testCalciumTrain()
     
