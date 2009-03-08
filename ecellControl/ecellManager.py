@@ -163,6 +163,18 @@ if __name__ == "__main__":
         option = sys.argv[1]
         if option == "interactive":
             batch = False
+    
+        ## Setting the backend
+    import matplotlib
+    if batch:
+        try:
+            import cairo
+            matplotlib.use('Cairo')
+            print "Switching backend to Cairo. Batch execution"
+        except:
+            matplotlib.use('Agg')
+            print "Switching backend to Agg. Batch execution"
+    
          
     ioH = IOHelper()
     ecellManager = testChangeCalciumValue()
