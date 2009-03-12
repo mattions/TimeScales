@@ -21,7 +21,7 @@ class MyNetStim(neuron.hclass(h.NetStim)):
 
 def stimulGraph(t, stimul):
     """Create a vector of the inputs given to the synapse"""
-        # Transforming the vecotr in numpy
+        # Transforming the vector in numpy
     t = numpy.array(t)
     t = numpy.round(t, decimals=9) # round
     

@@ -1,27 +1,46 @@
 # Author: Michele Mattioni
 # Mon Jan 26 05:54:30 GMT 2009
 
-import nrn
 from neuron import h
+import math
 
-class Spine(nrn.Section):
-    """Class spine. Extend the section class"""
+class Spine():
+    """Class spine. Create a spine with head and neck"""
+    
     def __init__(self):
         """ Create a spine with a standard volume of ~0.11 um
         the h is the reference to the main hoc interpreter"""
-        nrn.Section.__init__(self) # Calling the init of the 
-        # Volume of a spine ~ 0.11 um 
-        # dia = (sqrt (V/(pi*h))) * 2
-        self.L = 1
-        self.diam =  0.3742
-        self.nseg = 7
-        self.Ra = 150 # Used by Grunditz et al 2008 (see supplemental material) 
-        debug = True
-        if debug:
-            import math
-            vol = self.L * (self.diam/2) * (self.diam/2) * math.pi
-            print "Volume of the spine %f" % vol
-            
+        
+        self.neck = self.createNeck()
+        self.head = self.createHead(self.neck)
+    
+    def createNeck(self):
+        """ Create the neck with the Grunditz value"""
+        neck = h.Section()
+        neck.L = 1 # um
+        neck.diam = 0.0394
+        neck.nseg = 2
+        neck.Ra = 150.0 # Used by Grunditz et al 2008 (see supplemental material)
+        return neck
+        
+    def createHead(self, neck):
+        """Create the head of the spine and populate it with the right channels"""
+        head = h.Section()
+        vol = 0.11 #um
+        head.L = 1
+        head.diam = math.sqrt(vol / head.L * math.pi ) * 2
+        self.Ra = 150.0
+        neck.nseg = 7
+        head.connect(self.neck)
+        ### Insert the appropriate channels
+        head.insert("caL")
+        head.insert("caL13")
+        head.insert("can")
+        head.insert("skkca")
+        head.insert("caq")
+        
+        return head
+                
     def createAMPASyn(self, position=0.5):
         """Insert an ampa synapse in the section
         
@@ -36,7 +55,7 @@ class Spine(nrn.Section):
         syn["netStim"].start = 50
         syn["netStim"].noise = 0
         
-        syn["syn"] = h.ampa(position, sec = self)
+        syn["syn"] = h.ampa(position, sec = self.head)
         
         syn["netCon"] = h.NetCon(syn["netStim"], syn["syn"])
         syn["netCon"].weight[0] = 10
@@ -57,6 +76,35 @@ class Spine(nrn.Section):
     
     def attach(self, parentSec, parentx, childx):
         """Attach a spine to a parentSec and store the parentSec into an attribute.
-        Just anhandy variation of the connect method"""
-        self.parent = parentSec
-        self.connect(parentSec, parentx, childx)
+        Just an handy variation of the connect method"""
+        self.neck.connect(parentSec, parentx, childx)
+        
+if __name__ == "__main__":
+    import neuron
+    import numpy
+    from spine import *
+    import pylab
+    
+    h = neuron.h
+    
+    
+    sp1 = Spine()
+    sp1_syn = sp1.createAMPASyn()
+    sp1_synVecs = sp1.createSynapseVecs(sp1_syn)
+    vecs = {}
+    
+    for var in ['t', 'sp1_head_v', 'sp1_neck_v']:
+        vecs[var] = h.Vector()
+    
+    vecs['t'].record(h._ref_t)
+    vecs['sp1_head_v'].record(sp1.head(0.5)._ref_v)
+    vecs['sp1_neck_v'].record(sp1.neck(0.5)._ref_v)
+    
+    import neuron.gui
+    h.tstop = 1000
+    h.run()
+    pylab.plot(vecs['t'], vecs['sp1_head_v'], label='sp1_head_v')
+    pylab.plot(vecs['t'], vecs['sp1_neck_v'], label='sp1_neck_v')
+    pylab.legend(loc=0)
+    
+    pylab.show()
