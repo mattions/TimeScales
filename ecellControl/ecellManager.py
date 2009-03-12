@@ -184,4 +184,4 @@ if __name__ == "__main__":
         dir = ioH.saveObj(ecellManager.timeCourses, "timeCourses")
         ecellManager.plotTimeCourses(batch=batch, dir=dir)
     else:
-        ecellManager.plotTimeCourses(batch)
+        ecellManager.plotTimeCourses()
