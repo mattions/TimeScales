@@ -54,7 +54,7 @@ print base_dir
 
 for aVariableName in List:
 	aDataFile = ECDDataFile( Dict[ aVariableName ].getData() )
-	aDataFile.save(aVariableName + ".ecd")
+	aDataFile.save("Results/" + aVariableName + ".ecd")
 
 # you MUST write _ca+aNumber
 

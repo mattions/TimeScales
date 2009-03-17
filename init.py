@@ -52,8 +52,8 @@ def createVecs(spine):
     vecs["v_dend"] = h.Vector()
     vecs["v_dend"].record(spine.parent(0.5)._ref_v)
     
-    vecs["v_spine"] = h.Vector()
-    vecs["v_spine"].record(spine(0.5)._ref_v)
+    vecs["v_head_spine"] = h.Vector()
+    vecs["v_head_spine"].record(spine.head(0.5)._ref_v)
     
     vecs["cai_soma"] = h.Vector()
     vecs["cai_soma"].record(h.MSP_Cell[0].soma(0.5)._ref_cai)
@@ -78,7 +78,7 @@ def plotVoltage(vecs, synVecs):
     ax1 = fig.add_subplot(111) #sub for the two scales
     plot(vecs["t"], vecs["v_soma"], label="soma voltage")
     plot(vecs["t"], vecs["v_dend"], label="dendrite voltage")
-    plot(vecs["t"], vecs["v_spine"], label="spine voltage")
+    plot(vecs["t"], vecs["v_head_spine"], label="spine voltage")
     ylabel("Voltage [mV]")
     xlabel("Time [ms]")
     ax2 = ax1.twinx()
@@ -110,6 +110,7 @@ def plotCalciumCurrent(vecs):
         
 def go():
     """Just run the model for the time"""
+    h.tstop = 200
     h.run()
     plotVoltage(vecs, synVecs)
     plotCalcium(vecs)

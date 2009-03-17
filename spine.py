@@ -13,6 +13,7 @@ class Spine():
         
         self.neck = self.createNeck()
         self.head = self.createHead(self.neck)
+        self.parent = None # the parent section connected to the neck
     
     def createNeck(self):
         """ Create the neck with the Grunditz value"""
@@ -78,6 +79,7 @@ class Spine():
         """Attach a spine to a parentSec and store the parentSec into an attribute.
         Just an handy variation of the connect method"""
         self.neck.connect(parentSec, parentx, childx)
+        self.parent = parentSec
         
 if __name__ == "__main__":
     import neuron
