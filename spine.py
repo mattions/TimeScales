@@ -2,7 +2,9 @@
 # Mon Jan 26 05:54:30 GMT 2009
 
 from neuron import h
+from EcellManager import *
 import math
+
 
 class Spine():
     """Class spine. Create a spine with head and neck"""
@@ -14,7 +16,16 @@ class Spine():
         self.neck = self.createNeck()
         self.head = self.createHead(self.neck)
         self.parent = None # the parent section connected to the neck
+        self.ecellMan = self.setupBioSim()
     
+    def setupBioSim(self):
+        """Initialize the Biochemical Simulator creating the instance of 
+        the object to control the simulation"""
+        
+        ecellMan = EcellManager("../biochemical_circuits/biomd183_noCalcium.eml")
+        ecellMan.createLoggers()
+        self.ecellMan = ecellMan
+        
     def createNeck(self):
         """ Create the neck with the Grunditz value"""
         neck = h.Section()

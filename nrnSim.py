@@ -2,23 +2,22 @@
 # Tue Nov 11 11:54:40 GMT 2008
 
 import neuron
-import mediumSpinyNeuron
 import numpy
 from pylab import *
+from spine import *
 
 class NeuronSim():
     def __init__(self):
-        self.h = neuron.h 
-        self.msn = mediumSpinyNeuron.MediumSpinyNeuron(self.h)
-        self.initialized = False
-        
+        self.h = neuron.h
+        self.h.load_file("my_init.hoc")
+            
     def run(self, tStop):
         """Run the simulation untill tStop"""
         while (self.h.t < tStop):
             self.h.fadvance()
             
     def init(self, v_init=-87.75):
-        """Initialize the system"""
+        """Initialize the cell"""
         self.h.finitialize(v_init)
         self.initialized = True
         
@@ -40,51 +39,27 @@ class NeuronSim():
         
         return iClamp
     
-    def rec(self):
-        
-        vectors = {}
-        t = self.h.Vector()
-        t.record(self.h._ref_t)
-        vectors['time'] = t
-        print "Created vectors t"
-        
-        v_soma = self.h.Vector()
-        v_soma.record(self.msn.soma(0.5)._ref_v)
-        vectors['v_soma'] = v_soma
-        print "Created vectors v_soma"
-        
-        ca_in_s = self.h.Vector()
-        ca_in_s.record(self.msn.soma(0.5)._ref_cai)
-        vectors['ca_in_s'] = ca_in_s
-        print "Created vectors ca_in_s"
-        
-#        i_kas = self.h.Vector()
-#        i_kas.record(self.msn.soma(0.5).ref_ik)
-        return vectors
-    
-    def plotVecs(self, vectors):
-        # The vecs are transformed in numpy array and then plotted
-        t = numpy.array(vectors['time'])
-        t = numpy.round(t, decimals=9) # round
-        
-        vSoma = numpy.array(vectors['v_soma'])
-        
-        plot(t, vSoma)
+
+
+# Test code
 
 if __name__ == "__main__":
+    import pylab
     nrnSim = NeuronSim()
     h = nrnSim.h # Unpacking the variable for easy access in the console
-    msn = nrnSim.msn # Unpacking the variable for easy access in the console
-    vectors = nrnSim.rec()
-    
-    iClamp = nrnSim.rig1()
-    
-    #nrnSim.initAndRun(800)
-    #nrnSim.plotVecs(vectors)
-    #show()
-    
-    # Using the neuron gui
-    import neuron.gui
-    h.load_file("guiPython.ses")
+    vecs = {}
+    vecs['t'] = h.Vector()
+    vecs['t'].record(h._ref_t)
+    vecs['v_soma'] = h.Vector()
+    vecs['v_soma'].record(h.MSP_Cell[0].soma(0.5)._ref_v)
+    iClamp = h.IClamp(0.5, sec=h.MSP_Cell[0].soma)
+    iClamp.delay = 100
+    iClamp.dur = 500
+    iClamp.amp = 0.2481
+    #import neuron.gui
+    #h.load_file("guiRig2.ses")
+    nrnSim.initAndRun(800)
+    pylab.plot(vecs['t'],vecs['v_soma'])
+    pylab.show()
     
     

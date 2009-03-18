@@ -4,7 +4,7 @@
 import neuron
 import numpy
 from pylab import *
-h = neuron.h
+
 
 class MyNetStim(neuron.hclass(h.NetStim)):
     """NetStim that allows setting the parameters on the creation"""
@@ -127,7 +127,7 @@ def plotChannelCurrent():
 
 
 if __name__ == "__main__":
-    
+    h = neuron.h
     h.load_file("my_init.hoc")
     from spine import *   
     spine = Spine()
