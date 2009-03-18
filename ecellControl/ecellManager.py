@@ -23,7 +23,9 @@ class EcellManager():
                            'Rbar','PP2Bbar','CaMKIIbar')
         # Tracking the calcium
         self.ca =  self.ses.createEntityStub( 'Variable:/Spine:ca' )
-    
+        self.CaMKIIbar = self.ses.createEntityStub( 'Variable:/Spine:CaMKIIbar' )
+        
+        
     def createLoggers(self):
         """Create the logger to track the speces"""
         loggers = {}

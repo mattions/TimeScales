@@ -2,7 +2,7 @@
 # Mon Jan 26 05:54:30 GMT 2009
 
 from neuron import h
-from EcellManager import *
+import ecellControl as eC
 import math
 
 
@@ -16,15 +16,27 @@ class Spine():
         self.neck = self.createNeck()
         self.head = self.createHead(self.neck)
         self.parent = None # the parent section connected to the neck
+        
+        # TODO Reorganize the synapse in a proper object
+        self.synapses = {}
+        ampa = self.createAMPASyn()
+        self.synVecs = self.createSynapseVecs(ampa)
+        self.synapses['ampa'] = ampa
+        
+        # Setting up the vector
+        self.createCalciumVector()
+        
+        
+        # Setting up the biochemical simulator
         self.ecellMan = self.setupBioSim()
     
     def setupBioSim(self):
         """Initialize the Biochemical Simulator creating the instance of 
         the object to control the simulation"""
         
-        ecellMan = EcellManager("../biochemical_circuits/biomd183_noCalcium.eml")
+        ecellMan = eC.EcellManager("biochemical_circuits/biomd183_noCalcium.eml")
         ecellMan.createLoggers()
-        self.ecellMan = ecellMan
+        return ecellMan
         
     def createNeck(self):
         """ Create the neck with the Grunditz value"""
@@ -70,7 +82,7 @@ class Spine():
         syn["syn"] = h.ampa(position, sec = self.head)
         
         syn["netCon"] = h.NetCon(syn["netStim"], syn["syn"])
-        syn["netCon"].weight[0] = 10
+        syn["netCon"].weight[0] = 1
         
         return syn
     
@@ -85,6 +97,15 @@ class Spine():
         synVecs["i"].record(syn["syn"]._ref_i)
         
         return synVecs
+    
+    def createCalciumVector(self):
+        """Create the vector for the calcium"""
+        vecs = {}
+        vecs['ca'] = h.Vector()
+        vecs['ca'].record(self.head(0.5)._ref_cai)
+        vecs['cai'] = h.Vector()
+        vecs['cai'].record(self.head(0.5)._ref_cali)
+        self.vecs = vecs
     
     def attach(self, parentSec, parentx, childx):
         """Attach a spine to a parentSec and store the parentSec into an attribute.

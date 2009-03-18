@@ -3,13 +3,13 @@
 
 import neuron
 import numpy
-from pylab import *
 from spine import *
 
 class NeuronSim():
     def __init__(self):
         self.h = neuron.h
         self.h.load_file("my_init.hoc")
+        self.distributeSpines()
             
     def run(self, tStop):
         """Run the simulation untill tStop"""
@@ -25,6 +25,15 @@ class NeuronSim():
         """Initialize and run the simulation untill tStop""" 
         self.init()
         self.run(tStop)
+    
+    def distributeSpines(self):
+        """Attach spines to the dendrites"""
+        
+        # Now just a test spine
+        spine = Spine()
+        spine.attach(h.MSP_Cell[0].dend1_1[1], 0.5, 0)
+        self.spines = [spine]
+        
         
     def rig1(self):
         """Creating an IClamp in the soma"""
