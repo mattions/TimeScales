@@ -16,6 +16,7 @@ class Spine():
         self.neck = self.createNeck()
         self.head = self.createHead(self.neck)
         self.parent = None # the parent section connected to the neck
+        self.synapses = {} # Dict to save the pointer to the synapses
         
         # Setting up the vector
         self.createCalciumVector()

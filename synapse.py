@@ -6,10 +6,10 @@ from neuron import h
 class Synapse():
     
     def __init__(self, type, section, position=0.5):
-        self.section = section
-        self.type = type
-        self.chan = self.createChannel(type, position)
         
+        self.type = type
+        self.section = section
+        self.chan = self.createChannel(type, position)
         
     def createChannel(self, type, position):
         """Create the NMDA or AMPA channel"""
@@ -20,7 +20,7 @@ class Synapse():
             
         return chan        
     
-    def createStimul(self, start, number, noise=0):
+    def createStimul(self, start=0, number=0, interval=0, noise=0):
         """Create a netStim object and assign it to the synapse together with 
         a NetConnect one.
         
@@ -33,6 +33,7 @@ class Synapse():
         netStim = h.NetStim()
         netStim.number = number
         netStim.start = start
+        netStim.interval = interval
         netStim.noise = noise
         self.netStim = netStim # assign the point to the class as attribute
         
