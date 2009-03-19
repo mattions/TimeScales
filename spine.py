@@ -17,15 +17,8 @@ class Spine():
         self.head = self.createHead(self.neck)
         self.parent = None # the parent section connected to the neck
         
-        # TODO Reorganize the synapse in a proper object
-        self.synapses = {}
-        ampa = self.createAMPASyn()
-        self.synVecs = self.createSynapseVecs(ampa)
-        self.synapses['ampa'] = ampa
-        
         # Setting up the vector
         self.createCalciumVector()
-        
         
         # Setting up the biochemical simulator
         self.ecellMan = self.setupBioSim()
@@ -62,41 +55,7 @@ class Spine():
         head.insert("can")
         head.insert("skkca")
         head.insert("caq")
-        
         return head
-                
-    def createAMPASyn(self, position=0.5):
-        """Insert an ampa synapse in the section
-        
-        return syn dictionary where there are:
-        stim -> MyNetStim class
-        ampa -> h.ampa class
-        nc -> h.NetCon class"""
-        
-        syn = {}
-        syn["netStim"] = h.NetStim()
-        syn["netStim"].number = 10
-        syn["netStim"].start = 50
-        syn["netStim"].noise = 0
-        
-        syn["syn"] = h.ampa(position, sec = self.head)
-        
-        syn["netCon"] = h.NetCon(syn["netStim"], syn["syn"])
-        syn["netCon"].weight[0] = 1
-        
-        return syn
-    
-    def createSynapseVecs(self, syn):
-        """Create the vector to measure the activity of the synapse"""
-        
-        synVecs = {}
-        synVecs["stimul"] = h.Vector()
-        syn["netCon"].record(synVecs["stimul"]) # Record the input 
-        
-        synVecs["i"] = h.Vector()
-        synVecs["i"].record(syn["syn"]._ref_i)
-        
-        return synVecs
     
     def createCalciumVector(self):
         """Create the vector for the calcium"""
@@ -117,14 +76,18 @@ if __name__ == "__main__":
     import neuron
     import numpy
     from spine import *
+    from synapse import *
     import pylab
     
     h = neuron.h
     
     
     sp1 = Spine()
-    sp1_syn = sp1.createAMPASyn()
-    sp1_synVecs = sp1.createSynapseVecs(sp1_syn)
+    ampaSyn = Synapse('ampa', sp1.head)
+    ampaSyn.createStimul(30, 10)
+    sp1.synapses = [ampaSyn]
+    
+    
     vecs = {}
     
     for var in ['t', 'sp1_head_v', 'sp1_neck_v']:

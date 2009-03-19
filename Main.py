@@ -16,28 +16,43 @@ def calcWeight(CaMKIIbar):
 
 
 nrnSim = NeuronSim()
-h = nrnSim.h # Unpacking the variable for easy access in the console
-
-tStop = 1
-
 nrnSim.init()
 
+### Equilibrium run
 
-while h.t < tStop:
-    nrnSim.run(0.001) # run Neuron for ms
-    for spine in nrnSim.spines:
-        
-        # Setting the calcium in the biochemical sim with the one from neuron
-        electrical_cal = spine.vecs['ca'].x[-1] 
-        spine.ecellMan.ca['Value'] = electrical_cal 
-         
-        spine.ecellMan.ses.run(0.001)
-        
-        # getting the conc of the active CaMKII and set the weight of the synapse
-        CamKIIbar = spine.ecellMan.CaMKIIbar['Value']
-        ampa = spine.synapses['ampa']
-        ampa['netCon'].weight[0] = calcWeight(CamKIIbar)
-        
+print "Run the system till at the equilibrium"
+
+#nrnSim.run(100 * 1e3) # NEURON use the millisecond as base unit
+#for spine in nrnSim.spines:
+#    spine.ecellMan.ses.run(100)
+#
+#
+#
+## Experiment
+#
+#tStop = 200 * 1e3
+#nrnSim.h.dt = 0.025 #ms for neuron
+#
+#weights_tracker = []
+#while nrnSim.h.t < tStop:
+#    nrnSim.h.fadvance() # run Neuron for ms
+#    print "Neuron time [ms]: %f, spines: %s" % ( h.t, nrnSim.spines)
+#    if h.t % 1 == 0: # for every ms in NEURON we update the ecellMan
+#        for spine in nrnSim.spines:
+#            
+#            # Setting the calcium in the biochemical sim with the one from neuron
+#            electrical_cal = spine.vecs['ca'].x[-1] 
+#            spine.ecellMan.ca['Value'] = electrical_cal 
+#            print "Ecell Time [s] %f: " %spine.ecellMan.ses.getCurrentTime() 
+#            spine.ecellMan.ses.run(0.001)
+#            
+#            # getting the conc of the active CaMKII and set the weight of the synapse
+#            CaMKIIbar = spine.ecellMan.CaMKIIbar['Value']
+#            ampa = spine.synapses['ampa']
+#            weight = calcWeight(CaMKIIbar)
+#            ampa['netCon'].weight[0] = weight
+#            weights_tracker.append(weight)
+#        print "Active CamKII: %f Weight AMPA: %f" % (CaMKIIbar, weight)
 
 ### Let's plot
         
