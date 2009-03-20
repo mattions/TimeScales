@@ -1,18 +1,25 @@
 # Author: Michele Mattioni
 # Mon Jan 26 05:54:30 GMT 2009
 
-from neuron import h
+from neuron import h, nrn
 import ecellControl as eC
 import math
 
 
+class mySection(nrn.Section):
+    """Extend the Section object with the overriding then name"""
+    def __init__(self, id):
+        nrn.Section.__init__(self)
+        sec = h.Section()
+        self.id = id
+
 class Spine():
     """Class spine. Create a spine with head and neck"""
     
-    def __init__(self):
+    def __init__(self, name):
         """ Create a spine with a standard volume of ~0.11 um
         the h is the reference to the main hoc interpreter"""
-        
+        self.name = name
         self.neck = self.createNeck()
         self.head = self.createHead(self.neck)
         self.parent = None # the parent section connected to the neck
@@ -24,6 +31,11 @@ class Spine():
         # Setting up the biochemical simulator
         self.ecellMan = self.setupBioSim()
     
+    def updateName(self):
+        """Update the name of the sections. Call this method only when you will not change the section"""
+        self.neck.rename()
+        self.head.rename()
+        
     def setupBioSim(self):
         """Initialize the Biochemical Simulator creating the instance of 
         the object to control the simulation"""
@@ -34,7 +46,7 @@ class Spine():
         
     def createNeck(self):
         """ Create the neck with the Grunditz value"""
-        neck = h.Section()
+        neck = mySection(self.name + "_neck")
         neck.L = 1 # um
         neck.diam = 0.0394
         neck.nseg = 2
@@ -43,19 +55,25 @@ class Spine():
         
     def createHead(self, neck):
         """Create the head of the spine and populate it with the right channels"""
-        head = h.Section()
+        head = mySection(self.name + "_head")
         vol = 0.11 #um
         head.L = 1
         head.diam = math.sqrt(vol / head.L * math.pi ) * 2
         self.Ra = 150.0
         neck.nseg = 7
         head.connect(self.neck)
+        
         ### Insert the appropriate channels
         head.insert("caL")
         head.insert("caL13")
         head.insert("can")
         head.insert("skkca")
         head.insert("caq")
+        
+        # Calcium dynamics
+        head.insert("cadyn")
+        head.insert("caldyn")
+        
         return head
     
     def createCalciumVector(self):
@@ -74,35 +92,32 @@ class Spine():
         self.parent = parentSec
         
 if __name__ == "__main__":
-    import neuron
-    import numpy
     from spine import *
     from synapse import *
+    from neuron import h
+    from graph import *
+    import numpy
     import pylab
     
-    h = neuron.h
+    spine1 = Spine("spine1")
+    ampaSyn = Synapse('ampa', spine1.head)
+    ampaSyn.createStimul(start=30, number=10, interval=10, noise=0)
+    spine1.synapses = [ampaSyn]
     
     
-    sp1 = Spine()
-    ampaSyn = Synapse('ampa', sp1.head)
-    ampaSyn.createStimul(30, 10)
-    sp1.synapses = [ampaSyn]
+    vecsVolt = {}
+    vecsCai = {}
+    vecsCali = {}
     
-    
-    vecs = {}
-    
-    for var in ['t', 'sp1_head_v', 'sp1_neck_v']:
-        vecs[var] = h.Vector()
-    
-    vecs['t'].record(h._ref_t)
-    vecs['sp1_head_v'].record(sp1.head(0.5)._ref_v)
-    vecs['sp1_neck_v'].record(sp1.neck(0.5)._ref_v)
+    g = Graph()
+    vecsVolt = g.createVecs(vecsVolt, spine1, 'v')
+    vecsCai = g.createVecs(vecsCai, spine1, 'cai')
+    vecsCali = g.createVecs(vecsCali, spine1, 'cali')
     
     import neuron.gui
     h.tstop = 1000
     h.run()
-    pylab.plot(vecs['t'], vecs['sp1_head_v'], label='sp1_head_v')
-    pylab.plot(vecs['t'], vecs['sp1_neck_v'], label='sp1_neck_v')
-    pylab.legend(loc=0)
-    
+    g.plotVoltage(vecsVolt, ampaSyn.synVecs)
+    g.plotCalcium(vecsCai)
+    g.plotCalcium(vecsCali)
     pylab.show()
