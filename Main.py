@@ -19,8 +19,6 @@ def calcWeight(CaMKIIbar):
 
 
 nrnSim = NeuronSim()
-nrnSim.init()
-
 
 tEquilibrium = 100 # [sec] 
 
@@ -52,7 +50,13 @@ for spine in nrnSim.spines:
 # Equilibrium run
 
 print "Run the system 'till equilibrium"
-h.dt = 10 #  [ms]  
+# Using CVODE with a variable timestep
+cvode = h.CVode()
+cvode.active(1)
+
+nrnSim.init() # init
+
+#h.dt = 10 #  [ms]  
 nrnSim.run(tEquilibrium * 1e3) # NEURON use the millisecond as base unit
 print "Equilibrium reached. Neuron time: %f" % h.t
 for spine in nrnSim.spines:
