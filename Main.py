@@ -49,35 +49,37 @@ for spine in nrnSim.spines:
 #------------------------------------------------------------------------------ 
 # Equilibrium run
 
-print "Run the system 'till equilibrium"
+
 # Using CVODE with a variable timestep
-cvode = h.CVode()
-cvode.active(1)
-
+cvode = nrnSim.usingVariableTimeStep()
 nrnSim.init() # init
-
-#h.dt = 10 #  [ms]  
-nrnSim.run(tEquilibrium * 1e3) # NEURON use the millisecond as base unit
-print "Equilibrium reached. Neuron time: %f" % h.t
-for spine in nrnSim.spines:
-    spine.ecellMan.ses.run(tEquilibrium)
-    print "Equilibrium for spine: %s, dend: %s, bio sim time: %f" % (spine.head.name(), 
-                                                                     spine.parent.name(),
-                                                                     spine.ecellMan.ses.getCurrentTime())
-
-
-
-#------------------------------------------------------------------------------ 
-# Experiment
-
+nrnSim.run(tEquilibrium)
+print "Run the system 'till equilibrium"  
+#nrnSim.run(tEquilibrium * 1e3) # NEURON use the millisecond as base unit
+#print "Equilibrium reached. Neuron time: %f" % h.t
+#for spine in nrnSim.spines:
+#    spine.ecellMan.ses.run(tEquilibrium)
+#    print "Equilibrium for spine: %s, dend: %s, bio sim time: %f" % (spine.head.name(), 
+#                                                                     spine.parent.name(),
+#                                                                     spine.ecellMan.ses.getCurrentTime())
+#
+#
+#
+##------------------------------------------------------------------------------ 
+## Experiment
+#
 #tStop = (tEquilibrium + 2) * 1e3
-#nrnSim.h.dt = 0.025 # [ms] is the bas unit for neuron so fixed dt at 0.025
-##
+#
+## Back To Fix timeStep. We need to implement a variable algorithm to 
+## keep track of the changes
+#cvode.active(0)
+#h.dt = 0.025 # [ms] is the bas unit for neuron so fixed dt at 0.025
+#
 #weights_tracker = []
-#while nrnSim.h.t < tStop:
-#    nrnSim.h.fadvance() # run Neuron for step
+#while h.t < tStop:
+#    h.fadvance() # run Neuron for step
 ##    print "Neuron time [ms]: %f, spines: %s" % ( nrnSim.h.t, nrnSim.spines)
-#    if numpy.round(nrnSim.h.t, decimals = 4) % 1 == 0: # for every ms in NEURON we update the ecellMan
+#    if numpy.round(h.t, decimals = 4) % 1 == 0: # for every ms in NEURON we update the ecellMan
 #        for spine in nrnSim.spines:
 #            
 #            # Setting the calcium in the biochemical sim with the one from neuron
@@ -95,8 +97,8 @@ for spine in nrnSim.spines:
 #            ampa.netCon.weight[0] = weight
 #            weights_tracker.append(weight)
 #            
-#    if numpy.round(nrnSim.h.t, decimals = 4) % 50 == 0: # printig every half sec
-#            print "Neuron time [ms]: %f, spines: %s" % ( nrnSim.h.t, nrnSim.spines)
+#    if numpy.round(h.t, decimals = 4) % 50 == 0: # printig every half sec
+#            print "Neuron time [ms]: %f, spines: %s" % ( h.t, nrnSim.spines)
 #            print "Ecell Time [s] %g: " %spine.ecellMan.ses.getCurrentTime()
-
-## Let's plot
+#
+### Let's plot
