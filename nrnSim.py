@@ -12,7 +12,7 @@ class NeuronSim():
         self.distributeSpines()
             
     def run(self, tStop):
-        """Run the simulation untill tStop"""
+        """Run the simulation until tStop"""
         h.tstop = tStop
         h.run()
             
@@ -20,8 +20,9 @@ class NeuronSim():
         """Initialize the cell"""
         h.v_init = v_init
         
+        
     def initAndRun(self, tStop):
-        """Initialize and run the simulation untill tStop""" 
+        """Initialize and run the simulation until tStop""" 
         self.init()
         self.run(tStop)
     
@@ -63,7 +64,6 @@ if __name__ == "__main__":
     from neuron import h
     nrnSim = NeuronSim()
     cvode = nrnSim.usingVariableTimeStep()
-    nrnSim.init()
     vecs = {}
     vecs['t'] = h.Vector()
     vecs['t'].record(h._ref_t)
@@ -71,7 +71,10 @@ if __name__ == "__main__":
     vecs['v_soma'].record(h.MSP_Cell[0].soma(0.5)._ref_v)
     #h.load_file("../guiRig2.ses")
     iClamp = nrnSim.iClampExp()
-    nrnSim.run(800)
+    
+    # The run 
+#    nrnSim.init()
+    nrnSim.initAndRun(800)
     pylab.plot(vecs['t'],vecs['v_soma'])
     pylab.show()
     
