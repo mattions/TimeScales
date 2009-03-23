@@ -7,10 +7,10 @@ import datetime
 
 class IOHelper():
     
-    def __init__(self):
+    def __init__(self, prefix="./"):
         
         self.ecellManFileName = "ecellManagerObj"
-        self.dirRoot = "Sims"
+        self.dirRoot = os.path.join(prefix, "Sims")
         
     
     def createSaveDir(self):

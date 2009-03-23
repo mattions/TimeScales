@@ -122,17 +122,18 @@ def testCalciumTrain(filename="../biochemical_circuits/biomd183.eml"):
 
 
 
-def testChangeCalciumValue(filename="../biochemical_circuits/biomd183_noCalcium.eml"):
+def testChangeCalciumValue(interval, filename="../biochemical_circuits/biomd183_noCalcium.eml"):
     """Run a test simulation changing the calcium value on the fly"""
     print "Show case of the possibilities to change the level of calcium on the fly"
     ecellManager = EcellManager(filename)
     ecellManager.createLoggers()
     print "Loggers created"
+    print "Running with the updating interval of : %f" %interval
     
-    tstop = 200
+    tstop = 150
     while(ecellManager.ses.getCurrentTime() < tstop):
         ecellManager.ca['Value'] = 7
-        ecellManager.ses.run(0.001)
+        ecellManager.ses.run(interval)
         #ecellManager.ses.run(1)
         #print ecellManager.ses.getCurrentTime()
     
@@ -148,7 +149,7 @@ def testChangeCalciumValue(filename="../biochemical_circuits/biomd183_noCalcium.
     tstop = tstop+500
     while(ecellManager.ses.getCurrentTime() < tstop):
         ecellManager.ca['Value'] = 7
-        ecellManager.ses.run(0.001)
+        ecellManager.ses.run(interval)
         #ecellManager.ses.run(1)
         #print ecellManager.ses.getCurrentTime()
         
@@ -157,18 +158,28 @@ def testChangeCalciumValue(filename="../biochemical_circuits/biomd183_noCalcium.
     return ecellManager
         
 if __name__ == "__main__":
+    
     from ioHelper import *
-    import sys
+    import os
+    from optparse import OptionParser
+    usage= "usage: %prog [options] interval.\n\
+    Run the simulator using the interval [s] to update the calcium between different run"
+    parser = OptionParser(usage)
+    parser.add_option("-s", "--save", action="store_true", 
+                      help= "If True save the graphs and the log")
+    (options, args) = parser.parse_args()
+     
     
-    batch = True
-    if (len(sys.argv) == 2):
-        option = sys.argv[1]
-        if option == "interactive":
-            batch = False
+    if len(args) != 1:
+        parser.error("Incorrect number of arguments")
+        parser.usage()
+    else:
+        interval = float(args[0])
+        print "Interval %f, Save option %s" %( interval, options.save)
     
-        ## Setting the backend
+    ## Setting the backend
     import matplotlib
-    if batch:
+    if options.save == True:
         try:
             import cairo
             matplotlib.use('Cairo')
@@ -178,12 +189,16 @@ if __name__ == "__main__":
             print "Switching backend to Agg. Batch execution"
     
          
-    ioH = IOHelper()
-    ecellManager = testChangeCalciumValue()
+    ioH = IOHelper(prefix=os.getcwd())
+    ecellManager = testChangeCalciumValue(interval)
     #ecellManager = testCalciumTrain()
     
-    if batch == True:
+    if options.save == True:
         dir = ioH.saveObj(ecellManager.timeCourses, "timeCourses")
-        ecellManager.plotTimeCourses(batch=batch, dir=dir)
+        ecellManager.plotTimeCourses(batch=options.save, dir=dir)
+        f = open(os.path.join(dir, 'log.txt'), 'w') 
+        f.write("Test of the supply of the calcium to the biochemical model\n\
+        Interval used in this simulation: %f\n" % (interval))
+        f.close()
     else:
         ecellManager.plotTimeCourses()
