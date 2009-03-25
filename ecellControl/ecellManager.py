@@ -7,7 +7,6 @@ import ecell.config
 import ecell.emc
 import os
 import numpy
-import pylab
 
 class EcellManager():
     """Control and instatiate the ecell simulator embedding it in an handy python object"""
@@ -66,7 +65,7 @@ class EcellManager():
                          )
             self.ses.run(interval)
     
-    def plotTimeCourses(self, batch=False, dir=None):
+    def plotTimeCourses(self, save=False, dir=None):
         """Plot the default timecourses"""
         ca_tc = self.timeCourses['ca'] 
         pylab.figure()
@@ -74,8 +73,9 @@ class EcellManager():
         pylab.xlabel("Time [s]")
         pylab.legend(loc=0)
         
-        if batch :
+        if save :
             pylab.savefig(os.path.join(dir, "caInput.png"))
+            print "figure saved in: %s" % os.path.join(dir, "caInput.png")
         
         bars = ['PP2Bbar', 'CaMKIIbar']
         pylab.figure()
@@ -85,8 +85,9 @@ class EcellManager():
             pylab.xlabel("Time [s]")
             pylab.legend(loc=0)
         
-        if batch :
+        if save :
             pylab.savefig(os.path.join(dir, "PP2B_and_CaMKII_activation.png"))
+            print "figure saved in: %s" % os.path.join(dir, "PP2B_and_CaMKII_activation.png")
         else:
             pylab.show()
         
@@ -180,7 +181,7 @@ if __name__ == "__main__":
         interval = float(args[0])
         print "Interval %f, Save option %s" %( interval, options.save)
     
-    ## Setting the backend
+    ## Setting the mat plotlib backend
     import matplotlib
     if options.save == True:
         try:
@@ -190,7 +191,7 @@ if __name__ == "__main__":
         except:
             matplotlib.use('Agg')
             print "Switching backend to Agg. Batch execution"
-    
+    import pylab
          
     ioH = IOHelper(prefix=os.getcwd())
     if hasattr(options, "caValue"):
@@ -201,7 +202,7 @@ if __name__ == "__main__":
     
     if options.save == True:
         dir = ioH.saveObj(ecellManager.timeCourses, "timeCourses")
-        ecellManager.plotTimeCourses(batch=options.save, dir=dir)
+        ecellManager.plotTimeCourses(save=options.save, dir=dir)
         f = open(os.path.join(dir, 'log.txt'), 'w') 
         f.write("Test of the supply of the calcium to the biochemical model\n\
         Interval used in this simulation: %f\n" % (interval))

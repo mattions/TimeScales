@@ -20,8 +20,6 @@ def calcWeight(CaMKIIbar):
 
 nrnSim = NeuronSim()
 
-tEquilibrium = 100 # [sec] 
-
 #------------------------------------------------------------------------------ 
 graph = Graph()
 
@@ -32,6 +30,8 @@ vecsiCa = {}
 
 
 # Set the stimuls to the synapses
+
+tEquilibrium = 100 # [sec] 
 
 for spine in nrnSim.spines:
     ampaSyn = Synapse('ampa', spine.head)
@@ -50,21 +50,33 @@ for spine in nrnSim.spines:
 # Equilibrium run
 
 
+caSamplingInterval = 0.0020 # [sec] Reasonable Calcium sampling
 # Using CVODE with a variable timestep
 cvode = nrnSim.usingVariableTimeStep()
-nrnSim.init() # init
-nrnSim.run(tEquilibrium)
-print "Run the system 'till equilibrium"  
-#nrnSim.run(tEquilibrium * 1e3) # NEURON use the millisecond as base unit
-#print "Equilibrium reached. Neuron time: %f" % h.t
-#for spine in nrnSim.spines:
-#    spine.ecellMan.ses.run(tEquilibrium)
-#    print "Equilibrium for spine: %s, dend: %s, bio sim time: %f" % (spine.head.name(), 
+eventTimePoints = numpy.arange(0,tEquilibrium, caSamplingInterval)
+
+#def updateSpines():
+#    for spine in nrnSim.spines:
+#        ca_from_NEURON = spine.vecs['ca'].x[-1] 
+#        spine.ecellMan.ca['Value'] = ca_from_NEURON 
+#        spine.ecellMan.ses.run(caSamplingInterval)
+#        print "Equilibrium for spine: %s, dend: %s, bio sim time: %f" % (spine.head.name(), 
 #                                                                     spine.parent.name(),
 #                                                                     spine.ecellMan.ses.getCurrentTime())
-#
-#
-#
+for eventTimePoint in eventTimePoints:
+    event = Event(eventTimePoint, nrnSim)
+    
+print "Run the system 'till equilibrium"
+nrnSim.initAndRun(tEquilibrium * 1e3) # NEURON use the millisecond as base unit
+print "Equilibrium reached. Neuron time: %f" % h.t
+for spine in nrnSim.spines:
+    spine.ecellMan.ses.run(caSamplingInterval)
+    print "Equilibrium for spine: %s, dend: %s, bio sim time: %f" % (spine.head.name(), 
+                                                                     spine.parent.name(),
+                                                                     spine.ecellMan.ses.getCurrentTime())
+
+
+
 ##------------------------------------------------------------------------------ 
 ## Experiment
 #
@@ -101,4 +113,4 @@ print "Run the system 'till equilibrium"
 #            print "Neuron time [ms]: %f, spines: %s" % ( h.t, nrnSim.spines)
 #            print "Ecell Time [s] %g: " %spine.ecellMan.ses.getCurrentTime()
 #
-### Let's plot
+#### Let's plot

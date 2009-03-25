@@ -5,7 +5,22 @@
 import numpy
 from spine import *
 
+
+class Event():
+    """Event will be added to the cvode queue list"""
+    def __init__(self, eventTime, cvode, nrnSim):
+        self.eventTime = eventTime
+        self.cvode = cvode
+        self.fih = h.FInitializeHandler(1, self.callback)
+        
+    def callback(self, eventTime, nrnSim) :
+        print "event at %f " %h.t
+        self.cvode.event(self.eventTime, self.callback(eventTime, nrnSim))
+
+
+
 class NeuronSim():
+    """Class to control the NeuroSim"""
     def __init__(self):
         h.load_file("my_init.hoc")
         h.load_file("stdrun.hoc") # loading the standard run NEURON system
@@ -33,7 +48,16 @@ class NeuronSim():
         spine = Spine("spine1")
         spine.attach(h.MSP_Cell[0].dend1_1[1], 0.5, 0)
         self.spines = [spine]
-        
+    
+    def updateSpines(self):
+        "HERE WE UPDATE THE SPINE CALCIUM"
+        for spine in self.spines:
+            ca_from_NEURON = spine.vecs['ca'].x[-1] 
+            spine.ecellMan.ca['Value'] = ca_from_NEURON 
+            spine.ecellMan.ses.run(caSamplingInterval)
+            print "Equilibrium for spine: %s, dend: %s, bio sim time: %f" % (spine.head.name(), 
+                                                                     spine.parent.name(),
+                                                                     spine.ecellMan.ses.getCurrentTime())    
     def usingVariableTimeStep(self):
         cvode = h.CVode()
         cvode.active(1)
@@ -58,6 +82,7 @@ class NeuronSim():
 
 # Test code
 
+
 if __name__ == "__main__":
     import pylab
     import neuron.gui
@@ -72,9 +97,16 @@ if __name__ == "__main__":
     #h.load_file("../guiRig2.ses")
     iClamp = nrnSim.iClampExp()
     
-    # The run 
-#    nrnSim.init()
-    nrnSim.initAndRun(800)
+    
+    # The run
+    nrnSim.init() # Initialize the sim
+    
+    # Event preparation
+    ev = Event(100, cvode, nrnSim) 
+    print "Simulation started NEURON time: %d" %h.t
+    nrnSim.run(800)
+    
+    
     pylab.plot(vecs['t'],vecs['v_soma'])
     pylab.show()
     

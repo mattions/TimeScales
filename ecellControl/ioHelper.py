@@ -24,7 +24,7 @@ class IOHelper():
         dirDate = today.strftime("%d-%m-%Y")
         
         dirComp = os.path.join(self.dirRoot, dirDate)
-        dir = os.path.join(dirComp, str(index))
+        dir = os.path.join(dirComp, "Sim_" + str(index))
         while not free :
             if os.path.exists(dir):
                 index = index + 1
