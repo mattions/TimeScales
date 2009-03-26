@@ -1,0 +1,546 @@
+nspines = 1
+
+
+//*************************************************************************************
+// creating spine stems
+begintemplate AMPAtsp
+
+	public pp, sr, a, name
+
+	objref pp, sr
+	strdef name
+		
+		proc init()   {
+
+		pp = new AMPAsp($1)
+		sr = new SectionRef()
+		name = "AMPAsynsp"
+		a = $1
+
+		}
+
+endtemplate AMPAtsp
+
+begintemplate NMDAtsp
+
+	public pp, sr, a, name
+
+	objref pp, sr
+	strdef name
+		
+		proc init()   {
+
+		pp = new NMDAsp($1)
+		sr = new SectionRef()
+		name = "NMDAsynsp"
+		a = $1
+
+		}
+
+endtemplate NMDAtsp
+
+//*************************************************************************************
+
+
+
+
+//*************************************************************************************
+// creating spine stems
+
+create spins[nspines]
+for isp = 0, nspines-1 spins[isp] {
+	nseg=3
+	diam=0.1						// Wilson 1998, pg 368 (Shepherd book)
+	L=1.5							// Wilson 1998, pg 368 (Shepherd book)
+	Ra = 100						// gives Ri = 191 Mohm, agrees with Segev 1988
+
+	insert pas
+//	insert kirsp
+//	insert kassp
+	insert cansp
+	insert caqsp
+	insert carsp
+	insert skkcasp
+
+	factors_catrack()
+	insert catrack
+	ek = -90
+}
+ 
+create spinb[nspines]
+for isp = 0, nspines-1 spinb[isp] {
+	nseg=1
+	diam=0.5						// Wilson 1998, pg 368 (Shepherd book)
+	L=0.125							// Wilson 1998, pg 368 (Shepherd book)
+	Ra = 100						// gives Ri = 191 Mohm, agrees with Segev 1988
+
+	insert pas
+//	insert kirsp
+	insert kassp
+	insert cansp
+	insert caqsp
+	insert carsp
+//	insert skkcasp
+
+	factors_catrack()
+	insert catrack
+	ek = -90
+}
+ 
+/* creating spine heads and AZ*/
+create spinh[nspines]
+for isp = 0, nspines-1 spinh[isp] {
+	nseg = 3
+	diam = 0.5						// Wilson 1998, pg 368 (Shepherd book)
+	L = 0.375						// Wilson 1998, pg 368 (Shepherd book)
+	Ra = 100
+	
+	factors_catrack()
+	insert catrack
+//	insert cansp
+//	insert caqsp
+//	insert nafsp	// nothing with stim during Iinj, try w/ backprop
+	insert kassp
+//	insert kirsp
+	insert pas
+	ek = -90
+}
+
+create spina[nspines]
+for isp = 0, nspines-1 spina[isp] {
+	nseg = 1
+	diam = 0.5						// Wilson 1998 (Shepherd book)
+	L = 0.05						// um, Holmes & Levy 1990
+	Ra = 100
+
+	factors_catrack()
+	insert catrack
+	insert caL13sp
+	insert caLsp
+	insert rubin
+}
+
+//*************************************************************************************
+
+
+
+//*************************************************************************************
+// redo dendrite
+MSP_Cell[0].dend1_1[1] disconnect()
+
+ndend = 11
+
+//create dendsp[1]
+//dendsp[0] {
+//	nseg = 1
+//	Ra = 100
+//	L = 6
+//	insert kir { gkbar_kir=0.00014 mvhalf_kir=-52 mslope_kir=13 mshift_kir=30 qfact_kir=0.5}
+//	insert k_ion { ek=-90}
+//	insert nap { gnabar_nap=1.72525e-07}
+//	insert naf { gnabar_naf=0.024375 mshift_naf=-2 hshift_naf=-2}
+//	insert na_ion { ena=50}
+//	insert pas { g_pas=1.15e-05 e_pas=-70}
+//	insert capacitance { cm=1}
+//	insert morphology { diam=0.72}
+//}
+
+create dend[ndend]
+for isp = 0, ndend-1 dend[isp] {
+	nseg = 1
+	Ra = 100
+	L = 395.2/ndend
+	insert cat { pcatbar_cat=P_CAT}
+	insert car { pcarbar_car=P_CAR}
+	insert caq { pcaqbar_caq=P_CAQ}
+	insert can { pbar_can=P_CAN}
+	insert cadyn { drive_cadyn=10000 cainf_cadyn=1e-05 taur_cadyn=43 pump_cadyn=0.02}
+	insert caL13 { pcaLbar_caL13=P_CAL13D mshift_caL13=0 hshift_caL13=0 qfact_caL13=3 hqfact_caL13=3}
+	insert caL { pbar_caL=P_CALD mshift_caL=0 hshift_caL=0}
+	insert caldyn { drive_caldyn=10000 cainf_caldyn=1e-05 taur_caldyn=43 pump_caldyn=0.02}
+	insert cal_ion {}
+	insert kdr { gkbar_kdr=G_KDR}
+	insert skkca { stau_skkca=1 qfact_skkca=1 gkbar_skkca=G_SKKCAD abar_skkca=0.48 bbar_skkca=0.28}
+	insert bkkca { gkbar_bkkca=G_BKKCA}
+	insert ca_ion {}
+	insert kaf { gkbar_kaf=G_KAFD mshift_kaf=0 hshift_kaf=0 htau_kaf=14 power_kaf=2}
+	insert kas { gkbar_kas=G_KASD}
+	insert kir { gkbar_kir=G_KIR mvhalf_kir=-52 mslope_kir=13 mshift_kir=30 qfact_kir=0.5}
+	insert k_ion { ek=-90}
+	insert nap { gnabar_nap=G_NAPD}
+	insert naf { gnabar_naf=G_NAFD mshift_naf=SHNAF hshift_naf=SHNAF}
+	insert na_ion { ena=50}
+	insert pas { g_pas=G_PAS e_pas=-70}
+	insert capacitance { cm=1}
+	insert morphology { diam=0.72}
+}
+
+
+MSP_Cell[0].dend1_1[0] connect dend[0](0), (1)
+connect dend[1](0), dend[0](1)
+connect dend[2](0), dend[1](1)
+connect dend[3](0), dend[2](1)
+connect dend[4](0), dend[3](1)
+
+//connect dendsp[0](0), dend[4](1)
+//connect dend[5](0), dendsp[0](1)
+
+connect dend[5](0), dend[4](1)
+connect dend[6](0), dend[5](1)
+connect dend[7](0), dend[6](1)
+connect dend[8](0), dend[7](1)
+connect dend[9](0), dend[8](1)
+connect dend[10](0), dend[9](1)
+
+//*************************************************************************************
+
+
+
+//*************************************************************************************
+// connect spine active area, head, stem, to dend
+// insert ampa, nmda
+for isp=0, nspines-1 {
+	connect spina[isp](0), spinh[isp](1)
+	connect spinh[isp](0), spinb[isp](1)
+	connect spinb[isp](0), spins[isp](1)
+}
+
+//MSP_Cell[0].dend1_1[1] {
+
+dend[5] {
+	connect spins[0](0), (0.5)
+}
+
+//dendsp[0] {
+//	connect spins[0](0), (0.5)
+//}
+
+//*************************************************************************************
+
+
+
+
+
+//*************************************************************************************
+// redo ampa and nmda AND gaba, get rid of old dendrite
+
+MSP_Cell[0].synlist.remove(20)	       // MSP_Cell[0].synlist.index(MSP_Cell[0].ampa[0])
+dend[2] MSP_Cell[0].ampa[0] = new AMPAt(0.5) 	
+MSP_Cell[0].synlist.insrt(20, MSP_Cell[0].ampa[0])
+
+MSP_Cell[0].synlist.remove(21)	       // MSP_Cell[0].synlist.index(MSP_Cell[0].ampa[0])
+dend[4] MSP_Cell[0].ampa[1] = new AMPAt(0.5) 	
+MSP_Cell[0].synlist.insrt(21, MSP_Cell[0].ampa[1])
+AMPA[85].gbar = 0
+
+MSP_Cell[0].synlist.remove(22)	       // MSP_Cell[0].synlist.index(MSP_Cell[0].ampa[0])
+dend[5] MSP_Cell[0].ampa[2] = new AMPAt(0.5) 	
+MSP_Cell[0].synlist.insrt(22, MSP_Cell[0].ampa[2])
+
+MSP_Cell[0].synlist.remove(23)	       // MSP_Cell[0].synlist.index(MSP_Cell[0].ampa[0])
+dend[7] MSP_Cell[0].ampa[3] = new AMPAt(0.5) 	
+MSP_Cell[0].synlist.insrt(23, MSP_Cell[0].ampa[3])
+
+
+
+MSP_Cell[0].synlist.remove(104)	       // MSP_Cell[0].synlist.index(MSP_Cell[0].nmda[0])
+dend[2] MSP_Cell[0].nmda[0] = new NMDAt(0.5) 	
+MSP_Cell[0].synlist.insrt(104, MSP_Cell[0].nmda[0])
+
+MSP_Cell[0].synlist.remove(105)	       // MSP_Cell[0].synlist.index(MSP_Cell[0].nmda[0])
+dend[4] MSP_Cell[0].nmda[1] = new NMDAt(0.5) 	
+MSP_Cell[0].synlist.insrt(105, MSP_Cell[0].nmda[1])
+NMDA[85].gbar = 0
+
+MSP_Cell[0].synlist.remove(106)	       // MSP_Cell[0].synlist.index(MSP_Cell[0].nmda[0])
+dend[5] MSP_Cell[0].nmda[2] = new NMDAt(0.5) 	
+MSP_Cell[0].synlist.insrt(106, MSP_Cell[0].nmda[2])
+
+MSP_Cell[0].synlist.remove(107)	       // MSP_Cell[0].synlist.index(MSP_Cell[0].nmda[0])
+dend[7] MSP_Cell[0].nmda[3] = new NMDAt(0.5) 	
+MSP_Cell[0].synlist.insrt(107, MSP_Cell[0].nmda[3])
+
+
+
+MSP_Cell[0].synlist.remove(220)	       // MSP_Cell[0].synlist.index(MSP_Cell[0].nmda[0])
+dend[3] MSP_Cell[0].gaba[0] = new GABAt(0.5) 	
+MSP_Cell[0].synlist.insrt(220, MSP_Cell[0].gaba[0])
+
+MSP_Cell[0].synlist.remove(221)	       // MSP_Cell[0].synlist.index(MSP_Cell[0].nmda[0])
+dend[6] MSP_Cell[0].gaba[1] = new GABAt(0.5) 	
+MSP_Cell[0].synlist.insrt(221, MSP_Cell[0].gaba[1])
+
+
+
+MSP_Cell[0].dend1_1[1] delete_section()
+
+//*************************************************************************************
+
+
+
+
+//*************************************************************************************
+// ampa and nmda in spine
+
+objref ampaspine[nspines]
+objref nmdaspine[nspines]
+
+for isp=0,nspines-1 spina[isp] {
+	 ampaspine[isp] = new AMPAtsp(0.99)    
+	 nmdaspine[isp] = new NMDAtsp(0.99)
+}
+
+for isp = 0, nspines - 1 {		// cortical cells 
+	tempo = cell_append(new NS_NetStim(), 0, 0, 0)
+}
+
+for isp = 0, nspines - 1 {
+	ksp = (NGLU+NGABA)*cell_number
+	ConnectFAKE_[ksp+isp] = new NetCon( fakeit, NS_NetStim[ksp+isp].pp, 1, 0, 1)
+	ConnectNMDA_[ksp+isp] = new NetCon( NS_NetStim[ksp+isp].pp, nmdaspine[isp].pp, 0, 0, nNMDA_WT) 
+	ConnectAMPA_[ksp+isp] = new NetCon( NS_NetStim[ksp+isp].pp, ampaspine[isp].pp, 0, 0, nAMPA_WT) 
+	NS_NetStim[ksp+isp].pp.number = 0
+}
+//*************************************************************************************
+
+
+
+
+
+
+
+
+//......
+
+proc l12sp_ratio() { RATIO = $1
+	L12SP_RATIO = RATIO
+	nP_CALSP = P_CALSP * RATIO
+	set_caLsp(nP_CALSP)
+}
+
+proc l13sp_ratio() { RATIO = $1
+	L13SP_RATIO = RATIO
+	nP_CAL13SP = P_CAL13SP * RATIO
+	set_caL13sp(nP_CAL13SP)
+}
+
+proc cansp_ratio() { RATIO = $1
+	CANSP_RATIO = RATIO
+	nP_CANSP = P_CANSP * RATIO
+	set_cansp(nP_CANSP)
+}
+
+proc caqsp_ratio() { RATIO = $1
+	CAQSP_RATIO = RATIO
+	nP_CAQSP = P_CAQSP * RATIO
+	set_caqsp(nP_CAQSP)
+}
+
+proc carsp_ratio() { RATIO = $1
+	CARSP_RATIO = RATIO
+	nP_CARSP = P_CARSP * RATIO
+	set_carsp(nP_CARSP)
+}
+
+proc kirsp_ratio () {	RATIO = $1
+	nG_KIRSP = G_KIRSP * RATIO
+	KIRSP_RATIO = RATIO
+    set_kirsp(nG_KIRSP)
+}
+
+proc kassp_ratio () {	RATIO = $1
+	nG_KASSP = G_KASSP * RATIO
+	KASSP_RATIO = RATIO
+    set_kassp(nG_KASSP)
+}
+
+proc nafsp_ratio () {	RATIO = $1
+	nG_NAFSP = G_NAFSP * RATIO
+	NAFSP_RATIO = RATIO
+    set_nafsp(nG_NAFSP)
+}
+
+proc napsp_ratio () {	RATIO = $1
+	nG_NAPSP = G_NAPSP * RATIO
+	NAPSP_RATIO = RATIO
+    set_napsp(nG_NAPSP)
+}
+
+proc skkcasp_ratio () {	RATIO = $1
+	nG_SKKCASP = G_SKKCASP * RATIO
+	SKKCASP_RATIO = RATIO
+    set_skkcasp(nG_SKKCASP)
+}
+
+//......
+
+
+proc set_caLsp() {		NEW_PBAR = $1
+	nP_CALSP = NEW_PBAR
+	forall if (ismembrane("caLsp")) {pbar_caLsp = NEW_PBAR}
+}
+
+proc set_caL13sp() {		NEW_PBAR = $1
+	nP_CAL13SP = NEW_PBAR
+	forall if (ismembrane("caL13sp")) {pcaLbar_caL13sp = NEW_PBAR}
+}
+
+proc set_cansp() {		NEW_PBAR = $1
+	nP_CANSP = NEW_PBAR
+	forall if (ismembrane("cansp")) {pbar_cansp = NEW_PBAR}
+}
+
+proc set_caqsp() {		NEW_PBAR = $1
+	nP_CAQSP = NEW_PBAR
+	forall if (ismembrane("caqsp")) {pcaqbar_caqsp = NEW_PBAR}
+}
+
+proc set_carsp() {		NEW_PBAR = $1
+	nP_CARSP = NEW_PBAR
+	forall if (ismembrane("carsp")) {pcarbar_carsp = NEW_PBAR}
+}
+
+proc set_nafsp() {		NEW_GBAR = $1
+	nG_NAFSP = NEW_GBAR
+//	dendsp[0].gnabar_naf = nG_NAFSP
+	for isp = 2, 8 {dend[isp].gnabar_naf = nG_NAFSP}
+//	dend[5].gnabar_naf = nG_NAFSP
+	forall if (ismembrane("nafsp")) {gnabar_nafsp = nG_NAFSP}
+	
+	dend[0].gnabar_naf = nG_NAFSP
+	dend[1].gnabar_naf = nG_NAFSP
+	dend[9].gnabar_naf = nG_NAFSP
+	dend[10].gnabar_naf = nG_NAFSP
+}
+
+proc set_napsp() {		NEW_GBAR = $1
+	nG_NAPSP = NEW_GBAR
+//	dendsp[0].gnabar_nap = nG_NAPSP
+	for isp = 2, 8 {dend[isp].gnabar_nap = nG_NAPSP}
+//	dend[5].gnabar_nap = nG_NAPSP
+	forall if (ismembrane("napsp")) {gnabar_napsp = nG_NAPSP}
+}
+
+proc set_kirsp() {		NEW_GBAR = $1
+	nG_KIRSP = NEW_GBAR
+//	dendsp[0].gkbar_kir = nG_KIRSP
+	for isp = 2, 8 {dend[isp].gkbar_kir = nG_KIRSP}
+	dend[5].gkbar_kir = nG_KIRSP
+	forall if (ismembrane("kirsp")) {gkbar_kirsp = nG_KIRSP}
+}
+
+proc set_kassp() {		NEW_GBAR = $1
+	nG_KASSP = NEW_GBAR
+	forall if (ismembrane("kassp")) {gkbar_kassp = nG_KASSP}
+}
+
+proc set_skkcasp() {		NEW_GBAR = $1
+	nG_SKKCASP = NEW_GBAR
+	forall if (ismembrane("skkcasp")) {gkbar_skkcasp = nG_SKKCASP}
+}
+
+//......
+
+proc set_mshiftcal13sp() {	NEW = $1
+	forall if (ismembrane("caL13sp")) {mshift_caL13sp = NEW}
+	nMSHIFT_CAL13SP = NEW
+}
+
+proc set_hshiftnafsp() {	NEW = $1
+	forall if (ismembrane("nafsp")) {hshift_nafsp = NEW}
+	nHSHIFT_NAFSP = NEW
+}
+
+proc champawtsp() { nAMPA_WTSP = $1
+	ConnectAMPA_[168] = new NetCon( NS_NetStim[168].pp, ampaspine[0].pp, 0, 0, nAMPA_WTSP) 
+}
+ 
+proc chnmdawtsp() { nNMDA_WTSP = $1
+	ConnectNMDA_[168] = new NetCon( NS_NetStim[168].pp, nmdaspine[0].pp, 0, 0, nNMDA_WTSP) 
+}
+
+proc gampasp() {	NEW = $1
+	nAMPA_WTSP = NEW
+	for isp = 0, nspines-1 {AMPAsp[isp].gbar = G_AMPA * nAMPA_WTSP}
+}
+
+proc gnmdasp() {	NEW = $1
+	nNMDA_WTSP = NEW
+	for isp = 0, nspines-1 {NMDAsp[isp].gbar = G_NMDA * nNMDA_WTSP}
+}
+
+
+//......
+
+CA = 10000
+L13 = 400
+L12 = 10000
+KAS = 4000
+SK = 300
+AMP = 2
+NMD = 2
+MSHIFT_CAL13SP = 0
+HSHIFT_NAFSP = -2
+GPS = 1
+GPH = 1
+
+//NAF = 110
+//NAP = 50000
+//KIR = 240
+NAF = 1
+NAP = 1
+KIR = 1
+
+
+// med ca tuning to start off with
+P_CALSP = 6.7e-6 * 10 * L12
+P_CAL13SP = 4.25e-7 * 10 * L13
+P_CANSP = 1.0e-5 * 10 * CA
+P_CAQSP = 6.0e-6 * 10 * CA
+P_CARSP = 2.6e-5 * 10 * CA
+G_KIRSP = 0.00014 * 1 * KIR
+G_KASSP = 9.5142e-4 * 1 * KAS
+G_NAFSP = 0.0195 * 1.25 * NAF * 3
+G_NAPSP = 1.3802e-7 * 1.25 * NAP
+G_SKKCASP = 0.145 * 1.3 * SK
+G_AMPA = 8.5e-4 * AMP
+G_NMDA = 12.2e-5 * NMD
+
+l12sp_ratio(1)
+l13sp_ratio(1)
+cansp_ratio(1)
+caqsp_ratio(1)
+carsp_ratio(1)
+kirsp_ratio(1)
+kassp_ratio(1)
+nafsp_ratio(1)
+napsp_ratio(1)
+skkcasp_ratio(1)
+set_mshiftcal13sp(MSHIFT_CAL13SP)
+set_hshiftnafsp(HSHIFT_NAFSP)
+gampasp(1)	// was 0.8
+gnmdasp(1)
+spins[0] g_pas = 1.15e-5 * GPS
+spinh[0] g_pas = 1.15e-5 * GPH
+
+spina[0].TotalPump_catrack = 1e-11
+spinh[0].TotalPump_catrack = 1e-10
+spinb[0].TotalPump_catrack = 1e-10
+//spins[0].TotalPump_catrack = 1e-11
+
+//......
+
+
+proc doit() {
+//	nafsp_ratio(0.75)
+//	napsp_ratio(0.75)
+//	kirsp_ratio(1.65)
+}
+
+//forall if(ismembrane("naf")) {print gnabar_naf, secname()}
+
+
+
+
+
+

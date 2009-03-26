@@ -1,0 +1,711 @@
+//****************************************************************************
+// basic_procs.hoc defines procedures for setting conductances and range
+// variables of channels - these are primarily used to change variables
+// from the gui
+
+proc naf_ratio() {	RATIO = $1
+	NAF_RATIO = RATIO
+	nG_NAF = G_NAF * RATIO
+	nG_NAFD = G_NAFD * RATIO
+	set_naf(nG_NAF)
+	set_nafd(nG_NAFD)
+}
+
+proc nap_ratio() {  RATIO = $1
+	NAP_RATIO = RATIO
+	nG_NAP = G_NAP * RATIO
+	nG_NAPD = G_NAPD * RATIO
+	set_nap(nG_NAP)
+	set_napd(nG_NAPD)
+}
+
+proc cat_ratio() {	RATIO = $1
+	CAT_RATIO = RATIO
+	nP_CAT = P_CAT * RATIO
+	nP_CATD = P_CATD * RATIO
+	
+	set_cat(nP_CAT)
+	set_catd(nP_CATD)	
+}
+
+proc can_ratio() { RATIO = $1
+	CAN_RATIO = RATIO
+	nP_CAN = P_CAN * RATIO
+	set_can(nP_CAN)
+}
+
+proc caq_ratio() { RATIO = $1
+	CAQ_RATIO = RATIO
+	nP_CAQ = P_CAQ * RATIO
+	set_caq(nP_CAQ)
+}
+
+proc car_ratio() {RATIO = $1
+	CAR_RATIO = RATIO
+	nP_CAR = P_CAR * RATIO
+	set_car(nP_CAR)
+}
+
+proc l13p_ratio() { RATIO = $1
+	L13P_RATIO = RATIO
+	nP_CAL13 = P_CAL13 * RATIO
+	set_caL13(nP_CAL13)
+}
+
+proc l13d_ratio() { RATIO = $1
+	L13D_RATIO = RATIO
+	nP_CAL13D = P_CAL13D * RATIO
+	set_caL13d(nP_CAL13D)
+}
+
+proc l13_ratio() { RATIO = $1
+	L13_RATIO = RATIO
+	l13p_ratio(RATIO)
+	l13d_ratio(RATIO)
+}
+
+proc l12_ratio() { RATIO = $1
+	L12_RATIO = RATIO
+	nP_CAL = P_CAL * RATIO
+	nP_CALD = P_CALD * RATIO
+
+	set_caL(nP_CAL)
+	set_caLd(nP_CALD)
+}
+
+proc kas_ratio () {	RATIO = $1
+	nG_KAS = G_KAS * RATIO
+	KAS_RATIO = RATIO
+    set_kas (nG_KAS)
+}
+
+proc kaf_ratio () {	RATIO = $1
+	nG_KAF = G_KAF * RATIO
+	KAF_RATIO = RATIO
+    set_kaf(nG_KAF)
+}
+
+proc kdr_ratio() { RATIO = $1
+	nG_KDR = G_KDR * RATIO
+	KDR_RATIO = RATIO
+	set_kdr(nG_KDR)	
+}
+
+proc kir_ratio () {	RATIO = $1
+	nG_KIR = G_KIR * RATIO
+	KIR_RATIO = RATIO
+    set_kir(nG_KIR)
+}
+
+proc krp_ratio () {	RATIO = $1
+	nG_KRP = G_KRP * RATIO
+	KRP_RATIO = RATIO
+    set_krp(nG_KRP)
+}
+
+proc bkca_ratio () {	RATIO = $1
+	nG_BKKCA = G_BKKCA * RATIO
+	BKCA_RATIO = RATIO
+    set_bkkca(nG_BKKCA)
+}
+
+proc skca_ratio () {	RATIO = $1
+	nG_SKKCA = G_SKKCA * RATIO
+	SKCA_RATIO = RATIO
+    set_skkca(nG_SKKCA)
+}
+
+proc skcad_ratio () {	RATIO = $1
+	nG_SKKCAD = G_SKKCAD * RATIO
+	SKCAD_RATIO = RATIO
+    set_skkcad(nG_SKKCAD)
+}
+
+
+//...........
+
+
+proc na_ratio () {	RATIO = $1
+	NA_RATIO = RATIO
+	naf_ratio(RATIO)
+	nap_ratio(RATIO)
+}
+
+proc k_ratio () {	RATIO = $1
+	K_RATIO = RATIO
+	kas_ratio(RATIO)
+	kaf_ratio(RATIO)
+	kdr_ratio(RATIO)
+	kir_ratio(RATIO)
+	krp_ratio(RATIO)
+	bkca_ratio(RATIO)
+	skca_ratio(RATIO)
+	skcad_ratio(RATIO)
+}
+
+proc ca_ratio() {	RATIO = $1
+	CA_RATIO = RATIO
+	cat_ratio(RATIO)
+	can_ratio(RATIO)
+	caq_ratio(RATIO)
+	car_ratio(RATIO)
+	l13p_ratio(RATIO)
+	l13d_ratio(RATIO)
+	l12_ratio(RATIO)
+}
+
+
+//...........
+
+
+
+
+
+proc set_pas() {    NEW_GPAS = $1
+    forall if (ismembrane("pas")) {g_pas = NEW_GPAS}
+	nG_PAS = NEW_GPAS
+}
+
+
+
+
+
+//*****************
+// Sodium conductance settings - different conductances in the soma and dends
+// soma G is 10 times dendritic G
+
+proc set_naf() {		NEW_GBAR = $1
+	nG_NAF = NEW_GBAR
+	forsec "soma" {gnabar_naf = nG_NAF}
+ }
+
+proc set_nafd() {		NEW_GBAR = $1
+	nG_NAFD = NEW_GBAR
+	forsec "dend.*" {gnabar_naf = nG_NAFD}
+}
+
+proc set_nap() {		NEW_GBAR = $1
+	nG_NAP = NEW_GBAR
+	forsec "soma" {gnabar_nap = nG_NAP}
+ }
+
+proc set_napd() {		NEW_GBAR = $1
+	nG_NAPD = NEW_GBAR
+	forsec "dend.*" {gnabar_nap = nG_NAPD}
+}
+
+//*****************
+
+
+	
+
+
+//*****************
+// Potassium conductance settings
+
+proc set_ek() {	newEK = $1
+	forsec "MSP" {ek = newEK}
+	EK = newEK
+}
+
+proc set_kir() {		NEW_GBAR = $1
+	nG_KIR = NEW_GBAR
+	forall if (ismembrane("kir")) {gkbar_kir = nG_KIR}
+	set_kird(nG_KIR)
+ }
+
+proc set_kird() {		NEW_GBAR = $1
+	nG_KIRD = NEW_GBAR
+	forsec "dend._.*" {gkbar_kir = nG_KIRD}
+}
+
+proc set_kas() {		NEW_GBAR = $1
+	nG_KAS = NEW_GBAR
+	forsec "soma" {gkbar_kas = nG_KAS}
+	MSP_Cell[0].dend1 gkbar_kas = nG_KAS
+	MSP_Cell[0].dend2 gkbar_kas = nG_KAS
+	MSP_Cell[0].dend3 gkbar_kas = nG_KAS
+	MSP_Cell[0].dend4 gkbar_kas = nG_KAS
+
+	nG_KASD = nG_KAS * Ap / Ad
+	set_kasd(nG_KASD)
+ }
+
+proc set_kasd() {		NEW_GBAR = $1
+	nG_KASD = NEW_GBAR
+	forsec "dend._.*" {gkbar_kas = nG_KASD}
+}
+
+proc set_kaf() {		NEW_GBAR = $1
+	nG_KAF = NEW_GBAR
+	forsec "soma" {gkbar_kaf = nG_KAF}
+	MSP_Cell[0].dend1 gkbar_kaf = nG_KAF
+	MSP_Cell[0].dend2 gkbar_kaf = nG_KAF
+	MSP_Cell[0].dend3 gkbar_kaf = nG_KAF
+	MSP_Cell[0].dend4 gkbar_kaf = nG_KAF
+
+	nG_KAFD = nG_KAF * Ap / Ad
+	set_kafd(nG_KAFD)
+ }
+
+proc set_kafd() {		NEW_GBAR = $1
+	nG_KAFD = NEW_GBAR
+	forsec "dend._.*" {gkbar_kaf = nG_KAFD}
+}
+
+proc set_kdr() { NEW_GBAR = $1
+	nG_KDR = NEW_GBAR
+	forall if (ismembrane("kdr")) {gkbar_kdr = NEW_GBAR}
+}
+
+proc set_krp() {		NEW_GBAR = $1
+	nG_KRP = NEW_GBAR
+	forall if (ismembrane("krp")) {gkbar_krp = NEW_GBAR}
+}
+
+proc set_bkkca() {		NEW = $1
+	nG_BKKCA = NEW
+	forall if(ismembrane("bkkca")) {gkbar_bkkca = NEW}
+}
+
+proc set_skkca() {		NEW_GBAR = $1
+	nG_SKKCA = NEW_GBAR
+	forsec "soma" {gkbar_skkca = nG_SKKCA}
+
+	MSP_Cell[0].dend1 gkbar_skkca = nG_SKKCA
+	MSP_Cell[0].dend2 gkbar_skkca = nG_SKKCA
+	MSP_Cell[0].dend3 gkbar_skkca = nG_SKKCA
+	MSP_Cell[0].dend4 gkbar_skkca = nG_SKKCA
+}
+
+proc set_skkcad() {		NEW_GBAR = $1
+	nG_SKKCAD = NEW_GBAR
+	forsec "dend._.*" {gkbar_skkca = nG_SKKCAD}
+}
+
+//*****************
+
+
+
+
+
+//******************
+// Calcium conductance settings
+
+proc set_caL() {		NEW_PBAR = $1
+	nP_CAL = NEW_PBAR
+	MSP_Cell[0].soma pbar_caL = NEW_PBAR
+	MSP_Cell[0].dend1 pbar_caL = NEW_PBAR
+	MSP_Cell[0].dend2 pbar_caL = NEW_PBAR
+	MSP_Cell[0].dend3 pbar_caL = NEW_PBAR
+	MSP_Cell[0].dend4 pbar_caL = NEW_PBAR
+}
+
+proc set_caLd() {		NEW_PBAR = $1
+	nP_CALD = NEW_PBAR
+	forsec "dend._.*" {pbar_caL = NEW_PBAR}
+}
+
+proc set_caL13() {		NEW_PBAR = $1
+	nP_CAL13 = NEW_PBAR
+	MSP_Cell[0].soma pcaLbar_caL13 = NEW_PBAR
+	MSP_Cell[0].dend1 pcaLbar_caL13 = NEW_PBAR
+	MSP_Cell[0].dend2 pcaLbar_caL13 = NEW_PBAR
+	MSP_Cell[0].dend3 pcaLbar_caL13 = NEW_PBAR
+	MSP_Cell[0].dend4 pcaLbar_caL13 = NEW_PBAR
+}
+
+proc set_caL13d() {		NEW_PBAR = $1
+	nP_CAL13D = NEW_PBAR
+	forsec "dend._.*" {pcaLbar_caL13 = NEW_PBAR}
+}
+
+proc set_can() {		NEW_PBAR = $1
+	nP_CAN = NEW_PBAR
+	forall if (ismembrane("can")) {pbar_can = NEW_PBAR}
+}
+
+proc set_caq() {		NEW_PBAR = $1
+	nP_CAQ = NEW_PBAR
+	forall if (ismembrane("caq")) {pcaqbar_caq = NEW_PBAR}
+}
+
+proc set_car() {		NEW_PBAR = $1
+	nP_CAR = NEW_PBAR
+	forall if (ismembrane("car")) {pcarbar_car = NEW_PBAR}
+}
+proc set_cat() {		NEW_PBAR = $1	// for t in soma&prox
+	nP_CAT = NEW_PBAR
+	forsec "MSP_Cell[0]" pcatbar_cat = nP_CAT 
+	set_catd(nP_CAT)	
+}
+
+proc set_catd() {		NEW_PBAR = $1
+	nP_CATD = NEW_PBAR
+	forsec "dend._.*" pcatbar_cat = nP_CATD
+}
+
+//******************
+
+
+
+//******************
+// synaptic gbar procs
+proc gampa() {	NEW = $1
+	nG_AMPA = NEW
+	for j = 0, NGLU-1 {AMPA[j].gbar = NEW}
+}
+
+proc gnmda() {	NEW = $1
+	nG_NMDA = NEW
+	for j = 0, NGLU-1 {NMDA[j].gbar = NEW}
+}
+
+proc ggaba() {	NEW = $1
+	nG_GABA = NEW
+	for j = 0, NGABA-1 {GABA[j].gbar = nG_GABA}
+}
+//******************
+
+
+
+
+//******************
+// Calcium dynamics procs
+
+proc set_cainf() {	NEW_CAINF = $1
+	nCA_INF = NEW_CAINF
+	forall if (ismembrane("cadyn")) {cainf_cadyn = NEW_CAINF}
+	forall if (ismembrane("caldyn")) {cainf_caldyn = NEW_CAINF}
+}
+
+proc set_taur() {	NEW_TAUR = $1
+	nCA_TAUR = NEW_TAUR
+	forall if (ismembrane("cadyn")) {taur_cadyn = NEW_TAUR}
+	forall if (ismembrane("caldyn")) {taur_caldyn = NEW_TAUR}
+}
+proc set_cadrive() { 	NEW_DRIVE = $1
+	nCA_DRIVE = NEW_DRIVE
+	forall if (ismembrane("cadyn")) {drive_cadyn = NEW_DRIVE}
+	forall if (ismembrane("caldyn")) {drive_caldyn = NEW_DRIVE}
+}
+proc set_pump() {	NEW_PUMP = $1
+	nCA_PUMP = NEW_PUMP
+	forall if (ismembrane("cadyn")) {pump_cadyn = NEW_PUMP}
+	forall if (ismembrane("caldyn")) {pump_caldyn = NEW_PUMP}
+}
+//******************
+
+
+
+
+
+
+//******************
+// change temp
+proc change_temp() { NEWT = $1	// NEWT = 3 = 35degC, 1 = 22 degC
+
+	forall if (ismembrane("kir")) {qfact_kir = NEWT / 6}
+	forall if (ismembrane("krp")) {qfact_krp = NEWT}
+	forall if (ismembrane("kas")) {qfact_kas = NEWT * 3}
+	forall if (ismembrane("kaf")) {qfact_kaf = NEWT}
+
+	if (NEWT == 1) {
+		forall if (ismembrane("skkca")) {celsius_sk_skkca = 22}
+		celsius = 22
+		for itemp = 0, 83 {
+			AMPA[itemp].qfact = 1
+			GABA[itemp].qfact = 1
+			NMDA[itemp].qfact = 1
+		}
+	} else if (NEWT == 3) {
+		forall if (ismembrane("skkca")) {celsius_sk_skkca = 35}
+		celsius = 35
+		for itemp = 0, 83 {
+			AMPA[itemp].qfact = 2
+			GABA[itemp].qfact = 2
+			NMDA[itemp].qfact = 2
+		}
+	}
+	
+	forall if (ismembrane("naf")) {mqfact_naf = NEWT	hqfact_naf = NEWT}
+	forall if (ismembrane("nap")) {qfact_nap = NEWT}
+	
+	forall if (ismembrane("catl")) {qfact_catl = NEWT}
+	forall if (ismembrane("cat")) {qfact_cat = NEWT}
+	forall if (ismembrane("carl")) {qfact_carl = NEWT}
+	forall if (ismembrane("car")) {qfact_car = NEWT}
+	forall if (ismembrane("caq")) {qfact_caq = NEWT}
+	forall if (ismembrane("can")) {qfact_can = NEWT}
+	forall if (ismembrane("caL13")) {qfact_caL13 = NEWT}
+	forall if (ismembrane("caL")) {qfact_caL = NEWT}
+	
+	// don't know what to do about the cadyn's
+}
+//******************
+
+
+
+
+
+//............
+// intrinsic range variables
+
+proc set_mqfactnaf() {	NEW = $1
+	forall if (ismembrane("naf")) {mqfact_naf = NEW}
+	nMQFACT_NAF = NEW
+}
+
+proc set_hqfactnaf() {	NEW = $1
+	forall if (ismembrane("naf")) {hqfact_naf = NEW}
+	nHQFACT_NAF = NEW
+}
+
+proc set_mshiftnaf() {	NEW = $1
+	forall if (ismembrane("naf")) {mshift_naf = NEW}
+	print "nMSHIFT_NAF = ", nMSHIFT_NAF
+	nMSHIFT_NAF = NEW
+}
+
+proc set_hshiftnaf() {	NEW = $1
+	nHSHIFT_NAF = NEW
+	print "nHSHIFT_NAF = ", nHSHIFT_NAF
+	forall if (ismembrane("naf")) {hshift_naf = NEW}
+}
+
+proc set_mslopenaf() {	NEW = $1
+	forall if (ismembrane("naf")) {mslope_naf = NEW}
+	nMSLOPE_NAF = NEW
+}
+
+proc set_hslopenaf() {	NEW = $1
+	forall if (ismembrane("naf")) {hslope_naf = NEW}
+	nHSLOPE_NAF = NEW
+}
+
+//............
+
+
+proc set_hshiftcal13() {	NEW = $1
+	nHSHIFT_CAL13 = NEW
+	forall if (ismembrane("caL13")) {hshift_caL13 = NEW}
+}
+proc set_mshiftcal13() {	NEW = $1
+	forall if (ismembrane("caL13")) {mshift_caL13 = NEW}
+	nMSHIFT_CAL13 = NEW
+}
+
+proc set_hshiftcal() {	NEW = $1
+	nHSHIFT_CAL = NEW
+	forall if (ismembrane("caL")) {hshift_caL = NEW}
+}
+proc set_mshiftcal() {	NEW = $1
+	forall if (ismembrane("caL")) {mshift_caL = NEW}
+	nMSHIFT_CAL = NEW
+}
+
+proc set_a_caL() {		NEW_A = $1
+	nA_CAL = NEW_A
+	forall if (ismembrane("caL")) {a_caL = NEW_A}
+}
+
+proc set_a_can() {		NEW_A = $1
+	nA_CAN = NEW_A
+	forall if (ismembrane("can")) {a_can = NEW_A}
+}
+
+proc shift13dist() {NEW = $1 
+	forsec "dend._." {mshift_caL13 = NEW} 
+}
+
+proc shift12dist() {NEW = $1 
+	forsec "dend._." {mshift_caL = NEW} 
+}
+
+
+//............
+
+
+proc set_scaleskkca() {	NEW = $1
+	nSCALE_SKKCA = NEW
+	forall if (ismembrane("skkca")) {scale_skkca = NEW}
+}
+proc set_mshiftkir() {	NEW = $1
+	nMSHIFT_KIR = NEW
+	forall if (ismembrane("kir")) {mshift_kir = NEW}
+}
+proc set_qfactkir() {	NEW = $1
+	nQFACT_KIR = NEW
+	forall if (ismembrane("kir")) {qfact_kir = NEW}
+}
+proc set_mslopekir() {	NEW = $1
+	nMSLOPE_KIR = NEW
+	forall if (ismembrane("kir")) {mslope_kir = NEW}
+}
+proc set_mvhalfkir() {	NEW = $1
+	nMVHALF_KIR = NEW
+	forall if (ismembrane("kir")) {mvhalf_kir = NEW}
+}
+
+proc set_akas() {	NEW_AKAS = $1
+	nA_KAS = NEW_AKAS
+	forall if(ismembrane("kas")) {a_kas = NEW_AKAS}
+}
+
+proc set_hshiftkaf() {	NEW = $1
+	nHSHIFT_KAF = NEW
+	forall if (ismembrane("kaf")) {hshift_kaf = NEW}
+}
+proc set_mshiftkaf() {	NEW = $1
+	forall if (ismembrane("kaf")) {mshift_kaf = NEW}
+	nMSHIFT_KAF = NEW
+}
+
+proc set_hslopekaf() { NEW = $1
+	nHSLOPE_KAF = NEW
+	forall if (ismembrane("kaf")) {hslope_kaf = NEW}
+}
+
+proc set_powerkaf() { NEW = $1
+	nPOWER_KAF = NEW
+	forall if (ismembrane("kaf")) {power_kaf = NEW}
+}
+proc set_htaukaf() { NEW = $1
+	nHTAU_KAF = NEW
+	forall if (ismembrane("kaf")) {htau_kaf = NEW}
+}
+proc set_qfactkaf() { NEW = $1
+	nQFACT_KAF = NEW
+	forall if (ismembrane("kaf")) {qfact_kaf = NEW}
+}
+
+//...............
+
+
+
+//...............
+
+proc check_gbars() {
+	print "\ts\t\td1\t\td2\t\td3\t\td4\t\t d1_1[0]\t d1_1[1]\t d1_1[2]\t d1_2[0]\t d1_2[1]\t d1_2[2]\t d2_1[0]\t d2_1[1]\t d2_1[2]\t d2_2[0]\t d2_2[1]\t d2_2[2]\t d4_1[0]\t d4_1[1]\t d4_1[2]\t d4_2[0]\t d4_2[1]\t d4_2[2]\t d3_2[0]\t d3_2[1]\t d3_2[2]\t d3_1[0]\t d3_1[1]\t d3_1[2]"
+	
+	printf("naf\t")
+	forall if(ismembrane("naf")) {printf("%-5.4g\t\t", gnabar_naf)}
+	printf("\nnap\t")
+	forall if(ismembrane("nap")) {printf("%-5.2e\t", gnabar_nap)}
+	
+	printf("\nkir\t")
+	forall if(ismembrane("kir")) {printf("%-5.4g\t\t", gkbar_kir)}
+	printf("\nkas\t")
+	forall if(ismembrane("kas")) {printf("%-5.2e\t", gkbar_kas)}
+	printf("\nkaf\t")
+	forall if(ismembrane("kaf")) {printf("%-5.4g\t\t", gkbar_kaf)}
+	printf("\nkrp\t")
+	forall if(ismembrane("krp")) {printf("%-5.4g\t\t", gkbar_krp)}
+	printf("\nkdr\t")
+	forall if(ismembrane("kdr")) {printf("%-5.4g\t\t", gkbar_kdr)}
+	printf("\nbkkca\t")
+	forall if(ismembrane("bkkca")) {printf("%-5.4g\t\t", gkbar_bkkca)}
+	printf("\nskkca\t")
+	forall if(ismembrane("skkca")) {printf("%-5.4g\t\t", gkbar_skkca)}
+	
+	printf("\ncaL1.2\t")
+	forall if(ismembrane("caL")) {printf("%-5.2e\t", pbar_caL)}
+	printf("\ncaL.3\t")
+	forall if(ismembrane("caL13")) {printf("%-5.2e\t", pcaLbar_caL13)}
+	printf("\ncat\t")
+	forall if(ismembrane("cat")) {printf("%-5.2e\t", pcatbar_cat)}
+	printf("\ncar\t")
+	forall if(ismembrane("car")) {printf("%-5.2e\t", pcarbar_car)}
+	printf("\ncaq\t")
+	forall if(ismembrane("caq")) {printf("%-5.2e\t", pcaqbar_caq)}
+	printf("\ncan\t")
+	forall if(ismembrane("can")) {printf("%-5.2e\t", pbar_can)}
+	printf("\n")
+}
+//...............
+
+
+//............
+// synaptic range variables
+
+proc aontau() {		NEW = $1
+	nA_ONTAU = NEW
+	for j = 0, NGLU-1 {AMPA[j].tau_r = NEW}
+}
+
+proc nontau() {		NEW = $1
+	nN_ONTAU = NEW
+	for j = 0, NGLU-1 {NMDA[j].tau_r = NEW}
+}
+
+proc aofftau() {	NEW = $1
+	nA_OFFTAU = NEW
+	for j = 0, NGLU-1 {AMPA[j].tau_d = NEW}
+}
+
+proc nofftau() {	NEW = $1
+	nN_OFFTAU = NEW
+	for j = 0, NGLU-1 {NMDA[j].tau_d = NEW}
+}
+
+proc gofftau() {	NEW = $1
+	nG_OFFTAU = NEW
+	for j = 0, NGABA-1 {GABA[j].tau_d = NEW}
+}
+
+proc setmgnmda() {	NEW = $1
+	nMG_NMDA = NEW
+	for i = 0, NGLU-1 { NMDA[i].mg = nMG_NMDA }
+}
+
+proc set_caAMPA() {		NEW_A = $1
+	ncaAMPA = NEW_A
+	for j = 0, NGLU-1 {AMPA[j].ca_ratio = NEW_A}
+}
+
+proc set_caNMDA() {		NEW_A = $1
+	ncaNMDA = NEW_A
+	for j = 0, NGLU-1 {NMDA[j].ca_ratio = NEW_A}
+}
+//******************
+
+
+
+
+//******************
+// netstim variables
+proc tstart() {		NEW = $1
+	nT_START = NEW
+	for i = 0, NSYN-1 {NS_NetStim[i].pp.start = NEW}
+}
+
+proc setnetn() {	NEW = $1
+	nNET_N = NEW
+	for i = 0, NSYN-1 { NS_NetStim[i].pp.number = nNET_N }
+}
+
+proc setnoise() { NEW = $1
+	nNOISE = NEW
+	for i = 0, NSYN-1 { NS_NetStim[i].pp.noise = nNOISE }
+}
+
+proc set_mshiftcaL13() {	NEW = $1
+	nMSHIFT_CAL13 = NEW
+	forall if (ismembrane("caL13")) {mshift_caL13 = NEW}
+}
+
+// func round(real_number)
+func round() { local x
+    x = $1
+    if ( ( x - int(x) ) >= 0.5 ) {
+	return int(x+1)
+    } else {
+	return int(x)
+    }
+}
+
+
+//******************
+
+
+

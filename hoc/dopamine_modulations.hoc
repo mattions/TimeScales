@@ -1,0 +1,330 @@
+proc previous() {		// Revert all to baseline values
+	print "previous", " ", t
+	sprint(dirstr, "%s/input_params/baseline_values.txt", preface)
+	load_file(1, dirstr)		// the 1 forces it to load again
+	// specify cell's active properties using constants specified at top of file
+
+	na_ratio(1)
+	k_ratio(1)
+	ca_ratio(1)
+	set_skkcad(G_SKKCA)
+
+	// from moving krp to prox and inserting kdr everywhere
+	MSP_Cell[0].dend1 gkbar_krp = 0
+	MSP_Cell[0].dend2 gkbar_krp = 0
+	MSP_Cell[0].dend3 gkbar_krp = 0
+	MSP_Cell[0].dend4 gkbar_krp = 0
+	kdr_ratio(0)
+	
+	set_htaukaf(14)
+	set_powerkaf(2)
+	set_mshiftkir(30)
+		
+	champawt(1)
+	chnmdawt(1)
+	chgabawt(1)
+
+	set_mshiftcal13(0)
+	set_hshiftcal13(0)
+	set_mshiftcal(0)
+	set_hshiftcal(0)
+	
+	SHNAF = 2
+	set_mshiftnaf(SHNAF)
+	set_hshiftnaf(SHNAF)
+	
+	print "baseline values loaded"
+}
+
+proc d1_intr() {
+	print "d1_intr", " ", t
+	naf_ratio(0.95)
+	
+	kir_ratio(1.25)
+	kas_ratio(1)
+
+	set_mshiftcal13(-10)
+	l13_ratio(1)
+	l12_ratio(2)	//l12_ratio(1)
+	caq_ratio(0.5)	//caq_ratio(0.05)
+	can_ratio(0.2)	//can_ratio(0.8)
+
+	set_hshiftnaf(SHNAF+0)	// -2 mV built in
+
+	champawt(1)
+	chnmdawt(1)
+	chgabawt(1)
+}
+
+proc d1_syn() {
+	print "d1_syn", " ", t
+	naf_ratio(0.95)
+	
+	kir_ratio(1.25)
+	kas_ratio(1)
+
+	set_mshiftcal13(-10)
+	l13_ratio(1)
+	l12_ratio(2)	//l12_ratio(1)
+	caq_ratio(0.5)	//caq_ratio(0.05)
+	can_ratio(0.2)	//can_ratio(0.8)
+
+	set_hshiftnaf(SHNAF+0)	// -2 mV built in
+
+	champawt(1)
+	chnmdawt(1.3)
+	chgabawt(1)
+}
+
+proc d1_synsp() {
+	print "d1_syn", t
+	nafsp_ratio(0.95)
+	
+	kirsp_ratio(1.25)
+
+	set_mshiftcal13sp(-10)
+	l13sp_ratio(1)
+	l12sp_ratio(2)
+	caqsp_ratio(0.5)
+	cansp_ratio(0.2)
+
+	set_hshiftnafsp(0)
+
+	gampasp(1)	// was 0.8
+	gnmdasp(1.3)
+}
+
+
+proc nodendmod() {
+//	print "nodendmod"
+	nafsp_ratio(1)
+	
+	kirsp_ratio(1)
+	kassp_ratio(0.8)
+
+	set_mshiftcal13sp(-5)
+	l13sp_ratio(2)
+	l12sp_ratio(2)
+	caqsp_ratio(0.5)
+	cansp_ratio(0.2)
+
+	set_hshiftnafsp(0)
+
+	gampasp(0.85)	// was 0.8
+	gnmdasp(1.3)
+}
+
+
+proc nmdax17() {
+//	print "nmdax17"
+	nafsp_ratio(0.75)
+	
+	kirsp_ratio(1.65)
+	kassp_ratio(0.8)
+
+	set_mshiftcal13sp(-5)
+	l13sp_ratio(2)
+	l12sp_ratio(2)
+	caqsp_ratio(0.5)
+	cansp_ratio(0.2)
+
+	set_hshiftnafsp(0)
+
+	gampasp(1)	// was 0.8
+	gnmdasp(1.7)
+}
+
+
+proc d1_canq() {
+//	print "d1_canq"
+	caqsp_ratio(0)
+	cansp_ratio(0)
+}
+
+
+
+proc unmod_sp() {
+	print "unmod_sp", t
+	nafsp_ratio(1)
+	kirsp_ratio(1)
+
+	set_mshiftcal13sp(0)
+	l13sp_ratio(1)
+	l12sp_ratio(1)
+	caqsp_ratio(1)
+	cansp_ratio(1)
+
+	set_hshiftnafsp(0)
+
+	gampasp(1)	// was 0.8
+	gnmdasp(1)
+}
+
+proc d2_intr() {	// Akaike, Nicola/Surmeier rev - D2 is excitatory
+	print "d2_intr", " ", t
+	na_ratio(1)
+	naf_ratio(1.1)
+	
+	kir_ratio(1)	// Uchimura KIR down, but Greif 1995 (maybe) KIR up; not much ev, so don't touch
+	kas_ratio(1.1)
+
+	set_mshiftcal13(0)
+	l13_ratio(0.75)
+	l12_ratio(1)
+	caq_ratio(1)
+	can_ratio(1)
+
+	set_hshiftnaf(SHNAF+3)
+
+	champawt(1)
+	chnmdawt(1)
+	chgabawt(1)
+}
+
+//  D2 can either excite or inhibit cell depending on Na - most likely excitatory (akaike 1987; calabresi 1987; uchimura 1986)
+//  D2: NaF up 19%, hV1/2 right 3.2 mV	[Surmeier 1992] - will excite
+//  D3: NaF no change, hV1/2 left -16.9 mV	[Surmeier 1992] - will inhibit
+//  also, KIR either doesn't move or goes down (Uchimura 1990) - see Nicola 2000 rev
+// if Kir goes down D2 is def. exc intrinsically, but synaptically can inhibit
+
+proc d3() {	// ie more D3 mod of Na than D2
+	na_ratio(1)
+	naf_ratio(1)
+	
+	kir_ratio(1)	// Uchimura KIR down, but Greif 1995 (maybe) KIR up; not much ev, so don't touch
+	kas_ratio(1.1)
+
+	set_mshiftcal13(0)
+	l13_ratio(0.75)
+	l12_ratio(1)
+	caq_ratio(1)
+	can_ratio(1)
+
+	set_hshiftnaf(SHNAF-3)
+
+	champawt(1)
+	chnmdawt(1)
+	chgabawt(1)
+}
+
+// d2_exc - Naf x 1.2; h_naf = 1 (shift of +3)
+
+proc d2_syn() {
+	print "d2_syn", " ", t
+	na_ratio(1)
+	naf_ratio(1.1)
+	
+	kir_ratio(1)
+	kas_ratio(1.1)
+
+	set_mshiftcal13(0)
+	l13_ratio(0.75)
+	l12_ratio(1)
+	caq_ratio(1)
+	can_ratio(1)
+
+	set_hshiftnaf(SHNAF+3)
+
+	champawt(0.8) 	// NMDA doesn't move, AMPA and Glu go down, A 0.8 still spikes enough
+	chnmdawt(1)
+	chgabawt(1)
+}
+
+proc crazy() {
+	kaf_ratio(1.55)
+	kir_ratio(3.5)
+	chnmdawt(5)
+}
+
+proc med_calcium() {
+	print "med_calcium", " ", t
+	// for single spike, use Iin of 0.2425
+	NA = 1.25
+	KAF = 1.6
+	KIR = 1
+	KAS = 1
+	KRP = 0.15
+	SK = 0
+	SKD = 1.3
+	BK = 120
+	CA = 10
+	CAT = 10
+	L13P = 75
+	L13D = 10
+	L12 = 10
+	PAS = 1.15e-5
+	SHNAF = 0
+
+	G_NAF = 1.5 * NA		// soma only
+	G_NAFD = 0.0195	* NA // all dends
+	G_NAP = 4e-5 *NA		// soma only
+	G_NAPD = 1.3802e-7 *NA	// all dends
+	
+	G_KIR = 0.00014 * KIR		// S/cm2
+	G_KAS = 0.0104 * KAS		// soma & prox dends; s/cm2
+	G_KASD = 0.00095142 * KAS	// mid & distal dends; S/cm2
+	G_KAF = 0.225 * KAF		// soma & prox dends; S/cm2
+	G_KAFD = 0.020584 * KAF	// mid & dist dends; S/cm2
+	G_KRP = 0.001 * KRP		// 0.004; S/cm2
+	G_BKKCA = 0.001	* BK	// 
+	G_SKKCA = 0.145 * SK
+	G_SKKCAD = 0.145 * SKD
+	G_PAS = PAS		// S/cm2
+
+	P_CAL = 6.7e-6 * L12			// cm/s
+	P_CALD = 6.7e-6	* L12		// cm/s
+	P_CAL13 = 4.25e-7 * L13P		//1.7e-6		// cm/s
+	P_CAL13D = 4.25e-7 *L13D		//1.7e-6		// cm/s
+	P_CAN = 1.0e-5 * CA			// cm/s
+	P_CAQ = 6.0e-6 * CA			// cm/s
+	P_CAR = 2.6e-5 * CA			// cm/s
+	P_CAT = 4e-7 * CAT			// cm/s	4e-7
+	P_CATD = 4e-7 * CAT			// cm/s	4e-7
+	
+	
+    set_naf(G_NAF)
+    set_nafd(G_NAFD)
+    set_nap(G_NAP)
+    set_napd(G_NAPD)
+    
+    set_kir(G_KIR)
+    set_kas (G_KAS)
+    set_kaf (G_KAF)
+    set_krp(G_KRP)
+	set_kdr(G_KDR)
+    set_bkkca(G_BKKCA)
+    set_skkca(G_SKKCA)
+    set_skkcad(G_SKKCAD)
+    set_pas(G_PAS)
+    
+	set_caL(P_CAL)
+	set_caLd(P_CALD)
+	set_caL13(P_CAL13)
+	set_caL13d(P_CAL13D)
+
+   	set_can(P_CAN)
+	set_caq(P_CAQ)
+	set_car(P_CAR)
+	set_cat(P_CAT)
+	set_catd(P_CATD)	
+
+	set_mshiftnaf(SHNAF)
+	set_hshiftnaf(SHNAF)
+
+	set_mshiftcal13(0)
+
+	na_ratio(1)
+	k_ratio(1)
+	ca_ratio(1)
+	
+	champawt(1)
+	chnmdawt(1)
+	chgabawt(1)
+}
+
+
+
+
+
+
+
