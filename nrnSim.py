@@ -23,14 +23,18 @@ class Event():
 class NeuronSim():
     """Class to control the NeuroSim"""
     def __init__(self, hoc_path="hoc", mod_path="mod"):
+        self.gcw = os.getcwd()
         neuron.load_mechanisms(mod_path)
         h('strdef preface, dirstr') # preface and dirstr used in each hoc
-        preface_string = "preface = \"" + os.getcwd() + "\""
+        preface_string = "preface = \"" + self.gcw + "\""
         h(preface_string)
         h.load_file(os.path.join(hoc_path, "nacb_main.hoc"))
         
         h.load_file("stdrun.hoc") # loading the standard run NEURON system
         self.distributeSpines()
+        os.chdir(self.gcw) # Revert back to the original working directory. 
+        #(eCell change the cwd don't know why)
+        
             
     def run(self, tStop):
         """Run the simulation until tStop"""
