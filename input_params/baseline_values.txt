@@ -1,0 +1,71 @@
+//****************************************************************************
+// These are the default parameters for creation of the MSP cell.  This file
+// is usually called by hoc/nacb_main.hoc
+
+cai0_ca_ion = 0.001		// mM, Churchill 1998
+cao0_ca_ion = 5			// mM, Churchill 1998 - gives eca = 100 mV
+cali0_cal_ion = 0.001		// mM, Churchill 1998
+calo0_cal_ion = 5			// mM, Churchill 1998 - gives eca = 100 mV
+celsius = 35			// degC
+
+global_ra = 100		// not really sure what this is
+RA = 100			// ohm-cm - constant for whole cell
+CM = 1				// uF-cm2 - constant for whole cell
+G_PAS = 1.15e-5			// S/cm2
+E_PAS = -70			// mV
+
+G_NAF = 1.5		// soma only
+G_NAFD = 0.0195	// all dends
+G_NAP = 4e-5		// soma only
+G_NAPD = 1.3802e-7	// all dends
+
+G_KIR = 0.00014		// S/cm2
+G_KAS = 0.0104		// soma & prox dends; s/cm2
+G_KASD = 0.00095142	// mid & distal dends; S/cm2
+G_KAF = 0.225 		// soma & prox dends; S/cm2
+G_KAFD = 0.020584	// mid & dist dends; S/cm2
+G_KRP = 0.001 		// 0.004; S/cm2
+G_BKKCA = 0.001		// 
+G_SKKCA = 0.145
+
+G_KDR = 0.0005 // was 0.0003 until 9/26/2006
+
+CAINF = 1e-5			// mM, steady state intracell ca conc.
+TAUR = 43			// ms, time const of ca diffusion - Jackson 2003
+CA_DRIVE = 10000
+CA_PUMP = 0.02
+
+caNMDA = 0.1
+P_CAL = 6.7e-6			// cm/s
+P_CALD = 6.7e-6			// cm/s
+P_CAL13 = 4.25e-7		//1.7e-6		// cm/s
+P_CAL13D = 4.25e-7		//1.7e-6		// cm/s
+P_CAN = 1.0e-5			// cm/s
+P_CAQ = 6.0e-6			// cm/s
+P_CAR = 2.6e-5			// cm/s
+P_CAT = 4e-7			// cm/s	4e-7
+P_CATD = 4e-7			// cm/s	4e-7
+
+EK = -90
+ENA = 50
+
+NET_N = 1e10
+
+GA_RATIO = 1
+
+G_AMPA = 8.5e-4		//350e-6		//8.81e-4
+G_NMDA = 12.2e-5	// 9.2e-5	
+G_GABA = 0.0021		//4300e-6	//0.0027
+
+AMPA_WT = 1
+NMDA_WT = 1
+GABA_WT = 1
+
+NOISE = 1
+
+NGLU = 84
+NGABA = 84
+NSYN = NGABA + NGLU
+
+//****************************************************************************
+
