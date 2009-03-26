@@ -1,7 +1,7 @@
 # Author: Michele Mattioni
 # Tue Nov 11 11:54:40 GMT 2008
 
-#from neuron import h
+from neuron import h
 import numpy
 from spine import *
 
@@ -22,6 +22,7 @@ class Event():
 class NeuronSim():
     """Class to control the NeuroSim"""
     def __init__(self):
+        neuron.load_mechanisms("mod")
         h.load_file("my_init.hoc")
         h.load_file("stdrun.hoc") # loading the standard run NEURON system
         self.distributeSpines()
@@ -97,17 +98,12 @@ if __name__ == "__main__":
     #h.load_file("../guiRig2.ses")
     iClamp = nrnSim.iClampExp()
     
-    
-    # The run
-    nrnSim.init() # Initialize the sim
-    
-    # Event preparation
-    ev = Event(100, cvode, nrnSim) 
-    print "Simulation started NEURON time: %d" %h.t
-    nrnSim.run(800)
-    
-    
-    pylab.plot(vecs['t'],vecs['v_soma'])
+
+    # The run 
+#    nrnSim.init()
+    nrnSim.initAndRun(800)
+    pylab.plot(vecs['t'],vecs['v_soma'], label='v_soma')
+    pylab.legend(loc=0)
     pylab.show()
     
     
