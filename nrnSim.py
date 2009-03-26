@@ -4,6 +4,7 @@
 from neuron import h
 import numpy
 from spine import *
+import os
 
 
 class Event():
@@ -21,9 +22,13 @@ class Event():
 
 class NeuronSim():
     """Class to control the NeuroSim"""
-    def __init__(self):
-        neuron.load_mechanisms("mod")
-        h.load_file("my_init.hoc")
+    def __init__(self, hoc_path="hoc", mod_path="mod"):
+        neuron.load_mechanisms(mod_path)
+        h('strdef preface, dirstr') # preface and dirstr used in each hoc
+        preface_string = "preface = \"" + os.getcwd() + "\""
+        h(preface_string)
+        h.load_file(os.path.join(hoc_path, "nacb_main.hoc"))
+        
         h.load_file("stdrun.hoc") # loading the standard run NEURON system
         self.distributeSpines()
             
