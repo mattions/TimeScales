@@ -5,6 +5,7 @@ from neuron import h
 import numpy
 from spine import *
 import os
+import sys
 
 
 class Event():
@@ -24,11 +25,27 @@ class NeuronSim():
     """Class to control the NeuroSim"""
     def __init__(self, hoc_path="hoc", mod_path="mod"):
         self.gcw = os.getcwd()
+        
+        # Mod file are always in a mod directory
+        if not os.path.exists(mod_path) :
+            print "ERROR mod path %s doesn't exist" %os.path.realpath(mod_path)
+            sys.exit(1)
         neuron.load_mechanisms(mod_path)
+        if not os.path.exists(hoc_path):
+            print "ERROR hoc path %s doesn't exist" %os.path.realpath(hoc_path)
+            sys.exit(1)
+        # Hoc file assumes all the file are launched from a top directory
+        head, tail  = os.path.split(hoc_path)
+        if head is not '':
+            os.chdir(head)
+            preface_pos = os.getcwd()
+        else: 
+            preface_pos = self.gcw
+            
         h('strdef preface, dirstr') # preface and dirstr used in each hoc
-        preface_string = "preface = \"" + self.gcw + "\""
+        preface_string = "preface = \"" + preface_pos + "\""
         h(preface_string)
-        h.load_file(os.path.join(hoc_path, "nacb_main.hoc"))
+        h.load_file(os.path.join(tail, "nacb_main.hoc"))
         
         h.load_file("stdrun.hoc") # loading the standard run NEURON system
         self.distributeSpines()
@@ -97,19 +114,17 @@ if __name__ == "__main__":
     import pylab
     import neuron.gui
     from neuron import h
-    nrnSim = NeuronSim()
+    nrnSim = NeuronSim(mod_path="../mod", hoc_path="../hoc")
     cvode = nrnSim.usingVariableTimeStep()
     vecs = {}
     vecs['t'] = h.Vector()
     vecs['t'].record(h._ref_t)
     vecs['v_soma'] = h.Vector()
     vecs['v_soma'].record(h.MSP_Cell[0].soma(0.5)._ref_v)
-    #h.load_file("../guiRig2.ses")
     iClamp = nrnSim.iClampExp()
     
 
     # The run 
-#    nrnSim.init()
     nrnSim.initAndRun(800)
     pylab.plot(vecs['t'],vecs['v_soma'], label='v_soma')
     pylab.legend(loc=0)
