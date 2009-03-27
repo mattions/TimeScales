@@ -58,6 +58,8 @@ pylab.figure()
 plotVecs(vecs, 'cai')
 pylab.xlabel("Time [ms]")
 pylab.ylabel("Concentration [mM]")
+ax = pylab.gca()
+ax.set_ylim([0, 0.0008])
 
 pylab.figure()
 plotVecs(vecs, 'cali')
