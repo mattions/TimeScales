@@ -1,6 +1,6 @@
 strdef preface, dirstr
 //preface = "/Users/jtmoyer/desk"
-preface = "/home/mattions/Work/model/otherPeopleModel/spineCaMoyer/spine"
+preface = "/home/mattions/Work/model/MSN/Time_scales/trunk"
 
 load_file ("../hoc/nacb_main.hoc")
 print "main hoc loaded"

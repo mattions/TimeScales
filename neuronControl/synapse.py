@@ -14,9 +14,9 @@ class Synapse():
     def createChannel(self, type, position):
         """Create the NMDA or AMPA channel"""
         if type == 'ampa':
-            chan = h.ampa(position, sec = self.section)
+            chan = h.AMPA(position, sec = self.section)
         elif type == 'nmda':
-            chan = h.nmda(position, sec = self.section)
+            chan = h.NMDA(position, sec = self.section)
             
         return chan        
     

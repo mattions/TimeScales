@@ -16,7 +16,7 @@ class mySection(nrn.Section):
 class Spine():
     """Class spine. Create a spine with head and neck"""
     
-    def __init__(self, name):
+    def __init__(self, name, filename_bioch_mod="biochemical_circuits/biomd183_noCalcium.eml"):
         """ Create a spine with a standard volume of ~0.11 um
         the h is the reference to the main hoc interpreter"""
         self.name = name
@@ -29,18 +29,18 @@ class Spine():
         self.createCalciumVector()
         
         # Setting up the biochemical simulator
-        self.ecellMan = self.setupBioSim()
+        self.ecellMan = self.setupBioSim(filename_bioch_mod)
     
     def updateName(self):
         """Update the name of the sections. Call this method only when you will not change the section"""
         self.neck.rename()
         self.head.rename()
         
-    def setupBioSim(self):
+    def setupBioSim(self, filename):
         """Initialize the Biochemical Simulator creating the instance of 
         the object to control the simulation"""
         
-        ecellMan = eC.EcellManager("biochemical_circuits/biomd183_noCalcium.eml")
+        ecellMan = eC.EcellManager(filename)
         ecellMan.createLoggers()
         return ecellMan
         
@@ -95,11 +95,14 @@ if __name__ == "__main__":
     from spine import *
     from synapse import *
     from neuron import h
+    import neuron
     from graph import *
     import numpy
     import pylab
+   
+    neuron.load_mechanisms("../mod")
     
-    spine1 = Spine("spine1")
+    spine1 = Spine("spine1", filename_bioch_mod ="../biochemical_circuits/biomd183_noCalcium.eml")
     ampaSyn = Synapse('ampa', spine1.head)
     ampaSyn.createStimul(start=30, number=10, interval=10, noise=0)
     spine1.synapses = [ampaSyn]

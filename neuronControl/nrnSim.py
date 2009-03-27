@@ -31,6 +31,7 @@ class NeuronSim():
             print "ERROR mod path %s doesn't exist" %os.path.realpath(mod_path)
             sys.exit(1)
         neuron.load_mechanisms(mod_path)
+        
         if not os.path.exists(hoc_path):
             print "ERROR hoc path %s doesn't exist" %os.path.realpath(hoc_path)
             sys.exit(1)
