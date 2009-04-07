@@ -102,7 +102,7 @@ forsec "MSP_Cell[0]"  {
 
 Ap = A1 - Ad
 
-print "Total cell membrane area = ", A1, "um2"		// equals whole cell membrane area
+print "Total cell membrane area = ", A1, "um2" // equals whole cell membrane area
 print "Mid + Dist mem area = ", Ad, "um2"
 print "Soma + Prox mem area = ", Ap, "um2" 
 
