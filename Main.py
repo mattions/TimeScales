@@ -2,7 +2,7 @@
 # Wed Mar 18 17:51:51 GMT 2009
 
 from neuron import h
-from nrnSim import *
+from neuronControl import nrnSim
 from synapse import *
 from graph import *
 import numpy
