@@ -1,6 +1,7 @@
 # Author: Michele Mattioni
 # Tue Nov 11 11:54:40 GMT 2008
 
+import neuron
 from neuron import h
 import numpy
 from spine import *
