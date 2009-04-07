@@ -101,7 +101,7 @@ if __name__ == "__main__":
     import pylab
    
     neuron.load_mechanisms("../mod")
-    
+    print "Testing the spine"
     spine1 = Spine("spine1", filename_bioch_mod ="../biochemical_circuits/biomd183_noCalcium.eml")
     ampaSyn = Synapse('ampa', spine1.head)
     ampaSyn.createStimul(start=30, number=10, interval=10, noise=0)
