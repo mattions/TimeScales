@@ -1,0 +1,8 @@
+# Ignore the files for git
+
+# All the python compiled
+*.pyc
+
+# The compiled mod of NEURON
+mod/x86_64
+mod/i686
