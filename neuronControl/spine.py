@@ -25,9 +25,6 @@ class Spine():
         self.parent = None # the parent section connected to the neck
         self.synapses = {} # Dict to save the pointer to the synapses
         
-        # Setting up the vector
-        self.createCalciumVector()
-        
         # Setting up the biochemical simulator
         self.ecellMan = self.setupBioSim(filename_bioch_mod)
     
@@ -47,10 +44,21 @@ class Spine():
     def createNeck(self):
         """ Create the neck with the Grunditz value"""
         neck = mySection(self.name + "_neck")
-        neck.L = 1 # um
-        neck.diam = 0.0394
-        neck.nseg = 2
-        neck.Ra = 150.0 # Used by Grunditz et al 2008 (see supplemental material)
+        neck.nseg = 3
+        neck.L = 1.5 # um
+        neck.diam = 0.1
+        #neck.Ra = 150.0 # Used by Grunditz et al 2008 (see supplemental material)
+        neck.Ra = 100.0 #
+        
+        neck.insert("pas")
+        
+#        h.factors_catrack() # Called on the NMOD
+#        neck.insert("catrack")
+#        
+#        h.factors_caltrack()
+#        neck.insert("caltrack") 
+        
+        
         return neck
         
     def createHead(self, neck):
@@ -60,36 +68,43 @@ class Spine():
         head.L = 1
         head.diam = math.sqrt(vol / head.L * math.pi ) * 2
         self.Ra = 150.0
-        neck.nseg = 7
+        head.nseg = 7
         head.connect(self.neck)
         
-        ### Insert the appropriate channels
-        head.insert("caL")
-        head.insert("caL13")
-        head.insert("can")
-        head.insert("skkca")
-        head.insert("caq")
+#        ### Insert the appropriate channels
+#        head.insert("caL")
+#        head.insert("caL13")
+#        head.insert("can")
+#        head.insert("skkca")
+#        head.insert("caq")
+#        
+#        # Calcium dynamics
+#        head.insert("cadyn")
+#        head.insert("caldyn")
+
+
+        head.insert("pas")
+        head.insert("cansp")
+        head.insert("caqsp")
+#        head.insert("carsp")
+        head.insert("skkcasp")
+
         
-        # Calcium dynamics
-        head.insert("cadyn")
-        head.insert("caldyn")
+##
+        h.factors_caltrack()
+        head.insert("caltrack")
+##        
+        h.factors_catrack()
+        head.insert("catrack")
         
         return head
-    
-    def createCalciumVector(self):
-        """Create the vector for the calcium"""
-        vecs = {}
-        vecs['ca'] = h.Vector()
-        vecs['ca'].record(self.head(0.5)._ref_cai)
-        vecs['cai'] = h.Vector()
-        vecs['cai'].record(self.head(0.5)._ref_cali)
-        self.vecs = vecs
     
     def attach(self, parentSec, parentx, childx):
         """Attach a spine to a parentSec and store the parentSec into an attribute.
         Just an handy variation of the connect method"""
         self.neck.connect(parentSec, parentx, childx)
         self.parent = parentSec
+
         
 if __name__ == "__main__":
     from spine import *
@@ -106,21 +121,19 @@ if __name__ == "__main__":
     ampaSyn = Synapse('ampa', spine1.head)
     ampaSyn.createStimul(start=30, number=10, interval=10, noise=0)
     spine1.synapses = [ampaSyn]
+
+    # Plotting stuff
+    vecs = {}
+    graph = Graph()
+    vecs = graph.createVecs(vecs, spine1, "cai")
+    vecs = graph.createVecs(vecs, spine1, "cali")
     
     
-    vecsVolt = {}
-    vecsCai = {}
-    vecsCali = {}
-    
-    g = Graph()
-    vecsVolt = g.createVecs(vecsVolt, spine1, 'v')
-    vecsCai = g.createVecs(vecsCai, spine1, 'cai')
-    vecsCali = g.createVecs(vecsCali, spine1, 'cali')
     
     import neuron.gui
     h.tstop = 1000
     h.run()
-    g.plotVoltage(vecsVolt, ampaSyn.synVecs)
-    g.plotCalcium(vecsCai)
-    g.plotCalcium(vecsCali)
+    
+    graph.plotCalcium(vecs, "cai")
+    graph.plotCalcium(vecs, "cali")
     pylab.show()

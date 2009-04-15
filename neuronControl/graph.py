@@ -40,6 +40,7 @@ class Graph:
         else:
             key = section.id # Custom section 
             
+        key = key + "_" + var    
         if hasattr(section(0.5), var):
             if vecs is None or not vecs.has_key(key):
                 vecs[key] = h.Vector()
@@ -86,11 +87,13 @@ class Graph:
             return pylab.ax1 # No really needed but handy
 
     
-    def plotCalcium(self, vecsCa):
+    def plotCalcium(self, vecsCa, var):
         
+        "Plot the calcium current (both together or only one)"
         pylab.figure()
         for key,vec in vecsCa.iteritems():
-            pylab.plot(self.t , vec, label=key)
+            if var in key:
+                pylab.plot(self.t , vec, label=key)
         pylab.xlabel("Time [ms]")
         pylab.ylabel("Concentration [mM]")
         pylab.legend(loc=0)
