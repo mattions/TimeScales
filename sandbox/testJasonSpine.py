@@ -38,10 +38,14 @@ if __name__ == "__main__":
     # plot results
     plotVecs(vecs, "cai")
     pylab.legend(loc=0)
+    pylab.ylabel("concentration [mM]")
+    pylab.xlabel("time [ms]")
     
     pylab.figure()
     plotVecs(vecs, "cali")
     pylab.legend(loc=0)
+    pylab.ylabel("concentration [mM]")
+    pylab.xlabel("time [ms]")
     
     # Show everything
     pylab.show()
