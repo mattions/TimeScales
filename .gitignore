@@ -2,7 +2,13 @@
 
 # All the python compiled
 *.pyc
+*.png
+.project
+.pydevproject
+ses
+dfiles
 
 # The compiled mod of NEURON
 mod/x86_64
 mod/i686
+
