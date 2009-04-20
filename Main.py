@@ -12,8 +12,8 @@ def calcWeight(CaMKIIbar):
     """Calc the weight of the synapses according to the CaMKII"""
     
     # Dummy function should be changed
-    weight = 1 + CaMKIIbar
-    return weight  
+    weight = 1 + (1 + math.pow(CaMKIIbar, theta)/k)
+    return weight
 
 
 neuronSim = nrnSim.NeuronSim()
