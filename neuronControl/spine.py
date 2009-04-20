@@ -4,6 +4,7 @@
 from neuron import h, nrn
 import ecellControl as eC
 import math
+import os
 
 
 class mySection(nrn.Section):
@@ -26,8 +27,9 @@ class Spine():
         self.synapses = {} # Dict to save the pointer to the synapses
         
         # Setting up the biochemical simulator
+        self.gcw = os.getcwd()
         self.ecellMan = self.setupBioSim(filename_bioch_mod)
-    
+        
     def updateName(self):
         """Update the name of the sections. Call this method only when you will not change the section"""
         self.neck.rename()
@@ -52,13 +54,12 @@ class Spine():
         
         neck.insert("pas")
         
-#        h.factors_catrack() # Called on the NMOD
-#        neck.insert("catrack")
-#        
-#        h.factors_caltrack()
-#        neck.insert("caltrack") 
+        h.factors_catrack() # Called on the NMOD
+        neck.insert("catrack")
         
-        
+        h.factors_caltrack()
+        neck.insert("caltrack") 
+                
         return neck
         
     def createHead(self, neck):
@@ -71,29 +72,18 @@ class Spine():
         head.nseg = 7
         head.connect(self.neck)
         
-#        ### Insert the appropriate channels
-#        head.insert("caL")
-#        head.insert("caL13")
-#        head.insert("can")
-#        head.insert("skkca")
-#        head.insert("caq")
-#        
-#        # Calcium dynamics
-#        head.insert("cadyn")
-#        head.insert("caldyn")
-
 
         head.insert("pas")
         head.insert("cansp")
         head.insert("caqsp")
-#        head.insert("carsp")
+        head.insert("carsp")
         head.insert("skkcasp")
 
         
-##
+
         h.factors_caltrack()
         head.insert("caltrack")
-##        
+        
         h.factors_catrack()
         head.insert("catrack")
         
@@ -114,10 +104,35 @@ if __name__ == "__main__":
     from graph import *
     import numpy
     import pylab
-   
-    neuron.load_mechanisms("../mod")
-    print "Testing the spine"
-    spine1 = Spine("spine1", filename_bioch_mod ="../biochemical_circuits/biomd183_noCalcium.eml")
+    import os
+    
+    mod_path = "../mod"
+    hoc_path = "../hoc"
+        
+    if not os.path.exists(mod_path) :
+        print "ERROR mod path %s doesn't exist" %os.path.realpath(mod_path)
+        sys.exit(1)
+    neuron.load_mechanisms(mod_path)
+    
+    if not os.path.exists(hoc_path):
+        print "ERROR hoc path %s doesn't exist" %os.path.realpath(hoc_path)
+        sys.exit(1)
+    
+    # Hoc file assumes all the file are launched from a top directory
+    head, tail  = os.path.split(hoc_path)
+    print head, tail
+    if head is not '':
+        os.chdir(head)
+    preface_pos = os.getcwd()
+        
+    h('strdef preface, dirstr') # preface and dirstr used in each hoc
+    preface_string = "preface = \"" + preface_pos + "\""
+    h(preface_string)
+    h.load_file(os.path.join(tail, "all_tau_vecs.hoc"))
+        
+    print "Testing the spine. Current directory %s" %os.getcwd()
+    spine1 = Spine("spine1", 
+                   filename_bioch_mod ="biochemical_circuits/biomd183_noCalcium.eml")
     ampaSyn = Synapse('ampa', spine1.head)
     ampaSyn.createStimul(start=30, number=10, interval=10, noise=0)
     spine1.synapses = [ampaSyn]
