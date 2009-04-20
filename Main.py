@@ -16,6 +16,16 @@ def calcWeight(CaMKIIbar):
     return weight
 
 
+def convertCalcium(cai, vol=1e-15):
+    """Convert the internal calcium concentration to the number of molecules."""
+    
+    NAv= 6.022e23
+    numberOfMoleculs = cai * vol * NAv
+    numberOfMoleculs = math.round(numberOfMoleculs)
+    
+    return numberOfMoleculs
+
+
 neuronSim = nrnSim.NeuronSim()
 
 #------------------------------------------------------------------------------ 
