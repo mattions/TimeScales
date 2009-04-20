@@ -123,7 +123,7 @@ def testCalciumTrain(filename="../biochemical_circuits/biomd183.eml"):
 
 
 
-def testChangeCalciumValue(interval, caValue=7, filename="../biochemical_circuits/biomd183_noCalcium.eml"):
+def testChangeCalciumValue(interval, caValue, filename="../biochemical_circuits/biomd183_noCalcium.eml"):
     """Run a test simulation changing the calcium value on the fly"""
     print "Show case of the possibilities to change the level of calcium on the fly"
     ecellManager = EcellManager(filename)
@@ -163,22 +163,24 @@ if __name__ == "__main__":
     from ioHelper import *
     import os
     from optparse import OptionParser
-    usage= "usage: %prog [options] interval.\n\
-    Run the simulator using the interval [s] to update the calcium between different run"
+    usage= "usage: %prog [options] interval calciumValue.\n\
+    Run the simulator using the interval [s] to update the calcium between different run\
+    interval - The interval between the stop of the simulators. Used to sample tha calcium\
+    calciumValue - The value of the calcium to pump into the system\
+                      The frequency of the spike and the duration are hardcoded."
     parser = OptionParser(usage)
     parser.add_option("-s", "--save", action="store_true", 
                       help= "If True save the graphs and the log")
-    parser.add_option("-v", "--caValue", 
-                      help= "The value of the calcium to pump into the system\
-                      at each interval")
+
     (options, args) = parser.parse_args()
      
     
-    if len(args) != 1:
+    if len(args) != 2:
         parser.error("Incorrect number of arguments")
         parser.usage()
     else:
         interval = float(args[0])
+        caValue = float(args[1])
         print "Interval %f, Save option %s" %( interval, options.save)
     
     ## Setting the mat plotlib backend
@@ -194,10 +196,8 @@ if __name__ == "__main__":
     import pylab
          
     ioH = IOHelper(prefix=os.getcwd())
-    if hasattr(options, "caValue"):
-        ecellManager = testChangeCalciumValue(interval, caValue=options.caValue)
-    else:
-        ecellManager = testChangeCalciumValue(interval)
+
+    ecellManager = testChangeCalciumValue(interval, caValue)
     #ecellManager = testCalciumTrain()
     
     if options.save == True:

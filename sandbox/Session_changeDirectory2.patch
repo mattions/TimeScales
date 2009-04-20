@@ -1,0 +1,39 @@
+Index: Session.py
+===================================================================
+--- Session.py	(revision 3455)
++++ Session.py	(working copy)
+@@ -52,7 +52,7 @@
+ class Session:
+     'Session class'
+ 
+-    def __init__( self, aSimulator = None ):
++    def __init__( self, aSimulator = None, changeDirectory=False ):
+         'constructor'
+ 
+         self.theMessageMethod = self.__plainMessageMethod
+@@ -63,6 +63,7 @@
+             self.theSimulator = aSimulator
+ 
+         self.theModelName = ''
++        self.changeDirectory = changeDirectory
+ 
+     def loadModel( self, aModel ):
+         # aModel : an EML instance, a file name (string) or a file object
+@@ -94,11 +95,12 @@
+             raise TypeError, " The type of aModel must be EML instance, string(file name) or file object "
+     
+         # change directory to file's home directory
+-        if type( aModel ) != type( eml.Eml ) and\
+-               type( aModel ) != type( eml.Eml() ):
+-            dirname = os.path.dirname( aModel )
+-            if dirname != "":
+-                os.chdir( dirname )
++        if self.changeDirectory:
++           if type( aModel ) != type( eml.Eml ) and\
++                  type( aModel ) != type( eml.Eml() ):
++               dirname = os.path.dirname( aModel )
++               if dirname != "":
++                   os.chdir( dirname )
+     
+         # calls load methods
+         self.__loadStepper( anEml )
