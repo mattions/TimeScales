@@ -50,10 +50,6 @@ class NeuronSim():
         h.load_file(os.path.join(tail, "nacb_main.hoc"))
         
         h.load_file("stdrun.hoc") # loading the standard run NEURON system
-        self.distributeSpines()
-        os.chdir(self.gcw) # Revert back to the original working directory. 
-        #(eCell change the cwd don't know why)
-        
             
     def run(self, tStop):
         """Run the simulation until tStop"""
@@ -112,12 +108,20 @@ class NeuronSim():
 # Test code
 
 
+def go(tstop):
+    
+    nrnSim.initAndRun(tstop)
+    pylab.plot(vecs['t'],vecs['v_soma'], label='v_soma')
+    pylab.legend(loc=0)
+    pylab.show()
+
 if __name__ == "__main__":
     import pylab
     import neuron.gui
     from neuron import h
     nrnSim = NeuronSim(mod_path="../mod", hoc_path="../hoc")
-    cvode = nrnSim.usingVariableTimeStep()
+    nrnSim.distributeSpines()
+    #cvode = nrnSim.usingVariableTimeStep()
     vecs = {}
     vecs['t'] = h.Vector()
     vecs['t'].record(h._ref_t)
@@ -125,11 +129,11 @@ if __name__ == "__main__":
     vecs['v_soma'].record(h.MSP_Cell[0].soma(0.5)._ref_v)
     iClamp = nrnSim.iClampExp()
     
+    go(100) # Just a way to advance the simulator and get the plot back
+    
 
-    # The run 
-    nrnSim.initAndRun(800)
-    pylab.plot(vecs['t'],vecs['v_soma'], label='v_soma')
-    pylab.legend(loc=0)
-    pylab.show()
+    # The run
+     
+
     
     
