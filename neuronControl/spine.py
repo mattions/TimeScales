@@ -73,14 +73,11 @@ class Spine():
         head.nseg = 7
         head.connect(neck)
         
-
         head.insert("pas")
         head.insert("cansp")
         head.insert("caqsp")
         head.insert("carsp")
         head.insert("skkcasp")
-
-        
 
         h.factors_caltrack()
         head.insert("caltrack")
@@ -167,9 +164,16 @@ if __name__ == "__main__":
     print "Testing the spine. Current directory %s" %os.getcwd()
     spine1 = Spine("spine1", 
                    filename_bioch_mod ="biochemical_circuits/biomd183_noCalcium.eml")
+    
+    # AMPA Syn
     ampaSyn = Synapse('ampa', spine1.psd)
-    ampaSyn.createStimul(start=30, number=10, interval=10, noise=0)
+    ampaSyn.createStimul(start=130, number=10, interval=10, noise=0)
     spine1.addSynapse("ampa", ampaSyn)
+    
+    #NMDA Syn
+    nmdaSyn = Synapse('nmda', spine1.psd)
+    nmdaSyn.createStimul(start=130, number=10, interval=10, noise=0)
+    spine1.addSynapse("nmda", nmdaSyn)
 
     # Plotting stuff
     
@@ -190,4 +194,5 @@ if __name__ == "__main__":
     graph.plotCalcium(vecs, "cai")
     graph.plotCalcium(vecs, "cali")
     graph.plotVoltage(vecsVolt, spine1.getSynapse('ampa').synVecs)
+    graph.plotVoltage(vecsVolt, spine1.getSynapse('nmda').synVecs)
     pylab.show()
