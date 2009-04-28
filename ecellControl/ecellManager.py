@@ -14,7 +14,7 @@ class EcellManager():
     def __init__(self, filename="../biochemical_circuits/biomd183.eml"):
         ecell.ecs.setDMSearchPath( os.pathsep.join( ecell.config.dm_path ) )
         self.sim = ecell.emc.Simulator()
-        self.ses = ecell.Session.Session(self.sim)
+        self.ses = ecell.Session.Session(self.sim, changeDirectory=False)
         
         # Load the model
         self.ses.loadModel(filename)
