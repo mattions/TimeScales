@@ -68,11 +68,15 @@ class NeuronSim():
     
     def distributeSpines(self):
         """Attach spines to the dendrites"""
-        
+        self.spines = []
         # Now just a test spine
-        spine = Spine("spine1")
-        spine.attach(h.MSP_Cell[0].dend1_1[1], 0.5, 0)
-        self.spines = [spine]
+        i=1
+        for i in xrange (9):
+            spine = Spine("spine" + "-" + str(i))
+            #spine.attach(h.MSP_Cell[0].dend1_1[1], 0.5, 0)
+            spine.attach(h.MSP_Cell[0].dend3_1[1], i/10.0 , 0)
+            self.createSynapses(spine)
+            self.spines.append(spine)
     
     def updateSpines(self):
         "HERE WE UPDATE THE SPINE CALCIUM"
@@ -104,6 +108,18 @@ class NeuronSim():
         
         return iClamp
 
+    def createSynapses(self, spine):
+        "Create an AMPA and an NMDA synapse in the spine"
+        
+        # AMPA Syn
+        ampaSyn = Synapse('ampa', spine.psd)
+        ampaSyn.createStimul(start=130, number=5, interval=2, noise=0)
+        spine.addSynapse("ampa", ampaSyn)
+        
+        #NMDA Syn
+        nmdaSyn = Synapse('nmda', spine.psd)
+        nmdaSyn.createStimul(start=150, number=5, interval=2, noise=0)
+        spine.addSynapse("nmda", nmdaSyn)
 
 # Test code
 
@@ -121,7 +137,7 @@ if __name__ == "__main__":
     from neuron import h
     from synapse import Synapse
     nrnSim = NeuronSim(mod_path="../mod", hoc_path="../hoc")
-    #nrnSim.distributeSpines()
+    nrnSim.distributeSpines()
     
     # Create the synapses for all the spines
     
