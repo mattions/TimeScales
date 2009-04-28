@@ -92,15 +92,15 @@ class NeuronSim():
         #cvode.dstates(dstates)
         return cvode
 
-    def iClampExp(self):
+    def iClampExp(self, delay=100, dur=500, amp=0.2375):
         """Creating an IClamp in the soma"""
         # Creating an ICLAMP just for testing
         
         iClamp = h.IClamp(0.5, sec = h.MSP_Cell[0].soma)
         
-        iClamp.delay = 100
-        iClamp.dur = 500
-        iClamp.amp = 0.2481
+        iClamp.delay = delay
+        iClamp.dur = dur
+        iClamp.amp = amp
         
         return iClamp
 
@@ -119,15 +119,32 @@ if __name__ == "__main__":
     import pylab
     import neuron.gui
     from neuron import h
+    from synapse import Synapse
     nrnSim = NeuronSim(mod_path="../mod", hoc_path="../hoc")
-    nrnSim.distributeSpines()
+    #nrnSim.distributeSpines()
+    
+    # Create the synapses for all the spines
+    
+#    for spine in nrnSim.spines:
+#    
+#        # AMPA Syn
+#        ampaSyn = Synapse('ampa', spine.psd)
+#        ampaSyn.createStimul(start=130, number=10, interval=10, noise=0)
+#        spine.addSynapse("ampa", ampaSyn)
+#        
+#        #NMDA Syn
+#        nmdaSyn = Synapse('nmda', spine.psd)
+#        nmdaSyn.createStimul(start=130, number=10, interval=10, noise=0)
+#        spine.addSynapse("nmda", nmdaSyn)
+    
     #cvode = nrnSim.usingVariableTimeStep()
     vecs = {}
     vecs['t'] = h.Vector()
     vecs['t'].record(h._ref_t)
     vecs['v_soma'] = h.Vector()
     vecs['v_soma'].record(h.MSP_Cell[0].soma(0.5)._ref_v)
-    iClamp = nrnSim.iClampExp()
+    h.dt =0.005
+    h.v_init =(-87.75)
     
     #go(100) # Just a way to advance the simulator and get the plot back
     
