@@ -26,6 +26,7 @@ class Graph:
         if spine.parent is not None:
             vecs = self.initVec(vecs, spine.parent, var)
         
+        vecs = self.initVec(vecs, spine.psd, var)
         vecs = self.initVec(vecs, spine.head, var)
         vecs = self.initVec(vecs, spine.neck, var)
         
@@ -74,6 +75,7 @@ class Graph:
             pylab.plot(self.t , vec, label=key)
         pylab.ylabel("Voltage [mV]")
         pylab.xlabel("Time [ms]")
+        pylab.legend(loc=0)
         
         if synVecs is not None:
             ax2 = pylab.ax1.twinx()

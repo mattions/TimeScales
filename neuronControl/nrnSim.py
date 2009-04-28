@@ -129,7 +129,7 @@ if __name__ == "__main__":
     vecs['v_soma'].record(h.MSP_Cell[0].soma(0.5)._ref_v)
     iClamp = nrnSim.iClampExp()
     
-    go(100) # Just a way to advance the simulator and get the plot back
+    #go(100) # Just a way to advance the simulator and get the plot back
     
 
     # The run

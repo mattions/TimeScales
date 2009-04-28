@@ -23,6 +23,7 @@ class Spine():
         self.name = name
         self.neck = self.createNeck()
         self.head = self.createHead(self.neck)
+        self.psd = self.createPSD(self.head)
         self.parent = None # the parent section connected to the neck
         self.synapses = {} # Dict to save the pointer to the synapses
         
@@ -70,7 +71,7 @@ class Spine():
         head.diam = math.sqrt(vol / head.L * math.pi ) * 2
         self.Ra = 150.0
         head.nseg = 7
-        head.connect(self.neck)
+        head.connect(neck)
         
 
         head.insert("pas")
@@ -89,11 +90,44 @@ class Spine():
         
         return head
     
+    def createPSD(self, head):
+        """Create the Post Synaptic Density of the spine to model the different \
+        location of the different channel"""
+        psd = mySection(self.name + "_psd")
+        psd.L = 0.05        # um, Holmes & Levy 1990
+        psd.diam = 0.5      # Wilson 1998 (Shepherd book)
+        psd.Ra =100
+        psd.connect(head)
+        
+        psd.insert("caL13sp")
+        psd.insert("caLsp")
+        psd.insert("rubin")
+        
+        h.factors_catrack()
+        psd.insert("catrack")
+        h.factors_caltrack()
+        psd.insert("caltrack")
+        
+        return psd
+        
+        
+    
     def attach(self, parentSec, parentx, childx):
         """Attach a spine to a parentSec and store the parentSec into an attribute.
         Just an handy variation of the connect method"""
         self.neck.connect(parentSec, parentx, childx)
         self.parent = parentSec
+        
+    def addSynapse(self, synapseName, synapseObj):
+        """Add a synapese to the internal dictionary"""
+        self.synapses[synapseName] = synapseObj
+    
+    def getSynapse(self, synapseName):
+        """Return the synapse object"""
+        if synapseName in self.synapses.keys():
+            return self.synapses[synapseName]
+        else:
+            return None
 
         
 if __name__ == "__main__":
@@ -133,22 +167,27 @@ if __name__ == "__main__":
     print "Testing the spine. Current directory %s" %os.getcwd()
     spine1 = Spine("spine1", 
                    filename_bioch_mod ="biochemical_circuits/biomd183_noCalcium.eml")
-    ampaSyn = Synapse('ampa', spine1.head)
+    ampaSyn = Synapse('ampa', spine1.psd)
     ampaSyn.createStimul(start=30, number=10, interval=10, noise=0)
-    spine1.synapses = [ampaSyn]
+    spine1.addSynapse("ampa", ampaSyn)
 
     # Plotting stuff
-    vecs = {}
+    
     graph = Graph()
+    vecs = {}
     vecs = graph.createVecs(vecs, spine1, "cai")
     vecs = graph.createVecs(vecs, spine1, "cali")
     
+    vecsVolt = {}
+    vecsVolt = graph.createVecs(vecsVolt, spine1, "v")
     
     
     import neuron.gui
+    h.v_init = -87.75 # Setting the initial vm
     h.tstop = 1000
     h.run()
     
     graph.plotCalcium(vecs, "cai")
     graph.plotCalcium(vecs, "cali")
+    graph.plotVoltage(vecsVolt, spine1.getSynapse('ampa').synVecs)
     pylab.show()
