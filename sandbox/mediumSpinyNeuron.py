@@ -7,29 +7,30 @@
 
 import neuron
 from math import cos, sin, fabs, pi, radians, sqrt
+import os
 
 
 class Branch:
     
-    def __init__(self, hoc):
-        self.h = hoc
+    def __init__(self):
+
         self.prox = None # Will be a Section
         self.mid = []
         self.dist = []
     
     def create(self, numMidDends, numDistDends):
         # Create the distal section
-        self.prox = self.h.Section()
+        self.prox = h.Section()
         
         # Create the Mid Dend 
         for i in xrange(numMidDends):       # Middle Dends
             
-            mid_dend = self.h.Section()
+            mid_dend = h.Section()
             self.mid.append(mid_dend)
             mid_dend.connect(self.prox)
             
         for j in xrange(numDistDends):      # Distal Dends
-            dist_dend = self.h.Section()
+            dist_dend = h.Section()
             self.dist.append(dist_dend)
             if j < 2:
                 dist_dend.connect(self.mid[0])
@@ -37,20 +38,31 @@ class Branch:
                 dist_dend.connect(self.mid[1])
             
 
-
-
-
-
 class MediumSpinyNeuron:
     
-    def __init__(self, hoc):
-        self.h = hoc
+    def __init__(self, hoc_path="../hoc", mod_path="../mod"):
         
-        # Load the baseline
-        #self.h.load_file("baseline_values.txt")
+        if not os.path.exists(mod_path) :
+            print "ERROR mod path %s doesn't exist" %os.path.realpath(mod_path)
+            sys.exit(1)
+        neuron.load_mechanisms(mod_path)
         
-        # Load the taus for many channels
-        self.h.load_file("all_tau_vecs_mod.hoc")
+        if not os.path.exists(hoc_path):
+            print "ERROR hoc path %s doesn't exist" %os.path.realpath(hoc_path)
+            sys.exit(1)
+        
+        # Hoc file assumes all the file are launched from a top directory
+        head, tail  = os.path.split(hoc_path)
+        print head, tail
+        if head is not '':
+            os.chdir(head)
+        preface_pos = os.getcwd()
+            
+        h('strdef preface, dirstr') # preface and dirstr used in each hoc
+        preface_string = "preface = \"" + preface_pos + "\""
+        h(preface_string)
+        h.load_file(os.path.join(tail, "all_tau_vecs.hoc"))
+        
         
         self.__topology()
         for branch in self.branches:
@@ -78,11 +90,11 @@ class MediumSpinyNeuron:
         return 1e5 * sqrt (sec(0.5).diam / ( 4 * pi * freq * sec.Ra * sec(0.5).cm))
 
     def __topology(self):
-        self.soma = self.h.Section()
+        self.soma = h.Section()
         self.branches = []
         numProxDends = 4 # Proximal Dends
         for i in xrange(numProxDends):
-            branch = Branch(self.h)
+            branch = Branch()
             branch.create(2,4)
 
             #self.createBranch(2, 4)
@@ -204,11 +216,11 @@ class MediumSpinyNeuron:
     def __biophys(self):
         """Insert all the channels required and intialize the values"""
         # Global variable
-        self.h.celsius = 35 # degC
-        self.h.cai0_ca_ion = 0.001        # mM, Churchill 1998
-        self.h.cao0_ca_ion = 5            # mM, Churchill 1998 - gives eca = 100 mV
-        self.h.cali0_cal_ion = 0.001      # mM, Churchill 1998
-        self.h.calo0_cal_ion = 5          # mM, Churchill 1998 - gives eca = 100 mV
+        h.celsius = 35 # degC
+        h.cai0_ca_ion = 0.001        # mM, Churchill 1998
+        h.cao0_ca_ion = 5            # mM, Churchill 1998 - gives eca = 100 mV
+        h.cali0_cal_ion = 0.001      # mM, Churchill 1998
+        h.calo0_cal_ion = 5          # mM, Churchill 1998 - gives eca = 100 mV
         
         # Membrane mech present in all the section
         mechs = [
@@ -232,7 +244,7 @@ class MediumSpinyNeuron:
 
 
         # Inserting the mechanism in all the section
-        for sec in self.h.allsec():
+        for sec in h.allsec():
             
             for mec in mechs:
                 sec.insert(mec)
@@ -290,8 +302,9 @@ class MediumSpinyNeuron:
             sec(0.5).kaf.gkbar = 0.020584 # S/cm2
         
 if __name__ == "__main__":
-    h = neuron.h
-    msn = MediumSpinyNeuron(h)
+    from neuron import h
+    import neuron.gui
+    msn = MediumSpinyNeuron()
         
             
         
