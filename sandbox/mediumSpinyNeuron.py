@@ -221,6 +221,7 @@ class MediumSpinyNeuron:
         h.cao0_ca_ion = 5            # mM, Churchill 1998 - gives eca = 100 mV
         h.cali0_cal_ion = 0.001      # mM, Churchill 1998
         h.calo0_cal_ion = 5          # mM, Churchill 1998 - gives eca = 100 mV
+        h.v_init = -87.75 # mV
         
         # Membrane mech present in all the section
         mechs = [
@@ -300,11 +301,40 @@ class MediumSpinyNeuron:
         for sec in midAndDist:
             sec(0.5).kas.gkbar = 0.00095142 # S/cm2
             sec(0.5).kaf.gkbar = 0.020584 # S/cm2
-        
+
+def iClampExp(section, delay=100, dur=500, amp=0.2375):
+    """Creating an IClamp in the soma"""
+    # Creating an ICLAMP just for testing
+    
+    iClamp = h.IClamp(0.5, sec = section)
+    
+    iClamp.delay = delay
+    iClamp.dur = dur
+    iClamp.amp = amp
+    return iClamp
+
+def go():
+    h.run()
+    pylab.plot(vecs['t'], vecs['v_soma'], label="soma v")    
+    
 if __name__ == "__main__":
     from neuron import h
     import neuron.gui
+    import pylab
     msn = MediumSpinyNeuron()
+    iclamp = iClampExp(msn.soma)
+    h.dt = 0.005
+    h.tstop = 800
+    vecs = {}
+    vecs['t'] = h.Vector()
+    vecs['t'].record(h._ref_t)
+    vecs['v_soma'] = h.Vector()
+    vecs['v_soma'].record(msn.soma(0.5)._ref_v)
+    print "Performing iClamp Experiment with:\n\
+    amp: %f, dur:%f, delay:%f" %(iclamp.amp, iclamp.dur, iclamp.delay)
+    print "Running until %f with fixed dt %f" %(h.tstop, h.dt)
+    #go()
+    pylab.show()
         
             
         
