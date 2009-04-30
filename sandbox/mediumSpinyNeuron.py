@@ -224,23 +224,27 @@ class MediumSpinyNeuron:
         h.v_init = -87.75 # mV
         
         # Membrane mech present in all the section
+        
         mechs = [
-                 'pas', 
-                 'nafsp', 
-                 'nap', 
-                 'kir', 
-                 'kas', 
-                 'kaf', 
-                 'bkkca', 
-                 'skkca', 
+                 'nafsp', #done
+                 'nap', #done
+                 'kaf', #done
+                 'kas', #done
+                 'kir', #done
+                 #krp addedd below only in soma and prox #done
+                 'kdr', #done
+                 'bkkca', #done
+                 #'skkca', #mid and dist only #done below
+                 'pas', #done 
+                 
+                 'caL', #done  
+                 'caL13', #done
+                 'can', #done
+                 'caq', #done
+                 'car', #done
+                 'cat', #done
                  'caldyn', # pump calcium dynamics for L-type calcium channels (HVA & LVA)
-                 'cadyn', # pump calcium dynamics for N, P/Q, R calcium
-                 'caL',  
-                 'caL13',
-                 'can', 
-                 'caq', 
-                 'car', 
-                 'cat' 
+                 'cadyn' # pump calcium dynamics for N, P/Q, R calcium 
                  ]
 
 
@@ -254,26 +258,26 @@ class MediumSpinyNeuron:
             
             sec(0.5).pas.g =  1.15e-5 # S/cm2
             sec(0.5).pas.e = -70 # mV
-            sec(0.5).kir.gkbar = 0.00014 # S/cm2
-            sec(0.5).bkkca.gkbar = 0.001 # S/cm2
-            sec(0.5).skkca.gkbar = 0.145
-            sec(0.5).can.pbar = 1.0e-5 # cm/s
-            sec(0.5).caq.pcaqbar = 6.0e-6 # cm/s
-            sec(0.5).car.pcarbar = 2.6e-5 # cm/s
-            sec(0.5).cat.pcatbar = 4e-7 # m/s
-            sec(0.5).caL.pbar = 6.7e-6 # cm/s
-            sec(0.5).caL13.pcaLbar = 4.25e-7 # cm/s
+            sec(0.5).kir.gkbar = 1.4e-4 # S/cm2
+            sec(0.5).kdr.gkbar = 0.0005 # S/cm2
+            sec(0.5).bkkca.gkbar = 0.12 # S/cm2
+            
+            sec(0.5).caL.pbar = 6.7e-5 # cm/s
+            sec(0.5).can.pbar = 1.0e-4 # cm/s
+            sec(0.5).caq.pcaqbar = 6.0e-5 # cm/s
+            sec(0.5).car.pcarbar = 2.6e-4 # cm/s
+            sec(0.5).cat.pcatbar = 4e-6 # m/s
+            
+            
             sec(0.5).ek = -90
             sec(0.5).ena = 50
             sec.Ra = 100 # ohm-cm 
 
         
         # Soma Only
-        self.soma.insert('krp') # Inserting this only in the soma.
-        self.soma(0.5).krp.gkbar = 0.001 # 0.004 # S/cm2
         
-        self.soma(0.5).naf.gnabar = 1.875 # S/cm2
-        self.soma(0.5).nap.gnabar = 4e-5 # S/cm2
+        self.soma(0.5).nafsp.gnabar = 1.875 # S/cm2
+        self.soma(0.5).nap.gnabar = 5e-5 # S/cm2
         
         # Dends only
         allDends = []
@@ -289,18 +293,25 @@ class MediumSpinyNeuron:
            midAndDist.extend(branch.dist)
            
         for sec in allDends:
-            sec(0.5).naf.gnabar = 0.0244
-            sec(0.5).nap.gnabar = 1.3802e-7
+            sec(0.5).nafsp.gnabar = 0.0244
+            sec(0.5).nap.gnabar = 1.73e-7
             
         # Soma + Prox
         for sec in somaAndProx:
             sec(0.5).kas.gkbar = 0.0104 # S/cm2
-            sec(0.5).kaf.gkbar = 0.225 # S/cm2
+            sec(0.5).kaf.gkbar = 0.36 # S/cm2
+            sec.insert('krp') # Inserting this only in the soma and prox.
+            sec(0.5).krp.gkbar = 1.5e-4 # S/cm2
+            sec(0.5).caL13.pcaLbar = 3.19e-5 # cm/s
+            
             
         # Mid + Dist
         for sec in midAndDist:
-            sec(0.5).kas.gkbar = 0.00095142 # S/cm2
-            sec(0.5).kaf.gkbar = 0.020584 # S/cm2
+            sec(0.5).kas.gkbar = 9.51e-4 # S/cm2
+            sec(0.5).kaf.gkbar = 0.033 # S/cm2
+            sec.insert('skkcasp')
+            sec(0.5).skkcasp.gkbar = 0.1885 # S/cm2
+            sec(0.5).caL13.pcaLbar = 4.25e-7 # cm/s
 
 def iClampExp(section, delay=100, dur=500, amp=0.2375):
     """Creating an IClamp in the soma"""
