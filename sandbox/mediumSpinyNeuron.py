@@ -225,22 +225,22 @@ class MediumSpinyNeuron:
         
         # Membrane mech present in all the section
         mechs = [
-                 'pas', # done
-                 'naf', # done
-                 'nap', # done
-                 'kir', # done
-                 'kas', # done
-                 'kaf', # done
-                 'bkkca', # done
-                 'skkca', # done
+                 'pas', 
+                 'nafsp', 
+                 'nap', 
+                 'kir', 
+                 'kas', 
+                 'kaf', 
+                 'bkkca', 
+                 'skkca', 
                  'caldyn', # pump calcium dynamics for L-type calcium channels (HVA & LVA)
                  'cadyn', # pump calcium dynamics for N, P/Q, R calcium
-                 'caL',  #done
-                 'caL13', #done
-                 'can', # done
-                 'caq', # done
-                 'car', # done
-                 'cat' # done
+                 'caL',  
+                 'caL13',
+                 'can', 
+                 'caq', 
+                 'car', 
+                 'cat' 
                  ]
 
 
@@ -272,7 +272,7 @@ class MediumSpinyNeuron:
         self.soma.insert('krp') # Inserting this only in the soma.
         self.soma(0.5).krp.gkbar = 0.001 # 0.004 # S/cm2
         
-        self.soma(0.5).naf.gnabar = 1.5 # S/cm2
+        self.soma(0.5).naf.gnabar = 1.875 # S/cm2
         self.soma(0.5).nap.gnabar = 4e-5 # S/cm2
         
         # Dends only
@@ -289,7 +289,7 @@ class MediumSpinyNeuron:
            midAndDist.extend(branch.dist)
            
         for sec in allDends:
-            sec(0.5).naf.gnabar = 0.0195
+            sec(0.5).naf.gnabar = 0.0244
             sec(0.5).nap.gnabar = 1.3802e-7
             
         # Soma + Prox
