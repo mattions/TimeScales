@@ -17,7 +17,7 @@ class mySection(nrn.Section):
 class Spine():
     """Class spine. Create a spine with head and neck"""
     
-    def __init__(self, name, filename_bioch_mod="biochemical_circuits/biomd183_noCalcium.eml"):
+    def __init__(self, name, filename_bioch_mod="../biochemical_circuits/biomd183_noCalcium.eml"):
         """ Create a spine with a standard volume of ~0.11 um
         the h is the reference to the main hoc interpreter"""
         self.name = name
@@ -55,10 +55,10 @@ class Spine():
         
         neck.insert("pas")
         
-        h.factors_catrack() # Called on the NMOD
+        h.factors_catrack() # Called on the NMOD catrack
         neck.insert("catrack")
         
-        h.factors_caltrack()
+        h.factors_caltrack() # Called on the NMOD caltrack
         neck.insert("caltrack") 
                 
         return neck
@@ -74,10 +74,10 @@ class Spine():
         head.connect(neck)
         
         head.insert("pas")
-        head.insert("cansp")
-        head.insert("caqsp")
-        head.insert("carsp")
-        head.insert("skkcasp")
+        head.insert("can")
+        head.insert("caq")
+        head.insert("car")
+        head.insert("skkca")
 
         h.factors_caltrack()
         head.insert("caltrack")
@@ -96,8 +96,8 @@ class Spine():
         psd.Ra =100
         psd.connect(head)
         
-        psd.insert("caL13sp")
-        psd.insert("caLsp")
+        psd.insert("caL13")
+        psd.insert("caL")
         psd.insert("rubin")
         
         h.factors_catrack()
@@ -188,9 +188,10 @@ if __name__ == "__main__":
     
     import neuron.gui
     h.v_init = -87.75 # Setting the initial vm
-    h.tstop = 1000
-    h.run()
+    h.dt = 0.005
     
+    h.tstop = 500
+    h.run()
     graph.plotCalcium(vecs, "cai")
     graph.plotCalcium(vecs, "cali")
     graph.plotVoltage(vecsVolt, spine1.getSynapse('ampa').synVecs)
