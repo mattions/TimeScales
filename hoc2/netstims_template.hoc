@@ -1,0 +1,28 @@
+//*************************************************************
+//	TEMPLATE FOR NETSTIMS
+// load netstims template, sets default frequency, number, noise
+
+begintemplate NS_NetStim
+
+public pp, connect2target, x, y, z, position, is_art
+
+external acell_home_
+objref pp
+
+proc init() {
+acell_home_ pp = new stim(0.5) //stim2(.5)
+    pp.frequency = 100  //Spike frequency
+    pp.number = 10e6 // number of spikes 
+    pp.noise = 1
+	pp.start = 0
+}
+
+func is_art() { return 1 }
+proc connect2target() { $o2 = new NetCon(pp, $o1) }
+proc position(){x=$1  y=$2  z=$3}
+endtemplate NS_NetStim
+
+//END TEMPLATE
+
+//*************************************************************
+
