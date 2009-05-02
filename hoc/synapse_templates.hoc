@@ -8,33 +8,33 @@ begintemplate GABAt
 	objref pp, sr
 	strdef name
 		
-	proc init()   {
-	
+		proc init()   {
+		
 		pp = new GABA($1)
 		sr = new SectionRef()
 		name = "GABAsyn"
 		a = $1
 
-	}
+		}
 
 endtemplate GABAt
 
 begintemplate AMPAt
 
-	public pp, sr, a, name, unref
+	public pp, sr, a, name
 
 	objref pp, sr
 	strdef name
 		
-	proc init()   {
+		proc init()   {
+
 		pp = new AMPA($1)
 		sr = new SectionRef()
 		name = "AMPAsyn"
 		a = $1
-	}
 
-	proc unref() {}
-		
+		}
+
 endtemplate AMPAt
 
 begintemplate NMDAt
@@ -44,14 +44,14 @@ begintemplate NMDAt
 	objref pp, sr
 	strdef name
 		
-	proc init()   {
+		proc init()   {
 
 		pp = new NMDA($1)
 		sr = new SectionRef()
 		name = "NMDAsyn"
 		a = $1
 
-	}
+		}
 
 endtemplate NMDAt
 //****************************************************************************

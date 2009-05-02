@@ -11,7 +11,7 @@
 //****************************************************************************
 //Load all the baseline parameters to start with
 
-sprint(dirstr, "%s/input_params/baseline_values.txt", preface)
+sprint(dirstr, "%s/baseline_values.txt", preface)
 //print dirstr
 xopen(dirstr)
 //load_file("../input_params/baseline_values.txt")
@@ -22,7 +22,7 @@ xopen(dirstr)
 //****************************************************************************
 // all_tau_vecs.hoc loads the tables used to define the taus for many channels
 
-sprint(dirstr, "%s/hoc/all_tau_vecs.hoc", preface)
+sprint(dirstr, "%s/all_tau_vecs.hoc", preface)
 //print dirstr
 xopen(dirstr)
 //load_file("all_tau_vecs.hoc")
@@ -33,7 +33,7 @@ xopen(dirstr)
 //****************************************************************************
 //load the templates for the synapses - AMPA, GABA, and NMDA
 
-sprint(dirstr, "%s/hoc/synapse_templates.hoc", preface)
+sprint(dirstr, "%s/synapse_templates.hoc", preface)
 xopen(dirstr)
 //load_file("synapse_templates.hoc")
 //****************************************************************************
@@ -46,7 +46,7 @@ xopen(dirstr)
 // channels and synapses; dlambda code is in here (under geom()) along 
 // with code to output the number of compartments in cell
 
-sprint(dirstr, "%s/hoc/msp_template.hoc", preface)
+sprint(dirstr, "%s/msp_template.hoc", preface)
 xopen(dirstr)
 //load_file ("msp_template.hoc")
 //****************************************************************************
@@ -60,7 +60,7 @@ create acell_home_
 //****************************************************************************
 // load netstims template, sets default interval, number, noise
 
-sprint(dirstr, "%s/hoc/netstims_template.hoc", preface)
+sprint(dirstr, "%s/netstims_template.hoc", preface)
 xopen(dirstr)
 //load_file("netstims_template.hoc")
 //****************************************************************************
@@ -72,7 +72,7 @@ xopen(dirstr)
 // set number of segments using geom_nseg() (in fixnseg.hoc)
 // create shunt for sharp electrode
 
-sprint(dirstr, "%s/hoc/create_mspcells.hoc", preface)
+sprint(dirstr, "%s/create_mspcells.hoc", preface)
 xopen(dirstr)
 //load_file("create_mspcells.hoc")
 //****************************************************************************
@@ -88,51 +88,23 @@ Ad = 0
 
 forsec "dend._.*" {
 	for i = 1, nseg {
-//		print secname(), " ", i, " ", area( i/(nseg+1) )
 		Ad = Ad + area( i/(nseg+1) )
 	}
 }
 
 forsec "MSP_Cell[0]"  {
 	for i = 1, nseg {
-//		print secname(), " ", i, " ", area( i/(nseg+1) )
 		A1 = A1 + area( i/(nseg+1) )
 	}
 }
 
 Ap = A1 - Ad
 
-print "Total cell membrane area = ", A1, "um2" // equals whole cell membrane area
-print "Mid + Dist mem area = ", Ad, "um2"
-print "Soma + Prox mem area = ", Ap, "um2" 
+print "Total cell membrane area = ", A1		// equals whole cell membrane area
+print "Mid + Dist mem area = ", Ad
+print "Soma + Prox mem area = ", Ap 
 
 //**********************************************************************
-
-
-
-
-
-//*************************************************************************
-// create and set netstims using champawt(), chnmdawt(), chint()
-
-sprint(dirstr, "%s/hoc/basic_procs.hoc", preface)
-xopen(dirstr)
-
-//*************************************************************************
-
-
-
-
-
-
-//*************************************************************************
-// create and set netstims using champawt(), chnmdawt(), chint()
-
-sprint(dirstr, "%s/hoc/make_netstims.hoc", preface)
-xopen(dirstr)
-
-//*************************************************************************
-
 
 
 
@@ -143,24 +115,55 @@ xopen(dirstr)
 // input_params/baseline_values.txt
 //
 
-sprint(dirstr, "%s/hoc/dopamine_modulations.hoc", preface)
+sprint(dirstr, "%s/basic_procs.hoc", preface)
 xopen(dirstr)
 
-
-previous()
-
-
 set_pas(G_PAS)
+
+set_naf(G_NAF)
+set_nafd(G_NAFD)
+set_nap(G_NAP)
+set_napd(G_NAPD)
+
+set_kir(G_KIR)
+set_kas(G_KAS)
+set_kasd(G_KASD)
+set_kaf(G_KAF)
+set_kafd(G_KAFD)
+set_krp(G_KRP)
+set_bkkca(G_BKKCA)
+set_skkca(G_SKKCA)
+
+set_caL(P_CAL)
+set_caL13(P_CAL13)
+set_can(P_CAN)
+set_caq(P_CAQ)
+set_car(P_CAR)
+set_cat(P_CAT)
+
 set_cainf(CAINF)
 set_taur(TAUR)
 set_cadrive(CA_DRIVE)
 set_pump(CA_PUMP)
-set_ek(EK)
 
+set_ek(EK)
 forsec "MSP_Cell" {Ra = RA    cm = CM}
+
 //****************************************************************************
 
-setnetn(0)
+
+
+
+//*************************************************************************
+// create and set netstims using champawt(), chnmdawt(), chint()
+
+sprint(dirstr, "%s/make_netstims.hoc", preface)
+xopen(dirstr)
+
+//*************************************************************************
+
+
+
 access MSP_Cell[0].soma
 
 

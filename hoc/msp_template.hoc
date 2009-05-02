@@ -34,9 +34,7 @@ proc init() {
 	synlist = new List()
 	leaf    = new List()
 	
-	ampaloops()
-	nmdaloops()
-	gabaloops()
+	synloops()
 	x = y = z = 0 // only change via position
 }
 
@@ -178,7 +176,6 @@ func lambda_f() { local i, x1, x2, d1, d2, lam
                 x1 = x2   d1 = d2
         }
 
-//		print Ra, cm
         //  length of the section in units of lambda
         lam *= sqrt(2) * 1e-5*sqrt(4*PI*$1*Ra*cm)
 
@@ -208,8 +205,6 @@ proc biophys() {
 	insert kaf
 	insert bkkca
 	insert skkca
-	insert kdr
-	insert krp
 
 	insert caldyn
 	insert caL
@@ -233,7 +228,6 @@ proc biophys() {
 	insert kaf
 	insert bkkca
 	insert skkca
-	insert kdr
 
 	insert caldyn
 	insert caL
@@ -257,8 +251,7 @@ proc biophys() {
 	insert kaf
 	insert bkkca
 	insert skkca
-	insert kdr
-	
+
 	insert caldyn
 	insert caL
    	insert caL13
@@ -282,7 +275,6 @@ proc biophys() {
 	insert krp
 	insert bkkca
 	insert skkca
-	insert kdr
 	
 	insert caldyn
 	insert caL
@@ -312,8 +304,7 @@ func is_art() { return 0 }
 
 
 
-proc ampaloops() {
-
+proc synloops() {
 	//***************************
 	//Build AMPA synapses
 	// Inner dends AMPA
@@ -455,13 +446,11 @@ proc ampaloops() {
 			onode = (i+1)/5
 			dend4_2[2] ampa[i] = new AMPAt(onode)   synlist.append(ampa[i])
 	}
-}	// end ampaloops
-	
-
-//***************************
+	//***************************
 	
 	
-proc nmdaloops() {	
+	
+	
 	//***************************
 	//Build NMDA synapses
 	// Inner dends NMDA
@@ -534,7 +523,9 @@ proc nmdaloops() {
 			onode = (i+1)/5		// 0.2, 0.4, 0.6, 0.8
 			dend1_1[2] nmda[i] = new NMDAt(onode)   synlist.append(nmda[i]) 
 	}
-	
+	synloops_1() // continue in next proc to avoid to large a proc error
+}  //end synloops
+proc synloops_1() {
 	for i = 0, 3  {
 			onode = (i+1)/5		// 0.2, 0.4, 0.6, 0.8
 			dend1_2[1] nmda[i] = new NMDAt(onode)   synlist.append(nmda[i]) 
@@ -604,14 +595,12 @@ proc nmdaloops() {
 			onode = (i+1)/5		// 0.2, 0.4, 0.6, 0.8
 			dend4_2[2] nmda[i] = new NMDAt(onode)   synlist.append(nmda[i])
 	}
-
-}	// end ampaloops
-
-	
-//***************************
+	//***************************
 	
 	
-proc gabaloops() {	
+	
+	
+	
 	//***************************
 	//Build GABA synapses
 	// soma GABA
@@ -760,7 +749,8 @@ proc gabaloops() {
 			onode = (i+1)/3
 			dend4_2[2] gaba[i] = new GABAt(onode)   synlist.append(gaba[i])
 	}
-}	// end gabaloops()
+	//**************************
+}	// end synloops()
 
 endtemplate MSP_Cell
 

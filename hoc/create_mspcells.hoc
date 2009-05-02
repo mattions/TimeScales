@@ -22,25 +22,9 @@ func nc_append() {//srcindex, target cell index, synindex
 
 // create MSP cells using cell_append()
 access acell_home_
-L=1
+L=0
 
 cell_number = 1
 /*MSP1*/ cell_append(new MSP_Cell(RA,CM), -270,90,0) 
-///*MSP2*/ cell_append(new MSP_Cell(RA,CM), -290,90,0) 
-
-
-
-//xopen("fixnseg.hoc")
-//geom_nseg()
-
-
-
-// match sharp electrode or patch clamp recordings
-/*
-objref shnt[cell_number]
-for i = 0, cell_number-1 {
-	MSP_Cell[i].soma shnt[i] = new shunt(0.5)
-}
-*/
 //****************************************************************************
 

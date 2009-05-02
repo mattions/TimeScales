@@ -23,7 +23,6 @@ proc champawt() {    nAMPA_WT = $1
 			ConnectAMPA_[k] = new NetCon( NS_NetStim[k].pp, MSP_Cell[i].synlist.object[j].pp, 0, 0, nAMPA_WT) 
         }
     }
-//	print "AMPA weights changed"
  }
 
 
@@ -36,7 +35,6 @@ proc chnmdawt() {    nNMDA_WT = $1
 	        ConnectNMDA_[k] = new NetCon( NS_NetStim[k].pp, MSP_Cell[i].synlist.object[j+NGLU].pp, 0, 0, nNMDA_WT) 
         }
     }
-//	print "NMDA weights changed"
 }
 
 
@@ -49,7 +47,6 @@ proc chgabawt() {    nGABA_WT = $1
             ConnectGABA_[k] = new NetCon( NS_NetStim[k+NGABA*cell_number].pp, MSP_Cell[i].synlist.object[j+2*NGLU].pp, 0, 0, nGABA_WT) 
         }
     }
-//	print "GABA weights changed"
 }
 
 
@@ -81,21 +78,6 @@ proc chfreq() {		// downstate frequency, upstate frequency, time of cycle, gaba:
 }
 
 
-proc ampaspec() {
-	syn = $1
-	wgt = $2
-	
-	ConnectAMPA_[syn] = new NetCon( NS_NetStim[syn].pp, MSP_Cell[0].synlist.object[syn].pp, 0, 0, wgt) 
-//	print "ampa #", syn, " set to ", wgt
-}
-
-proc nmdaspec() {
-	syn = $1
-	wgt = $2
-	
-	ConnectNMDA_[syn] = new NetCon( NS_NetStim[syn].pp, MSP_Cell[0].synlist.object[syn+NGLU].pp, 0, 0, wgt) 
-//	print "nmda #", syn, " set to ", wgt
-}
 
 
 
@@ -124,6 +106,7 @@ proc make_netstims() {
 }
 
 make_netstims()
+setnetn(0)			// allows events to played into NetCons via ConnectFAKEs
 
 print "cells loaded"
 

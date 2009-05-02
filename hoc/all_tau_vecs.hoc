@@ -2,9 +2,6 @@
 // All_Tau_Vecs loads the tables used to define the taus for channels
 
 
-// Naf/Nahc
-//load_file("../mod/hoc_load/nahc_vec.hoc")
-
 objref taum_
 objref tauh_
 objref vtau_
@@ -16,24 +13,21 @@ taum_ = new Vector(16,0)
 tauh_ = new Vector(16,0)
 vtau_ = new Vector(16,0)
 
-//print "naf vector"
 
-sprint(dirstr, "%s/mod/tau_tables/taum_naf.txt", preface)
+sprint(dirstr, "%s/tau_tables/taum_naf.txt", preface)
 file_.ropen (dirstr)
 taum_.scanf(file_)
 file_.close()
 
-sprint(dirstr, "%s/mod/tau_tables/tauh_naf.txt", preface)
+sprint(dirstr, "%s/tau_tables/tauh_naf.txt", preface)
 file_.ropen (dirstr)
 tauh_.scanf(file_)
 file_.close()
 
-sprint(dirstr, "%s/mod/tau_tables/vtau_naf.txt", preface)
+sprint(dirstr, "%s/tau_tables/vtau_naf.txt", preface)
 file_.ropen (dirstr)
 vtau_.scanf(file_)
 file_.close()
-
-//print "vtau = ", vtau_.x[0], vtau_.x[1], vtau_.x[2] 
 
 table_taumnaf_naf(taum_,vtau_)
 table_tauhnaf_naf(tauh_,vtau_)
@@ -42,8 +36,7 @@ table_tauhnaf_naf(tauh_,vtau_)
 //*************************
 
 
-// Nap
-//load_file("../mod/hoc_load/nap_vec.hoc")
+
 objref tauh_nap_
 objref vtau_nap_
 objref file_nap_
@@ -53,12 +46,12 @@ file_nap_ = new File ()
 tauh_nap_ = new Vector(15,0)
 vtau_nap_ = new Vector(15,0)
 
-sprint(dirstr, "%s/mod/tau_tables/tauh_nap.txt", preface)
+sprint(dirstr, "%s/tau_tables/tauh_nap.txt", preface)
 file_nap_.ropen (dirstr)
 tauh_nap_.scanf(file_nap_)
 file_nap_.close()
 
-sprint(dirstr, "%s/mod/tau_tables/vtau_nap.txt", preface)
+sprint(dirstr, "%s/tau_tables/vtau_nap.txt", preface)
 file_nap_.ropen (dirstr)
 vtau_nap_.scanf(file_nap_)
 file_nap_.close()
@@ -71,8 +64,7 @@ table_tauhnap_nap(tauh_nap_,vtau_nap_)
 
 
 
-// Kir
-//load_file("../mod/hoc_load/kir_vec.hoc")
+
 objref taum_kir_
 objref vtau_kir_
 objref file_kir_
@@ -82,12 +74,12 @@ file_kir_ = new File ()
 taum_kir_ = new Vector(16,0)
 vtau_kir_ = new Vector(16,0)
 
-sprint(dirstr, "%s/mod/tau_tables/taum_kir.txt", preface)
+sprint(dirstr, "%s/tau_tables/taum_kir.txt", preface)
 file_kir_.ropen (dirstr)
 taum_kir_.scanf(file_kir_)
 file_kir_.close()
 
-sprint(dirstr, "%s/mod/tau_tables/vtau_kir.txt", preface)
+sprint(dirstr, "%s/tau_tables/vtau_kir.txt", preface)
 file_kir_.ropen (dirstr)
 vtau_kir_.scanf(file_kir_)
 file_kir_.close()
@@ -100,8 +92,6 @@ table_taumkir_kir(taum_kir_,vtau_kir_)
 
 
 
-// Krp
-//load_file("../mod/hoc_load/krp_vec.hoc")
 objref taum_krp_
 objref tauh_krp_
 objref vtau_krp_
@@ -113,17 +103,17 @@ taum_krp_ = new Vector(31,0)
 tauh_krp_ = new Vector(31,0)
 vtau_krp_ = new Vector(31,0)
 
-sprint(dirstr, "%s/mod/tau_tables/taum_krp.txt", preface)
+sprint(dirstr, "%s/tau_tables/taum_krp.txt", preface)
 file_krp_.ropen (dirstr)
 taum_krp_.scanf(file_krp_)
 file_krp_.close()
 
-sprint(dirstr, "%s/mod/tau_tables/tauh_krp.txt", preface)
+sprint(dirstr, "%s/tau_tables/tauh_krp.txt", preface)
 file_krp_.ropen (dirstr)
 tauh_krp_.scanf(file_krp_)
 file_krp_.close()
 
-sprint(dirstr, "%s/mod/tau_tables/vtau_krp.txt", preface)
+sprint(dirstr, "%s/tau_tables/vtau_krp.txt", preface)
 file_krp_.ropen (dirstr)
 vtau_krp_.scanf(file_krp_)
 file_krp_.close()
@@ -137,8 +127,6 @@ table_tauhkrp_krp(tauh_krp_,vtau_krp_)
 
 
 
-// Kaf
-//load_file("../mod/hoc_load/kaf_vec.hoc")
 objref mtau_kaf_
 objref vtau_kaf_
 objref file_kaf_
@@ -148,12 +136,12 @@ file_kaf_ = new File ()
 mtau_kaf_ = new Vector(31,0)
 vtau_kaf_ = new Vector(31,0)
 
-sprint(dirstr, "%s/mod/tau_tables/taum_kaf.txt", preface)
+sprint(dirstr, "%s/tau_tables/taum_kaf.txt", preface)
 file_kaf_.ropen (dirstr)
 mtau_kaf_.scanf(file_kaf_)
 file_kaf_.close()
 
-sprint(dirstr, "%s/mod/tau_tables/vtau_kaf.txt", preface)
+sprint(dirstr, "%s/tau_tables/vtau_kaf.txt", preface)
 file_kaf_.ropen (dirstr)
 vtau_kaf_.scanf(file_kaf_)
 file_kaf_.close()
@@ -166,8 +154,6 @@ table_mtau_kaf(mtau_kaf_,vtau_kaf_)
 
 
 
-// Cat
-//load_file("../mod/hoc_load/cat_vec.hoc")
 objref taum_catvec
 objref tauh_catvec
 objref vtau_catvec
@@ -179,17 +165,17 @@ taum_catvec = new Vector(30,0)
 tauh_catvec = new Vector(30,0)
 vtau_catvec = new Vector(30,0)
 
-sprint(dirstr, "%s/mod/tau_tables/taum_cat.txt", preface)
+sprint(dirstr, "%s/tau_tables/taum_cat.txt", preface)
 file_cat.ropen (dirstr)
 taum_catvec.scanf(file_cat)
 file_cat.close()
 
-sprint(dirstr, "%s/mod/tau_tables/tauh_cat.txt", preface)
+sprint(dirstr, "%s/tau_tables/tauh_cat.txt", preface)
 file_cat.ropen (dirstr)
 tauh_catvec.scanf(file_cat)
 file_cat.close()
 
-sprint(dirstr, "%s/mod/tau_tables/vtau_cat.txt", preface)
+sprint(dirstr, "%s/tau_tables/vtau_cat.txt", preface)
 file_cat.ropen (dirstr)
 vtau_catvec.scanf(file_cat)
 file_cat.close()
@@ -202,18 +188,6 @@ table_htau_cat(tauh_catvec, vtau_catvec)
 //*************************
 
 
-// Catl
-//table_mtau_catl(taum_catvec, vtau_catvec)
-//table_htau_catl(tauh_catvec, vtau_catvec)
-
-
-
-//*************************
-
-
-
-// Car
-//load_file("../mod/hoc_load/car_vec.hoc")
 objref tauh_carvec
 objref vtau_carvec
 objref file_car
@@ -222,12 +196,12 @@ file_car = new File ()
 tauh_carvec = new Vector(30,0)
 vtau_carvec = new Vector(30,0)
 
-sprint(dirstr, "%s/mod/tau_tables/tauh_car.txt", preface)
+sprint(dirstr, "%s/tau_tables/tauh_car.txt", preface)
 file_car.ropen (dirstr)
 tauh_carvec.scanf(file_car)
 file_car.close()
 
-sprint(dirstr, "%s/mod/tau_tables/vtau_car.txt", preface)
+sprint(dirstr, "%s/tau_tables/vtau_car.txt", preface)
 file_car.ropen (dirstr)
 vtau_carvec.scanf(file_car)
 file_car.close()
@@ -236,119 +210,12 @@ table_htau_car(tauh_carvec, vtau_carvec)
 
 
 
-//*************************
-
-
-
-
-//*************************
-
-
-
-// Carsp
-//load_file("../mod/hoc_load/car_vec.hoc")
-objref tauh_carspvec
-objref vtau_carspvec
-objref file_carsp
-
-file_carsp = new File ()
-tauh_carspvec = new Vector(30,0)
-vtau_carspvec = new Vector(30,0)
-
-sprint(dirstr, "%s/mod/tau_tables/tauh_car.txt", preface)
-file_carsp.ropen (dirstr)
-tauh_carspvec.scanf(file_carsp)
-file_carsp.close()
-
-sprint(dirstr, "%s/mod/tau_tables/vtau_car.txt", preface)
-file_carsp.ropen (dirstr)
-vtau_carspvec.scanf(file_carsp)
-file_carsp.close()
-
-table_htau_carsp(tauh_carspvec, vtau_carspvec)
-
-
-
-//*************************
-
-
-
-// Carl
-//table_htau_carl(tauh_carvec, vtau_carvec)
-
 //**************************************************************************
 
 
-// Nafsp
-//load_file("../mod/hoc_load/nahc_vec.hoc")
-
-objref taum_nafsp
-objref tauh_nafsp
-objref vtau_nafsp
-objref file_nafsp
-
-file_nafsp = new File ()
-
-taum_nafsp = new Vector(16,0)
-tauh_nafsp = new Vector(16,0)
-vtau_nafsp = new Vector(16,0)
-
-//print "naf vector"
-
-sprint(dirstr, "%s/mod/tau_tables/taum_naf.txt", preface)
-file_nafsp.ropen (dirstr)
-taum_nafsp.scanf(file_nafsp)
-file_nafsp.close()
-
-sprint(dirstr, "%s/mod/tau_tables/tauh_naf.txt", preface)
-file_nafsp.ropen (dirstr)
-tauh_nafsp.scanf(file_nafsp)
-file_nafsp.close()
-
-sprint(dirstr, "%s/mod/tau_tables/vtau_naf.txt", preface)
-file_nafsp.ropen (dirstr)
-vtau_nafsp.scanf(file_nafsp)
-file_nafsp.close()
-
-//print "vtau = ", vtau_.x[0], vtau_.x[1], vtau_.x[2] 
-
-table_taumnaf_nafsp(taum_nafsp,vtau_nafsp)
-table_tauhnaf_nafsp(tauh_nafsp,vtau_nafsp)
-
-
-//*************************
 
 
 
-//*************************
 
-
-
-// Kirsp
-//load_file("../mod/hoc_load/kir_vec.hoc")
-objref taum_kirsp_
-objref vtau_kirsp_
-objref file_kirsp_
-
-file_kirsp_ = new File ()
-
-taum_kirsp_ = new Vector(16,0)
-vtau_kirsp_ = new Vector(16,0)
-
-sprint(dirstr, "%s/mod/tau_tables/taum_kir.txt", preface)
-file_kirsp_.ropen (dirstr)
-taum_kirsp_.scanf(file_kirsp_)
-file_kirsp_.close()
-
-sprint(dirstr, "%s/mod/tau_tables/vtau_kir.txt", preface)
-file_kirsp_.ropen (dirstr)
-vtau_kirsp_.scanf(file_kirsp_)
-file_kirsp_.close()
-
-table_taumkir_kirsp(taum_kirsp_,vtau_kirsp_)
-
-
-
-//*************************
 
 
