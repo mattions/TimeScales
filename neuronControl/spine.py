@@ -149,21 +149,17 @@ if __name__ == "__main__":
         print "ERROR hoc path %s doesn't exist" %os.path.realpath(hoc_path)
         sys.exit(1)
     
-    # Hoc file assumes all the file are launched from a top directory
-    head, tail  = os.path.split(hoc_path)
-    print head, tail
-    if head is not '':
-        os.chdir(head)
+    os.chdir(hoc_path)
     preface_pos = os.getcwd()
         
     h('strdef preface, dirstr') # preface and dirstr used in each hoc
     preface_string = "preface = \"" + preface_pos + "\""
     h(preface_string)
-    h.load_file(os.path.join(tail, "all_tau_vecs.hoc"))
+    h.load_file( "all_tau_vecs.hoc")
         
     print "Testing the spine. Current directory %s" %os.getcwd()
     spine1 = Spine("spine1", 
-                   filename_bioch_mod ="biochemical_circuits/biomd183_noCalcium.eml")
+                   filename_bioch_mod ="../biochemical_circuits/biomd183_noCalcium.eml")
     
     # AMPA Syn
     ampaSyn = Synapse('ampa', spine1.psd)

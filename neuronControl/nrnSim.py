@@ -128,7 +128,7 @@ def iClampExp():
     import neuron.gui
     from neuron import h
     from synapse import Synapse
-    nrnSim = NeuronSim(mod_path="../mod2", hoc_path="../hoc2")
+    nrnSim = NeuronSim(mod_path="../mod", hoc_path="../hoc")
     #nrnSim.distributeSpines()
     
     # Create the synapses for all the spines
