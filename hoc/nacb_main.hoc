@@ -2,9 +2,10 @@
 	of the hoc files necessary to build one cell and sets the default
 	parameter values.
 	
-	Usually this file is called by a hoc file in /input_params/.
+	
 	
 	Jason Moyer 2005 - jtmoyer@seas.upenn.edu
+	Michele Mattioni 2008 - mattioni@ebi.ac.uk
 */
 	
 
@@ -29,18 +30,6 @@ xopen(dirstr)
 //****************************************************************************
 
 
-
-//****************************************************************************
-//load the templates for the synapses - AMPA, GABA, and NMDA
-
-sprint(dirstr, "%s/synapse_templates.hoc", preface)
-xopen(dirstr)
-//load_file("synapse_templates.hoc")
-//****************************************************************************
-
-
-
-
 //****************************************************************************
 // load cell template - builds the cell topology, including inserting
 // channels and synapses; dlambda code is in here (under geom()) along 
@@ -54,16 +43,6 @@ xopen(dirstr)
 
 
 create acell_home_
-
-
-
-//****************************************************************************
-// load netstims template, sets default interval, number, noise
-
-sprint(dirstr, "%s/netstims_template.hoc", preface)
-xopen(dirstr)
-//load_file("netstims_template.hoc")
-//****************************************************************************
 
 
 
@@ -150,18 +129,6 @@ set_ek(EK)
 forsec "MSP_Cell" {Ra = RA    cm = CM}
 
 //****************************************************************************
-
-
-
-
-//*************************************************************************
-// create and set netstims using champawt(), chnmdawt(), chint()
-
-sprint(dirstr, "%s/make_netstims.hoc", preface)
-xopen(dirstr)
-
-//*************************************************************************
-
 
 
 access MSP_Cell[0].soma

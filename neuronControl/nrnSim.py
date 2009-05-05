@@ -7,6 +7,7 @@ import numpy
 from spine import *
 import os
 import sys
+from synapse import Synapse
 
 
 class Event():
@@ -77,7 +78,6 @@ class NeuronSim():
             spine = Spine("spine" + "-" + str(i))
             #spine.attach(h.MSP_Cell[0].dend1_1[1], 0.5, 0)
             spine.attach(h.MSP_Cell[0].dend3_1[1], i/10.0 , 0)
-            self.createSynapses(spine)
             self.spines.append(spine)
     
     def updateSpines(self):
@@ -89,14 +89,6 @@ class NeuronSim():
             print "Equilibrium for spine: %s, dend: %s, bio sim time: %f" % (spine.head.name(), 
                                                                      spine.parent.name(),
                                                                      spine.ecellMan.ses.getCurrentTime())    
-    def usingVariableTimeStep(self):
-        cvode = h.CVode()
-        cvode.active(1)
-        cvode.atol(0.0001)
-        # Vector with the derivate
-        #dstates = h.Vector()
-        #cvode.dstates(dstates)
-        return cvode
 
     def createSynapses(self, spine):
         "Create an AMPA and an NMDA synapse in the spine"
@@ -114,38 +106,33 @@ class NeuronSim():
 # Test code
 
 
-def go(tstop):
-    
-    nrnSim.initAndRun(tstop)
-    pylab.plot(vecs['t'],vecs['v_soma'], label='v_soma')
-    pylab.legend(loc=0)
-    pylab.show()
-
-
 def iClampExp():
     """Test the Iclamp model"""
     import pylab
     import neuron.gui
     from neuron import h
-    from synapse import Synapse
     nrnSim = NeuronSim(mod_path="../mod", hoc_path="../hoc")
-    #nrnSim.distributeSpines()
+    vecs = {}
+    vecs['t'] = h.Vector()
+    vecs['t'].record(h._ref_t)
+    vecs['v_soma'] = h.Vector()
+    vecs['v_soma'].record(h.MSP_Cell[0].soma(0.5)._ref_v)
+    h.v_init =(-87.75)
+    h.load_file("iclamp_0.248.ses")
+    h.run()
+    print "Only the model with no spines attached"
+    print "Reproduce the result on the Wolf 2005 paper"
     
-    # Create the synapses for all the spines
+def testDistSpines():
+    """Test the distribution of the spines in the model."""
+    import pylab
+    import neuron.gui
+    from neuron import h
+    nrnSim = NeuronSim(mod_path="../mod", hoc_path="../hoc")
+    nrnSim.distributeSpines()
     
-#    for spine in nrnSim.spines:
-#    
-#        # AMPA Syn
-#        ampaSyn = Synapse('ampa', spine.psd)
-#        ampaSyn.createStimul(start=130, number=10, interval=10, noise=0)
-#        spine.addSynapse("ampa", ampaSyn)
-#        
-#        #NMDA Syn
-#        nmdaSyn = Synapse('nmda', spine.psd)
-#        nmdaSyn.createStimul(start=130, number=10, interval=10, noise=0)
-#        spine.addSynapse("nmda", nmdaSyn)
     
-    #cvode = nrnSim.usingVariableTimeStep()
+
     vecs = {}
     vecs['t'] = h.Vector()
     vecs['t'].record(h._ref_t)
@@ -153,16 +140,12 @@ def iClampExp():
     vecs['v_soma'].record(h.MSP_Cell[0].soma(0.5)._ref_v)
     h.dt =0.005
     h.v_init =(-87.75)
-    h.load_file("iclamp_0.248.ses")
-    h.run()
-    print "Only the model with no spines attached"
-    print "Reproduce the result on the Wolf 2005 paper"
+    h.load_file("iclamp_0.248_fixedTimeStep.ses")
+    #h.run()
     #go(100) # Just a way to advance the simulator and get the plot back
-    
-
-
 
 if __name__ == "__main__":
-    iClampExp()
+    #iClampExp()
+    testDistSpines()
     
     
