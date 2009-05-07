@@ -165,8 +165,8 @@ if __name__ == "__main__":
     from optparse import OptionParser
     usage= "usage: %prog [options] interval calciumValue.\n\
     Run the simulator using the interval [s] to update the calcium between different run\
-    interval - The interval between the stop of the simulators. Used to sample tha calcium\
-    calciumValue - The value of the calcium to pump into the system\
+    \ninterval - The interval between the stop of the simulators. Used to sample tha calcium\
+    \ncalciumValue - The value of the calcium to pump into the system\
                       The frequency of the spike and the duration are hardcoded."
     parser = OptionParser(usage)
     parser.add_option("-s", "--save", action="store_true", 
