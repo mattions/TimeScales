@@ -38,19 +38,14 @@ class NeuronSim():
             print "ERROR hoc path %s doesn't exist" %os.path.realpath(hoc_path)
             sys.exit(1)
         # Hoc file assumes all the file are launched from a top directory
-#        head, tail  = os.path.split(hoc_path)
-#        if head is not '':
-#            os.chdir(head)
-#            preface_pos = os.getcwd()
-#        else: 
-#            preface_pos = self.gcw
-        os.chdir(hoc_path)
-        preface_pos = os.getcwd()
+        head, tail  = os.path.split(os.path.realpath(hoc_path))
+
+        preface_pos = head
         
         h('strdef preface, dirstr') # preface and dirstr used in each hoc
         preface_string = "preface = \"" + preface_pos + "\""
         h(preface_string)
-        h.load_file(os.path.join("nacb_main.hoc"))
+        h.load_file(os.path.join(hoc_path, "nacb_main.hoc"))
         
         h.load_file("stdrun.hoc") # loading the standard run NEURON system
             
@@ -72,14 +67,24 @@ class NeuronSim():
     def distributeSpines(self):
         """Attach spines to the dendrites"""
         self.spines = []
-        # Now just a test spine
-        i=1
-        for i in xrange (9):
-            spine = Spine("spine" + "-" + str(i))
-            #spine.attach(h.MSP_Cell[0].dend1_1[1], 0.5, 0)
-            spine.attach(h.MSP_Cell[0].dend3_1[1], i/10.0 , 0)
-            self.spines.append(spine)
+        
+        # Distal:
+        spine_positions = [0.1, 0.3, 0.5, 0.7, 0.9]
+        self.populateDend(spine_positions, h.MSP_Cell[0].Dist_Dend)
+
+        # Mid
+        print "Adding the Mid spines"
+        spine_positions = [0.3, 0.7]
+        self.populateDend(spine_positions, h.MSP_Cell[0].Mid_Dend)
     
+    def populateDend(self, spine_positions, dendList):
+        for sec in dendList :
+            for pos in spine_positions:
+                spine = Spine("spine" + "-" + sec.name() + "-" + str(pos))
+                spine.attach(sec, pos, 0) # Attaching the spine in the right pos
+                self.spines.append(spine)
+                print "Addedd spine: %s" %spine.name
+                
     def updateSpines(self):
         "HERE WE UPDATE THE SPINE CALCIUM"
         for spine in self.spines:
@@ -100,7 +105,7 @@ class NeuronSim():
         
         #NMDA Syn
         nmdaSyn = Synapse('nmda', spine.psd)
-        nmdaSyn.createStimul(start=150, number=5, interval=2, noise=0)
+        nmdaSyn.createStimul(start=130, number=5, interval=2, noise=0)
         spine.addSynapse("nmda", nmdaSyn)
 
 # Test code
@@ -111,14 +116,15 @@ def iClampExp():
     import pylab
     import neuron.gui
     from neuron import h
-    nrnSim = NeuronSim(mod_path="../mod", hoc_path="../hoc")
+    hoc_path = "../hoc"
+    nrnSim = NeuronSim(mod_path="../mod", hoc_path=hoc_path)
     vecs = {}
     vecs['t'] = h.Vector()
     vecs['t'].record(h._ref_t)
     vecs['v_soma'] = h.Vector()
     vecs['v_soma'].record(h.MSP_Cell[0].soma(0.5)._ref_v)
     h.v_init =(-87.75)
-    h.load_file("iclamp_0.248.ses")
+    h.load_file(os.path.join(hoc_path,"iclamp_0.248.ses"))
     h.run()
     print "Only the model with no spines attached"
     print "Reproduce the result on the Wolf 2005 paper"
@@ -128,11 +134,9 @@ def testDistSpines():
     import pylab
     import neuron.gui
     from neuron import h
-    nrnSim = NeuronSim(mod_path="../mod", hoc_path="../hoc")
+    hoc_path = "../hoc"
+    nrnSim = NeuronSim(mod_path="../mod", hoc_path=hoc_path)
     nrnSim.distributeSpines()
-    
-    
-
     vecs = {}
     vecs['t'] = h.Vector()
     vecs['t'].record(h._ref_t)
@@ -140,12 +144,13 @@ def testDistSpines():
     vecs['v_soma'].record(h.MSP_Cell[0].soma(0.5)._ref_v)
     h.dt =0.005
     h.v_init =(-87.75)
-    h.load_file("iclamp_0.248_fixedTimeStep.ses")
+    h.load_file(os.path.join(hoc_path, "iclamp_0.248_fixedTimeStep.ses"))
     #h.run()
     #go(100) # Just a way to advance the simulator and get the plot back
+    return nrnSim
 
 if __name__ == "__main__":
     #iClampExp()
-    testDistSpines()
+    nrnSim = testDistSpines()
     
     

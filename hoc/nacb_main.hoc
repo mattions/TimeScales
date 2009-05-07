@@ -12,7 +12,7 @@
 //****************************************************************************
 //Load all the baseline parameters to start with
 
-sprint(dirstr, "%s/baseline_values.txt", preface)
+sprint(dirstr, "%s/hoc/baseline_values.txt", preface)
 //print dirstr
 xopen(dirstr)
 //load_file("../input_params/baseline_values.txt")
@@ -23,7 +23,7 @@ xopen(dirstr)
 //****************************************************************************
 // all_tau_vecs.hoc loads the tables used to define the taus for many channels
 
-sprint(dirstr, "%s/all_tau_vecs.hoc", preface)
+sprint(dirstr, "%s/hoc/all_tau_vecs.hoc", preface)
 //print dirstr
 xopen(dirstr)
 //load_file("all_tau_vecs.hoc")
@@ -35,7 +35,7 @@ xopen(dirstr)
 // channels and synapses; dlambda code is in here (under geom()) along 
 // with code to output the number of compartments in cell
 
-sprint(dirstr, "%s/msp_template.hoc", preface)
+sprint(dirstr, "%s/hoc/msp_template.hoc", preface)
 xopen(dirstr)
 //load_file ("msp_template.hoc")
 //****************************************************************************
@@ -51,7 +51,7 @@ create acell_home_
 // set number of segments using geom_nseg() (in fixnseg.hoc)
 // create shunt for sharp electrode
 
-sprint(dirstr, "%s/create_mspcells.hoc", preface)
+sprint(dirstr, "%s/hoc/create_mspcells.hoc", preface)
 xopen(dirstr)
 //load_file("create_mspcells.hoc")
 //****************************************************************************
@@ -94,7 +94,7 @@ print "Soma + Prox mem area = ", Ap
 // input_params/baseline_values.txt
 //
 
-sprint(dirstr, "%s/basic_procs.hoc", preface)
+sprint(dirstr, "%s/hoc/basic_procs.hoc", preface)
 xopen(dirstr)
 
 set_pas(G_PAS)
