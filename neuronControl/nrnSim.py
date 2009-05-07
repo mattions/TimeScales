@@ -176,18 +176,19 @@ def testDistSpines(display=True):
             print "Switching backend to Agg. Batch execution"
         import pylab
         
-        h.tstop = 800
-        h.run()
-        
-        pylab.plot(vecs['t'], vecs['v_soma'], label="v_soma")
-        pylab.legend(loc=0)
-        pylab.xlabel("Time [ms]")
-        pylab.ylabel("Voltage [mV]")
-        figureName = "iClamp_%s.png" % iclamp.amp
-        pylab.savefig(figureName)
-        print "figure Saved in %s" %os.path.realpath(figureName) 
+    h.tstop = 8
+    h.run()
+    
+    pylab.plot(vecs['t'], vecs['v_soma'], label="v_soma")
+    pylab.legend(loc=0)
+    pylab.xlabel("Time [ms]")
+    pylab.ylabel("Voltage [mV]")
+    figureName = "iClamp_%s.png" % iclamp.amp
+    pylab.savefig(figureName)
+    print "figure Saved in %s" %os.path.realpath(figureName) 
     return nrnSim
 
 if __name__ == "__main__":
     #nrnSim = iClampExp()
     nrnSim = testDistSpines(display=False)
+    
