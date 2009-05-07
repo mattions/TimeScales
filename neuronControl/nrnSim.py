@@ -143,9 +143,9 @@ def iClampExp():
     print "Reproduce the result on the Wolf 2005 paper"
     return nrnSim
     
-def testDistSpines(display=True):
+def testDistSpines(tstop, batch=False):
     """Test the distribution of the spines in the model."""
-    if display:
+    if not batch:
         import neuron.gui
         
     from neuron import h
@@ -159,7 +159,7 @@ def testDistSpines(display=True):
     vecs['v_soma'].record(h.MSP_Cell[0].soma(0.5)._ref_v)
     h.dt =0.005
     h.v_init =(-87.75)
-    if display:
+    if not batch:
         h.load_file(os.path.join(hoc_path, "iclamp_0.248_fixedTimeStep.ses"))
     else:
         # Execution on the Cluster with no display.
@@ -175,20 +175,29 @@ def testDistSpines(display=True):
             matplotlib.use('Agg')
             print "Switching backend to Agg. Batch execution"
         import pylab
+        pylab.plot(vecs['t'], vecs['v_soma'], label="v_soma")
+        pylab.legend(loc=0)
+        pylab.xlabel("Time [ms]")
+        pylab.ylabel("Voltage [mV]")
+        figureName = "iClamp_%s.png" % iclamp.amp
+        pylab.savefig(figureName)
+        print "figure Saved in %s" %os.path.realpath(figureName)
         
-    h.tstop = 8
+    h.tstop = tstop
     h.run()
-    
-    pylab.plot(vecs['t'], vecs['v_soma'], label="v_soma")
-    pylab.legend(loc=0)
-    pylab.xlabel("Time [ms]")
-    pylab.ylabel("Voltage [mV]")
-    figureName = "iClamp_%s.png" % iclamp.amp
-    pylab.savefig(figureName)
-    print "figure Saved in %s" %os.path.realpath(figureName) 
     return nrnSim
 
 if __name__ == "__main__":
-    #nrnSim = iClampExp()
-    nrnSim = testDistSpines(display=False)
+    from optparse import OptionParser
+    usage= "usage: %prog [options] tstop"
+    parser = OptionParser(usage)
+    parser.add_option("-b", "--batch", action="store_true", default=False, 
+                      help= "Run in batch mode. no gui showed")
+    (options, args) = parser.parse_args()
+    if len(args) != 1:
+        parser.error("Incorrect number of arguments")
+        parser.usage()
+    else:
+        tstop = float (args[0])
+    nrnSim = testDistSpines(tstop, batch=options.batch)
     
