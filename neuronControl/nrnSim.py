@@ -107,6 +107,19 @@ class NeuronSim():
         nmdaSyn = Synapse('nmda', spine.psd)
         nmdaSyn.createStimul(start=130, number=5, interval=2, noise=0)
         spine.addSynapse("nmda", nmdaSyn)
+    
+    def iClampPointProcess(self, delay=100, dur=500, amp=0.2480):
+        """Creating an IClamp in the soma"""
+        # Creating an ICLAMP just for testing
+        
+        iClamp = h.IClamp(0.5, sec = h.MSP_Cell[0].soma)
+        
+        iClamp.delay = delay
+        iClamp.dur = dur
+        iClamp.amp = amp
+        
+        return iClamp
+
 
 # Test code
 
@@ -128,11 +141,13 @@ def iClampExp():
     h.run()
     print "Only the model with no spines attached"
     print "Reproduce the result on the Wolf 2005 paper"
+    return nrnSim
     
-def testDistSpines():
+def testDistSpines(display=True):
     """Test the distribution of the spines in the model."""
-    import pylab
-    import neuron.gui
+    if display:
+        import neuron.gui
+        
     from neuron import h
     hoc_path = "../hoc"
     nrnSim = NeuronSim(mod_path="../mod", hoc_path=hoc_path)
@@ -144,13 +159,35 @@ def testDistSpines():
     vecs['v_soma'].record(h.MSP_Cell[0].soma(0.5)._ref_v)
     h.dt =0.005
     h.v_init =(-87.75)
-    h.load_file(os.path.join(hoc_path, "iclamp_0.248_fixedTimeStep.ses"))
-    #h.run()
-    #go(100) # Just a way to advance the simulator and get the plot back
+    if display:
+        h.load_file(os.path.join(hoc_path, "iclamp_0.248_fixedTimeStep.ses"))
+    else:
+        # Execution on the Cluster with no display.
+        
+        iclamp = nrnSim.iClampPointProcess()
+        print iclamp.amp, iclamp.delay, iclamp.dur
+        import matplotlib
+        try:
+            import cairo
+            matplotlib.use('Cairo')
+            print "Switching backend to Cairo. Batch execution"
+        except:
+            matplotlib.use('Agg')
+            print "Switching backend to Agg. Batch execution"
+        import pylab
+        
+        h.tstop = 800
+        h.run()
+        
+        pylab.plot(vecs['t'], vecs['v_soma'], label="v_soma")
+        pylab.legend(loc=0)
+        pylab.xlabel("Time [ms]")
+        pylab.ylabel("Voltage [mV]")
+        figureName = "iClamp_%s.png" % iclamp.amp
+        pylab.savefig(figureName)
+        print "figure Saved in %s" %os.path.realpath(figureName) 
     return nrnSim
 
 if __name__ == "__main__":
-    #iClampExp()
-    nrnSim = testDistSpines()
-    
-    
+    #nrnSim = iClampExp()
+    nrnSim = testDistSpines(display=False)
