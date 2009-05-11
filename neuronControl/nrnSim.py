@@ -124,11 +124,12 @@ class NeuronSim():
 # Test code
 
 
-def iClampExp():
+def iClampExp(tstop):
     """Test the Iclamp model"""
     import pylab
     import neuron.gui
     from neuron import h
+    print "Test the IClamp one, no spines"
     hoc_path = "../hoc"
     nrnSim = NeuronSim(mod_path="../mod", hoc_path=hoc_path)
     vecs = {}
@@ -142,16 +143,17 @@ def iClampExp():
     
     # Reverting to the old dimensions Used in the paper with no spines.
     # in the case we changed that
-    for sec in nrnSim.h.MSP_Cell[0].Mid_Dend:
+    for sec in h.MSP_Cell[0].Mid_Dend:
         sec.L= 24.23
         sec.diam = 1.10
     
-    for sec in nrnSim.h.MSP_Cell[0].Dist_Dend:
+    for sec in h.MSP_Cell[0].Dist_Dend:
         sec.L= 395.2
         sec.diam = 0.72
     
     
     h.load_file(os.path.join(hoc_path,"iclamp_0.248.ses"))
+    h.tstop = tstop
     h.run()
     print "Only the model with no spines attached"
     print "Reproduce the result on the Wolf 2005 paper"
@@ -163,12 +165,15 @@ def iClampExp():
     pylab.ylabel("Voltage [mV]")
     pylab.title("iclamp exp 0.248 nA -- no spines -- No Correction")
     pylab.show()
+    
     return nrnSim
     
 def testDistSpines(tstop, batch, amplitude):
     """Test the distribution of the spines in the model."""
     if not batch:
         import neuron.gui
+    else:
+        import ecellControl.ioHelper as ioHelper
     from graph import Graph
     from neuron import h
     if batch:
@@ -203,7 +208,9 @@ def testDistSpines(tstop, batch, amplitude):
         g.plotVoltage(vecs)
         pylab.title("iClamp_%s" % iclamp.amp)
         figureName = "iClamp_%s.png" % iclamp.amp
-        pylab.savefig(figureName)
+        ioH = ioHelper.IOHelper()
+        dir = ioH.saveObj(ioH.convertToNumpy(vecs), "vecs.bin")
+        pylab.savefig(os.path.join(dir,figureName))
         print "figure Saved in %s" %os.path.realpath(figureName)
         
     nrnSim.vecs = vecs # Vectors dict
@@ -221,11 +228,19 @@ if __name__ == "__main__":
     parser.add_option("-a", "--amplitude", default=0.248, 
                   help= "The intensity of the iClamp experiment. Default is 0.248")
     
+    parser.add_option("-n", "--nospines", action="store_true", default=False, 
+                  help= "Run the test without spines in the neuron")
+    
     (options, args) = parser.parse_args()
+    
     if len(args) != 1:
         parser.error("Incorrect number of arguments")
         parser.usage()
     else:
         tstop = float (args[0])
-    nrnSim = testDistSpines(tstop, batch=options.batch, amplitude=options.amplitude)
+        
+    if options.nospines:
+        nrnSim = iClampExp(tstop)
+    else:
+        nrnSim = testDistSpines(tstop, batch=options.batch, amplitude=options.amplitude)
     
