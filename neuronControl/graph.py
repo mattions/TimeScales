@@ -2,18 +2,18 @@
 # Thu Mar 19 18:51:30 GMT 2009
 
 from neuron import h
-import pylab
 import numpy
+import pylab
 
 class Graph:
     
-    def __init__(self):
+    def __init__(self, batch=False):
         t = h.Vector()
         t.record(h._ref_t)
         self.t = t
     
     def createVecs(self, vecs, spine, var):
-        """Create the vector for the spine and the parent of the spine and the soma if they don't exist
+        """Create the vector for the spine and the parent of the spine exist
         :params
             vecs - dict for the vecs
             spine - spine where to create the vecs

@@ -136,55 +136,79 @@ def iClampExp():
     vecs['t'].record(h._ref_t)
     vecs['v_soma'] = h.Vector()
     vecs['v_soma'].record(h.MSP_Cell[0].soma(0.5)._ref_v)
+    vecs['v_dend'] = h.Vector()
+    vecs['v_dend'].record(h.MSP_Cell[0].dend1_1[0](0.5)._ref_v)
     h.v_init =(-87.75)
+    
+    # Reverting to the old dimensions Used in the paper with no spines.
+    # in the case we changed that
+    for sec in nrnSim.h.MSP_Cell[0].Mid_Dend:
+        sec.L= 24.23
+        sec.diam = 1.10
+    
+    for sec in nrnSim.h.MSP_Cell[0].Dist_Dend:
+        sec.L= 395.2
+        sec.diam = 0.72
+    
+    
     h.load_file(os.path.join(hoc_path,"iclamp_0.248.ses"))
     h.run()
     print "Only the model with no spines attached"
     print "Reproduce the result on the Wolf 2005 paper"
+    nrnSim.vecs = vecs
+    nrnSim.h = h # Hoc Interpreter
+    
+    pylab.plot(nrnSim.vecs['t'], nrnSim.vecs['v_soma'])
+    pylab.xlabel("Time [s]")
+    pylab.ylabel("Voltage [mV]")
+    pylab.title("iclamp exp 0.248 nA -- no spines -- No Correction")
+    pylab.show()
     return nrnSim
     
-def testDistSpines(tstop, batch=False):
+def testDistSpines(tstop, batch, amplitude):
     """Test the distribution of the spines in the model."""
     if not batch:
         import neuron.gui
-        
+    from graph import Graph
     from neuron import h
+    if batch:
+        import matplotlib
+        matplotlib.use('Agg')
+        print "Switching backend to Agg. Batch execution"    
+    import pylab
+    
     hoc_path = "../hoc"
     nrnSim = NeuronSim(mod_path="../mod", hoc_path=hoc_path)
     nrnSim.distributeSpines()
     vecs = {}
-    vecs['t'] = h.Vector()
-    vecs['t'].record(h._ref_t)
     vecs['v_soma'] = h.Vector()
     vecs['v_soma'].record(h.MSP_Cell[0].soma(0.5)._ref_v)
+    g = Graph()
+    spine = nrnSim.spines[0] #Grabbing the first one for testing
+    vecs = g.createVecs(vecs, spine, "v")
     h.dt =0.005
     h.v_init =(-87.75)
+    iclamp = nrnSim.iClampPointProcess(amp=amplitude)
+    print "iClamp point processes created: amp: %f, delay: %f, duration: %f" %(iclamp.amp, iclamp.delay, iclamp.dur)
+    
     if not batch:
-        h.load_file(os.path.join(hoc_path, "iclamp_0.248_fixedTimeStep.ses"))
+        h.load_file(os.path.join(hoc_path, "runControl_somaVoltage.ses"))
     else:
         # Execution on the Cluster with no display.
         
-        iclamp = nrnSim.iClampPointProcess()
+        iclamp = nrnSim.iClampPointProcess(amp=amplitude)
         print iclamp.amp, iclamp.delay, iclamp.dur
-        import matplotlib
-        try:
-            import cairo
-            matplotlib.use('Cairo')
-            print "Switching backend to Cairo. Batch execution"
-        except:
-            matplotlib.use('Agg')
-            print "Switching backend to Agg. Batch execution"
-        import pylab
-        pylab.plot(vecs['t'], vecs['v_soma'], label="v_soma")
-        pylab.legend(loc=0)
-        pylab.xlabel("Time [ms]")
-        pylab.ylabel("Voltage [mV]")
+        h.tstop = tstop
+        h.run()
+        g.plotVoltage(vecs)
+        pylab.title("iClamp_%s" % iclamp.amp)
         figureName = "iClamp_%s.png" % iclamp.amp
         pylab.savefig(figureName)
         print "figure Saved in %s" %os.path.realpath(figureName)
         
-    h.tstop = tstop
-    h.run()
+    nrnSim.vecs = vecs # Vectors dict
+    nrnSim.g = g # Plotting facilities object
+    nrnSim.h = h # Pointer to the hoc Intepreter
     return nrnSim
 
 if __name__ == "__main__":
@@ -192,12 +216,16 @@ if __name__ == "__main__":
     usage= "usage: %prog [options] tstop"
     parser = OptionParser(usage)
     parser.add_option("-b", "--batch", action="store_true", default=False, 
-                      help= "Run in batch mode. no gui showed")
+                      help= "Run in batch mode. No gui is shown")
+    
+    parser.add_option("-a", "--amplitude", default=0.248, 
+                  help= "The intensity of the iClamp experiment. Default is 0.248")
+    
     (options, args) = parser.parse_args()
     if len(args) != 1:
         parser.error("Incorrect number of arguments")
         parser.usage()
     else:
         tstop = float (args[0])
-    nrnSim = testDistSpines(tstop, batch=options.batch)
+    nrnSim = testDistSpines(tstop, batch=options.batch, amplitude=options.amplitude)
     
