@@ -4,6 +4,7 @@
 import os
 import cPickle
 import datetime
+import numpy
 
 class IOHelper():
     
@@ -35,13 +36,13 @@ class IOHelper():
                 os.makedirs(dir)
         return dir
     
-    def saveObj(self, ecellManager, name):
+    def saveObj(self, obj, name):
         
         """ Save results of the simulation. only the logger"""
         dir = self.createSaveDir()
         filepath = os.path.join (dir, name)
         FILE = open(filepath, 'w')
-        cPickle.dump(ecellManager, FILE, 1)
+        cPickle.dump(obj, FILE, 1)
         FILE.close()
         print "Python object saved in %s" %os.path.abspath(filepath)
         return dir
@@ -55,6 +56,13 @@ class IOHelper():
         FILE.close()
         print "loaded file %s" %os.path.abspath(filename)
         return obj
+    
+    def convertToNumpy(self, vecDict):
+        """Convert a dictionary of Hoc Vectors into one of Numpy Vecs"""
+        vecsNu = {}
+        for k,v in vecDict.iteritems():
+            vecsNu[k] = numpy.array(v)
+        return vecsNu
     
 if __name__ == "__main__":
     
