@@ -80,7 +80,9 @@ class NeuronSim():
     def populateDend(self, spine_positions, dendList):
         for sec in dendList :
             for pos in spine_positions:
-                spine = Spine("spine" + "-" + sec.name() + "-" + str(pos))
+                tmpName = sec.name()
+                tmpName = tmpName.split('.')[1] # Get rid of the MSP_Cell[0] prefix
+                spine = Spine("spine" + "-" + tmpName + "-" + str(pos))
                 spine.attach(sec, pos, 0) # Attaching the spine in the right pos
                 self.spines.append(spine)
                 print "Addedd spine: %s" %spine.name
@@ -145,10 +147,12 @@ def iClampExp(tstop):
     # in the case we changed that
     for sec in h.MSP_Cell[0].Mid_Dend:
         sec.L= 24.23
+        #sec.L= 15.0
         sec.diam = 1.10
     
     for sec in h.MSP_Cell[0].Dist_Dend:
         sec.L= 395.2
+        #sec.L=390.0
         sec.diam = 0.72
     
     
@@ -196,13 +200,16 @@ def testDistSpines(tstop, batch, amplitude):
     iclamp = nrnSim.iClampPointProcess(amp=amplitude)
     print "iClamp point processes created: amp: %f, delay: %f, duration: %f" %(iclamp.amp, iclamp.delay, iclamp.dur)
     
+    nrnSim.vecs = vecs # Vectors dict
+    nrnSim.g = g # Plotting facilities object
+    nrnSim.h = h # Pointer to the hoc Intepreter
+    nrnSim.iclamp = iclamp # To return the point process
+    
     if not batch:
         h.load_file(os.path.join(hoc_path, "runControl_somaVoltage.ses"))
+
     else:
         # Execution on the Cluster with no display.
-        
-        iclamp = nrnSim.iClampPointProcess(amp=amplitude)
-        print iclamp.amp, iclamp.delay, iclamp.dur
         h.tstop = tstop
         h.run()
         g.plotVoltage(vecs)
@@ -211,13 +218,41 @@ def testDistSpines(tstop, batch, amplitude):
         ioH = ioHelper.IOHelper()
         dir = ioH.saveObj(ioH.convertToNumpy(vecs), "vecs.bin")
         pylab.savefig(os.path.join(dir,figureName))
-        print "figure Saved in %s" %os.path.realpath(figureName)
+        print "figure Saved in %s" %os.path.realpath(os.path.join(dir,figureName))
+        logGeometry(dir, nrnSim)
         
-    nrnSim.vecs = vecs # Vectors dict
-    nrnSim.g = g # Plotting facilities object
-    nrnSim.h = h # Pointer to the hoc Intepreter
     return nrnSim
 
+def logGeometry(dir, nrnSim):
+    
+    logFile = os.path.join(dir, 'log.txt')
+    f = open(logFile, 'w')
+    #Prox Dend
+    f.write("Prox_Dend\n")
+    for i,s in enumerate(nrnSim.h.MSP_Cell[0].Prox_Dend):
+        line = "%d %f %f\n" %(i, s.L, s.diam)
+        f.write(line)
+    
+    #Mid Dend
+    f.write("Mid_Dend\n")
+    for i,s in enumerate(nrnSim.h.MSP_Cell[0].Mid_Dend):
+        line = "%d %f %f\n" %(i, s.L, s.diam)
+        f.write(line)
+    
+    #Dist Dend
+    f.write("Dist_Dend:\n")
+    for i,s in enumerate(nrnSim.h.MSP_Cell[0].Dist_Dend):
+        line = "%d %f %f\n" %(i, s.L, s.diam)
+        f.write(line)
+    #Spine
+    f.write("Number of spines: %d\n" %len(nrnSim.spines))
+    for spine in nrnSim.spines:
+        line = "%s \n" %(spine.name)
+        f.write(line)
+        
+    print "Log written in %s" %os.path.realpath(logFile)
+    
+    
 if __name__ == "__main__":
     from optparse import OptionParser
     usage= "usage: %prog [options] tstop"
