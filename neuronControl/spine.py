@@ -29,8 +29,7 @@ class Spine():
         self.synapses = self.createSynapses() # Dict to save the pointer to the synapses
         
         # Setting up the biochemical simulator
-        self.gcw = os.getcwd()
-        self.ecellMan = self.setupBioSim(filename_bioch_mod)
+        #self.ecellMan = self.setupBioSim(filename_bioch_mod)
         
     def setupBioSim(self, filename):
         """Initialize the Biochemical Simulator creating the instance of 
