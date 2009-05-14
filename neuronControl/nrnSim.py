@@ -71,9 +71,12 @@ class NeuronSim():
         # Distal:
         spine_positions = [0.1, 0.3, 0.5, 0.7, 0.9]
         self.populateDend(spine_positions, h.MSP_Cell[0].Dist_Dend)
+        
+        #spine_positions = [0.5]
+        #self.populateDend(spine_positions, [h.MSP_Cell[0].dend3_1[1]])
 
         # Mid
-        print "Adding the Mid spines"
+#        print "Adding the Mid spines"
         spine_positions = [0.3, 0.7]
         self.populateDend(spine_positions, h.MSP_Cell[0].Mid_Dend)
     
@@ -96,19 +99,6 @@ class NeuronSim():
             print "Equilibrium for spine: %s, dend: %s, bio sim time: %f" % (spine.head.name(), 
                                                                      spine.parent.name(),
                                                                      spine.ecellMan.ses.getCurrentTime())    
-
-    def createSynapses(self, spine):
-        "Create an AMPA and an NMDA synapse in the spine"
-        
-        # AMPA Syn
-        ampaSyn = Synapse('ampa', spine.psd)
-        ampaSyn.createStimul(start=130, number=5, interval=2, noise=0)
-        spine.addSynapse("ampa", ampaSyn)
-        
-        #NMDA Syn
-        nmdaSyn = Synapse('nmda', spine.psd)
-        nmdaSyn.createStimul(start=130, number=5, interval=2, noise=0)
-        spine.addSynapse("nmda", nmdaSyn)
     
     def iClampPointProcess(self, delay=100, dur=500, amp=0.2480):
         """Creating an IClamp in the soma"""
@@ -200,14 +190,15 @@ def testDistSpines(tstop, batch, amplitude):
     iclamp = nrnSim.iClampPointProcess(amp=amplitude)
     print "iClamp point processes created: amp: %f, delay: %f, duration: %f" %(iclamp.amp, iclamp.delay, iclamp.dur)
     
-    nrnSim.vecs = vecs # Vectors dict
+    g.vecs = vecs # Vectors dict
     nrnSim.g = g # Plotting facilities object
     nrnSim.h = h # Pointer to the hoc Intepreter
-    nrnSim.iclamp = iclamp # To return the point process
+    nrnSim.iclamp = iclamp # To return the point process 
     
     if not batch:
         h.load_file(os.path.join(hoc_path, "runControl_somaVoltage.ses"))
-
+        h.tstop = tstop
+        
     else:
         # Execution on the Cluster with no display.
         h.tstop = tstop
@@ -216,7 +207,8 @@ def testDistSpines(tstop, batch, amplitude):
         pylab.title("iClamp_%s" % iclamp.amp)
         figureName = "iClamp_%s.png" % iclamp.amp
         ioH = ioHelper.IOHelper()
-        dir = ioH.saveObj(ioH.convertToNumpy(vecs), "vecs.bin")
+        g.vecs = ioH.convertToNumpy(g.vecs)
+        dir = ioH.saveObj(g, "graphObj.bin")
         pylab.savefig(os.path.join(dir,figureName))
         print "figure Saved in %s" %os.path.realpath(os.path.join(dir,figureName))
         logGeometry(dir, nrnSim)
@@ -251,6 +243,19 @@ def logGeometry(dir, nrnSim):
         f.write(line)
         
     print "Log written in %s" %os.path.realpath(logFile)
+
+def testSpineInput():
+    
+    nrnSim.iclamp = None
+    spine1 = nrnSim.spines[0]
+    ampa = spine1.synapses['ampa']
+    ampa.netStim.start = 60
+    ampa.netStim.number = 1
+    print spine1.name
+    h.run()
+    nrnSim.g.plotVoltage(nrnSim.g.vecs)
+    return spine1
+    
     
     
 if __name__ == "__main__":
@@ -266,6 +271,7 @@ if __name__ == "__main__":
     parser.add_option("-n", "--nospines", action="store_true", default=False, 
                   help= "Run the test without spines in the neuron")
     
+    
     (options, args) = parser.parse_args()
     
     if len(args) != 1:
@@ -278,4 +284,5 @@ if __name__ == "__main__":
         nrnSim = iClampExp(tstop)
     else:
         nrnSim = testDistSpines(tstop, batch=options.batch, amplitude=options.amplitude)
+        #spine = testSpineInput()
     

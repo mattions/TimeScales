@@ -142,12 +142,12 @@ proc subsets() { local i
 // Koch/Segev Methods in Neuronal Modeling pg 122-3, 1998
 proc geom() {
   forsec Prox_Dend { L = 20     diam = 2.25 }	
-  forsec Mid_Dend  {L = 24.23	diam = 1.10}	// { L = 20		diam = 1 * (1+0.3) }	
-  forsec Dist_Dend {L = 395.2	diam = 0.72}	// { L = 190	diam = 0.5 * (1+2) }
+  //forsec Mid_Dend  {L = 24.23	diam = 1.10}	// { L = 20		diam = 1 * (1+0.3) }	
+  //forsec Dist_Dend {L = 395.2	diam = 0.72}	// { L = 190	diam = 0.5 * (1+2) }
   
   // Without the spine 
-  //forsec Mid_Dend  { L = 20		diam = 1}	
-  //forsec Dist_Dend { L = 190	diam = 0.5}
+  forsec Mid_Dend  { L = 20		diam = 1}	
+  forsec Dist_Dend { L = 190	diam = 0.5}
   soma {  L = 16  diam = 16  }
 }
 
