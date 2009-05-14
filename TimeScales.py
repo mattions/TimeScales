@@ -76,7 +76,7 @@ def testDistSpines(nrnSim, tstop, batch, amplitude):
     vecs = {}
     vecs['v_soma'] = h.Vector()
     vecs['v_soma'].record(h.MSP_Cell[0].soma(0.5)._ref_v)
-    g = nC.Graph()
+    g = helpers.Graph()
     spine = nrnSim.spines[0] #Grabbing the first one for testing
     vecs = g.createVecs(vecs, spine, "v")
     h.dt =0.005
@@ -100,12 +100,12 @@ def testDistSpines(nrnSim, tstop, batch, amplitude):
         g.plotVoltage(vecs)
         pylab.title("iClamp_%s" % iclamp.amp)
         figureName = "iClamp_%s.png" % iclamp.amp
-        ioH = ioHelper.IOHelper()
+        loader = helpers.Loader()
         # Converting to numpy so I can save it
         g.t = numpy.array(g.t)
-        g.vecs = ioH.convertToNumpy(g.vecs)
+        g.vecs = loader.convertToNumpy(g.vecs)
         
-        dir = ioH.saveObj(g, "graphObj.pickle")
+        dir = loader.saveObj(g, "graphObj.pickle")
         pylab.savefig(os.path.join(dir,figureName))
         print "figure Saved in %s" %os.path.realpath(os.path.join(dir,figureName))
         logGeometry(dir, nrnSim)
@@ -150,7 +150,6 @@ if __name__ == "__main__":
     # Processing the options
     
     if options.batch:
-        import ecellControl.ioHelper as ioHelper
         import matplotlib
         matplotlib.use('Agg')
         print "Switching backend to Agg. Batch execution"
@@ -160,6 +159,7 @@ if __name__ == "__main__":
     from neuron import h        
     import pylab
     import neuronControl as nC
+    import helpers
     import numpy
     import os
     

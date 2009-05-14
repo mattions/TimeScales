@@ -67,7 +67,7 @@ class Graph:
         return masked
           
 
-    def plotVoltage(self, vecsVolt, synVecs=None):
+    def plotVoltage(self, vecsVolt, synVecs=None, drawLegend=True):
         
         fig = pylab.figure()
         pylab.ax1 = fig.add_subplot(111) #sub for the two scales
@@ -75,7 +75,8 @@ class Graph:
             pylab.plot(self.t , vec, label=key)
         pylab.ylabel("Voltage [mV]")
         pylab.xlabel("Time [ms]")
-        pylab.legend(loc=0)
+        if drawLegend:
+            pylab.legend(loc=0)
         
         if synVecs is not None:
             ax2 = pylab.ax1.twinx()
@@ -85,7 +86,8 @@ class Graph:
             t = numpy.array(self.t)
             t = numpy.round(t, decimals=9) # round
             pylab.ax1.set_xlim(t[0],t[-1])
-            pylab.ax1.legend(loc=0)
+            if drawLegend:
+                pylab.ax1.legend(loc=0)
             return pylab.ax1 # No really needed but handy
 
     

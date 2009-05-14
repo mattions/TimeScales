@@ -6,11 +6,10 @@ import cPickle
 import datetime
 import numpy
 
-class IOHelper():
+class Loader():
     
     def __init__(self, prefix="./"):
         
-        self.ecellManFileName = "ecellManagerObj"
         self.dirRoot = os.path.join(prefix, "Sims")
         
     
@@ -65,11 +64,12 @@ class IOHelper():
         return vecsNu
     
 if __name__ == "__main__":
-    
+    import os
     a= [1,2,3]
     print "Test saving a list obj: %s" %a
-    ioH= IOHelper()
-    dir = ioH.saveObj(a, "list")
-    loaded = ioH.loadObj(dir)
+    l = Loader()
+    filename = "list.pickle"
+    dir = l.saveObj(a, filename)
+    loaded = l.loadObj(os.path.join(dir, filename))
     print "Loaded Obj: %s" %loaded
     print "Is the same object? %s" %(a == loaded)
