@@ -186,22 +186,17 @@ if __name__ == "__main__":
     ## Setting the mat plotlib backend
     import matplotlib
     if options.save == True:
-        try:
-            import cairo
-            matplotlib.use('Cairo')
-            print "Switching backend to Cairo. Batch execution"
-        except:
-            matplotlib.use('Agg')
-            print "Switching backend to Agg. Batch execution"
+        matplotlib.use('Agg')
+        print "Switching backend to Agg. Batch execution"
     import pylab
-         
-    ioH = IOHelper(prefix=os.getcwd())
+    import helpers     
+    loader = helpers.Loader(prefix=os.getcwd())
 
     ecellManager = testChangeCalciumValue(interval, caValue)
     #ecellManager = testCalciumTrain()
     
     if options.save == True:
-        dir = ioH.saveObj(ecellManager.timeCourses, "timeCourses")
+        dir = loader.saveObj(ecellManager.timeCourses, "timeCourses")
         ecellManager.plotTimeCourses(save=options.save, dir=dir)
         f = open(os.path.join(dir, 'log.txt'), 'w') 
         f.write("Test of the supply of the calcium to the biochemical model\n\
