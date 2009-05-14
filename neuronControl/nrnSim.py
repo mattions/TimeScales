@@ -168,13 +168,13 @@ def testDistSpines(tstop, batch, amplitude):
         import neuron.gui
     else:
         import ecellControl.ioHelper as ioHelper
-    from graph import Graph
     from neuron import h
     if batch:
         import matplotlib
         matplotlib.use('Agg')
         print "Switching backend to Agg. Batch execution"    
     import pylab
+    from graph import Graph
     
     hoc_path = "../hoc"
     nrnSim = NeuronSim(mod_path="../mod", hoc_path=hoc_path)
@@ -207,7 +207,10 @@ def testDistSpines(tstop, batch, amplitude):
         pylab.title("iClamp_%s" % iclamp.amp)
         figureName = "iClamp_%s.png" % iclamp.amp
         ioH = ioHelper.IOHelper()
+        # Converting to numpy so I can save it
+        g.t = numpy.array(g.t)
         g.vecs = ioH.convertToNumpy(g.vecs)
+        
         dir = ioH.saveObj(g, "graphObj.bin")
         pylab.savefig(os.path.join(dir,figureName))
         print "figure Saved in %s" %os.path.realpath(os.path.join(dir,figureName))
