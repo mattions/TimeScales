@@ -165,7 +165,7 @@ if __name__ == "__main__":
     if options.batch:
         import matplotlib
         matplotlib.use('Agg')
-        os.system('unset DISPLAY') # Unsetting the display to import neuron in batch mode
+        del os.environ['DISPLAY'] # Unsetting the display to import neuron in batch mode
         print "Switching backend to Agg. Batch execution"
     else:
         import neuron.gui
