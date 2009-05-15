@@ -74,11 +74,12 @@ def testDistSpines(nrnSim, tstop, batch, amplitude):
     """Test the distribution of the spines in the model."""
 
     vecs = {}
-    vecs['v_soma'] = h.Vector()
-    vecs['v_soma'].record(h.MSP_Cell[0].soma(0.5)._ref_v)
     g = helpers.Graph()
-    spine = nrnSim.spines[0] #Grabbing the first one for testing
-    vecs = g.createVecs(vecs, spine, "v")
+    spine1 = nrnSim.spines[0] #Grabbing the first one for testing
+    vecs = g.createVecs(vecs, spine1, "v")
+    vecs = g.createSpineSiblingVecs(nrnSim.spines, spine1, vecs, "v")
+    print "Vectors Created: %d" %len (vecs)
+    
     h.dt =0.005
     h.v_init =(-87.75)
     iclamp = nrnSim.iClampPointProcess(amp=amplitude)
@@ -97,17 +98,27 @@ def testDistSpines(nrnSim, tstop, batch, amplitude):
         # Execution on the Cluster with no display.
         h.tstop = tstop
         h.run()
-        g.plotVoltage(vecs)
-        pylab.title("iClamp_%s" % iclamp.amp)
-        figureName = "iClamp_%s.png" % iclamp.amp
         loader = helpers.Loader()
         # Converting to numpy so I can save it
         g.t = numpy.array(g.t)
         g.vecs = loader.convertToNumpy(g.vecs)
-        
         dir = loader.saveObj(g, "graphObj.pickle")
+        
+        # Saving the dend results
+        dendAndSomaVecs = g.vecsSubSelection(vecs, "spine", matching=False)
+        g.plotVoltage(dendAndSomaVecs)
+        pylab.title("iClamp_%s" % iclamp.amp)
+        figureName = "dendAndSoma_iClamp_%s.png" % iclamp.amp
         pylab.savefig(os.path.join(dir,figureName))
         print "figure Saved in %s" %os.path.realpath(os.path.join(dir,figureName))
+        
+        # Saving the spines results
+        spinesVecs = g.vecsSubSelection(vecs, "head")
+        g.plotVoltage(spinesVecs)
+        figureName = "spines_iClamp_%s.png" % iclamp.amp
+        pylab.savefig(os.path.join(dir,figureName))
+        print "figure Saved in %s" %os.path.realpath(os.path.join(dir,figureName))
+        
         logGeometry(dir, nrnSim)
 
 def testSpineInput():
@@ -125,6 +136,8 @@ def testSpineInput():
 if __name__ == "__main__":
 
     from optparse import OptionParser
+    import os
+    
     usage= "usage: %prog [options] tstop"
     parser = OptionParser(usage)
     parser.add_option("-b", "--batch", action="store_true", default=False, 
@@ -152,6 +165,7 @@ if __name__ == "__main__":
     if options.batch:
         import matplotlib
         matplotlib.use('Agg')
+        os.system('unset DISPLAY') # Unsetting the display to import neuron in batch mode
         print "Switching backend to Agg. Batch execution"
     else:
         import neuron.gui
@@ -161,7 +175,6 @@ if __name__ == "__main__":
     import neuronControl as nC
     import helpers
     import numpy
-    import os
     
     hoc_path = "hoc"
     mod_path="mod"

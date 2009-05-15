@@ -24,7 +24,9 @@ class Graph:
         #vecs = self.initVec(vecs, h.MSP_Cell[0].soma, var)
         
         if spine.parent is not None:
-            vecs = self.initVec(vecs, spine.parent, var)
+            tree = self.createTree(spine.neck)
+            for sec in tree:
+                vecs = self.initVec(vecs, sec, var)
         
         vecs = self.initVec(vecs, spine.psd, var)
         vecs = self.initVec(vecs, spine.head, var)
@@ -110,3 +112,55 @@ class Graph:
         pylab.xlabel("Time [ms]")
         pylab.ylabel("Current [nA]")
         pylab.legend(loc=0)
+        
+    def vecsSubSelection(self, vecs, nameOfInterest, matching=True):
+      
+        "Return a vecs containing only the vecs that have the nameOfInterest in the key"
+        matchingKeys = []
+        notMatchingKeys = []
+        keys = vecs.keys()
+        for k in keys:
+          if nameOfInterest in k:
+              matchingKeys.append(k)
+          else:
+              notMatchingKeys.append(k)
+        # Creating a set to avoid duplicate
+        notMatchingKeys = set(notMatchingKeys)
+        selectedVecs = {}
+
+        if matching:
+          for k in matchingKeys:
+              selectedVecs[k] = vecs[k]
+        else:
+          for k in notMatchingKeys:
+              selectedVecs[k] = vecs[k]
+          
+        return selectedVecs
+    
+    def createSpineSiblingVecs(self, spines, spineOfInterest, vecs, varToRecord):
+        "Create the vectors for all the siblings spines"
+        spine_sibilings = []
+        for spine in spines:
+            if spine.parent == spineOfInterest.parent:
+                spine_sibilings.append(spine)
+        for spine in spine_sibilings:
+            vecs = self.createVecs(vecs, spine, varToRecord)
+        return vecs
+    
+    
+    def __getParent(self, sec, tree):
+        sec.push()
+        secRef = h.SectionRef()
+        if secRef.has_parent():
+            parentSeg = secRef.parent()
+            parentSec = parentSeg.sec
+            tree.append(parentSec)
+            tree = self.__getParent(parentSec, tree)
+        return tree
+    
+    def createTree(self, sec):
+        "Return the minimal tree of section Using the given section as the last leave"
+        tree = []
+        tree.append(sec)
+        tree = self.__getParent(sec, tree)
+        return tree
