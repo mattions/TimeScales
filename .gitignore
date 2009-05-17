@@ -12,3 +12,5 @@ dfiles
 mod/x86_64
 mod/i686
 
+# The directory with the Sims
+Sims
