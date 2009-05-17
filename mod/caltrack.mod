@@ -1,6 +1,7 @@
 : Calcium ion accumulation with radial and longitudinal diffusion
 
 NEURON {
+    THREADSAFE
 	SUFFIX caltrack
 	USEION cal READ calo, cali, ical WRITE cali, ical
 	RANGE ica_pmp, TotalBuffer, TotalPump

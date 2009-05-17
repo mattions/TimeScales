@@ -12,6 +12,7 @@ UNITS {
 }
 
 NEURON {
+    THREADSAFE
 	SUFFIX skkca
 	USEION ca READ cai
 	USEION k READ ek WRITE ik

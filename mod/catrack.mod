@@ -1,6 +1,7 @@
 : Calcium ion accumulation with radial and longitudinal diffusion
 
 NEURON {
+    THREADSAFE
 	SUFFIX catrack
 	USEION ca READ cao, cai, ica WRITE cai, ica
 	RANGE ica_pmp
