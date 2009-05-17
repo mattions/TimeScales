@@ -186,7 +186,7 @@ if __name__ == "__main__":
         import neuronControl as nC
         nC.nrnSim = iClampExp(tstop)
     else:
-        testDistSpines(nrnSim,tstop, batch=options.batch, amplitude=options.amplitude)
+        testDistSpines(nrnSim,tstop, batch=options.batch, amplitude= float (options.amplitude))
     
     # Introduce an option for one spine only.    
     #spine = testSpineInput()
