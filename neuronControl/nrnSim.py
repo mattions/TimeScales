@@ -69,15 +69,15 @@ class NeuronSim():
         self.spines = []
         
         # Distal:
-        spine_positions = [0.1, 0.3, 0.5, 0.7, 0.9]
+        spine_positions = [0.1, 0.21, 0.23, 0.25, 0.27, 0.29, 0.30, 0.50, 0.7]
         self.populateDend(spine_positions, h.MSP_Cell[0].Dist_Dend)
         
         #spine_positions = [0.5]
         #self.populateDend(spine_positions, [h.MSP_Cell[0].dend3_1[1]])
 
         # Mid
-#        print "Adding the Mid spines"
-        spine_positions = [0.3, 0.7]
+        print "Adding the Mid spines"
+        spine_positions = [0.3, 0.7, 0.9]
         self.populateDend(spine_positions, h.MSP_Cell[0].Mid_Dend)
     
     def populateDend(self, spine_positions, dendList):
