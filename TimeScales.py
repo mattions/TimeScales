@@ -179,13 +179,12 @@ if __name__ == "__main__":
     hoc_path = "hoc"
     mod_path="mod"
     nrnSim = nC.NeuronSim(mod_path=mod_path, hoc_path=hoc_path)
-    nrnSim.distributeSpines()
     
-        
     if options.nospines:
         import neuronControl as nC
-        nC.nrnSim = iClampExp(tstop)
+        iClampExp(nrnSim, tstop)
     else:
+        nrnSim.distributeSpines()
         testDistSpines(nrnSim,tstop, batch=options.batch, amplitude= float (options.amplitude))
     
     # Introduce an option for one spine only.    
