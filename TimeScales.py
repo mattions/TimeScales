@@ -25,7 +25,7 @@ def logGeometry(dir, nrnSim):
     #Spine
     f.write("Number of spines: %d\n" %len(nrnSim.spines))
     for spine in nrnSim.spines:
-        line = "%s \n" %(spine.name)
+        line = "%s \n" %(spine.id)
         f.write(line)
         
     print "Log written in %s" %os.path.realpath(logFile)
@@ -127,7 +127,7 @@ def testSpineInput():
     ampa = spine1.synapses['ampa']
     ampa.netStim.start = 60
     ampa.netStim.number = 1
-    print spine1.name
+    print spine1.id
     h.run()
     nrnSim.g.plotVoltage(nrnSim.g.vecs)
     return spine1

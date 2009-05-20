@@ -6,6 +6,7 @@ import ecellControl as eC
 import math
 import os
 from synapse import Synapse
+import math
 
 
 class mySection(nrn.Section):
@@ -18,10 +19,10 @@ class mySection(nrn.Section):
 class Spine():
     """Class spine. Create a spine with head and neck"""
     
-    def __init__(self, name, filename_bioch_mod="../biochemical_circuits/biomd183_noCalcium.eml"):
+    def __init__(self, id, filename_bioch_mod="../biochemical_circuits/biomd183_noCalcium.eml"):
         """ Create a spine with a standard volume of ~0.11 um
         the h is the reference to the main hoc interpreter"""
-        self.name = name
+        self.id = id
         self.neck = self.createNeck()
         self.head = self.createHead(self.neck)
         self.psd = self.createPSD(self.head)
@@ -41,7 +42,7 @@ class Spine():
         
     def createNeck(self):
         """ Create the neck with the Grunditz value"""
-        neck = mySection(self.name + "_neck")
+        neck = mySection(self.id + "_neck")
         neck.nseg = 3
         neck.L = 1.5 # um
         neck.diam = 0.1
@@ -60,7 +61,7 @@ class Spine():
         
     def createHead(self, neck):
         """Create the head of the spine and populate it with the right channels"""
-        head = mySection(self.name + "_head")
+        head = mySection(self.id + "_head")
         vol = 0.11 #um
         head.L = 1
         head.diam = math.sqrt(vol / head.L * math.pi ) * 2
@@ -85,7 +86,7 @@ class Spine():
     def createPSD(self, head):
         """Create the Post Synaptic Density of the spine to model the different \
         location of the different channel"""
-        psd = mySection(self.name + "_psd")
+        psd = mySection(self.id + "_psd")
         psd.L = 0.05        # um, Holmes & Levy 1990
         psd.diam = 0.5      # Wilson 1998 (Shepherd book)
         psd.Ra =100
@@ -123,14 +124,21 @@ class Spine():
         Just an handy variation of the connect method"""
         self.neck.connect(parentSec, parentx, childx)
         self.parent = parentSec
-
+    
+    def calcAreaSpine(self):
+        """Calculate the surface of the spine"""
+        surface_neck_cyl = 2 * math.pi * (self.neck.diam/2) * (self.neck.diam/2 + self.neck.L)
+        surface_head_cyl = 2 * math.pi * (self.head.diam/2) * (self.head.diam/2 + self.head.L)
+        tot_surf = surface_head_cyl + surface_neck_cyl
+        
+        return tot_surf
         
 if __name__ == "__main__":
     from spine import *
     from synapse import *
     from neuron import h
     import neuron
-    from graph import *
+    from helpers import graph
     import numpy
     import pylab
     import os
@@ -173,7 +181,7 @@ if __name__ == "__main__":
 
     # Plotting stuff
     
-    graph = Graph()
+    graph = graph.Graph()
     vecs = {}
     vecs = graph.createVecs(vecs, spine1, "cai")
     vecs = graph.createVecs(vecs, spine1, "cali")
@@ -191,5 +199,7 @@ if __name__ == "__main__":
     graph.plotCalcium(vecs, "cai")
     graph.plotCalcium(vecs, "cali")
     graph.plotVoltage(vecsVolt, spine1.synapses['ampa'].synVecs)
+    pylab.title("AMPA syn")
     graph.plotVoltage(vecsVolt, spine1.synapses['nmda'].synVecs)
+    pylab.title("NMDA syn")
     pylab.show()

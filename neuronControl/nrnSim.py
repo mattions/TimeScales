@@ -90,7 +90,7 @@ class NeuronSim():
                 spine = Spine("spine" + "-" + tmpName + "-" + str(pos))
                 spine.attach(sec, pos, 0) # Attaching the spine in the right pos
                 self.spines.append(spine)
-                print "Addedd spine: %s" %spine.name
+                print "Addedd spine: %s" %spine.id
                 
     def updateSpines(self):
         "HERE WE UPDATE THE SPINE CALCIUM"
