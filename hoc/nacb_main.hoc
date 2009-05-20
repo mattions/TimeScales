@@ -42,8 +42,10 @@ xopen(dirstr)
 
 
 
-create acell_home_
+//create acell_home_
 
+objref MSN // Handy pointer
+MSN = new MSP_Cell(RA,CM) // It is possible to refer to the same object with MSP_Cell[0] or MSN
 
 
 //****************************************************************************
@@ -51,8 +53,8 @@ create acell_home_
 // set number of segments using geom_nseg() (in fixnseg.hoc)
 // create shunt for sharp electrode
 
-sprint(dirstr, "%s/hoc/create_mspcells.hoc", preface)
-xopen(dirstr)
+//sprint(dirstr, "%s/hoc/create_mspcells.hoc", preface)
+//xopen(dirstr)
 //load_file("create_mspcells.hoc")
 //****************************************************************************
 
