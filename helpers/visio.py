@@ -1,8 +1,35 @@
+# Michele Mattioni
+# Thu May 21 11:46:55 BST 2009
+
 import visual as vs
 from neuron import h
 
 
 class Visio():
+    
+    def __init__(self):
+        self.scene = vs.display(title="nrnVisio")
+        self.cil2sec = {}
+        self.drawModel()
+        print self.cil2sec
+        #timer = LoopTimer(.2, self.processEvents())
+        #timer.start()
+        
+        
+    
+    def processEvents(self):
+        while(True):
+            if self.scene.mouse.clicked:
+                 m = self.scene.mouse.getclick()
+                 loc = m.pos
+                 print loc
+                 picked = m.pick
+                 if picked:
+                     picked.color = (0,0,1) #blue
+                     sec = self.cyl2sec(picked)
+                     print "Section: %s Name: %s" %(sec, sec.name()) 
+
+        
     def retrieveCoordinate(self, sec):
         coords = {}
         sec.push()
@@ -24,6 +51,8 @@ class Visio():
         z_ax = coords['z1'] -coords['z0']
         cyl = vs.cylinder(pos=(coords['x0'],coords['y0'],coords['z0']), 
                           axis=(x_ax,y_ax,z_ax), radius=sec.diam/2)
+        
+        self.cil2sec[cyl] = sec
     
     
     
