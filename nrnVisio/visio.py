@@ -5,19 +5,22 @@ import visual as vs
 from neuron import h
 
 
-class Visio():
+
+#create logger
+
+class Visio(object):
     
     def __init__(self):
+        
         self.scene = vs.display(title="nrnVisio")
-        self.cil2sec = {}
+        self.cyl2sec = {}
         self.drawModel()
-        print self.cil2sec
-        #timer = LoopTimer(.2, self.processEvents())
-        #timer.start()
+        self.vecRefs = []
+        
         
         
     
-    def processEvents(self):
+    def pickSection(self):
         while(True):
             if self.scene.mouse.clicked:
                  m = self.scene.mouse.getclick()
@@ -26,14 +29,40 @@ class Visio():
                  picked = m.pick
                  if picked:
                      picked.color = (0,0,1) #blue
-                     sec = self.cyl2sec(picked)
-                     print "Section: %s Name: %s" %(sec, sec.name()) 
+                     sec = self.cyl2sec[picked]
+                     return sec
+                     
+                     #print "Section: %s Name: %s" %(sec, sec.name())
+    
+    
+    
+    def createVector(self, var):
+        sec = self.pickSection()
+        vecNotPresent = True
+        for vecRef in self.vecRefs:
+            print "Searched: var %s, sec %s.\tCurrent var: %s sec: %s" %(var, sec, vecRef.var, vecRef.sec) 
+            if vecRef.var == var and vecRef.sec == sec:
+                  vecNotPresent = False
+                  break
+        if vecNotPresent:      
+            vec = h.Vector()
+            varRef = '_ref_' + var
+            vec.record(getattr(sec(0.5), varRef))
+            vecRef = VecRef(var, vec, sec)
+            self.vecRefs.append(vecRef)     
 
+    def plotVector(self, tPoints, varPoints):
+        curve = vs.graph.gcurve()
+         
+        for i in range(tPoints, vaPoints):
+            curve.plot(pos=(tPoints[i], varPoints[i]))
         
+        return curve
+                       
     def retrieveCoordinate(self, sec):
         coords = {}
         sec.push()
-        print "section: %s n3d: %d" %(sec.name(),h.n3d())
+        #self.logger.debug( "section: %s n3d: %d" %(sec.name(),h.n3d()))
         coords['x0'] = h.x3d((h.n3d()- h.n3d()))
         coords['x1'] = h.x3d((h.n3d()- 1))
         coords['y0'] = h.y3d((h.n3d()- h.n3d()))
@@ -52,9 +81,10 @@ class Visio():
         cyl = vs.cylinder(pos=(coords['x0'],coords['y0'],coords['z0']), 
                           axis=(x_ax,y_ax,z_ax), radius=sec.diam/2)
         
-        self.cil2sec[cyl] = sec
+        self.cyl2sec[cyl] = sec
     
-    
+    def visualizeSectionPotential(self):
+        pass
     
     
     def findSecs(self, secList, secName):
@@ -83,4 +113,13 @@ class Visio():
         h.define_shape()
         for sec in h.allsec():
             self.drawSection(sec)
+
+class VecRef(object):
+    
+    def __init__(self, var, vec, sec):
+        self.var = var
+        self.vec = vec
+        self.sec = sec
+
+
         
