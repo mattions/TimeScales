@@ -1,8 +1,10 @@
 # Michele Mattioni
 # Thu May 21 11:46:55 BST 2009
 
-import visual as vs
+import visual
+import visual.graph
 from neuron import h
+import logging
 
 
 
@@ -12,20 +14,51 @@ class Visio(object):
     
     def __init__(self):
         
-        self.scene = vs.display(title="nrnVisio")
+        self.scene = visual.display(title="nrnVisio")
         self.cyl2sec = {}
         self.drawModel()
         self.vecRefs = []
+        self.logger = logging.getLogger("nrnVisio.Visio")
+        self.logger.setLevel(logging.DEBUG)
+        #create console handler and set level to debug
+        ch = logging.StreamHandler()
+        ch.setLevel(logging.DEBUG)
+        #create formatter
+        formatter = logging.Formatter("%(name)s - %(levelname)s - %(message)s")
+        #add formatter to ch
+        ch.setFormatter(formatter)
+        #add ch to logger
+        self.logger.addHandler(ch)
+
+        self.logger.debug("Starting Visio")
+
         
         
+    def getVec(self,sec, var=None):
+        """Return the vecs that record given a section
         
+        param: 
+            sec - Section of interest
+            var - if None return all the vectors that record in that section
+            as a list, otherwise return the vector that record the variable var"""
+        vecsSection = [] 
+        for vecRef in self.vecRefs:
+            if vecRef.sec == sec:
+                if var is None:
+                    vecsSection.append(vecRef.vec)
+                elif var == vecRef.var:
+                    return vecRef.vec
+        
+        return vecsSection
+                        
     
     def pickSection(self):
+        self.logger.info("Click on the section of interest")
         while(True):
             if self.scene.mouse.clicked:
                  m = self.scene.mouse.getclick()
                  loc = m.pos
-                 print loc
+                 self.logger.debug(loc)
                  picked = m.pick
                  if picked:
                      picked.color = (0,0,1) #blue
@@ -49,15 +82,19 @@ class Visio(object):
             varRef = '_ref_' + var
             vec.record(getattr(sec(0.5), varRef))
             vecRef = VecRef(var, vec, sec)
-            self.vecRefs.append(vecRef)     
+            self.vecRefs.append(vecRef)
+        return sec     
 
     def plotVector(self, tPoints, varPoints):
-        curve = vs.graph.gcurve()
-         
-        for i in range(tPoints, vaPoints):
-            curve.plot(pos=(tPoints[i], varPoints[i]))
+        funct = visual.graph.gcurve()
+        try:
+             for i in range(int (tPoints.size() )):
+                 curve.plot(pos=(tPoints[i], varPoints[i]))
+        except LookupError:
+            self.logger.warning("At least one of the vector seems to be empty.\n\
+            Please run the simulation first")
         
-        return curve
+        return funct
                        
     def retrieveCoordinate(self, sec):
         coords = {}
@@ -78,7 +115,7 @@ class Visio(object):
         x_ax = coords['x1'] -coords['x0']
         y_ax = coords['y1'] -coords['y0']
         z_ax = coords['z1'] -coords['z0']
-        cyl = vs.cylinder(pos=(coords['x0'],coords['y0'],coords['z0']), 
+        cyl = visual.cylinder(pos=(coords['x0'],coords['y0'],coords['z0']), 
                           axis=(x_ax,y_ax,z_ax), radius=sec.diam/2)
         
         self.cyl2sec[cyl] = sec
