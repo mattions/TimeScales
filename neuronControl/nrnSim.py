@@ -22,11 +22,12 @@ class Event():
         self.cvode.event(self.eventTime, self.callback(eventTime, nrnSim))
 
 
-
 class NeuronSim():
-    """Class to control the NeuroSim"""
-    def __init__(self, hoc_path="hoc", mod_path="mod", spines=True, biochemical=True, 
-                 biochemical_filename=None):
+    """General class to control NEURON"""
+    def __init__(self, hoc_path="hoc", mod_path="mod", msn=True, spines=True, 
+                 biochemical=True, biochemical_filename=None):
+        """Load and initiate all the hoc and mod file. Can load the model of the neuron
+        or otherwise can just expose general method"""
         
         self.biochemical=biochemical
         self.biochemical_filename=biochemical_filename
@@ -48,46 +49,54 @@ class NeuronSim():
         h('strdef preface, dirstr') # preface and dirstr used in each hoc
         preface_string = "preface = \"" + preface_pos + "\""
         h(preface_string)
-        h.load_file(os.path.join(hoc_path, "nacb_main.hoc"))
         
-        h.load_file("stdrun.hoc") # loading the standard run NEURON system
-        
-        if spines:
-            self.distributeSpines()
+        if msn:
+            # Loading the MSN model
+            h.load_file(os.path.join(hoc_path, "nacb_main.hoc"))
+            if spines:
+                # Adding the spines
+                self.__distributeSpines()
             
     def run(self, tStop):
         """Run the simulation until tStop"""
         h.tstop = tStop
-        h.run()
-            
-    def init(self, v_init=-87.75):
-        """Initialize the cell"""
-        h.v_init = v_init
+        while h.t < h.tstop :
+            h.fadvance()
+            # update the plotting system here.
         
+    def init(self, v_init=-87.75):
+        """Initialize the simulator"""
+        h.v_init = v_init
+        h.fcurrent()
+        # Init the plotting system if required here
+
         
     def initAndRun(self, tStop):
         """Initialize and run the simulation until tStop""" 
         self.init()
         self.run(tStop)
     
-    def distributeSpines(self):
+    def __distributeSpines(self):
         """Attach spines to the dendrites"""
         self.spines = []
+        
+        # Trying one spine only for test
+        #spine_positions = [0.5]
+        #self.__populateDend(spine_positions, [h.MSP_Cell[0].dend3_1[1]])
+
         
         # Distal:
         spine_positions = [0.1, 0.21, 0.23, 0.25, 0.27, 0.29, 0.30, 0.50, 0.7]
         #spine_positions = [0.1, 0.21, 0.25, 0.30, 0.50, 0.7]
-        self.populateDend(spine_positions, h.MSP_Cell[0].Dist_Dend)
+        self.__populateDend(spine_positions, h.MSP_Cell[0].Dist_Dend)
         
-        #spine_positions = [0.5]
-        #self.populateDend(spine_positions, [h.MSP_Cell[0].dend3_1[1]])
-
+        
         # Mid
         print "Adding the Mid spines"
         spine_positions = [0.3, 0.7, 0.9]
-        self.populateDend(spine_positions, h.MSP_Cell[0].Mid_Dend)
+        self.__populateDend(spine_positions, h.MSP_Cell[0].Mid_Dend)
     
-    def populateDend(self, spine_positions, dendList):
+    def __populateDend(self, spine_positions, dendList):
         """Distribuete the psines among the dends"""
         
         for sec in dendList :
@@ -104,7 +113,7 @@ class NeuronSim():
                 print "Addedd spine: %s" %spine.id
                 
     def updateSpines(self):
-        "HERE WE UPDATE THE SPINE CALCIUM"
+        "Update the calcium inside the spine"
         for spine in self.spines:
             ca_from_NEURON = spine.vecs['ca'].x[-1] 
             spine.ecellMan.ca['Value'] = ca_from_NEURON 

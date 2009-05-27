@@ -149,7 +149,7 @@ if __name__ == "__main__":
     parser.add_option("--nospines", action="store_true", default=False, 
                   help= "Run the test without spines in the neuron")
     parser.add_option("--biochemical", action="store_true", default=False, 
-                  help= "Run the model without the biochemical integrator in each spine.")
+                  help= "Run the model with the biochemical integrator in each spine.")
     
     (options, args) = parser.parse_args()
     
