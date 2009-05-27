@@ -19,7 +19,9 @@ class mySection(nrn.Section):
 class Spine():
     """Class spine. Create a spine with head and neck"""
     
-    def __init__(self, id, filename_bioch_mod="../biochemical_circuits/biomd183_noCalcium.eml"):
+    def __init__(self, id, 
+                 filename_bioch_mod="../biochemical_circuits/biomd183_noCalcium.eml",
+                 biochemical=True):
         """ Create a spine with a standard volume of ~0.11 um
         the h is the reference to the main hoc interpreter"""
         self.id = id
@@ -30,7 +32,8 @@ class Spine():
         self.synapses = self.createSynapses() # Dict to save the pointer to the synapses
         
         # Setting up the biochemical simulator
-        #self.ecellMan = self.setupBioSim(filename_bioch_mod)
+        if biochemical:
+            self.ecellMan = self.setupBioSim(filename_bioch_mod)
         
     def setupBioSim(self, filename):
         """Initialize the Biochemical Simulator creating the instance of 

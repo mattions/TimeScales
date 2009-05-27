@@ -146,9 +146,10 @@ if __name__ == "__main__":
     parser.add_option("-a", "--amplitude", default=0.248, 
                   help= "The intensity of the iClamp experiment. Default is 0.248")
     
-    parser.add_option("-n", "--nospines", action="store_true", default=False, 
+    parser.add_option("--nospines", action="store_true", default=False, 
                   help= "Run the test without spines in the neuron")
-    
+    parser.add_option("--biochemical", action="store_true", default=False, 
+                  help= "Run the model without the biochemical integrator in each spine.")
     
     (options, args) = parser.parse_args()
     
@@ -178,14 +179,17 @@ if __name__ == "__main__":
     
     hoc_path = "hoc"
     mod_path="mod"
-    nrnSim = nC.NeuronSim(mod_path=mod_path, hoc_path=hoc_path)
+    
     
     if options.nospines:
-        import neuronControl as nC
+        nrnSim = nC.NeuronSim(mod_path=mod_path, hoc_path=hoc_path, spines=False)
         iClampExp(nrnSim, tstop)
     else:
-        nrnSim.distributeSpines()
-        testDistSpines(nrnSim,tstop, batch=options.batch, amplitude= float (options.amplitude))
+        nrnSim = nC.NeuronSim(mod_path=mod_path, hoc_path=hoc_path, 
+                              spines=True, biochemical=options.biochemical, 
+                              biochemical_filename="biochemical_circuits/biomd183_noCalcium.eml")
+        testDistSpines(nrnSim,tstop, batch=options.batch, 
+                       amplitude= float (options.amplitude))
     
     # Introduce an option for one spine only.    
     #spine = testSpineInput()

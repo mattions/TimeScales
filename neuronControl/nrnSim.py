@@ -25,8 +25,11 @@ class Event():
 
 class NeuronSim():
     """Class to control the NeuroSim"""
-    def __init__(self, hoc_path="hoc", mod_path="mod"):
-        self.gcw = os.getcwd()
+    def __init__(self, hoc_path="hoc", mod_path="mod", spines=True, biochemical=True, 
+                 biochemical_filename=None):
+        
+        self.biochemical=biochemical
+        self.biochemical_filename=biochemical_filename
         
         # Mod file are always in a mod directory
         if not os.path.exists(mod_path) :
@@ -48,6 +51,9 @@ class NeuronSim():
         h.load_file(os.path.join(hoc_path, "nacb_main.hoc"))
         
         h.load_file("stdrun.hoc") # loading the standard run NEURON system
+        
+        if spines:
+            self.distributeSpines()
             
     def run(self, tStop):
         """Run the simulation until tStop"""
@@ -70,6 +76,7 @@ class NeuronSim():
         
         # Distal:
         spine_positions = [0.1, 0.21, 0.23, 0.25, 0.27, 0.29, 0.30, 0.50, 0.7]
+        #spine_positions = [0.1, 0.21, 0.25, 0.30, 0.50, 0.7]
         self.populateDend(spine_positions, h.MSP_Cell[0].Dist_Dend)
         
         #spine_positions = [0.5]
@@ -87,7 +94,11 @@ class NeuronSim():
             for pos in spine_positions:
                 tmpName = sec.name()
                 tmpName = tmpName.split('.')[1] # Get rid of the MSP_Cell[0] prefix
-                spine = Spine("spine" + "-" + tmpName + "-" + str(pos))
+                
+                # Instantiate the spine with the biochemical model
+                spine = Spine("spine" + "-" + tmpName + "-" + str(pos), 
+                              biochemical=self.biochemical, 
+                              filename_bioch_mod=self.biochemical_filename)
                 spine.attach(sec, pos, 0) # Attaching the spine in the right pos
                 self.spines.append(spine)
                 print "Addedd spine: %s" %spine.id
