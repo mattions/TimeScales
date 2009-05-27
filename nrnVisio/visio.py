@@ -152,6 +152,31 @@ class Visio(object):
         h.define_shape()
         for sec in h.allsec():
             self.drawSection(sec)
+    
+    def dragModel(self):
+        pick = None # no object picked out of the scene yet
+        while 1:
+            if self.scene.mouse.events:
+                m1 = self.scene.mouse.getevent() # get event
+                if m1.drag and m1.pick : # if touched a cylinder
+                    drag_pos = m1.pickpos # where on the cylinder
+                    pick = m1.pick # pick now true (not None)
+                elif m1.drop: # released at end of drag
+                    pick = None # end dragging (None is false)
+            if pick:
+                # project onto xy plane, even if scene rotated:
+                new_pos = self.scene.mouse.project(normal=(0,0,1))
+                
+                if new_pos != drag_pos: # if mouse has moved
+                    # offset for where the ball was clicked:
+                    offset = new_pos - drag_pos
+                    # For all the object
+                    for obj in self.scene.objects:
+                            obj.pos += offset
+                            drag_pos = new_pos # New drag pos start is the new pos
+                    
+                    
+                    
 
 class VecRef(object):
     
