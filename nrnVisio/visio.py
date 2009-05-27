@@ -18,6 +18,8 @@ class Visio(object):
         self.cyl2sec = {}
         self.drawModel()
         self.vecRefs = []
+        
+        # logging facility
         self.logger = logging.getLogger("nrnVisio.Visio")
         self.logger.setLevel(logging.DEBUG)
         #create console handler and set level to debug
