@@ -5,12 +5,12 @@ import visual
 import visual.graph
 from neuron import h
 import logging
+import gobject
+import threading
 
+gobject.threads_init()
 
-
-#create logger
-
-class Visio(object):
+class Visio(threading.Thread):
     
     def __init__(self):
         
@@ -153,9 +153,10 @@ class Visio(object):
         for sec in h.allsec():
             self.drawSection(sec)
     
-    def dragModel(self):
+    def dragModel(self, drag_btn):
         pick = None # no object picked out of the scene yet
-        while 1:
+        stillDragging = True
+        while stillDragging:
             if self.scene.mouse.events:
                 m1 = self.scene.mouse.getevent() # get event
                 if m1.drag and m1.pick : # if touched a cylinder
@@ -163,6 +164,11 @@ class Visio(object):
                     pick = m1.pick # pick now true (not None)
                 elif m1.drop: # released at end of drag
                     pick = None # end dragging (None is false)
+                    stillDragging = False
+                    self.logger.debug("Dragging action ended.")
+                    gobject.idle_add(drag_btn.toggled()) #Changing the button state
+                    
+                    
             if pick:
                 # project onto xy plane, even if scene rotated:
                 new_pos = self.scene.mouse.project(normal=(0,0,1))
@@ -174,6 +180,10 @@ class Visio(object):
                     for obj in self.scene.objects:
                             obj.pos += offset
                             drag_pos = new_pos # New drag pos start is the new pos
+        return
+
+                    
+                
                     
                     
                     
