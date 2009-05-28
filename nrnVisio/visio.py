@@ -5,15 +5,13 @@ import visual
 import visual.graph
 from neuron import h
 import logging
-import gobject
 import threading
+import gtk
 
-gobject.threads_init()
-
-class Visio(threading.Thread):
+class Visio():
     
     def __init__(self):
-        
+
         self.scene = visual.display(title="nrnVisio")
         self.cyl2sec = {}
         self.drawModel()
@@ -153,22 +151,18 @@ class Visio(threading.Thread):
         for sec in h.allsec():
             self.drawSection(sec)
     
-    def dragModel(self, drag_btn):
+    def dragModel(self):
         pick = None # no object picked out of the scene yet
-        stillDragging = True
-        while stillDragging:
+        
+        while True:
             if self.scene.mouse.events:
                 m1 = self.scene.mouse.getevent() # get event
                 if m1.drag and m1.pick : # if touched a cylinder
                     drag_pos = m1.pickpos # where on the cylinder
                     pick = m1.pick # pick now true (not None)
-                elif m1.drop: # released at end of drag
+                elif m1.drop and not m1.drag: # released at end of drag
                     pick = None # end dragging (None is false)
-                    stillDragging = False
-                    self.logger.debug("Dragging action ended.")
-                    gobject.idle_add(drag_btn.toggled()) #Changing the button state
-                    
-                    
+                    break # Out of the loop.
             if pick:
                 # project onto xy plane, even if scene rotated:
                 new_pos = self.scene.mouse.project(normal=(0,0,1))
@@ -179,12 +173,7 @@ class Visio(threading.Thread):
                     # For all the object
                     for obj in self.scene.objects:
                             obj.pos += offset
-                            drag_pos = new_pos # New drag pos start is the new pos
-        return
-
-                    
-                
-                    
+                            drag_pos = new_pos # New drag pos start is the new pos           
                     
                     
 
