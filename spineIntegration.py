@@ -2,9 +2,10 @@
 # Wed Mar 18 17:51:51 GMT 2009
 
 from neuron import h
-from neuronControl import nrnSim, synapse, graph
+from neuronControl import nrnSim, synapse
+from helpers import graph, loader
 import numpy
-
+import logging
 
 
 
@@ -32,6 +33,7 @@ if __name__ == "__main__":
 
     from optparse import OptionParser
     import os
+    import neuronControl
     
     logger = logging.getLogger("spineIntegration")
     logger.setLevel(logging.DEBUG)
@@ -44,18 +46,16 @@ if __name__ == "__main__":
     ch.setFormatter(formatter)
     #add ch to logger
     logger.addHandler(ch)
-
-    logger.debug("Starting Spine integration")
     
     usage= "usage: %prog [options] tEquilibrium tStop"
     parser = OptionParser(usage)
        
-    parser.add_option("-nDt", "--dtNeuron", default=0.005, 
-                  help= "Fixed timestep to use to update neuron.")
+    parser.add_option("--dtNeuron", default=0.005, 
+                  help= "Fixed timestep to use to update neuron. i.e.:0.005")
     
-    parser.add_option("-caS", "--calciumSampling", default=0.020, 
+    parser.add_option("--calciumSampling", default=0.020, 
                   help= "Fixed interval used to sample the calcium concentration in the Neuron world and\
-                   pass it to the biochemical simulator")
+                   pass it to the biochemical simulator. i.e.:0.020")
     
     
     (options, args) = parser.parse_args()
@@ -63,20 +63,25 @@ if __name__ == "__main__":
     # Checking the correct num of args
     
     if len(args) != 2:
-        parser.error("Incorrect number of arguments. You should provide the tEquilibrium and the tStop")
+        parser.error("Incorrect number of arguments. You should provide \
+        the tEquilibrium and the tStop")
         parser.usage()
     else:
         tEquilibrium = float (args[0])
         tStop = float (args[0])
         if tStop < tEquilibrium:
-            logger.error("tEquilbrium should be bigger of Tstop. We can't finish before the equilibrium")
+            logger.error("tEquilbrium should be bigger of Tstop. \
+            We can't finish before the equilibrium")
             parser.usage()
         
     
     # Processing the options
+    logger.debug("Starting Spine integration")
     
-    nrnSim = nrnSim.NeuronSim()
-    
+    hoc_path = "hoc"
+    mod_path="mod"
+    nrnSim = neuronControl.NeuronSim(mod_path=mod_path, hoc_path=hoc_path, 
+                              spines=True, biochemical=options.biochemical)
     #------------------------------------------------------------------------------ 
     graph = graph.Graph()
     
@@ -112,9 +117,10 @@ if __name__ == "__main__":
             ca_from_NEURON = spine.vecs['ca'].x[-1] 
             spine.ecellMan.ca['Value'] = ca_from_NEURON 
             spine.ecellMan.ses.run(caSamplingInterval)
-            print "Equilibrium for spine: %s, dend: %s, bio sim time: %f" % (spine.head.name(), 
-                                                                         spine.parent.name(),
-                                                                         spine.ecellMan.ses.getCurrentTime())
+            print "Equilibrium for spine: %s, dend: %s, bio sim time: \
+            %f" % (spine.head.name(), spine.parent.name(),
+                   spine.ecellMan.ses.getCurrentTime())
+            
     for eventTimePoint in eventTimePoints:
         event = Event(eventTimePoint, neuronSim)
         
