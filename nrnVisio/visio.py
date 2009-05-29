@@ -145,10 +145,14 @@ class Visio():
         return selectedSec
     
     def drawModel(self):
-        
+        # Hide all the old objects
+        for obj in self.scene.objects:
+            obj.visible = False
+        # Draw the new one    
         h.define_shape()
         for sec in h.allsec():
             self.drawSection(sec)
+        self.modelDrawn = True    
     
     def dragModel(self):
         pick = None # no object picked out of the scene yet
