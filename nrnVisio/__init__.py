@@ -1,1 +1,2 @@
-from visio import *
+# We import the controls    
+from controls import Controls

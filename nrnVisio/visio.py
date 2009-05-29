@@ -14,7 +14,6 @@ class Visio():
 
         self.scene = visual.display(title="nrnVisio")
         self.cyl2sec = {}
-        self.drawModel()
         self.vecRefs = []
         
         # logging facility
