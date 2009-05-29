@@ -15,12 +15,12 @@ class Controls(threading.Thread):
         threading.Thread.__init__(self)
 
         # create widget tree ...
-        builder = gtk.Builder()
+        self.builder = gtk.Builder()
         
-        builder.add_from_file(os.path.join(os.path.dirname(__file__),
+        self.builder.add_from_file(os.path.join(os.path.dirname(__file__),
                                            "nrnVisioControl.glade"))
-        builder.connect_signals(self)
-        self.window = builder.get_object("window")
+        self.builder.connect_signals(self)
+        self.window = self.builder.get_object("window")
         
 
         self.visio = visio.Visio()
@@ -44,7 +44,12 @@ class Controls(threading.Thread):
     
     def on_pick_clicked(self, widget, data=None):
         """Pick a section"""
-        self.visio.pickSection()
+        sec = self.visio.pickSection()
+        statusbar = self.builder.get_object("statusbar")
+        context_id = statusbar.get_context_id("sectionInfo")
+        statusbar.push(context_id, sec.name())
+        self.selectedSec = sec
+        
         
     def run(self):
         """Running the gtk loop in our thread"""

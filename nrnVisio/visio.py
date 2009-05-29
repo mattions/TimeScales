@@ -15,6 +15,8 @@ class Visio():
         self.scene = visual.display(title="nrnVisio")
         self.cyl2sec = {}
         self.vecRefs = []
+        self.selectedCyl = None # Used for storing the cyl when picked
+        self.defaultColor = (1,1,1) #light gray
         
         # logging facility
         self.logger = logging.getLogger("nrnVisio.Visio")
@@ -60,9 +62,18 @@ class Visio():
                  self.logger.debug(loc)
                  picked = m.pick
                  if picked:
-                     picked.color = (0,0,1) #blue
-                     sec = self.cyl2sec[picked]
-                     return sec
+                     
+                     # unselect the old one
+                    if self.selectedCyl is not None:
+                        self.logger.debug(self.selectedCyl)
+                        self.logger.debug(self.defaultColor)
+                        self.logger.debug(picked)
+                        self.selectedCyl.color = self.defaultColor
+                    
+                    picked.color = (0,0,1) #blue
+                    self.selectedCyl = picked
+                    sec = self.cyl2sec[picked]
+                    return sec
                      
                      #print "Section: %s Name: %s" %(sec, sec.name())
     
