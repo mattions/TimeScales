@@ -16,6 +16,7 @@ class Visio():
         self.cyl2sec = {}
         self.vecRefs = []
         self.selectedCyl = None # Used for storing the cyl when picked
+        self.selectedCylColor = (0,0,1) #blue
         self.defaultColor = (1,1,1) #light gray
         
         # logging facility
@@ -70,7 +71,7 @@ class Visio():
                         self.logger.debug(picked)
                         self.selectedCyl.color = self.defaultColor
                     
-                    picked.color = (0,0,1) #blue
+                    picked.color = self.selectedCylColor
                     self.selectedCyl = picked
                     sec = self.cyl2sec[picked]
                     return sec
@@ -156,14 +157,20 @@ class Visio():
         return selectedSec
     
     def drawModel(self):
+        drawn = False
         # Hide all the old objects
         for obj in self.scene.objects:
             obj.visible = False
-        # Draw the new one    
+        
+        # Draw the new one
         h.define_shape()
         for sec in h.allsec():
             self.drawSection(sec)
-        self.modelDrawn = True    
+            drawn = True # Assigned every time. Didn't find a way to test if there is a sec
+        
+        self.logger.debug( "Drawn: %s" %drawn)            
+        return drawn
+            
     
     def dragModel(self):
         pick = None # no object picked out of the scene yet

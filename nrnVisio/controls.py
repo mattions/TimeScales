@@ -40,7 +40,15 @@ class Controls(threading.Thread):
         
     def on_draw_clicked(self, widget, data=None):
         """Draw the whole model"""
-        self.visio.drawModel()
+        drawn = self.visio.drawModel()
+        if drawn:
+            btns = ["drag", "pick"]
+            for name in btns:
+                btn = self.builder.get_object(name)
+                btn.set_sensitive(True)
+        else:
+            print "WARNING ! No Section created. Can't draw anything. Sorry."
+        
     
     def on_pick_clicked(self, widget, data=None):
         """Pick a section"""
