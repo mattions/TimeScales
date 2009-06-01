@@ -4,7 +4,6 @@
 import visual
 import visual.graph
 from neuron import h
-import logging
 import threading
 import gtk
 
@@ -18,21 +17,7 @@ class Visio():
         self.selectedCyl = None # Used for storing the cyl when picked
         self.selectedCylColor = (0,0,1) #blue
         self.defaultColor = (1,1,1) #light gray
-        
-        # logging facility
-        self.logger = logging.getLogger("nrnVisio.Visio")
-        self.logger.setLevel(logging.DEBUG)
-        #create console handler and set level to debug
-        ch = logging.StreamHandler()
-        ch.setLevel(logging.DEBUG)
-        #create formatter
-        formatter = logging.Formatter("%(name)s - %(levelname)s - %(message)s")
-        #add formatter to ch
-        ch.setFormatter(formatter)
-        #add ch to logger
-        self.logger.addHandler(ch)
-
-        self.logger.debug("Starting Visio")
+        self.h = h # Link to the neuron interpreter
 
         
         
@@ -55,20 +40,15 @@ class Visio():
                         
     
     def pickSection(self):
-        self.logger.info("Click on the section of interest")
         while(True):
             if self.scene.mouse.clicked:
                  m = self.scene.mouse.getclick()
                  loc = m.pos
-                 self.logger.debug(loc)
                  picked = m.pick
                  if picked:
                      
                      # unselect the old one
                     if self.selectedCyl is not None:
-                        self.logger.debug(self.selectedCyl)
-                        self.logger.debug(self.defaultColor)
-                        self.logger.debug(picked)
                         self.selectedCyl.color = self.defaultColor
                     
                     picked.color = self.selectedCylColor
@@ -102,15 +82,14 @@ class Visio():
              for i in range(int (tPoints.size() )):
                  curve.plot(pos=(tPoints[i], varPoints[i]))
         except LookupError:
-            self.logger.warning("At least one of the vector seems to be empty.\n\
-            Please run the simulation first")
+            print "At least one of the vector seems to be empty.\n\
+            Please run the simulation first"
         
         return funct
                        
     def retrieveCoordinate(self, sec):
         coords = {}
         sec.push()
-        #self.logger.debug( "section: %s n3d: %d" %(sec.name(),h.n3d()))
         coords['x0'] = h.x3d((h.n3d()- h.n3d()))
         coords['x1'] = h.x3d((h.n3d()- 1))
         coords['y0'] = h.y3d((h.n3d()- h.n3d()))
@@ -167,8 +146,7 @@ class Visio():
         for sec in h.allsec():
             self.drawSection(sec)
             drawn = True # Assigned every time. Didn't find a way to test if there is a sec
-        
-        self.logger.debug( "Drawn: %s" %drawn)            
+             
         return drawn
             
     
@@ -194,9 +172,42 @@ class Visio():
                     # For all the object
                     for obj in self.scene.objects:
                             obj.pos += offset
-                            drag_pos = new_pos # New drag pos start is the new pos           
-                    
-                    
+                            drag_pos = new_pos # New drag pos start is the new pos
+                            
+    def addVecRef(self, var, sec):
+        """Add a vecRef in the list. It takes care to create the vector
+        
+        :param: 
+        var - The variable to record
+        sec - The section where to record
+        
+        return success"""
+        success = False
+        if hasattr(sec, var):
+            # Adding the vector only if does not exist
+            alreadyPresent=False
+            for vecRef in self.vecRefs:
+                if vecRef.var == var and vecRef.sec == sec:
+                    alreadyPresent = True
+                    break
+             
+            if not alreadyPresent:
+                
+                # Creating the vector
+                vec = h.Vector()
+                varRef = '_ref_' + var
+                vec.record(getattr(sec(0.5), varRef))
+                
+                # Adding to the list
+                self.vecRefs.append(VecRef(var, vec, sec))
+                success = True
+                
+        return success
+    
+    def addAllVecRef(self, var):
+        """Create the vector for all the section with the given variable"""
+        for sec in h.allsec():
+            self.addVecRef(var, sec)
 
 class VecRef(object):
     
@@ -204,6 +215,7 @@ class VecRef(object):
         self.var = var
         self.vec = vec
         self.sec = sec
-
-
-        
+    
+    def info(self):
+        print "Var: %s Vec: %s SecName: %s" %(self.var, self.vec, self.sec.name())
+    
