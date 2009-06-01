@@ -91,12 +91,44 @@
                   <object class="GtkHBox" id="hbox1">
                     <property name="visible">True</property>
                     <child>
-                      <object class="GtkLabel" id="label4">
+                      <object class="GtkVBox" id="vbox4">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">variable to Record</property>
+                        <property name="orientation">vertical</property>
+                        <child>
+                          <object class="GtkLabel" id="var_rec_description">
+                            <property name="visible">True</property>
+                            <property name="label" translatable="yes">Enter the variable 
+to record</property>
+                          </object>
+                          <packing>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkEntry" id="var_entry">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="invisible_char">&#x25CF;</property>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
                       </object>
                       <packing>
                         <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkVSeparator" id="vseparator2">
+                        <property name="visible">True</property>
+                        <property name="orientation">vertical</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="position">1</property>
                       </packing>
                     </child>
                     <child>
@@ -133,17 +165,30 @@
                         </child>
                       </object>
                       <packing>
-                        <property name="position">1</property>
+                        <property name="position">2</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkComboBoxEntry" id="varSelection">
+                      <object class="GtkVSeparator" id="vseparator1">
                         <property name="visible">True</property>
-                        <property name="model">liststore1</property>
-                        <property name="add_tearoffs">True</property>
+                        <property name="orientation">vertical</property>
                       </object>
                       <packing>
-                        <property name="position">2</property>
+                        <property name="expand">False</property>
+                        <property name="position">3</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="createVector">
+                        <property name="label" translatable="yes">Create
+Vector</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <signal name="clicked" handler="on_createVector_clicked"/>
+                      </object>
+                      <packing>
+                        <property name="position">4</property>
                       </packing>
                     </child>
                   </object>
@@ -185,11 +230,5 @@
         </child>
       </object>
     </child>
-  </object>
-  <object class="GtkListStore" id="liststore1">
-    <columns>
-      <!-- column-name voltage -->
-      <column type="gchar"/>
-    </columns>
   </object>
 </interface>

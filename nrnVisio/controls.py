@@ -47,7 +47,14 @@ class Controls(threading.Thread):
                 btn = self.builder.get_object(name)
                 btn.set_sensitive(True)
         else:
-            print "WARNING ! No Section created. Can't draw anything. Sorry."
+            msg="No Section created. Can't draw anything. Have you created any section?"
+            print msg
+            warning_dial = gtk.MessageDialog(parent=None, flags=gtk.DIALOG_DESTROY_WITH_PARENT, 
+                                             type=gtk.MESSAGE_WARNING, 
+                                             buttons=gtk.BUTTONS_CLOSE, 
+                                             message_format=msg)
+            warning_dial.run()
+            warning_dial.destroy()
         
     
     def on_pick_clicked(self, widget, data=None):
@@ -55,13 +62,19 @@ class Controls(threading.Thread):
         sec = self.visio.pickSection()
         statusbar = self.builder.get_object("statusbar")
         context_id = statusbar.get_context_id("sectionInfo")
-        statusbar.push(context_id, sec.name())
+        if (hasattr(sec, "id")):
+            statusbar.push(context_id, "%s (%s)" %(sec.id, sec.name()))
+        else:
+            statusbar.push(context_id, "%s" %sec.name())
         self.selectedSec = sec
         
-        
+    
+    
     def run(self):
         """Running the gtk loop in our thread"""
         gtk.main()
+    
+    
 
 gobject.threads_init()
 
