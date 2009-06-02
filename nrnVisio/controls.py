@@ -29,11 +29,26 @@ class Controls(threading.Thread):
         self.window.show()
  
     def on_window_destroy(self, widget, data=None):
-        print "You should kill visio window by yourself for now."
+        self._shutdown()
+#        print "You should kill visio window by yourself for now."
+##       self.visio.display.hide()
+##       self.window.hide()
+#        gtk.main_quit()
+    
+    def on_quit_activate(self, widget, data=None):
+        """Destroy the window"""
+        self.window.destroy() # Destroy the window
+        self._shutdown() # Common procedure to destroy visio
+        
+    
+    def _shutdown(self):
+        """Procedure to shutdown the gtk control window and the \
+        visio instance"""
+        
+        #print "You should kill visio window by yourself for now.\n"
 #        self.visio.display.hide()
 #        self.window.hide()
-        gtk.main_quit()
-        
+        gtk.main_quit()    
         
     def on_drag_clicked(self, btn, data=None):
         """To drag the model in the window"""
@@ -49,15 +64,9 @@ class Controls(threading.Thread):
                 btn = self.builder.get_object(name)
                 btn.set_sensitive(True)
         else:
-            msg="No Section created. Can't draw anything. Have you created any section?"
-            print msg
-            warning_dial = gtk.MessageDialog(parent=None, flags=gtk.DIALOG_DESTROY_WITH_PARENT, 
-                                             type=gtk.MESSAGE_WARNING, 
-                                             buttons=gtk.BUTTONS_CLOSE, 
-                                             message_format=msg)
-            warning_dial.run()
-            warning_dial.destroy()
-        
+            no_section = self.builder.get_object("nosection")
+            no_section.run()
+            no_section.hide()
     
     def on_pick_clicked(self, widget, data=None):
         """Pick a section"""
@@ -77,13 +86,10 @@ class Controls(threading.Thread):
         var = entry.get_text()
         
         if var is "":
-            msg = "No var found. Please enter a variable to record. (i.e.: v)"
-            warning_dial = gtk.MessageDialog(parent=None, flags=gtk.DIALOG_DESTROY_WITH_PARENT, 
-                                 type=gtk.MESSAGE_WARNING, 
-                                 buttons=gtk.BUTTONS_CLOSE, 
-                                 message_format=msg)
-            warning_dial.run()
-            warning_dial.destroy()
+            no_var_warning = self.builder.get_object("novarwarning")
+            no_var_warning.run()
+            no_var_warning.hide()
+
         else:
             # Grab the section
             selectedSection_radio_btn = self.builder.get_object("selected_sec_btn")
@@ -91,41 +97,59 @@ class Controls(threading.Thread):
             allSection_radio_btn = self.builder.get_object("all_sections_btn")
             # Only for one section
             if selectedSection_radio_btn.get_active():
+                
+                # No section picked
+                # Throw a warning message
                 if self.selectedSec is None:
-                    msg = "No section selected. Please select a section."
-                    warning_dial = gtk.MessageDialog(parent=None, 
-                                                     flags=gtk.DIALOG_DESTROY_WITH_PARENT, 
-                                                     type=gtk.MESSAGE_WARNING, 
-                                                     buttons=gtk.BUTTONS_CLOSE, 
-                                                     message_format=msg)
-                    warning_dial.run()
-                    warning_dial.destroy()
+                    no_section_sel = self.builder.get_object("nosectionsel")
+                    no_section_sel.run()
+                    no_section_sel.hide()
                     
+                # Section selected. Let's create the vector
                 else:
                     success = self.visio.addVecRef(var, self.selectedSec)
                     if not success:
-                        msg="Impossible to create the vector.\
-                        The section does not have the variable to record or \
-                        the vector is already present"
-                        warning_dial = gtk.MessageDialog(parent=None, 
-                                                         flags=gtk.DIALOG_DESTROY_WITH_PARENT, 
-                                                         type=gtk.MESSAGE_WARNING, 
-                                                         buttons=gtk.BUTTONS_CLOSE, 
-                                                         message_format=msg)
-                        warning_dial.run()
-                        warning_dial.destroy()
+                        impossible_creation = self.builder.get_object("impossiblecreation")
+                        impossible_creation.run()
+                        impossible_creation.hide()
+#                    else:
+#                        self._update_tree_view()
+                        
             elif allSection_radio_btn.get_active():
-                self.visio.addAllVecRef(var)
                 
+                # Create all the vectors
+                allCreated = self.visio.addAllVecRef(var)
+                
+                #  
+                if allCreated:
+                    all_created_dial = self.builder.get_object("allvecscreated") 
+                    all_created_dial.run()
+                    all_created_dial.hide()
+#                else:
+#                    self._update_tree_view()
         
-                
+        
                     
-            
+    def _update_tree_view(self):
+        # Fill the treeview wit all the vectors created
+        treestore = self.builder.get_object("treestore")
+        for vecRef in self.visio.vecRefs:
+                parent = treestore.append(None, sec.name())
+                for k,v in vecRef.vecs.iteritems():
+                    treestore.append(parent, k)
     
+    def on_about_activate(self, widget, data=None):
+        """About dialogue pop up"""
+        about_dialog = self.builder.get_object("aboutdialog")
+        about_dialog.run()
+        about_dialog.hide()
+        
     def run(self):
         """Running the gtk loop in our thread"""
         gtk.main()
     
-    
 
+
+
+# We start the threads here
 gobject.threads_init()

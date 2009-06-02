@@ -187,9 +187,10 @@ class Visio():
             # Adding the vector only if does not exist
             alreadyPresent=False
             for vecRef in self.vecRefs:
-                if vecRef.var == var and vecRef.sec == sec:
-                    alreadyPresent = True
-                    break
+                if vecRef.sec.name() == sec.name():
+                    if vecRef.vecs.has_key(var):
+                        alreadyPresent = True
+                        break
              
             if not alreadyPresent:
                 
@@ -199,23 +200,39 @@ class Visio():
                 vec.record(getattr(sec(0.5), varRef))
                 
                 # Adding to the list
-                self.vecRefs.append(VecRef(var, vec, sec))
+                vecRef = VecRef(sec)
+                vecRef.vecs[var] = vec
+                self.vecRefs.append(vecRef)
                 success = True
                 
+        print "Alreadypresent: %s Success:%s" %(alreadyPresent, success)
         return success
     
     def addAllVecRef(self, var):
         """Create the vector for all the section with the given variable"""
+        done = False
+        responses = []
         for sec in h.allsec():
-            self.addVecRef(var, sec)
+            response = self.addVecRef(var, sec)
+            responses.append(response)
+        # If all the responses are False it means we already
+        # created all the vecs and we are done    
+        if any(responses) == False: #all False we're done
+            done = True
+        return done
+                
+        
 
 class VecRef(object):
-    
-    def __init__(self, var, vec, sec):
-        self.var = var
-        self.vec = vec
+    """Basic class to associate one or more vectors with a section"""
+    def __init__(self, sec):
+        # section
         self.sec = sec
-    
+        #Dict with all the vecs
+        # Key: var Value: Hoc.Vector
+        self.vecs = {}
+        
+        
     def info(self):
         print "Var: %s Vec: %s SecName: %s" %(self.var, self.vec, self.sec.name())
     
