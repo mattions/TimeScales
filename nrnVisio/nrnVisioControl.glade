@@ -196,7 +196,14 @@ Vector</property>
                   </packing>
                 </child>
                 <child>
-                  <placeholder/>
+                  <object class="GtkTreeView" id="vecs_tree">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="model">vecs_tree</property>
+                  </object>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
                 </child>
               </object>
               <packing>
@@ -229,5 +236,11 @@ Vector</property>
         </child>
       </object>
     </child>
+  </object>
+  <object class="GtkTreeStore" id="vecs_tree">
+    <columns>
+      <!-- column-name section -->
+      <column type="gchar"/>
+    </columns>
   </object>
 </interface>
