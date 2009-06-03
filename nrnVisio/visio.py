@@ -204,8 +204,7 @@ class Visio():
                 vecRef.vecs[var] = vec
                 self.vecRefs.append(vecRef)
                 success = True
-                
-        print "Alreadypresent: %s Success:%s" %(alreadyPresent, success)
+        
         return success
     
     def addAllVecRef(self, var):

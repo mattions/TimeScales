@@ -2,6 +2,12 @@
 <interface>
   <requires lib="gtk+" version="2.16"/>
   <!-- interface-naming-policy project-wide -->
+  <object class="GtkTreeStore" id="treestore">
+    <columns>
+      <!-- column-name sectionCol -->
+      <column type="gchararray"/>
+    </columns>
+  </object>
   <object class="GtkWindow" id="window">
     <property name="title" translatable="yes">nrnVisio Controls</property>
     <property name="default_width">400</property>
@@ -12,7 +18,7 @@
         <property name="visible">True</property>
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkMenuBar" id="menubar1">
+          <object class="GtkMenuBar" id="menubar">
             <property name="visible">True</property>
             <child>
               <object class="GtkMenuItem" id="menuitem1">
@@ -250,14 +256,21 @@ Vector</property>
                     <child>
                       <object class="GtkTreeView" id="treeview">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
                         <property name="model">treestore</property>
-                        <property name="hadjustment">adjustment1</property>
-                        <property name="vadjustment">adjustment1</property>
-                        <property name="expander_column">treeviewcolumn</property>
+                        <property name="headers_clickable">False</property>
                         <child>
-                          <object class="GtkTreeViewColumn" id="treeviewcolumn">
-                            <property name="title">Vectors per Section</property>
+                          <object class="GtkTreeViewColumn" id="sectionCol">
+                            <property name="sizing">autosize</property>
+                            <property name="title">Section</property>
+                            <property name="sort_indicator">True</property>
+                            <child>
+                              <object class="GtkCellRendererText" id="sectionCell"/>
+                              <attributes>
+                                <attribute name="text">0</attribute>
+                                <attribute name="width-chars">10</attribute>
+                                <attribute name="wrap-width">10</attribute>
+                              </attributes>
+                            </child>
                           </object>
                         </child>
                       </object>
@@ -299,12 +312,6 @@ Vector</property>
       </object>
     </child>
   </object>
-  <object class="GtkTreeStore" id="treestore">
-    <columns>
-      <!-- column-name section -->
-      <column type="gchararray"/>
-    </columns>
-  </object>
   <object class="GtkAboutDialog" id="aboutdialog">
     <property name="border_width">5</property>
     <property name="type_hint">normal</property>
@@ -334,12 +341,6 @@ Vector</property>
         </child>
       </object>
     </child>
-  </object>
-  <object class="GtkAdjustment" id="adjustment1">
-    <property name="upper">100</property>
-    <property name="step_increment">1</property>
-    <property name="page_increment">10</property>
-    <property name="page_size">10</property>
   </object>
   <object class="GtkMessageDialog" id="novarwarning">
     <property name="border_width">5</property>

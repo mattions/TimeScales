@@ -25,6 +25,7 @@ class Controls(threading.Thread):
                                            "nrnVisioControl.glade"))
         self.builder.connect_signals(self)
         self.window = self.builder.get_object("window")
+        self.treestore = self.builder.get_object("treestore")
         self.visio = visio.Visio()
         self.window.show()
  
@@ -46,8 +47,8 @@ class Controls(threading.Thread):
         visio instance"""
         
         #print "You should kill visio window by yourself for now.\n"
-#        self.visio.display.hide()
-#        self.window.hide()
+#        self.visio.scene.hide()
+#        self.visio = None
         gtk.main_quit()    
         
     def on_drag_clicked(self, btn, data=None):
@@ -112,8 +113,8 @@ class Controls(threading.Thread):
                         impossible_creation = self.builder.get_object("impossiblecreation")
                         impossible_creation.run()
                         impossible_creation.hide()
-#                    else:
-#                        self._update_tree_view()
+                    else:
+                        self._update_tree_view()
                         
             elif allSection_radio_btn.get_active():
                 
@@ -125,18 +126,22 @@ class Controls(threading.Thread):
                     all_created_dial = self.builder.get_object("allvecscreated") 
                     all_created_dial.run()
                     all_created_dial.hide()
-#                else:
-#                    self._update_tree_view()
+                else:
+                    self._update_tree_view()
         
         
                     
     def _update_tree_view(self):
         # Fill the treeview wit all the vectors created
-        treestore = self.builder.get_object("treestore")
+        #Clear all the row
+        self.treestore.clear()
+        
+        # Add all the vectors
         for vecRef in self.visio.vecRefs:
-                parent = treestore.append(None, sec.name())
-                for k,v in vecRef.vecs.iteritems():
-                    treestore.append(parent, k)
+            sec = vecRef.sec
+            sec_iter = self.treestore.append(None, [sec.name()])
+            for var,vec in vecRef.vecs.iteritems():
+                self.treestore.append(sec_iter, [var])
     
     def on_about_activate(self, widget, data=None):
         """About dialogue pop up"""
