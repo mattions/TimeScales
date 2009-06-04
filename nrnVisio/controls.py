@@ -8,6 +8,8 @@ import visio
 import threading
 import gobject
 import os
+import pylab
+import numpy
 
 class Controls(threading.Thread):
     """Main GTK control window. create a control object and start with
@@ -26,6 +28,7 @@ class Controls(threading.Thread):
         self.builder.connect_signals(self)
         self.window = self.builder.get_object("window")
         self.treestore = self.builder.get_object("treestore")
+        self.sectionCol = 0 # Defined in Glade 
         self.visio = visio.Visio()
         self.window.show()
  
@@ -92,6 +95,9 @@ class Controls(threading.Thread):
             no_var_warning.hide()
 
         else:
+            if self.visio.t is None: # Create the time vector if not already there
+                self.visio.t = self.visio.h.Vector()
+                self.visio.t.record(self.visio.h._ref_t)
             # Grab the section
             selectedSection_radio_btn = self.builder.get_object("selected_sec_btn")
             
@@ -117,11 +123,8 @@ class Controls(threading.Thread):
                         self._update_tree_view()
                         
             elif allSection_radio_btn.get_active():
-                
                 # Create all the vectors
                 allCreated = self.visio.addAllVecRef(var)
-                
-                #  
                 if allCreated:
                     all_created_dial = self.builder.get_object("allvecscreated") 
                     all_created_dial.run()
@@ -153,6 +156,71 @@ class Controls(threading.Thread):
         """Running the gtk loop in our thread"""
         gtk.main()
     
+    def on_plot_clicked(self, widget, data=None):
+        """Create a plot of the selected vector"""
+        treeview = self.builder.get_object("treeview")
+        treeselection = treeview.get_selection()
+        
+        #Nothing selected
+        if treeselection.count_selected_rows() == 0:
+            no_vec_selected = self.builder.get_object("novecselected")
+            no_vec_selected.run()
+            no_vec_selected.hide()
+        
+        else:
+            # Retrieving the selection
+            (treestore, pathlist) = treeselection.get_selected_rows()
+            # Cicling through all the selection
+            vecs_to_plot = {}
+            var = ""
+            for path in pathlist:
+                iter = treestore.get_iter(path)
+                var = treestore.get_value(iter, self.sectionCol)
+                parent = treestore.iter_parent(iter) 
+                if parent is None:
+                    no_vec_selected = self.builder.get_object("novecselected")
+                    no_vec_selected.run()
+                    no_vec_selected.hide()
+                    return # Out of the method.
+                else:
+                    # Retrieve the correct vecRef
+                    sectionName = treestore.get_value(parent, self.sectionCol)
+                    print sectionName
+                    # get the vecRef
+                    
+                    for vecRef in self.visio.vecRefs:
+                        sec = vecRef.sec
+                        print "SectionName vecRef: %s" %sec.name()
+                        if sec.name() == sectionName:
+                            # get the vec
+                            vec = vecRef.vecs[var]
+                            
+                            vecs_to_plot[sec.name()] = vec  
+                            break # Out of the inner loop
+            
+            #plot it
+            print vecs_to_plot, var
+            self.plotVecs(vecs_to_plot, var, legend=True)
+            pylab.show() # Freeze the gui FIXME (spawn a new thread for pylab)
+
+    def plotVecs(self, vecs_dic, var, legend=True):
+        """Plot the vectors with pylab
+        :param:
+            vecs_dic - dictionary with section name as k and the vec obj as value
+            var - Which variable we are plotting. Used to put the unit in the graph
+            legend - boolean. If True the legend is plotted"""
+        for sec_name, vec in vecs_dic.iteritems():
+            
+            if legend:
+                pylab.plot(self.visio.t, vec, label=sec_name)
+            else:
+                pylab.plot(self.visio.t, vec)
+        pylab.xlabel("Time [ms]")
+        
+        if var == 'v':
+            pylab.ylabel("Voltage [mV]")
+            
+        
 
 
 

@@ -18,6 +18,7 @@ class Visio():
         self.selectedCylColor = (0,0,1) #blue
         self.defaultColor = (1,1,1) #light gray
         self.h = h # Link to the neuron interpreter
+        self.t = None # Var to track the time Vector
 
         
         
