@@ -11,6 +11,15 @@ import os
 import pylab
 import numpy
 
+from matplotlib.figure import Figure
+# uncomment to select /GTK/GTKAgg/GTKCairo
+#from matplotlib.backends.backend_gtk import FigureCanvasGTK as FigureCanvas
+#from matplotlib.backends.backend_gtkagg import FigureCanvasGTKAgg as FigureCanvas
+from matplotlib.backends.backend_gtkcairo import FigureCanvasGTKCairo as FigureCanvas
+
+
+
+
 class Controls(threading.Thread):
     """Main GTK control window. create a control object and start with
     controls.start()"""
@@ -201,7 +210,6 @@ class Controls(threading.Thread):
             #plot it
             print vecs_to_plot, var
             self.plotVecs(vecs_to_plot, var, legend=True)
-            pylab.show() # Freeze the gui FIXME (spawn a new thread for pylab)
 
     def plotVecs(self, vecs_dic, var, legend=True):
         """Plot the vectors with pylab
@@ -209,20 +217,40 @@ class Controls(threading.Thread):
             vecs_dic - dictionary with section name as k and the vec obj as value
             var - Which variable we are plotting. Used to put the unit in the graph
             legend - boolean. If True the legend is plotted"""
+        figure = Figure(figsize=(5,4), dpi=100)
+        area = figure.add_subplot(111) # One subplot where to draw everything
+         
         for sec_name, vec in vecs_dic.iteritems():
             
             if legend:
-                pylab.plot(self.visio.t, vec, label=sec_name)
+                area.plot(self.visio.t, vec, label=sec_name)
             else:
-                pylab.plot(self.visio.t, vec)
-        pylab.xlabel("Time [ms]")
+                area.plot(self.visio.t, vec)
+#        area.xlabel("Time [ms]")
+#        
+#        if var == 'v':
+#            area.ylabel("Voltage [mV]")
+
+        # Figure ready. Let's create a window and show it
+        self.pylab_win(figure)
+
         
-        if var == 'v':
-            pylab.ylabel("Voltage [mV]")
             
+    def pylab_win(self, figure):
+        """Create a pylab window with the provided figure"""
         
-
-
+        win = gtk.Window()
+        
+        self.pylab_win = win # Need a reference to close the win later.
+        win.connect("destroy", lambda x: self.pylab_win.hide())
+        
+        win.set_default_size(400,300)
+        win.set_title("Embedding in GTK")
+        canvas = FigureCanvas(figure)  # a gtk.DrawingArea
+        win.add(canvas)
+        win.show_all()
+        
+        
 
 # We start the threads here
 gobject.threads_init()
