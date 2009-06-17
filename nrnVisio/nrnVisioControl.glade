@@ -551,4 +551,13 @@
       </object>
     </child>
   </object>
+  <object class="GtkWindow" id="pylab_win">
+    <property name="title" translatable="yes">Pylab window</property>
+    <property name="default_width">400</property>
+    <property name="default_height">300</property>
+    <signal name="destroy" handler="on_pylab_win_destroy" object="hide()"/>
+    <child>
+      <placeholder/>
+    </child>
+  </object>
 </interface>

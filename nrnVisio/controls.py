@@ -11,11 +11,15 @@ import os
 import pylab
 import numpy
 
-from matplotlib.figure import Figure
-# uncomment to select /GTK/GTKAgg/GTKCairo
-#from matplotlib.backends.backend_gtk import FigureCanvasGTK as FigureCanvas
-#from matplotlib.backends.backend_gtkagg import FigureCanvasGTKAgg as FigureCanvas
-from matplotlib.backends.backend_gtkcairo import FigureCanvasGTKCairo as FigureCanvas
+try:
+    
+    from matplotlib.figure import Figure
+    # uncomment to select /GTK/GTKAgg/GTKCairo
+    #from matplotlib.backends.backend_gtk import FigureCanvasGTK as FigureCanvas
+    #from matplotlib.backends.backend_gtkagg import FigureCanvasGTKAgg as FigureCanvas
+    from matplotlib.backends.backend_gtkcairo import FigureCanvasGTKCairo as FigureCanvas
+except:
+    print "matlab and cairo backend not available"
 
 
 
@@ -194,12 +198,12 @@ class Controls(threading.Thread):
                 else:
                     # Retrieve the correct vecRef
                     sectionName = treestore.get_value(parent, self.sectionCol)
-                    print sectionName
+                    #print sectionName
                     # get the vecRef
                     
                     for vecRef in self.visio.vecRefs:
                         sec = vecRef.sec
-                        print "SectionName vecRef: %s" %sec.name()
+                        #print "SectionName vecRef: %s" %sec.name()
                         if sec.name() == sectionName:
                             # get the vec
                             vec = vecRef.vecs[var]
@@ -208,7 +212,7 @@ class Controls(threading.Thread):
                             break # Out of the inner loop
             
             #plot it
-            print vecs_to_plot, var
+            #print vecs_to_plot, var
             self.plotVecs(vecs_to_plot, var, legend=True)
 
     def plotVecs(self, vecs_dic, var, legend=True):
@@ -239,13 +243,14 @@ class Controls(threading.Thread):
     def pylab_win(self, figure):
         """Create a pylab window with the provided figure"""
         
-        win = gtk.Window()
+        win = self.builder.get_object("pylab_win")
         
-        self.pylab_win = win # Need a reference to close the win later.
-        win.connect("destroy", lambda x: self.pylab_win.hide())
+        # We need to get the old widget
         
-        win.set_default_size(400,300)
-        win.set_title("Embedding in GTK")
+        # Destroy it
+        
+        # Put the new one.
+        
         canvas = FigureCanvas(figure)  # a gtk.DrawingArea
         win.add(canvas)
         win.show_all()
