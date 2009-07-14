@@ -10,6 +10,7 @@ class Synapse():
         self.type = type
         self.section = section
         self.chan = self.createChannel(type, position)
+        self.synVecs = None # Space for the vecs of the synapse
         
     def createChannel(self, type, position):
         """Create the NMDA or AMPA channel"""
@@ -56,6 +57,10 @@ class Synapse():
         
         # Record the current into the synaptic chan 
         synVecs["i"] = h.Vector()
-        synVecs["i"].record(self.chan._ref_i) 
+        synVecs["i"].record(self.chan._ref_i)
+        
+        # Record the weight
+        synVecs['weight'] = []
     
         return synVecs
+        
