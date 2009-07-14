@@ -160,7 +160,6 @@ def testChangeCalciumValue(interval, caValue, filename="../biochemical_circuits/
         
 if __name__ == "__main__":
     
-    from ioHelper import *
     import os
     from optparse import OptionParser
     usage= "usage: %prog [options] interval calciumValue.\n\
@@ -190,13 +189,14 @@ if __name__ == "__main__":
         print "Switching backend to Agg. Batch execution"
     import pylab
     import helpers     
-    loader = helpers.Loader(prefix=os.getcwd())
+    loader = helpers.Loader()
 
     ecellManager = testChangeCalciumValue(interval, caValue)
     #ecellManager = testCalciumTrain()
     
     if options.save == True:
-        dir = loader.saveObj(ecellManager.timeCourses, "timeCourses")
+        dir = loader.create_new_dir(prefix=os.getcwd())
+        loader.saveObj(ecellManager.timeCourses,  dir, "timeCourses")
         ecellManager.plotTimeCourses(save=options.save, dir=dir)
         f = open(os.path.join(dir, 'log.txt'), 'w') 
         f.write("Test of the supply of the calcium to the biochemical model\n\

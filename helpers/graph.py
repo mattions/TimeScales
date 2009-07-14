@@ -146,21 +146,3 @@ class Graph:
         for spine in spine_sibilings:
             vecs = self.createVecs(vecs, spine, varToRecord)
         return vecs
-    
-    
-    def __getParent(self, sec, tree):
-        sec.push()
-        secRef = h.SectionRef()
-        if secRef.has_parent():
-            parentSeg = secRef.parent()
-            parentSec = parentSeg.sec
-            tree.append(parentSec)
-            tree = self.__getParent(parentSec, tree)
-        return tree
-    
-    def createTree(self, sec):
-        "Return the minimal tree of section Using the given section as the last leave"
-        tree = []
-        tree.append(sec)
-        tree = self.__getParent(sec, tree)
-        return tree
