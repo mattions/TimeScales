@@ -6,17 +6,19 @@ import cPickle
 import datetime
 import numpy
 
-class Loader():
-    
-    def __init__(self, prefix="./"):
+class Loader(object):
+    def __init__(self):
         
-        self.dirRoot = os.path.join(prefix, "Sims")
+        self.dirRoot = None 
         
     
-    def createSaveDir(self):
+    
+    def create_new_dir(self, prefix="./"):
         """
             Create the directory where to put the simulation
         """
+        self.dirRoot = os.path.join(prefix, "Sims")
+        
         today = datetime.date.today()
         free = False
         index = 0
@@ -35,20 +37,24 @@ class Loader():
                 os.makedirs(dir)
         return dir
     
-    def saveObj(self, obj, name):
+    def save(self, obj, dir, name):
+        """ Save The object in binary form with the given name
         
-        """ Save results of the simulation. only the logger"""
-        dir = self.createSaveDir()
+        params:
+        obj - The python object
+        name - the name to give to the saved object"""
+        
         filepath = os.path.join (dir, name)
         FILE = open(filepath, 'w')
         cPickle.dump(obj, FILE, 1)
         FILE.close()
         print "Python object saved in %s" %os.path.abspath(filepath)
-        return dir
     
-    def loadObj(self, filename):
+    def load(self, filename):
+        """Load the python object into memory from the filename
         
-        """Load the ecellManager into memory"""
+        params:
+        filename - path to the binary python object"""
         
         FILE = open(filename, 'r')
         obj = cPickle.load(FILE)
@@ -56,20 +62,9 @@ class Loader():
         print "loaded file %s" %os.path.abspath(filename)
         return obj
     
-    def convertToNumpy(self, vecDict):
+    def convert_to_numpy(self, vecDict):
         """Convert a dictionary of Hoc Vectors into one of Numpy Vecs"""
         vecsNu = {}
         for k,v in vecDict.iteritems():
             vecsNu[k] = numpy.array(v)
         return vecsNu
-    
-if __name__ == "__main__":
-    import os
-    a= [1,2,3]
-    print "Test saving a list obj: %s" %a
-    l = Loader()
-    filename = "list.pickle"
-    dir = l.saveObj(a, filename)
-    loaded = l.loadObj(os.path.join(dir, filename))
-    print "Loaded Obj: %s" %loaded
-    print "Is the same object? %s" %(a == loaded)
