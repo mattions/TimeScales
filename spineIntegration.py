@@ -3,9 +3,10 @@
 
 from neuron import h
 from neuronControl import nrnSim, synapse
-from helpers import graph, loader
+from helpers.loader import Loader
 import numpy
 import logging
+from nrnVisio.manager import Manager
 
 
 
@@ -26,6 +27,24 @@ def convertCalcium(cai, vol=1e-15):
     
     return numberOfMoleculs
 
+
+
+
+def update_calcium_spines(spine_head_vec, var, ca_sampling_interval):
+    """Update the calcium taking it from the NEURON section to the ecell compartment
+        
+        params:
+        spine_head_vec - vec recording calcium concentration
+        var - Name of the variable recording the calcium
+        ca_sampling_interval - Interval to use to sync the electrical concentration \
+        with the biochemical.
+    """
+    electrical_ca = spine_head_vec[var].x[-1] 
+    spine.ecellMan.ca['Value'] = electrical_ca
+    spine.ecellMan.ses.run(ca_sampling_interval)
+    print "Equilibrium for spine: %s, dend: %s, bio sim time: \
+    %f" % (spine.head.name(), spine.parent.name(),
+           spine.ecellMan.ses.getCurrentTime())
 
 
 
@@ -57,6 +76,14 @@ if __name__ == "__main__":
                   help= "Fixed interval used to sample the calcium concentration in the Neuron world and\
                    pass it to the biochemical simulator. i.e.:0.020")
     
+    parser.add_option("--spines", action="store_true", default=False, 
+                  help= "Instantiate the spines in the model. Without this option no spine is created")
+    
+    parser.add_option("--biochemical", action="store_true", default=False, 
+                  help= "Run the model with the biochemical \
+                  integrator in each spine.")
+    
+    
     
     (options, args) = parser.parse_args()
     
@@ -80,95 +107,91 @@ if __name__ == "__main__":
     
     hoc_path = "hoc"
     mod_path="mod"
+    
     nrnSim = neuronControl.NeuronSim(mod_path=mod_path, hoc_path=hoc_path, 
-                              spines=True, biochemical=options.biochemical)
-    #------------------------------------------------------------------------------ 
-    graph = graph.Graph()
+                              spines=options.spines, 
+                              biochemical=options.biochemical,
+                              biochemical_filename="biochemical_circuits/biomd183.eml") 
+
+    # Creating the Vecs
     
-    vecsVolt = {}
-    vecsCai = {}
-    vecsCali = {}
-    vecsiCa = {}
+    variables_to_rec = ['v', 'cai', 'cali', 'ica']
     
+    manager = Manager()
+    if options.spines == True:
+        for spine in nrnSim.spines:
+            sections_list = manager.get_tree(spine.neck)
+            for sec in sections_list:
+                for var in variables_to_rec:
+                    manager.add_vecRef(var, sec)
     
-    # Set the stimuls to the synapses
-    
+    # Set the stimuls to the synapses    
     # For now hardcoded than we have to decide _how_ give the input. 
     
-    for spine in neuronSim.spines:
+    for spine in nrnSim.spines:
         ampaSyn = synapse.Synapse('ampa', spine.head)
         ampaSyn.createStimul(start = (tEquilibrium) * 1e3, # to convert in secs 
                              number = 10, 
                              interval = 10 # ms between the stimuli
                              ) 
         spine.synapses[ampaSyn.type] = ampaSyn
-        vecsVolt = graph.createVecs(vecsVolt, spine, 'v')
-        vecsCai = graph.createVecs(vecsCai, spine, 'cai')
-        vecsCali = graph.createVecs(vecsCali, spine, 'cali')
-        vecsiCa = graph.createVecs(vecsiCa, spine, 'ica')
-        
     
     #------------------------------------------------------------------------------ 
     # Equilibrium run
-    
-    
-    def updateSpines():
-        for spine in neuronSim.spines:
-            ca_from_NEURON = spine.vecs['ca'].x[-1] 
-            spine.ecellMan.ca['Value'] = ca_from_NEURON 
-            spine.ecellMan.ses.run(caSamplingInterval)
-            print "Equilibrium for spine: %s, dend: %s, bio sim time: \
-            %f" % (spine.head.name(), spine.parent.name(),
-                   spine.ecellMan.ses.getCurrentTime())
-            
-    for eventTimePoint in eventTimePoints:
-        event = Event(eventTimePoint, neuronSim)
         
     logger.debug("Running the system until equilibrium: %f" %tEquilibrium)
     nrnSim.initAndRun(tEquilibrium * 1e3) # NEURON use the millisecond as base unit
     logger.debug( "Equilibrium reached. Neuron time: %f" % h.t)
-    for spine in neuronSim.spines:
-        spine.ecellMan.ses.run(caSamplingInterval)
+    for spine in nrnSim.spines:
+        spine.ecellMan.ses.run(float (options.calciumSampling))
         logger.debug( "Equilibrium for spine: %s, dend: %s, bio sim time: %f" % (spine.head.name(), 
                                                                          spine.parent.name(),
                                                                          spine.ecellMan.ses.getCurrentTime()))
-    
-    
+        
     
     ##------------------------------------------------------------------------------ 
     ## Experiment
-    #
     
-    #
-    ## Back To Fix timeStep. We need to implement a variable algorithm to 
-    ## keep track of the changes
-    #cvode.active(0)
-    
-    #
-    weights_tracker = []
     while h.t < tStop:
         h.fadvance() # run Neuron for step
-        logger.debug( "Neuron time [ms]: %f, spines: %s" % ( neuronSim.h.t, neuronSim.spines))
+        logger.debug( "Neuron time [ms]: %f, spines: %s" % ( nrnSim.h.t, 
+                                                             nrnSim.spines))
         if numpy.round(h.t, decimals = 4) % 1 == 0: # for every ms in NEURON we update the ecellMan
-            for spine in neuronSim.spines:
-                
-                # Setting the calcium in the biochemical sim with the one from neuron
-                electrical_cal = spine.vecs['ca'].x[-1] 
-                spine.ecellMan.ca['Value'] = electrical_cal 
-                print "Ecell Time [s] %g: " %spine.ecellMan.ses.getCurrentTime() 
-                spine.ecellMan.ses.run(float (options.calciumSampling) )
-    #            
-    #            # getting the conc of the active CaMKII and set the weight of the synapse
+            
+            for spine in nrnSim.spines:
+                vec_spine_head = manager.get_vec(spine.head, 'cai')
+                update_calcium_spines(vec_spine_head, 'cai', 
+                                      float (options.calciumSampling)) 
+            
+            
+                # getting the conc of the active CaMKII and set the weight of the synapse
                 CaMKIIbar = spine.ecellMan.CaMKIIbar['Value']
                 weight = calcWeight(CaMKIIbar)
-    #            
-    #            # Updating the AMPA synapses
+                
+                # Updating the AMPA synapses
                 ampa = spine.synapses['ampa']
                 ampa.netCon.weight[0] = weight
-                weights_tracker.append(weight)
+                ampa.synVecs['weight'].append(weight)
     #            
         if numpy.round(h.t, decimals = 4) % 50 == 0: # printig every half sec
-                logger.debug( "Neuron time [ms]: %f, spines: %s" % ( h.t, neuronSim.spines))
+                logger.debug( "Neuron time [ms]: %f, spines: %s" % ( h.t, nrnSim.spines))
                 logger.debug( "Ecell Time [s] %g: " %spine.ecellMan.ses.getCurrentTime())
     #
-    #### Let's plot
+    
+    #------------------------------------
+    # Save the Results
+    loader = Loader()
+    saving_dir = loader.create_new_dir(prefix=os.getcwd())
+    # Convert manager to a pickable object
+    
+    #manager.vec_refs = loader.convert_to_numpy(manager.vec_refs)
+    loader.save(manager, saving_dir, "manager")
+    synapses_weight = {}
+    for spine in nrnSim.spines:
+        for synapse in spine.synapses:
+            key = synapse.type + "_" + synapse.section
+            synapses_weight[key] = synapse.synVecs['weight']
+    loader.save(synapses_weight, saving_dir, "synapses_weight")
+    
+    
+
