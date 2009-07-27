@@ -8,14 +8,6 @@ import os
 from synapse import Synapse
 import math
 
-
-class mySection(nrn.Section):
-    """Extend the Section object with the overriding then name"""
-    def __init__(self, id):
-        nrn.Section.__init__(self)
-        sec = h.Section()
-        self.id = id
-
 class Spine():
     """Class spine. Create a spine with head and neck"""
     
@@ -24,7 +16,7 @@ class Spine():
                  biochemical=True):
         """ Create a spine with a standard volume of ~0.11 um
         the h is the reference to the main hoc interpreter"""
-        self.id = id
+        self.id = 'spine' + str(id)
         self.neck = self.createNeck()
         self.head = self.createHead(self.neck)
         self.psd = self.createPSD(self.head)
@@ -45,7 +37,10 @@ class Spine():
         
     def createNeck(self):
         """ Create the neck with the Grunditz value"""
-        neck = mySection(self.id + "_neck")
+        name_sec = self.id + "_neck"
+        h("create " + name_sec)
+        neck = getattr(h, name_sec)
+
         neck.nseg = 3
         neck.L = 1.5 # um
         neck.diam = 0.1
@@ -64,7 +59,10 @@ class Spine():
         
     def createHead(self, neck):
         """Create the head of the spine and populate it with the right channels"""
-        head = mySection(self.id + "_head")
+        name_sec = self.id + "_head"
+        h("create " + name_sec)
+        head = getattr(h, name_sec)
+        
         vol = 0.11 #um
         head.L = 1
         head.diam = math.sqrt(vol / head.L * math.pi ) * 2
@@ -89,7 +87,10 @@ class Spine():
     def createPSD(self, head):
         """Create the Post Synaptic Density of the spine to model the different \
         location of the different channel"""
-        psd = mySection(self.id + "_psd")
+        name_sec = self.id + "_psd"
+        h("create " + name_sec)
+        psd = getattr(h, name_sec)
+        
         psd.L = 0.05        # um, Holmes & Levy 1990
         psd.diam = 0.5      # Wilson 1998 (Shepherd book)
         psd.Ra =100

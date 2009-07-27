@@ -103,10 +103,9 @@ class NeuronSim():
             for pos in spine_positions:
                 tmpName = sec.name()
                 tmpName = tmpName.split('.')[1] # Get rid of the MSP_Cell[0] prefix
-                
+                id = len (self.spines) + 1
                 # Instantiate the spine with the biochemical model
-                spine = Spine("spine" + "-" + tmpName + "-" + str(pos), 
-                              biochemical=self.biochemical, 
+                spine = Spine(id, biochemical=self.biochemical, 
                               filename_bioch_mod=self.biochemical_filename)
                 spine.attach(sec, pos, 0) # Attaching the spine in the right pos
                 self.spines.append(spine)
