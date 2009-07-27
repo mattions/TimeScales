@@ -47,6 +47,20 @@ def update_calcium_spines(spine_head_vec, var, ca_sampling_interval):
            spine.ecellMan.ses.getCurrentTime())
 
 
+def save_results(manager):
+    """Save the results in a directory"""
+    loader = Loader()
+    saving_dir = loader.create_new_dir(prefix=os.getcwd())
+    # Convert manager to a pickable object
+    pickable_vec_refs = manager.convert_vec_refs()
+    loader.save(pickable_vec_refs, saving_dir, "pickable_vec_refs")
+    
+#    synapses_weight = {}
+#    for spine in nrnSim.spines:
+#        for syn_name, syn_obj in spine.synapses.iteritems():
+#            key = synapse.type + "_" + synapse.section
+#            synapses_weight[key] = synapse.synVecs['weight']
+#    loader.save(synapses_weight, saving_dir, "synapses_weight")
 
 if __name__ == "__main__":
 
@@ -76,15 +90,6 @@ if __name__ == "__main__":
                   help= "Fixed interval used to sample the calcium concentration in the Neuron world and\
                    pass it to the biochemical simulator. i.e.:0.020")
     
-    parser.add_option("--spines", action="store_true", default=False, 
-                  help= "Instantiate the spines in the model. Without this option no spine is created")
-    
-    parser.add_option("--biochemical", action="store_true", default=False, 
-                  help= "Run the model with the biochemical \
-                  integrator in each spine.")
-    
-    
-    
     (options, args) = parser.parse_args()
     
     # Checking the correct num of args
@@ -109,8 +114,8 @@ if __name__ == "__main__":
     mod_path="mod"
     
     nrnSim = neuronControl.NeuronSim(mod_path=mod_path, hoc_path=hoc_path, 
-                              spines=options.spines, 
-                              biochemical=options.biochemical,
+                              spines=True, 
+                              biochemical=True,
                               biochemical_filename="biochemical_circuits/biomd183.eml") 
 
     # Creating the Vecs
@@ -118,12 +123,11 @@ if __name__ == "__main__":
     variables_to_rec = ['v', 'cai', 'cali', 'ica']
     
     manager = Manager()
-    if options.spines == True:
-        for spine in nrnSim.spines:
-            sections_list = manager.get_tree(spine.neck)
-            for sec in sections_list:
-                for var in variables_to_rec:
-                    manager.add_vecRef(var, sec)
+    for spine in nrnSim.spines:
+        sections_list = manager.get_tree(spine.neck)
+        for sec in sections_list:
+            for var in variables_to_rec:
+                manager.add_vecRef(var, sec)
     
     # Set the stimuls to the synapses    
     # For now hardcoded than we have to decide _how_ give the input. 
@@ -180,18 +184,10 @@ if __name__ == "__main__":
     
     #------------------------------------
     # Save the Results
-    loader = Loader()
-    saving_dir = loader.create_new_dir(prefix=os.getcwd())
-    # Convert manager to a pickable object
-    
-    #manager.vec_refs = loader.convert_to_numpy(manager.vec_refs)
-    loader.save(manager, saving_dir, "manager")
-    synapses_weight = {}
-    for spine in nrnSim.spines:
-        for synapse in spine.synapses:
-            key = synapse.type + "_" + synapse.section
-            synapses_weight[key] = synapse.synVecs['weight']
-    loader.save(synapses_weight, saving_dir, "synapses_weight")
+    print "Simulation Ended"
+    save_results(manager)
     
     
-
+    
+    
+    
