@@ -67,9 +67,7 @@ class NeuronSim():
     def init(self, v_init=-87.75):
         """Initialize the simulator"""
         h.v_init = v_init
-        h.fcurrent()
-        # Init the plotting system if required here
-
+        h.finitialize()
         
     def initAndRun(self, tStop):
         """Initialize and run the simulation until tStop""" 
