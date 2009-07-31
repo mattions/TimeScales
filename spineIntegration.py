@@ -1,11 +1,12 @@
 # Author Michele Mattioni
 # Wed Mar 18 17:51:51 GMT 2009
 
+import logging
+import numpy
 from neuron import h
+
 from neuronControl import nrnSim, synapse
 from helpers.loader import Loader
-import numpy
-import logging
 from nrnVisio.manager import Manager
 
 
@@ -26,9 +27,6 @@ def convertCalcium(cai, vol=1e-15):
     numberOfMoleculs = math.round(numberOfMoleculs)
     
     return numberOfMoleculs
-
-
-
 
 def update_calcium_spines(spine_head_vec, var, ca_sampling_interval):
     """Update the calcium taking it from the NEURON section to the ecell compartment
@@ -118,7 +116,21 @@ if __name__ == "__main__":
                               biochemical=True,
                               biochemical_filename="biochemical_circuits/biomd183.eml") 
 
-    # Creating the Vecs
+    # Set the stimuls to the synapses    
+    # For now hardcoded than we have to decide _how_ give the input. 
+    for spine in nrnSim.spines:
+        for synapse in spine.synapses:
+            if synapse.type == 'ampa':
+                synapse.createStimul(start = (tEquilibrium) * 1e3, # to convert in secs 
+                             number = 10, 
+                             interval = 10 # ms between the stimuli
+                             )
+
+    #==========
+    # Recording 
+    #==========
+
+    # Recording the sections
     
     variables_to_rec = ['v', 'cai', 'cali', 'ica']
     
@@ -129,17 +141,13 @@ if __name__ == "__main__":
             for var in variables_to_rec:
                 manager.add_vecRef(var, sec)
     
-    # Set the stimuls to the synapses    
-    # For now hardcoded than we have to decide _how_ give the input. 
     
+    # Recording the synapses
     for spine in nrnSim.spines:
-        ampaSyn = synapse.Synapse('ampa', spine.head)
-        ampaSyn.createStimul(start = (tEquilibrium) * 1e3, # to convert in secs 
-                             number = 10, 
-                             interval = 10 # ms between the stimuli
-                             ) 
-        spine.synapses[ampaSyn.type] = ampaSyn
+        for syn in spine.synapses:
+            synVec = manager.add_synVecRef(syn)
     
+        
     #------------------------------------------------------------------------------ 
     # Equilibrium run
         
@@ -186,8 +194,3 @@ if __name__ == "__main__":
     # Save the Results
     print "Simulation Ended"
     save_results(manager)
-    
-    
-    
-    
-    
