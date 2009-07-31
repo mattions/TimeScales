@@ -9,7 +9,9 @@ from synapse import Synapse
 import math
 
 class Spine():
-    """Class spine. Create a spine with head and neck"""
+    """
+    Class spine. Create a spine with head neck and psd
+    """
     
     def __init__(self, id, 
                  filename_bioch_mod="../biochemical_circuits/biomd183_noCalcium.eml",
@@ -21,7 +23,7 @@ class Spine():
         self.head = self.createHead(self.neck)
         self.psd = self.createPSD(self.head)
         self.parent = None # the parent section connected to the neck
-        self.synapses = self.createSynapses() # Dict to save the pointer to the synapses
+        self.synapses = self.createSynapses()
         
         # Setting up the biochemical simulator
         if biochemical:
@@ -111,17 +113,14 @@ class Spine():
         "Create an AMPA and an NMDA synapse in the spine"
         synapses = {}
         # AMPA Syn
-        
         ampaSyn = Synapse('ampa', self.psd)
-        ampaSyn.createStimul()
         synapses['ampa'] = ampaSyn
         
         #NMDA Syn
         nmdaSyn = Synapse('nmda', self.psd)
-        nmdaSyn.createStimul()
         synapses['nmda'] = nmdaSyn
         
-        return synapses    
+        return synapses
     
     def attach(self, parentSec, parentx, childx):
         """Attach a spine to a parentSec and store the parentSec into an attribute.
