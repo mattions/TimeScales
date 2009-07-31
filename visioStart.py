@@ -1,6 +1,6 @@
-import nrnVisio
+import nrnvisio
 from neuron import h
-controls = nrnVisio.Controls()
+controls = nrnvisio.Controls()
 import neuronControl
 nrnSim = neuronControl.NeuronSim(mod_path="mod", hoc_path="hoc", 
                               spines=True, biochemical=False, 

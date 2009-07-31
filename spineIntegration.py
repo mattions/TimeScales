@@ -7,7 +7,7 @@ from neuron import h
 
 from neuronControl import nrnSim, synapse
 from helpers.loader import Loader
-from nrnVisio.manager import Manager
+from nrnvisio.manager import Manager
 
 
 

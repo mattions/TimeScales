@@ -41,7 +41,7 @@ class Graph:
         if len (key.split('.')) > 1:
             key = key.split('.')[1] # Get rid of the MSP_Cell[0] prefix
         else:
-            key = section.id # Custom section 
+            key = section.name() 
             
         key = key + "_" + var    
         if hasattr(section(0.5), var):
@@ -94,8 +94,7 @@ class Graph:
 
     
     def plotCalcium(self, vecsCa, var):
-        
-        "Plot the calcium current (both together or only one)"
+        """Plot the calcium current (both together or only one)"""
         pylab.figure()
         for key,vec in vecsCa.iteritems():
             if var in key:
@@ -115,7 +114,14 @@ class Graph:
         
     def vecsSubSelection(self, vecs, nameOfInterest, matching=True):
       
-        "Return a vecs containing only the vecs that have the nameOfInterest in the key"
+        """Return a dictionary which is a subset of the given one, 
+        chosen in the matching of the namenOfInterest
+        
+        :param vecs: Dictionary from where to extract the subset
+        :param nameOfInterest: key to be matched
+        :param matching: If set to true the record is included, 
+        otherwise it's excluded and all the non matching are included."""
+        
         matchingKeys = []
         notMatchingKeys = []
         keys = vecs.keys()

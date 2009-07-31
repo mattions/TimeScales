@@ -137,14 +137,20 @@ class Spine():
         return tot_surf
         
 if __name__ == "__main__":
-    from spine import *
-    from synapse import *
-    from neuron import h
-    import neuron
-    from helpers import graph
+    import os
     import numpy
     import pylab
-    import os
+    
+    from neuron import h
+    import neuron
+    import nrnvisio
+
+    from spine import *
+    from synapse import *
+    from helpers import graph
+    
+    # Starting neuronVisio
+    controls = nrnvisio.Controls()
     
     mod_path = "../mod"
     hoc_path = "../hoc"
@@ -167,42 +173,51 @@ if __name__ == "__main__":
     preface_string = "preface = \"" + preface_pos + "\""
     h(preface_string)
     h.load_file(os.path.join(hoc_path, "all_tau_vecs.hoc"))
+    h.load_file('stdrun.hoc')
         
     print "Testing the spine. Current directory %s" %os.getcwd()
-    spine1 = Spine("spine1", 
+    spine1 = Spine("1", 
                    filename_bioch_mod ="../biochemical_circuits/biomd183_noCalcium.eml")
     
     # AMPA Syn
     ampaSyn = spine1.synapses['ampa']
-    ampaSyn.netStim.start = 200
-    ampaSyn.netStim.number = 1
-    ampaSyn.netStim.interval = 5
-    ampaSyn.netStim.noise = 0
+    ampaSyn.createStimul(start = 200, number = 5, interval = 5, noise = 0)
     
     #NMDA Syn
     
 
-    # Plotting stuff
-    
+    # Vectors
+    manager = nrnvisio.Manager()
+    vars = ['v', #voltage 
+            'cai', #first calcium pool
+            'cali' #second calcium pool
+            ]
+    for var in vars:
+        manager.add_all_vecRef(var)
+        
     graph = graph.Graph()
-    vecs = {}
-    vecs = graph.createVecs(vecs, spine1, "cai")
-    vecs = graph.createVecs(vecs, spine1, "cali")
     
-    vecsVolt = {}
-    vecsVolt = graph.createVecs(vecsVolt, spine1, "v")
-    
-    
-    import neuron.gui
+    #import neuron.gui
     h.v_init = -87.75 # Setting the initial vm
     h.dt = 0.005
     
-    h.tstop = 400
-    h.run()
-    graph.plotCalcium(vecs, "cai")
-    graph.plotCalcium(vecs, "cali")
-    graph.plotVoltage(vecsVolt, spine1.synapses['ampa'].synVecs)
-    pylab.title("AMPA syn")
-    graph.plotVoltage(vecsVolt, spine1.synapses['nmda'].synVecs)
-    pylab.title("NMDA syn")
-    pylab.show()
+    h.tstop = 300
+#    h.run()
+#    secs = [spine1.neck, spine1.head, spine1.psd]
+#    cai_vecs = []
+#    cali_vecs = []
+#    for sec in secs:
+#        cai_vec = manager.get_vector(sec, 'cai')
+#        cai_vecs.append(cai_vec)
+#        cali_vec = manager.get_vector(sec, 'cali')
+#        cali_vec.append(cali_vec)
+#        
+#    graph.plotCalcium(cai_vecs, "cai")
+#    graph.plotCalcium(cali_vecs, "cali")
+#    vecs_volt = graph.vecsSubSelection(manager.vecRefs, 'v')
+#    graph.plotVoltage(vecsVolt)
+##    graph.plotVoltage(vecsVolt, spine1.synapses['ampa'].synVecs)
+##    pylab.title("AMPA syn")
+###    graph.plotVoltage(vecsVolt, spine1.synapses['nmda'].synVecs)
+##    pylab.title("NMDA syn")
+#    pylab.show()

@@ -10,7 +10,7 @@ class Synapse(object):
         
         self.chan_type = chan_type
         self.section = section
-        self.chan = self.createChannel(type, position) 
+        self.chan = self.createChannel(chan_type, position) 
         
     def createChannel(self, chan_type, position):
         """Create the NMDA or AMPA channel"""
@@ -19,7 +19,7 @@ class Synapse(object):
         elif chan_type == 'nmda':
             chan = h.NMDA(position, sec = self.section)
             
-        return chan        
+        return chan    
     
     def createStimul(self, start=0, number=0, interval=0, noise=0):
         """Create a netStim object and assign it to the synapse together with 
