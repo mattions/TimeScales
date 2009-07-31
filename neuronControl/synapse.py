@@ -3,20 +3,20 @@
 
 from neuron import h
 
-class Synapse():
+class Synapse(object):
+    """Synapse object class. Usually created in the spine"""
     
-    def __init__(self, type, section, position=0.5):
+    def __init__(self, chan_type, section, position=0.5):
         
-        self.type = type
+        self.chan_type = chan_type
         self.section = section
-        self.chan = self.createChannel(type, position)
-        self.synVecs = None # Space for the vecs of the synapse
+        self.chan = self.createChannel(type, position) 
         
-    def createChannel(self, type, position):
+    def createChannel(self, chan_type, position):
         """Create the NMDA or AMPA channel"""
-        if type == 'ampa':
+        if chan_type == 'ampa':
             chan = h.AMPA(position, sec = self.section)
-        elif type == 'nmda':
+        elif chan_type == 'nmda':
             chan = h.NMDA(position, sec = self.section)
             
         return chan        
@@ -42,25 +42,3 @@ class Synapse():
         netCon = h.NetCon(netStim, self.chan)
         netCon.weight[0] = 1
         self.netCon = netCon # assign the point to the class as attribute
-        
-        # Create handy vectors
-        self.synVecs = self.createVecs()
-    
-    def createVecs(self):
-        """Create the vector to measure the activity of the synapse"""
-    
-        synVecs = {}
-        
-        # Record the stimuls
-        synVecs["stimul"] = h.Vector()
-        self.netCon.record(synVecs["stimul"]) 
-        
-        # Record the current into the synaptic chan 
-        synVecs["i"] = h.Vector()
-        synVecs["i"].record(self.chan._ref_i)
-        
-        # Record the weight
-        synVecs['weight'] = []
-    
-        return synVecs
-        
