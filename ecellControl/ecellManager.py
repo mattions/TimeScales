@@ -196,7 +196,7 @@ if __name__ == "__main__":
     
     if options.save == True:
         dir = loader.create_new_dir(prefix=os.getcwd())
-        loader.saveObj(ecellManager.timeCourses,  dir, "timeCourses")
+        loader.save(ecellManager.timeCourses,  dir, "timeCourses")
         ecellManager.plotTimeCourses(save=options.save, dir=dir)
         f = open(os.path.join(dir, 'log.txt'), 'w') 
         f.write("Test of the supply of the calcium to the biochemical model\n\
