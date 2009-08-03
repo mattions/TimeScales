@@ -29,6 +29,12 @@ class Spine():
         if biochemical:
             self.ecellMan = self.setupBioSim(filename_bioch_mod)
         
+        # Reset ions
+        h.cai0_ca_ion = 0.001        #// mM, Churchill 1998
+        h.cao0_ca_ion = 5            #// mM, Churchill 1998 - gives eca = 100 mV
+        h.cali0_cal_ion = 0.001        #// mM, Churchill 1998
+        h.calo0_cal_ion = 5            #// mM, Churchill 1998 - gives eca = 100 mVh.cao0_ca_ion = 
+        
     def setupBioSim(self, filename):
         """Initialize the Biochemical Simulator creating the instance of 
         the object to control the simulation"""
@@ -141,9 +147,10 @@ if __name__ == "__main__":
     import numpy
     import pylab
     
+    import nrnvisio
     from neuron import h
     import neuron
-    import nrnvisio
+    
 
     from spine import *
     from synapse import *
@@ -174,8 +181,6 @@ if __name__ == "__main__":
     h(preface_string)
     h.load_file(os.path.join(hoc_path, "all_tau_vecs.hoc"))
     h.load_file('stdrun.hoc')
-        
-    print "Testing the spine. Current directory %s" %os.getcwd()
     spine1 = Spine("1", 
                    filename_bioch_mod ="../biochemical_circuits/biomd183_noCalcium.eml")
     
@@ -187,15 +192,15 @@ if __name__ == "__main__":
     
 
     # Vectors
-    manager = nrnvisio.Manager()
-    vars = ['v', #voltage 
-            'cai', #first calcium pool
-            'cali' #second calcium pool
-            ]
-    for var in vars:
-        manager.add_all_vecRef(var)
-        
-    graph = graph.Graph()
+#    manager = nrnvisio.Manager()
+#    vars = ['v', #voltage 
+#            'cai', #first calcium pool
+#            'cali' #second calcium pool
+#            ]
+#    for var in vars:
+#        manager.add_all_vecRef(var)
+#        
+#    graph = graph.Graph()
     
     #import neuron.gui
     h.v_init = -87.75 # Setting the initial vm
@@ -204,13 +209,16 @@ if __name__ == "__main__":
     h.tstop = 300
 #    h.run()
 #    secs = [spine1.neck, spine1.head, spine1.psd]
-#    cai_vecs = []
-#    cali_vecs = []
-#    for sec in secs:
-#        cai_vec = manager.get_vector(sec, 'cai')
-#        cai_vecs.append(cai_vec)
-#        cali_vec = manager.get_vector(sec, 'cali')
-#        cali_vec.append(cali_vec)
+#        
+#    cai_vecs = manager.get_vectors(secs, 'cai')
+#    cali_vecs = manager.get_vectors(secs, 'cali')
+#    v_vecs = manager.get_vectors(secs, 'v')
+#    
+#    manager.plotVecs(cai_vecs, 'cai')
+#    manager.plotVecs(cali_vecs, 'cali')
+#    manager.plotVecs(cali_vecs, 'v')
+    
+
 #        
 #    graph.plotCalcium(cai_vecs, "cai")
 #    graph.plotCalcium(cali_vecs, "cali")
