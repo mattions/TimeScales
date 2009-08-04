@@ -59,6 +59,13 @@ class VisualizerBiochemical(object):
         if self.save :
             pylab.savefig(os.path.join(self.directory, "caInput.png"))
             print "figure saved in: %s" % os.path.join(self.directory, "caInput.png")
+            #zoom 1
+            pylab.xlim((149.8, 151))
+            pylab.savefig(os.path.join(self.directory, "caInput_zoom1.png"))
+            #zoom 2
+            pylab.xlim((160.0, 161.0))
+            pylab.ylim((6,15))
+            pylab.savefig(os.path.join(self.directory, "caInput_zoom2.png"))
         
         bars = ['PP2Bbar', 'CaMKIIbar']
         pylab.figure()
