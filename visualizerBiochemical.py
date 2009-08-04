@@ -76,6 +76,9 @@ class VisualizerBiochemical(object):
             print "figure saved in: %s" % os.path.join(self.directory, "PP2B_and_CaMKII_activation.png")
         else:
             pylab.show()
+    
+    def write_interval(self, interval):
+        open(os.path.join(self.directory, interval), 'w')
         
     def main(self):
         """Run the application"""
@@ -83,6 +86,7 @@ class VisualizerBiochemical(object):
         if success:
             interval = self.scanfile()
             self.plotTimeCourses(interval)
+            self.write_interval(interval)
 
 if __name__ == "__main__":
     from optparse import OptionParser
