@@ -21,10 +21,18 @@ class VisualizerBiochemical(object):
         
         self.directory = directory
         self.save = save
-        l = helpers.Loader()
-        self.timeCourses = l.load(os.path.join(self.directory, 'timeCourses'))
-        ## Setting the mat plotlib backend
         
+    def loadTimecourse(self):
+        """Load the timecourses numpy object"""
+        l = helpers.Loader()
+        success = True
+        try:
+            self.timeCourses = l.load(os.path.join(self.directory, 'timeCourses'))
+        except IOError:
+            success = False
+            print "IMPORT ERROR: timeCourse not well formed.\
+             Skipping %s" % self.directory
+        return success
         
     def scanfile(self, file='log.txt'):
         """scan the file to get the interval
@@ -71,8 +79,10 @@ class VisualizerBiochemical(object):
         
     def main(self):
         """Run the application"""
-        interval = self.scanfile()
-        self.plotTimeCourses(interval)
+        success = self.loadTimecourse()
+        if success:
+            interval = self.scanfile()
+            self.plotTimeCourses(interval)
 
 if __name__ == "__main__":
     from optparse import OptionParser
