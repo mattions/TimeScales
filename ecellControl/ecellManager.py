@@ -65,13 +65,15 @@ class EcellManager():
                          )
             self.ses.run(interval)
     
-    def plotTimeCourses(self, save=False, dir=None):
+    def plotTimeCourses(self, interval, save=False, dir=None):
         """Plot the default timecourses"""
         ca_tc = self.timeCourses['ca'] 
         pylab.figure()
         pylab.plot(ca_tc[:,0], ca_tc[:,1], label="Calcium")
         pylab.xlabel("Time [s]")
         pylab.legend(loc=0)
+        title = "Flux of Calcium Interval: %s [s]" %interval
+        pylab.title(title)
         
         if save :
             pylab.savefig(os.path.join(dir, "caInput.png"))
@@ -84,10 +86,13 @@ class EcellManager():
             pylab.plot(bar_tc[:,0], bar_tc[:,1], label=bar)
             pylab.xlabel("Time [s]")
             pylab.legend(loc=0)
+            title = "Flux of Calcium Interval: %s [s]" %interval
+            pylab.title(title)
         
         if save :
             pylab.savefig(os.path.join(dir, "PP2B_and_CaMKII_activation.png"))
-            print "figure saved in: %s" % os.path.join(dir, "PP2B_and_CaMKII_activation.png")
+            print "figure saved in: %s" % os.path.join(dir, 
+                                                       "PP2B_and_CaMKII_activation.png")
         else:
             pylab.show()
         
@@ -197,7 +202,7 @@ if __name__ == "__main__":
     if options.save == True:
         dir = loader.create_new_dir(prefix=os.getcwd())
         loader.save(ecellManager.timeCourses,  dir, "timeCourses")
-        ecellManager.plotTimeCourses(save=options.save, dir=dir)
+        ecellManager.plotTimeCourses(interval, save=options.save, dir=dir)
         f = open(os.path.join(dir, 'log.txt'), 'w') 
         f.write("Test of the supply of the calcium to the biochemical model\n\
         Interval used in this simulation: %f\n" % (interval))
