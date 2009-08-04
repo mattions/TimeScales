@@ -4,7 +4,6 @@
 import re
 import os
 
-#matplotlib backed defined in a top script
 import pylab
 
 import helpers
@@ -37,7 +36,8 @@ class VisualizerBiochemical(object):
         return interval
     
     def plotTimeCourses(self, interval=None):
-        """Plot the default timecourses"""
+        """Plot the default timecourses
+        :param interval: Used in the title"""
         ca_tc = self.timeCourses['ca'] 
         pylab.figure()
         pylab.plot(ca_tc[:,0], ca_tc[:,1], label="Calcium")
