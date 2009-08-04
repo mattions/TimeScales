@@ -3,7 +3,7 @@
 
 
 
-class Visualizer():
+class Visualizer(object):
     
     def __init__(self, graphObj):
         import helpers 
@@ -19,8 +19,6 @@ class Visualizer():
         # Saving the spines results
         spinesVecs = self.g.vecsSubSelection(self.g.vecs, "head")
         self.g.plotVoltage(spinesVecs, drawLegend=False)
-        
-        
     
     
 if __name__ == "__main__":
