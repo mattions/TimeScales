@@ -65,15 +65,16 @@ class EcellManager():
                          )
             self.ses.run(interval)
     
-    def plotTimeCourses(self, interval, save=False, dir=None):
+    def plotTimeCourses(self, interval=None, save=False, dir=None):
         """Plot the default timecourses"""
         ca_tc = self.timeCourses['ca'] 
         pylab.figure()
         pylab.plot(ca_tc[:,0], ca_tc[:,1], label="Calcium")
         pylab.xlabel("Time [s]")
         pylab.legend(loc=0)
-        title = "Flux of Calcium Interval: %s [s]" %interval
-        pylab.title(title)
+        if interval is not None:
+            title = "Flux of Calcium Interval: %s [s]" %interval
+            pylab.title(title)
         
         if save :
             pylab.savefig(os.path.join(dir, "caInput.png"))
@@ -86,8 +87,9 @@ class EcellManager():
             pylab.plot(bar_tc[:,0], bar_tc[:,1], label=bar)
             pylab.xlabel("Time [s]")
             pylab.legend(loc=0)
-            title = "Flux of Calcium Interval: %s [s]" %interval
-            pylab.title(title)
+            if interval is not None:
+                title = "Flux of Calcium Interval: %s [s]" %interval
+                pylab.title(title)
         
         if save :
             pylab.savefig(os.path.join(dir, "PP2B_and_CaMKII_activation.png"))
@@ -118,7 +120,7 @@ def testCalciumTrain(filename="../biochemical_circuits/biomd183.eml"):
     print "Model loaded, loggers created. Integration start."
     ecellManager.ses.run(200)
     print "Calcium Train"
-    ecellManager.calciumTrain()
+    ecellManager.calciumTrain(spikes=5, interval=0.005)
     ecellManager.ses.run(400)
     ecellManager.converToTimeCourses()
     print "CalciumTrain Test Concluded\n##################"
@@ -196,8 +198,8 @@ if __name__ == "__main__":
     import helpers     
     loader = helpers.Loader()
 
-    ecellManager = testChangeCalciumValue(interval, caValue)
-    #ecellManager = testCalciumTrain()
+    #ecellManager = testChangeCalciumValue(interval, caValue)
+    ecellManager = testCalciumTrain()
     
     if options.save == True:
         dir = loader.create_new_dir(prefix=os.getcwd())
