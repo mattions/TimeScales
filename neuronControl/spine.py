@@ -1,12 +1,13 @@
 # Author: Michele Mattioni
 # Mon Jan 26 05:54:30 GMT 2009
 
+import math
+
 from neuron import h, nrn
+
 import ecellControl as eC
-import math
-import os
 from synapse import Synapse
-import math
+
 
 class Spine():
     """
@@ -141,18 +142,17 @@ class Spine():
         tot_surf = surface_head_cyl + surface_neck_cyl
         
         return tot_surf
-        
+
 if __name__ == "__main__":
+    
+    import nrnvisio
     import os
     import numpy
     import pylab
     
-    import nrnvisio
     from neuron import h
     import neuron
     
-
-    from spine import *
     from synapse import *
     from helpers import graph
     
@@ -229,3 +229,4 @@ if __name__ == "__main__":
 ###    graph.plotVoltage(vecsVolt, spine1.synapses['nmda'].synVecs)
 ##    pylab.title("NMDA syn")
 #    pylab.show()
+
