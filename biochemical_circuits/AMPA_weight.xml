@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sbml xmlns="http://www.sbml.org/sbml/level2" xmlns:celldesigner="http://www.sbml.org/2001/ns/celldesigner" level="2" version="1">
-<model id="AMPA_weight">
+<sbml xmlns="http://www.sbml.org/sbml/level2/version4" xmlns:celldesigner="http://www.sbml.org/2001/ns/celldesigner" level="2" version="4">
+<model metaid="AMPA_weight" id="AMPA_weight">
 <annotation>
+<celldesigner:extension>
 <celldesigner:modelVersion>4.0</celldesigner:modelVersion>
 <celldesigner:modelDisplay sizeX="800" sizeY="800"/>
 <celldesigner:listOfIncludedSpecies>
@@ -33,7 +34,7 @@
 </celldesigner:speciesIdentity>
 </celldesigner:annotation>
 </celldesigner:species>
-<celldesigner:species id="s56" name="CamKII">
+<celldesigner:species id="s56" name="CaMKII">
 <celldesigner:notes>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <body/>
@@ -82,6 +83,7 @@
 <celldesigner:singleLine width="2.0"/>
 <celldesigner:paint color="fff7f7f7" scheme="Color"/>
 </celldesigner:briefView>
+<celldesigner:info state="empty" angle="-1.5707963267948966"/>
 </celldesigner:complexSpeciesAlias>
 <celldesigner:complexSpeciesAlias id="csa6" species="s55">
 <celldesigner:activity>active</celldesigner:activity>
@@ -101,6 +103,7 @@
 <celldesigner:singleLine width="2.0"/>
 <celldesigner:paint color="fff7f7f7" scheme="Color"/>
 </celldesigner:briefView>
+<celldesigner:info state="empty" angle="-1.5707963267948966"/>
 </celldesigner:complexSpeciesAlias>
 </celldesigner:listOfComplexSpeciesAliases>
 <celldesigner:listOfSpeciesAliases>
@@ -120,6 +123,7 @@
 <celldesigner:singleLine width="1.0"/>
 <celldesigner:paint color="3fff0000" scheme="Color"/>
 </celldesigner:briefView>
+<celldesigner:info state="empty" angle="-1.5707963267948966"/>
 </celldesigner:speciesAlias>
 <celldesigner:speciesAlias id="sa15" species="s18">
 <celldesigner:activity>inactive</celldesigner:activity>
@@ -137,6 +141,7 @@
 <celldesigner:singleLine width="1.0"/>
 <celldesigner:paint color="3fff0000" scheme="Color"/>
 </celldesigner:briefView>
+<celldesigner:info state="empty" angle="-1.5707963267948966"/>
 </celldesigner:speciesAlias>
 <celldesigner:speciesAlias id="sa16" species="s56" complexSpeciesAlias="csa6">
 <celldesigner:activity>inactive</celldesigner:activity>
@@ -154,6 +159,7 @@
 <celldesigner:singleLine width="1.0"/>
 <celldesigner:paint color="3fff0000" scheme="Color"/>
 </celldesigner:briefView>
+<celldesigner:info state="empty" angle="-1.5707963267948966"/>
 </celldesigner:speciesAlias>
 <celldesigner:speciesAlias id="sa18" species="s17">
 <celldesigner:activity>inactive</celldesigner:activity>
@@ -171,6 +177,7 @@
 <celldesigner:singleLine width="1.0"/>
 <celldesigner:paint color="3fff0000" scheme="Color"/>
 </celldesigner:briefView>
+<celldesigner:info state="empty" angle="-1.5707963267948966"/>
 </celldesigner:speciesAlias>
 <celldesigner:speciesAlias id="sa19" species="s17">
 <celldesigner:activity>active</celldesigner:activity>
@@ -188,6 +195,7 @@
 <celldesigner:singleLine width="1.0"/>
 <celldesigner:paint color="3fff0000" scheme="Color"/>
 </celldesigner:briefView>
+<celldesigner:info state="empty" angle="-1.5707963267948966"/>
 </celldesigner:speciesAlias>
 <celldesigner:speciesAlias id="sa21" species="s19">
 <celldesigner:activity>inactive</celldesigner:activity>
@@ -205,6 +213,7 @@
 <celldesigner:singleLine width="1.0"/>
 <celldesigner:paint color="3fff0000" scheme="Color"/>
 </celldesigner:briefView>
+<celldesigner:info state="empty" angle="-1.5707963267948966"/>
 </celldesigner:speciesAlias>
 <celldesigner:speciesAlias id="sa23" species="s19">
 <celldesigner:activity>inactive</celldesigner:activity>
@@ -222,6 +231,7 @@
 <celldesigner:singleLine width="1.0"/>
 <celldesigner:paint color="3fff0000" scheme="Color"/>
 </celldesigner:briefView>
+<celldesigner:info state="empty" angle="-1.5707963267948966"/>
 </celldesigner:speciesAlias>
 <celldesigner:speciesAlias id="sa29" species="s22">
 <celldesigner:activity>inactive</celldesigner:activity>
@@ -239,6 +249,7 @@
 <celldesigner:singleLine width="1.0"/>
 <celldesigner:paint color="3fff0000" scheme="Color"/>
 </celldesigner:briefView>
+<celldesigner:info state="empty" angle="-1.5707963267948966"/>
 </celldesigner:speciesAlias>
 <celldesigner:speciesAlias id="sa30" species="s53" complexSpeciesAlias="csa5">
 <celldesigner:activity>inactive</celldesigner:activity>
@@ -256,6 +267,7 @@
 <celldesigner:singleLine width="1.0"/>
 <celldesigner:paint color="3fff0000" scheme="Color"/>
 </celldesigner:briefView>
+<celldesigner:info state="empty" angle="-1.5707963267948966"/>
 </celldesigner:speciesAlias>
 <celldesigner:speciesAlias id="sa36" species="s27">
 <celldesigner:activity>active</celldesigner:activity>
@@ -273,6 +285,7 @@
 <celldesigner:singleLine width="1.0"/>
 <celldesigner:paint color="3fff0000" scheme="Color"/>
 </celldesigner:briefView>
+<celldesigner:info state="empty" angle="-1.5707963267948966"/>
 </celldesigner:speciesAlias>
 <celldesigner:speciesAlias id="sa35" species="s27">
 <celldesigner:activity>inactive</celldesigner:activity>
@@ -290,6 +303,7 @@
 <celldesigner:singleLine width="1.0"/>
 <celldesigner:paint color="3fff0000" scheme="Color"/>
 </celldesigner:briefView>
+<celldesigner:info state="empty" angle="-1.5707963267948966"/>
 </celldesigner:speciesAlias>
 <celldesigner:speciesAlias id="sa55" species="s54" complexSpeciesAlias="csa5">
 <celldesigner:activity>inactive</celldesigner:activity>
@@ -307,6 +321,7 @@
 <celldesigner:singleLine width="1.0"/>
 <celldesigner:paint color="3fff0000" scheme="Color"/>
 </celldesigner:briefView>
+<celldesigner:info state="empty" angle="-1.5707963267948966"/>
 </celldesigner:speciesAlias>
 <celldesigner:speciesAlias id="sa60" species="s57" complexSpeciesAlias="csa6">
 <celldesigner:activity>inactive</celldesigner:activity>
@@ -324,6 +339,7 @@
 <celldesigner:singleLine width="1.0"/>
 <celldesigner:paint color="3fff0000" scheme="Color"/>
 </celldesigner:briefView>
+<celldesigner:info state="empty" angle="-1.5707963267948966"/>
 </celldesigner:speciesAlias>
 <celldesigner:speciesAlias id="sa62" species="s59">
 <celldesigner:activity>inactive</celldesigner:activity>
@@ -338,15 +354,16 @@
 <celldesigner:briefView>
 <celldesigner:innerPosition x="0.0" y="0.0"/>
 <celldesigner:boxSize width="80.0" height="60.0"/>
-<celldesigner:singleLine width="0.0"/>
+<celldesigner:singleLine width="1.0"/>
 <celldesigner:paint color="3fff0000" scheme="Color"/>
 </celldesigner:briefView>
+<celldesigner:info state="empty" angle="-1.5707963267948966"/>
 </celldesigner:speciesAlias>
 </celldesigner:listOfSpeciesAliases>
 <celldesigner:listOfGroups/>
 <celldesigner:listOfProteins>
 <celldesigner:protein id="pr12" name="Calmodulin" type="GENERIC"/>
-<celldesigner:protein id="pr10" name="CamKII" type="GENERIC"/>
+<celldesigner:protein id="pr10" name="CaMKII" type="GENERIC"/>
 <celldesigner:protein id="pr14" name="AMPA" type="ION_CHANNEL"/>
 <celldesigner:protein id="pr15" name="PP2B" type="GENERIC"/>
 <celldesigner:protein id="pr19" name="PP1" type="GENERIC"/>
@@ -412,13 +429,42 @@ This is the Fernandez Model Part
 <celldesigner:listOfInternalLinksInBlockDiagram/>
 </celldesigner:blockDiagram>
 </celldesigner:listOfBlockDiagrams>
+</celldesigner:extension>
 </annotation>
+<listOfUnitDefinitions>
+<unitDefinition id="substance" name="substance">
+<listOfUnits>
+<unit kind="mole"/>
+</listOfUnits>
+</unitDefinition>
+<unitDefinition id="volume" name="volume">
+<listOfUnits>
+<unit kind="litre"/>
+</listOfUnits>
+</unitDefinition>
+<unitDefinition id="area" name="area">
+<listOfUnits>
+<unit kind="metre" exponent="2"/>
+</listOfUnits>
+</unitDefinition>
+<unitDefinition id="length" name="length">
+<listOfUnits>
+<unit kind="metre"/>
+</listOfUnits>
+</unitDefinition>
+<unitDefinition id="time" name="time">
+<listOfUnits>
+<unit kind="second"/>
+</listOfUnits>
+</unitDefinition>
+</listOfUnitDefinitions>
 <listOfCompartments>
-<compartment id="default" size="1"/>
+<compartment id="default" size="1" units="volume"/>
 </listOfCompartments>
 <listOfSpecies>
 <species id="s4" name="Ca" compartment="default" initialAmount="0">
 <annotation>
+<celldesigner:extension>
 <celldesigner:positionToCompartment>inside</celldesigner:positionToCompartment>
 <celldesigner:speciesIdentity>
 <celldesigner:class>ION</celldesigner:class>
@@ -427,46 +473,56 @@ This is the Fernandez Model Part
 <celldesigner:listOfCatalyzedReactions>
 <celldesigner:catalyzed reaction="re9"/>
 </celldesigner:listOfCatalyzedReactions>
+</celldesigner:extension>
 </annotation>
 </species>
 <species id="s17" name="Calmodulin" compartment="default" initialAmount="0">
 <annotation>
+<celldesigner:extension>
 <celldesigner:positionToCompartment>inside</celldesigner:positionToCompartment>
 <celldesigner:speciesIdentity>
 <celldesigner:class>PROTEIN</celldesigner:class>
 <celldesigner:proteinReference>pr12</celldesigner:proteinReference>
 </celldesigner:speciesIdentity>
+</celldesigner:extension>
 </annotation>
 </species>
-<species id="s18" name="CamKII" compartment="default" initialAmount="0">
+<species id="s18" name="CaMKII" compartment="default" initialAmount="0">
 <annotation>
+<celldesigner:extension>
 <celldesigner:positionToCompartment>inside</celldesigner:positionToCompartment>
 <celldesigner:speciesIdentity>
 <celldesigner:class>PROTEIN</celldesigner:class>
 <celldesigner:proteinReference>pr10</celldesigner:proteinReference>
 </celldesigner:speciesIdentity>
+</celldesigner:extension>
 </annotation>
 </species>
 <species id="s19" name="AMPA" compartment="default" initialAmount="0">
 <annotation>
+<celldesigner:extension>
 <celldesigner:positionToCompartment>inside</celldesigner:positionToCompartment>
 <celldesigner:speciesIdentity>
 <celldesigner:class>PROTEIN</celldesigner:class>
 <celldesigner:proteinReference>pr14</celldesigner:proteinReference>
 </celldesigner:speciesIdentity>
+</celldesigner:extension>
 </annotation>
 </species>
 <species id="s22" name="PP2B" compartment="default" initialAmount="0">
 <annotation>
+<celldesigner:extension>
 <celldesigner:positionToCompartment>inside</celldesigner:positionToCompartment>
 <celldesigner:speciesIdentity>
 <celldesigner:class>PROTEIN</celldesigner:class>
 <celldesigner:proteinReference>pr15</celldesigner:proteinReference>
 </celldesigner:speciesIdentity>
+</celldesigner:extension>
 </annotation>
 </species>
 <species id="s27" name="PP1" compartment="default" initialAmount="0">
 <annotation>
+<celldesigner:extension>
 <celldesigner:positionToCompartment>inside</celldesigner:positionToCompartment>
 <celldesigner:speciesIdentity>
 <celldesigner:class>PROTEIN</celldesigner:class>
@@ -475,10 +531,12 @@ This is the Fernandez Model Part
 <celldesigner:listOfCatalyzedReactions>
 <celldesigner:catalyzed reaction="re22"/>
 </celldesigner:listOfCatalyzedReactions>
+</celldesigner:extension>
 </annotation>
 </species>
 <species id="s52" name="s52" compartment="default" initialAmount="0">
 <annotation>
+<celldesigner:extension>
 <celldesigner:positionToCompartment>inside</celldesigner:positionToCompartment>
 <celldesigner:speciesIdentity>
 <celldesigner:class>COMPLEX</celldesigner:class>
@@ -487,10 +545,12 @@ This is the Fernandez Model Part
 <celldesigner:listOfCatalyzedReactions>
 <celldesigner:catalyzed reaction="re13"/>
 </celldesigner:listOfCatalyzedReactions>
+</celldesigner:extension>
 </annotation>
 </species>
 <species id="s55" name="s55" compartment="default" initialAmount="0">
 <annotation>
+<celldesigner:extension>
 <celldesigner:positionToCompartment>inside</celldesigner:positionToCompartment>
 <celldesigner:speciesIdentity>
 <celldesigner:class>COMPLEX</celldesigner:class>
@@ -499,10 +559,12 @@ This is the Fernandez Model Part
 <celldesigner:listOfCatalyzedReactions>
 <celldesigner:catalyzed reaction="re10"/>
 </celldesigner:listOfCatalyzedReactions>
+</celldesigner:extension>
 </annotation>
 </species>
 <species id="s59" name="DARPP-32" compartment="default" initialAmount="0">
 <annotation>
+<celldesigner:extension>
 <celldesigner:positionToCompartment>inside</celldesigner:positionToCompartment>
 <celldesigner:speciesIdentity>
 <celldesigner:class>PROTEIN</celldesigner:class>
@@ -519,12 +581,14 @@ This is the Fernandez Model Part
 <celldesigner:listOfCatalyzedReactions>
 <celldesigner:catalyzed reaction="re13"/>
 </celldesigner:listOfCatalyzedReactions>
+</celldesigner:extension>
 </annotation>
 </species>
 </listOfSpecies>
 <listOfReactions>
 <reaction id="re9" reversible="false">
 <annotation>
+<celldesigner:extension>
 <celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
 <celldesigner:baseReactants>
 <celldesigner:baseReactant species="s17" alias="sa18">
@@ -555,31 +619,39 @@ This is the Fernandez Model Part
 <celldesigner:line width="1.0" color="ff000000"/>
 </celldesigner:modification>
 </celldesigner:listOfModification>
+</celldesigner:extension>
 </annotation>
 <listOfReactants>
 <speciesReference species="s17">
 <annotation>
+<celldesigner:extension>
 <celldesigner:alias>sa18</celldesigner:alias>
+</celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
 <speciesReference species="s17">
 <annotation>
+<celldesigner:extension>
 <celldesigner:alias>sa19</celldesigner:alias>
+</celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
 <listOfModifiers>
 <modifierSpeciesReference species="s4">
 <annotation>
+<celldesigner:extension>
 <celldesigner:alias>sa4</celldesigner:alias>
+</celldesigner:extension>
 </annotation>
 </modifierSpeciesReference>
 </listOfModifiers>
 </reaction>
 <reaction id="re10" reversible="false">
 <annotation>
+<celldesigner:extension>
 <celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
 <celldesigner:baseReactants>
 <celldesigner:baseReactant species="s19" alias="sa21">
@@ -610,31 +682,39 @@ This is the Fernandez Model Part
 <celldesigner:line width="1.0" color="ff000000"/>
 </celldesigner:modification>
 </celldesigner:listOfModification>
+</celldesigner:extension>
 </annotation>
 <listOfReactants>
 <speciesReference species="s19">
 <annotation>
+<celldesigner:extension>
 <celldesigner:alias>sa21</celldesigner:alias>
+</celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
 <speciesReference species="s19">
 <annotation>
+<celldesigner:extension>
 <celldesigner:alias>sa23</celldesigner:alias>
+</celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
 <listOfModifiers>
 <modifierSpeciesReference species="s55">
 <annotation>
+<celldesigner:extension>
 <celldesigner:alias>csa6</celldesigner:alias>
+</celldesigner:extension>
 </annotation>
 </modifierSpeciesReference>
 </listOfModifiers>
 </reaction>
 <reaction id="re13" reversible="false">
 <annotation>
+<celldesigner:extension>
 <celldesigner:reactionType>STATE_TRANSITION</celldesigner:reactionType>
 <celldesigner:baseReactants>
 <celldesigner:baseReactant species="s27" alias="sa35">
@@ -676,36 +756,46 @@ This is the Fernandez Model Part
 <celldesigner:line width="1.0" color="ff000000"/>
 </celldesigner:modification>
 </celldesigner:listOfModification>
+</celldesigner:extension>
 </annotation>
 <listOfReactants>
 <speciesReference species="s27">
 <annotation>
+<celldesigner:extension>
 <celldesigner:alias>sa35</celldesigner:alias>
+</celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
 <speciesReference species="s27">
 <annotation>
+<celldesigner:extension>
 <celldesigner:alias>sa36</celldesigner:alias>
+</celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
 <listOfModifiers>
 <modifierSpeciesReference species="s52">
 <annotation>
+<celldesigner:extension>
 <celldesigner:alias>csa5</celldesigner:alias>
+</celldesigner:extension>
 </annotation>
 </modifierSpeciesReference>
 <modifierSpeciesReference species="s59">
 <annotation>
+<celldesigner:extension>
 <celldesigner:alias>sa62</celldesigner:alias>
+</celldesigner:extension>
 </annotation>
 </modifierSpeciesReference>
 </listOfModifiers>
 </reaction>
 <reaction id="re20" reversible="false">
 <annotation>
+<celldesigner:extension>
 <celldesigner:reactionType>HETERODIMER_ASSOCIATION</celldesigner:reactionType>
 <celldesigner:baseReactants>
 <celldesigner:baseReactant species="s17" alias="sa19">
@@ -729,29 +819,37 @@ This is the Fernandez Model Part
 </celldesigner:connectScheme>
 <celldesigner:editPoints num0="0" num1="0" num2="0" tShapeIndex="0">0.5384615384615389,0.4038461538461533</celldesigner:editPoints>
 <celldesigner:line width="1.0" color="ff000000"/>
+</celldesigner:extension>
 </annotation>
 <listOfReactants>
 <speciesReference species="s17">
 <annotation>
+<celldesigner:extension>
 <celldesigner:alias>sa19</celldesigner:alias>
+</celldesigner:extension>
 </annotation>
 </speciesReference>
 <speciesReference species="s22">
 <annotation>
+<celldesigner:extension>
 <celldesigner:alias>sa29</celldesigner:alias>
+</celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
 <speciesReference species="s52">
 <annotation>
+<celldesigner:extension>
 <celldesigner:alias>csa5</celldesigner:alias>
+</celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
 </reaction>
 <reaction id="re22" reversible="false">
 <annotation>
+<celldesigner:extension>
 <celldesigner:reactionType>HETERODIMER_ASSOCIATION</celldesigner:reactionType>
 <celldesigner:baseReactants>
 <celldesigner:baseReactant species="s17" alias="sa19">
@@ -788,30 +886,39 @@ This is the Fernandez Model Part
 <celldesigner:line width="1.0" color="ff000000"/>
 </celldesigner:modification>
 </celldesigner:listOfModification>
+</celldesigner:extension>
 </annotation>
 <listOfReactants>
 <speciesReference species="s17">
 <annotation>
+<celldesigner:extension>
 <celldesigner:alias>sa19</celldesigner:alias>
+</celldesigner:extension>
 </annotation>
 </speciesReference>
 <speciesReference species="s18">
 <annotation>
+<celldesigner:extension>
 <celldesigner:alias>sa15</celldesigner:alias>
+</celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfReactants>
 <listOfProducts>
 <speciesReference species="s55">
 <annotation>
+<celldesigner:extension>
 <celldesigner:alias>csa6</celldesigner:alias>
+</celldesigner:extension>
 </annotation>
 </speciesReference>
 </listOfProducts>
 <listOfModifiers>
 <modifierSpeciesReference species="s27">
 <annotation>
+<celldesigner:extension>
 <celldesigner:alias>sa36</celldesigner:alias>
+</celldesigner:extension>
 </annotation>
 </modifierSpeciesReference>
 </listOfModifiers>
