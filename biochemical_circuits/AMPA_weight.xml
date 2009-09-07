@@ -87,7 +87,7 @@
 </celldesigner:complexSpeciesAlias>
 <celldesigner:complexSpeciesAlias id="csa6" species="s55">
 <celldesigner:activity>active</celldesigner:activity>
-<celldesigner:bounds x="373.0" y="253.0" w="100.0" h="120.0"/>
+<celldesigner:bounds x="376.0" y="257.0" w="100.0" h="120.0"/>
 <celldesigner:view state="usual"/>
 <celldesigner:backupSize w="0.0" h="0.0"/>
 <celldesigner:backupView state="none"/>
@@ -145,7 +145,7 @@
 </celldesigner:speciesAlias>
 <celldesigner:speciesAlias id="sa16" species="s56" complexSpeciesAlias="csa6">
 <celldesigner:activity>inactive</celldesigner:activity>
-<celldesigner:bounds x="384.0" y="258.0" w="80.0" h="40.0"/>
+<celldesigner:bounds x="387.0" y="262.0" w="80.0" h="40.0"/>
 <celldesigner:view state="usual"/>
 <celldesigner:usualView>
 <celldesigner:innerPosition x="11.0" y="5.0"/>
@@ -199,7 +199,7 @@
 </celldesigner:speciesAlias>
 <celldesigner:speciesAlias id="sa21" species="s19">
 <celldesigner:activity>inactive</celldesigner:activity>
-<celldesigner:bounds x="496.0" y="175.0" w="80.0" h="40.0"/>
+<celldesigner:bounds x="495.0" y="189.0" w="80.0" h="40.0"/>
 <celldesigner:view state="usual"/>
 <celldesigner:usualView>
 <celldesigner:innerPosition x="0.0" y="0.0"/>
@@ -217,7 +217,7 @@
 </celldesigner:speciesAlias>
 <celldesigner:speciesAlias id="sa23" species="s19">
 <celldesigner:activity>inactive</celldesigner:activity>
-<celldesigner:bounds x="494.0" y="337.0" w="80.0" h="40.0"/>
+<celldesigner:bounds x="492.0" y="344.0" w="80.0" h="40.0"/>
 <celldesigner:view state="usual"/>
 <celldesigner:usualView>
 <celldesigner:innerPosition x="0.0" y="0.0"/>
@@ -289,7 +289,7 @@
 </celldesigner:speciesAlias>
 <celldesigner:speciesAlias id="sa35" species="s27">
 <celldesigner:activity>inactive</celldesigner:activity>
-<celldesigner:bounds x="35.0" y="338.0" w="80.0" h="40.0"/>
+<celldesigner:bounds x="36.0" y="335.0" w="80.0" h="40.0"/>
 <celldesigner:view state="usual"/>
 <celldesigner:usualView>
 <celldesigner:innerPosition x="0.0" y="0.0"/>
@@ -325,7 +325,7 @@
 </celldesigner:speciesAlias>
 <celldesigner:speciesAlias id="sa60" species="s57" complexSpeciesAlias="csa6">
 <celldesigner:activity>inactive</celldesigner:activity>
-<celldesigner:bounds x="385.0" y="318.0" w="80.0" h="40.0"/>
+<celldesigner:bounds x="388.0" y="322.0" w="80.0" h="40.0"/>
 <celldesigner:view state="usual"/>
 <celldesigner:usualView>
 <celldesigner:innerPosition x="12.0" y="65.0"/>
@@ -779,7 +779,7 @@
 <celldesigner:lineDirection arm="2" index="0" value="unknown"/>
 </celldesigner:listOfLineDirection>
 </celldesigner:connectScheme>
-<celldesigner:editPoints num0="0" num1="0" num2="0" tShapeIndex="0">0.7146878856437684,0.2809157754010697</celldesigner:editPoints>
+<celldesigner:editPoints num0="0" num1="0" num2="0" tShapeIndex="0">0.6930899181186211,0.3032639002788259</celldesigner:editPoints>
 <celldesigner:line width="1.0" color="ff000000"/>
 <celldesigner:listOfModification>
 <celldesigner:modification type="INHIBITION" modifiers="s27" aliases="sa36" targetLineIndex="2,3">
