@@ -6,7 +6,7 @@ import numpy
 from neuron import h
 
 from neuronControl import nrnSim, synapse
-from helpers.loader import Loader
+from helpers import Loader, Storage
 from nrnvisio.manager import Manager
 
 
@@ -49,8 +49,21 @@ def save_results(manager):
     """Save the results in a directory"""
     loader = Loader()
     saving_dir = loader.create_new_dir(prefix=os.getcwd())
+    
+    # Storage object
+    storage  = Storage()
+    
     # Convert manager to a pickable object
     pickable_vec_refs = manager.convert_vec_refs()
+    storage.set_VecRefs(pickable_vec_refs)
+    
+    # get the timecourses
+    spine_timecourses = {}
+    for spine in nrnSim.spines:
+        spine.ecellMan.converToTimeCourses()
+        spine_timecourses[spine.id] = spine.ecellMan.timeCourses    
+    
+    
     loader.save(pickable_vec_refs, saving_dir, "pickable_vec_refs")
     
 #    synapses_weight = {}
@@ -120,14 +133,17 @@ if __name__ == "__main__":
     # For now hardcoded than we have to decide _how_ give the input. 
     for spine in nrnSim.spines:
         for synapse in spine.synapses:
-            if synapse.type == 'ampa':
+            if synapse.chan_type == 'ampa':
                 synapse.createStimul(start = (tEquilibrium) * 1e3, # to convert in secs 
                              number = 10, 
                              interval = 10 # ms between the stimuli
                              )
 
     #==========
-    # Recording 
+    # Recording
+    # - Variables in the section
+    # - Synaptic weight
+    # - Biochemical timecourse (done in the spines already)
     #==========
 
     # Recording the sections
@@ -143,9 +159,14 @@ if __name__ == "__main__":
     
     
     # Recording the synapses
+    
     for spine in nrnSim.spines:
+        
         for syn in spine.synapses:
             synVec = manager.add_synVecRef(syn)
+            
+    
+    
     
         
     #------------------------------------------------------------------------------ 
@@ -186,8 +207,10 @@ if __name__ == "__main__":
                 ampa.synVecs['weight'].append(weight)
     #            
         if numpy.round(h.t, decimals = 4) % 50 == 0: # printig every half sec
-                logger.debug( "Neuron time [ms]: %f, spines: %s" % ( h.t, nrnSim.spines))
-                logger.debug( "Ecell Time [s] %g: " %spine.ecellMan.ses.getCurrentTime())
+                logger.debug( "Neuron time [ms]: %f, spines: %s" 
+                              % ( h.t, nrnSim.spines))
+                logger.debug( "Ecell Time [s] %g: " 
+                              %spine.ecellMan.ses.getCurrentTime())
     #
     
     #------------------------------------

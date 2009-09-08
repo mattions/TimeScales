@@ -118,14 +118,14 @@ class Spine():
         
     def createSynapses(self):
         "Create an AMPA and an NMDA synapse in the spine"
-        synapses = {}
+        synapses = []
         # AMPA Syn
         ampaSyn = Synapse('ampa', self.psd)
-        synapses['ampa'] = ampaSyn
+        synapses.append(ampaSyn)
         
         #NMDA Syn
         nmdaSyn = Synapse('nmda', self.psd)
-        synapses['nmda'] = nmdaSyn
+        synapses.append(nmdaSyn)
         
         return synapses
     

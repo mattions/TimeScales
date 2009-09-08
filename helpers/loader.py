@@ -68,3 +68,20 @@ class Loader(object):
         for k,v in vecDict.iteritems():
             vecsNu[k] = numpy.array(v)
         return vecsNu
+    
+class Storage(object):
+    """Class to store in one place: the vecRef for the electrical,
+    the timecourses for the spines, the weight of the synapses"""
+    
+    def set_vecRefs(self, vecRefs):
+        """Set the vecRef in the class"""
+        self.vecRefs = vecRefs
+    
+    def set_timecourses(self, time_courses):
+        """Save the timecourses"""
+        self.time_courses = time_courses
+    
+    def set_synapses_weight(self, synapses_weight):
+        """Set the synapses weight"""
+        self.synapses_weight = synapses_weight
+     
