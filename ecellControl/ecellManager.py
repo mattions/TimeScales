@@ -32,7 +32,8 @@ class EcellManager():
         
         for mol in self.molToTrack:
             
-            loggers[mol]  = self.ses.createLoggerStub( "Variable:/Spine:" + mol + ":Value" )
+            loggers[mol]  = self.ses.createLoggerStub( "Variable:/Spine:" + mol 
+                                                       + ":Value" )
             loggers[mol].create() # This creat the Logger Object in the backend
         
         self.loggers = loggers
