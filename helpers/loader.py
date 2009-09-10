@@ -81,7 +81,7 @@ class Storage(object):
         """Save the timecourses"""
         self.time_courses = time_courses
     
-    def set_synapses_weight(self, synapses_weight):
+    def set_synVecRefs(self, synVecRefs):
         """Set the synapses weight"""
-        self.synapses_weight = synapses_weight
+        self.synVecRefs = synVecRefs
      

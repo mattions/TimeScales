@@ -7,15 +7,15 @@ from neuron import h
 
 from neuronControl import nrnSim, synapse
 from helpers import Loader, Storage
-from nrnvisio.manager import Manager
+from nrnvisio.manager import Manager, SynVecRef
 
 
 
-def calcWeight(CaMKIIbar, theta=10):
+def calcWeight(CaMKIIbar, n=2, k=4):
     """Calc the weight of the synapses according to the CaMKII"""
     
     # Dummy function should be changed
-    weight = 1 + (1 + math.pow(CaMKIIbar, theta)/k)
+    weight = 1 + (1 + math.pow(CaMKIIbar, n)/k)
     return weight
 
 
@@ -55,23 +55,22 @@ def save_results(manager):
     
     # Convert manager to a pickable object
     pickable_vec_refs = manager.convert_vec_refs()
-    storage.set_VecRefs(pickable_vec_refs)
+    storage.set_vecRefs(pickable_vec_refs)
     
-    # get the timecourses
+    # get the biochemical timecourses
     spine_timecourses = {}
+    synVecRefs = []
     for spine in nrnSim.spines:
         spine.ecellMan.converToTimeCourses()
-        spine_timecourses[spine.id] = spine.ecellMan.timeCourses    
+        spine_timecourses[spine.id] = spine.ecellMan.timeCourses
+        
+        for synapse in spine.synapses:
+            synVecRef = SynVecRef(syn)
+            synVecRefs.append(synVecRef)
+    storage.set_timecourses(spine_timecourses)
+    storage.set_synVecRefs(synVecRefs)
     
-    
-    loader.save(pickable_vec_refs, saving_dir, "pickable_vec_refs")
-    
-#    synapses_weight = {}
-#    for spine in nrnSim.spines:
-#        for syn_name, syn_obj in spine.synapses.iteritems():
-#            key = synapse.type + "_" + synapse.section
-#            synapses_weight[key] = synapse.synVecs['weight']
-#    loader.save(synapses_weight, saving_dir, "synapses_weight")
+    loader.save(storage, saving_dir, "storage")
 
 if __name__ == "__main__":
 
@@ -165,9 +164,6 @@ if __name__ == "__main__":
         for syn in spine.synapses:
             synVec = manager.add_synVecRef(syn)
             
-    
-    
-    
         
     #------------------------------------------------------------------------------ 
     # Equilibrium run
@@ -184,13 +180,14 @@ if __name__ == "__main__":
     
     ##------------------------------------------------------------------------------ 
     ## Experiment
-    
+    print h.t
     while h.t < tStop:
         h.fadvance() # run Neuron for step
         logger.debug( "Neuron time [ms]: %f, spines: %s" % ( nrnSim.h.t, 
                                                              nrnSim.spines))
-        if numpy.round(h.t, decimals = 4) % 1 == 0: # for every ms in NEURON we update the ecellMan
-            
+        # for every ms in NEURON we update the ecellMan
+        if numpy.round(h.t, decimals = 4) % 1 == 0: 
+                
             for spine in nrnSim.spines:
                 vec_spine_head = manager.get_vec(spine.head, 'cai')
                 update_calcium_spines(vec_spine_head, 'cai', 
@@ -202,14 +199,16 @@ if __name__ == "__main__":
                 weight = calcWeight(CaMKIIbar)
                 
                 # Updating the AMPA synapses
-                ampa = spine.synapses['ampa']
-                ampa.netCon.weight[0] = weight
-                ampa.synVecs['weight'].append(weight)
+                for synapse in spine.synapses:
+                    if synapse.chan_type == 'ampa':
+                        synapse.netCon.weight[0] = weight
+                        synapse.synVecs['weight'].append(weight)
+                print weight
     #            
-        if numpy.round(h.t, decimals = 4) % 50 == 0: # printig every half sec
-                logger.debug( "Neuron time [ms]: %f, spines: %s" 
+        #if numpy.round(h.t, decimals = 4) % 50 == 0: # printig every half sec
+            logger.debug( "Neuron time [ms]: %f, spines: %s" 
                               % ( h.t, nrnSim.spines))
-                logger.debug( "Ecell Time [s] %g: " 
+            logger.debug( "Ecell Time [s] %g: " 
                               %spine.ecellMan.ses.getCurrentTime())
     #
     
