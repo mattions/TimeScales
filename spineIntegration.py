@@ -4,6 +4,12 @@
 import logging
 import numpy
 import math
+
+#Importing matploti lib with no screen
+import matplotlib
+matplotlib.use('Agg')
+import pylab
+
 from neuron import h
 
 from neuronControl import nrnSim, synapse
