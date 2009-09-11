@@ -42,10 +42,6 @@ def update_calcium_spines(spine_head_vec, ca_sampling_interval):
     electrical_ca = spine_head_vec.x[-1] 
     spine.ecellMan.ca['Value'] = electrical_ca
     spine.ecellMan.ses.run(ca_sampling_interval)
-    print "Equilibrium for spine: %s, dend: %s, bio sim time: \
-    %f" % (spine.head.name(), spine.parent.name(),
-           spine.ecellMan.ses.getCurrentTime())
-
 
 def save_results(manager):
     """Save the results in a directory"""
@@ -96,7 +92,7 @@ if __name__ == "__main__":
     usage= "usage: %prog [options] tEquilibrium tStop"
     parser = OptionParser(usage)
        
-    parser.add_option("--dtNeuron", default=0.005, 
+    parser.add_option("--dtNeuron", default=0.025, 
                   help= "Fixed timestep to use to update neuron. i.e.:0.005")
     
     parser.add_option("--calciumSampling", default=0.020, 
@@ -166,39 +162,43 @@ if __name__ == "__main__":
         
         for syn in spine.synapses:
             synVec = manager.add_synVecRef(syn)
-            
-        
+    
+    
+    #------------------------------------------------------------------------
+    # Processing the options
+    
+    h.dt = float(options.dtNeuron)
+    calcium_sampling = float(options.calciumSampling)
+    
+    ecell_interval_update = calcium_sampling * 1e3 # we need [ms] to sync 
+                                                   # with NEURON in the while    
+    
     #------------------------------------------------------------------------------ 
     # Equilibrium run
         
     logger.debug("Running the system until equilibrium: %f [s]" %tEquilibrium)
-    # NEURON use the millisecond as base unit
-    # Transforming everything in [ms]
-    tEquilibrium = tEquilibrium * 1e3
-    tStop = tStop * 1e3
     
-    nrnSim.initAndRun(tEquilibrium) 
-    logger.debug( "Equilibrium reached. Neuron time: %f" % h.t)
+    # NEURON use the millisecond as base unit    
+    nrnSim.initAndRun(tEquilibrium * 1e3) #Transofming the [s] in [ms] 
+    logger.debug( "Equilibrium reached. Neuron time [ms]: %f" % h.t)
     for spine in nrnSim.spines:
-        spine.ecellMan.ses.run(float (options.calciumSampling))
-        logger.debug( "Equilibrium for spine: %s, dend: %s, \
-        bio sim time: %f" % (spine.head.name(), spine.parent.name(), 
-                             spine.ecellMan.ses.getCurrentTime()))
+        spine.ecellMan.ses.run(tEquilibrium)
+        logger.debug( "Equilibrium for spine: %s, eCell time [s]: %f" 
+                      % (spine.head.name(), 
+                           spine.ecellMan.ses.getCurrentTime()))
     
     
     ##------------------------------------------------------------------------------ 
     ## Experiment
     
-    while h.t < tStop:
+    while h.t < tStop * 1e3: # Using [ms] for NEURON
         h.fadvance() # run Neuron for step
         # for every ms in NEURON we update the ecellMan
-        if numpy.round(h.t, decimals = 4) % 1 == 0: 
+        if numpy.round(h.t, decimals = 4) % ecell_interval_update == 0: 
                 
             for spine in nrnSim.spines:
                 vec_spine_head = manager.get_vector(spine.head, 'cai')
-                update_calcium_spines(vec_spine_head, 
-                                      float (options.calciumSampling)) 
-            
+                update_calcium_spines(vec_spine_head, calcium_sampling) 
             
                 # getting the conc of the active CaMKII and set the weight of the synapse
                 CaMKIIbar = spine.ecellMan.CaMKIIbar['Value']
