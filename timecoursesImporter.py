@@ -21,6 +21,7 @@ class VisualizerBiochemical(object):
         
         self.directory = directory
         self.plot = plot
+        self.main()
         
         
     def loadTimecourse(self):
@@ -52,83 +53,49 @@ class VisualizerBiochemical(object):
     def plotTimeCourses(self, interval=None):
         """Plot the default timecourses
         :param interval: Used in the title"""
-        ca_tc = self.timeCourses['ca'] 
+        
+        # Plotting the Calcium 
         pylab.figure()
-        pylab.plot(ca_tc[:,0], ca_tc[:,1], label="Calcium")
+        pylab.plot(self.time, self.ca_values, label="Calcium")
         pylab.xlabel("Time [s]")
         pylab.legend(loc=0)
         if interval is not None:
             title = "Flux of Calcium Interval: %s [s]" %interval
             pylab.title(title)
         
-        bars = ['PP2Bbar', 'CaMKIIbar']
-        pylab.figure()
-        for bar in bars:
-            bar_tc = self.timeCourses[bar]
-            pylab.plot(bar_tc[:,0], bar_tc[:,1], label=bar)
-            pylab.xlabel("Time [s]")
-            pylab.legend(loc=0)
-            if interval is not None:
-                title = "Flux of Calcium Interval: %s [s]" %interval
-                pylab.title(title)
         
-        if self.save :
-            pylab.savefig(os.path.join(self.directory, "PP2B_and_CaMKII_activation.png"))
-            print "figure saved in: %s" % os.path.join(self.directory, "PP2B_and_CaMKII_activation.png")
-        else:
-            pylab.show()
+        # Plotting the CamKII
+        pylab.figure()
+        pylab.plot(self.time , self.CaMKIIbar_values, label='CaMKIIbar')
+        pylab.xlabel("Time [s]")
+        pylab.legend(loc=0)
+        if interval is not None:
+            title = "Flux of Calcium Interval: %s [s]" %interval
+            pylab.title(title)
+        pylab.show()
         
     def main(self):
         """Run the application"""
         success = self.loadTimecourse()
         if success:
             interval = self.scanfile()
+            # We extract the calcium_tc
+            self.ca_tc = self.timeCourses['ca']
+            self.time = self.ca_tc[:,0] # time equal for everybody.
+            self.ca_values = self.ca_tc[:,1]
+    
+            # We extract the CAMKII values
+            self.CaMKIIbar_tc = self.timeCourses['CaMKIIbar']
+            self.CaMKIIbar_values = self.CaMKIIbar_tc[:,1]
             if self.plot == True:
                 self.plotTimeCourses(interval)
+            
+            print "Loaded the timecourses."
 
 class Loader(object):
     """Just an handy loader"""
-    
     def __init__(self):
-        
-        self.dirRoot = None 
-        
-    def create_new_dir(self, prefix="./"):
-        """
-            Create the directory where to put the simulation
-        """
-        self.dirRoot = os.path.join(prefix, "Sims")
-        
-        today = datetime.date.today()
-        free = False
-        index = 0
-        
-        dirDate = today.strftime("%d-%m-%Y")
-        
-        dirComp = os.path.join(self.dirRoot, dirDate)
-        dir = os.path.join(dirComp, "Sim_" + str(index))
-        while not free :
-            if os.path.exists(dir):
-                index = index + 1
-                simNum = "Sim_" + str(index)
-                dir = os.path.join(dirComp, simNum )
-            else:
-                free = True
-                os.makedirs(dir)
-        return dir
-    
-    def save(self, obj, dir, name):
-        """ Save The object in binary form with the given name
-        
-        params:
-        obj - The python object
-        name - the name to give to the saved object"""
-        
-        filepath = os.path.join (dir, name)
-        FILE = open(filepath, 'w')
-        cPickle.dump(obj, FILE, 1)
-        FILE.close()
-        print "Python object saved in %s" %os.path.abspath(filepath)
+        pass
     
     def load(self, filename):
         """Load the python object into memory from the filename
@@ -145,31 +112,26 @@ class Loader(object):
                 
 if __name__ == "__main__":
     from optparse import OptionParser
-    usage= "usage: %prog [options] path/to/dir_sim"
+    usage= """usage: %prog [options] path/to/dir_sim or 
+    %progs [options] path/to/dir_sim1 path/to/dir_sim_2
+    
+    To load the two timecourses pass both results."""
     parser = OptionParser(usage)
     parser.add_option("-p", "--plot", action="store_true", 
                       help= "If True will plot the graphs")
     
     (options, args) = parser.parse_args()
     
-    if len(args) != 1:
-        parser.error("Incorrect number of arguments")
-        parser.usage()
-    else:
+    if len(args) == 1:
         directory = args[0]
+        visualBio = VisualizerBiochemical(directory, plot=options.plot)
+        
+    elif len(args) == 2:
+        visualBio1 = VisualizerBiochemical(args[0], plot=options.plot)
+        visualBio2 = VisualizerBiochemical(args[1], plot=options.plot)
+        
+    else:
+        parser.usage()
     
-    visualBio = VisualizerBiochemical(directory, plot=options.plot)
-    visualBio.main()
-    
-    # We extract the calcium_tc
-    ca_tc = visualBio.timeCourses['ca']
-    time = ca_tc[:,0] # time equal for everybody.
-    ca_values = ca_tc[:,1]
-    
-    # We extract the CAMKII values
-    CaMKIIbar_tc = visualBio.timeCourses['CaMKIIbar']
-    CaMKIIbar_values = CaMKIIbar_tc[:,1]
-    
-    print "Loaded the values of Calcium and CAmKIIbar (active form)"
     
     
