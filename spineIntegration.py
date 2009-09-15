@@ -11,7 +11,7 @@ from neuronControl import nrnSim, synapse
 from helpers import Loader, Storage
 
 from nrnvisio.manager import Manager
-from nrnvisio.manger import SynVecRef
+from nrnvisio.manager import SynVecRef
 
 
 def calcWeight(CaMKIIbar, n=2, k=4):
