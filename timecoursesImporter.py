@@ -89,8 +89,6 @@ class VisualizerBiochemical(object):
             self.CaMKIIbar_values = self.CaMKIIbar_tc[:,1]
             if self.plot == True:
                 self.plotTimeCourses(interval)
-            
-            print "Loaded the timecourses."
 
 class Loader(object):
     """Just an handy loader"""
@@ -115,7 +113,9 @@ if __name__ == "__main__":
     usage= """usage: %prog [options] path/to/dir_sim or 
     %progs [options] path/to/dir_sim1 path/to/dir_sim_2
     
-    To load the two timecourses pass both results."""
+    To load the two timecourses pass both the directory where
+     the simulations' results are stored."""
+     
     parser = OptionParser(usage)
     parser.add_option("-p", "--plot", action="store_true", 
                       help= "If True will plot the graphs")
@@ -129,6 +129,23 @@ if __name__ == "__main__":
     elif len(args) == 2:
         visualBio1 = VisualizerBiochemical(args[0], plot=options.plot)
         visualBio2 = VisualizerBiochemical(args[1], plot=options.plot)
+        
+        # You can access to values from the object:
+        print """Loaded two simulations results in the objects:
+        visualBio1 and visualBio2"""
+        
+        print """visualBio1: 
+        Time in variable %s,
+        Calcium values in the variable %s, 
+        CaMKIIbar values in the variable %s""" %(visualBio1.time,
+                                                     visualBio1.ca_values,
+                                                     visualBio1.CaMKIIbar_values)
+        print """visualBio2: 
+        Time in variable %s,
+        Calcium values in the variable %s, 
+        CaMKIIbar values in the variable %s""" %(visualBio1.time,
+                                                     visualBio1.ca_values,
+                                                     visualBio1.CaMKIIbar_values)
         
     else:
         parser.usage()
