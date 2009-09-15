@@ -3,11 +3,14 @@
 
 from neuron import h
 import numpy
-import pylab
+import matplotlib
 
 class Graph:
     
     def __init__(self, batch=False):
+        if batch:
+            matplotlib.use('Agg')
+        import matplotlib.pyplot as plt
         t = h.Vector()
         t.record(h._ref_t)
         self.t = t
@@ -64,53 +67,53 @@ class Graph:
                     inputs_event[indx] = 1
                     
         masked = numpy.ma.masked_where(inputs_event == 0, inputs_event)
-        #pylab.figure()
-        pylab.plot(t, masked, 'k.', label = "stimul")
+        #plt.figure()
+        plt.plot(t, masked, 'k.', label = "stimul")
         return masked
           
 
     def plotVoltage(self, vecsVolt, synVecs=None, drawLegend=True):
         
-        fig = pylab.figure()
-        pylab.ax1 = fig.add_subplot(111) #sub for the two scales
+        fig = plt.figure()
+        plt.ax1 = fig.add_subplot(111) #sub for the two scales
         for key,vec in vecsVolt.iteritems():
-            pylab.plot(self.t , vec, label=key)
-        pylab.ylabel("Voltage [mV]")
-        pylab.xlabel("Time [ms]")
+            plt.plot(self.t , vec, label=key)
+        plt.ylabel("Voltage [mV]")
+        plt.xlabel("Time [ms]")
         if drawLegend:
-            pylab.legend(loc=0)
+            plt.legend(loc=0)
         
         if synVecs is not None:
-            ax2 = pylab.ax1.twinx()
+            ax2 = plt.ax1.twinx()
             self.stimulGraph(synVecs["stimul"])
             ax2.set_ylim(0,4)
             ax2.set_axis_off()
             t = numpy.array(self.t)
             t = numpy.round(t, decimals=9) # round
-            pylab.ax1.set_xlim(t[0],t[-1])
+            plt.ax1.set_xlim(t[0],t[-1])
             if drawLegend:
-                pylab.ax1.legend(loc=0)
-            return pylab.ax1 # No really needed but handy
+                plt.ax1.legend(loc=0)
+            return plt.ax1 # No really needed but handy
 
     
     def plotCalcium(self, vecsCa, var):
         """Plot the calcium current (both together or only one)"""
-        pylab.figure()
+        plt.figure()
         for key,vec in vecsCa.iteritems():
             if var in key:
-                pylab.plot(self.t , vec, label=key)
-        pylab.xlabel("Time [ms]")
-        pylab.ylabel("Concentration [mM]")
-        pylab.legend(loc=0)
+                plt.plot(self.t , vec, label=key)
+        plt.xlabel("Time [ms]")
+        plt.ylabel("Concentration [mM]")
+        plt.legend(loc=0)
         
     def plotCalciumCurrent(self, vecsCur):
         
-        pylab.figure()
+        plt.figure()
         for key,vec in vecsCur.iteritems():
-            pylab.plot(self.t , vec, label=key)
-        pylab.xlabel("Time [ms]")
-        pylab.ylabel("Current [nA]")
-        pylab.legend(loc=0)
+            plt.plot(self.t , vec, label=key)
+        plt.xlabel("Time [ms]")
+        plt.ylabel("Current [nA]")
+        plt.legend(loc=0)
         
     def vecsSubSelection(self, vecs, nameOfInterest, matching=True):
       

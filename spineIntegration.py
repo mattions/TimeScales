@@ -5,18 +5,13 @@ import logging
 import numpy
 import math
 
-#Importing matploti lib with no screen
-import matplotlib
-matplotlib.use('Agg')
-import pylab
-
 from neuron import h
 
 from neuronControl import nrnSim, synapse
 from helpers import Loader, Storage
-from nrnvisio.manager import Manager, SynVecRef
 
-
+from nrnvisio.manager import Manager
+from nrnvisio.manger import SynVecRef
 
 
 def calcWeight(CaMKIIbar, n=2, k=4):
