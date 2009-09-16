@@ -52,6 +52,9 @@ def save_results(manager, tEquilibrium, tStop, calciumSampling, dtNeuron):
     # Storage object
     storage  = Storage()
     
+    # Convert the time
+    storage.t = numpy.array(manager.t)
+    
     # Convert manager to a pickable object
     pickable_vec_refs = manager.convert_vec_refs()
     storage.set_vecRefs(pickable_vec_refs)
