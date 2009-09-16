@@ -44,7 +44,7 @@ def update_calcium_spines(spine_head_vec, ca_sampling_interval):
     spine.ecellMan.ca['Value'] = electrical_ca
     spine.ecellMan.ses.run(ca_sampling_interval)
 
-def save_results(manager):
+def save_results(manager, tEquilibrium, tStop, calciumSampling, dtNeuron):
     """Save the results in a directory"""
     loader = Loader()
     saving_dir = loader.create_new_dir(prefix=os.getcwd())
@@ -70,6 +70,12 @@ def save_results(manager):
     storage.set_synVecRefs(synVecRefs)
     
     loader.save(storage, saving_dir, "storage")
+    f = open(os.path.join(saving_dir, 'log.txt'), 'w') 
+    f.write("tEquilibrium [s]: %f\n" % (tEquilibrium))
+    f.write("tStop [s]: %f\n" % (tStop))
+    f.write("calciumSampling [s]: %f\n" % (calciumSampling))
+    f.write("dtNeuron [ms]: %f\n" % (dtNeuron))
+    f.close()
     return storage
 
 if __name__ == "__main__":
@@ -221,4 +227,4 @@ if __name__ == "__main__":
     #------------------------------------
     # Save the Results
     print "Simulation Ended"
-    sto = save_results(manager)
+    sto = save_results(manager, tEquilibrium, tStop, options.calciumSampling, options.dtNeuron)
