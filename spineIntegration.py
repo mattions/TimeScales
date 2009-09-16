@@ -220,7 +220,7 @@ if __name__ == "__main__":
                         synapse.netCon.weight[0] = weight
                         synapse.syn_vecs['weight'].append(weight)
                  
-        if numpy.round(h.t, decimals = 4) % 50 == 0: # printig every half sec
+        if numpy.round(h.t, decimals = 4) % 200 == 0: # printig every two seconds
             logger.debug( "Neuron time [ms]: %f, spines: %s" 
                               % ( h.t, nrnSim.spines))
             logger.debug( "Ecell Time [s] %g: " 
