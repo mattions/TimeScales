@@ -18,7 +18,8 @@ def calcWeight(CaMKIIbar, n=2, k=4):
     """Calc the weight of the synapses according to the CaMKII"""
     
     # Dummy function should be changed
-    weight = 1 + (1 + math.pow(CaMKIIbar, n)/k)
+    weight = math.pow(CaMKIIbar, n) / (math.pow(k, n) + 
+                                       math.pow(CaMKIIbar, n))
     return weight
 
 
@@ -68,6 +69,8 @@ def save_results(manager, tEquilibrium, tStop, calciumSampling, dtNeuron):
         
         for synapse in spine.synapses:
             synVecRef = SynVecRef(syn)
+            print "syn type: %s, synVecRef type: %s" %(synapse.chan_type,
+                                                       synVecRef.chan_type)
             synVecRefs.append(synVecRef)
     storage.set_timecourses(spine_timecourses)
     storage.set_synVecRefs(synVecRefs)
