@@ -1,61 +1,64 @@
-#! /usr/bin/env python
-import pygtk
-pygtk.require('2.0')
-import gtk, gobject, cairo
+#!/usr/bin/python
 
-# Create a GTK+ widget on which we will draw using Cairo
-class Screen(gtk.DrawingArea):
+import gtk
+import math
+import cairo
 
-    # Draw in response to an expose-event
-    __gsignals__ = { "expose-event": "override" }
+class PyApp(gtk.Window):
 
-    # Handle the expose-event by drawing
-    def do_expose_event(self, event):
+    def __init__(self):
+        super(PyApp, self).__init__()
 
-        # Create the cairo context
-        cr = self.window.cairo_create()
+        self.set_title("Simple drawing")
+        self.resize(400, 150)
+        self.set_position(gtk.WIN_POS_CENTER)
 
-        # Restrict Cairo to the exposed area; avoid extra work
-        cr.rectangle(event.area.x, event.area.y,
-                event.area.width, event.area.height)
-        cr.clip()
+        self.connect("destroy", gtk.main_quit)
 
-        self.draw(cr, *self.window.get_size())
+        darea = gtk.DrawingArea()
+        darea.connect("expose-event", self.expose)
+        self.add(darea)
 
-    def draw(self, cr, width, height):
-        # Fill the background with gray
-        cr.set_source_rgb(0.5, 0.5, 0.5)
-        cr.rectangle(0, 0, width, height)
+        self.show_all()
+    
+    def expose(self, widget, event):
+
+        cr = widget.window.cairo_create()
+        w = self.allocation.width
+        h = self.allocation.height
+
+        cr.rectangle(0, 0, w/2 , h)
+        self.offset1 = 0 # Start gradient
+        self.offset2 = 1 # End gradient
+        linear = cairo.LinearGradient(0, h/2, w/2, h/2)
+        self.color1 = [0, 0.3, 0.8]
+        self.color2 = [0, 0.8, 0.3]
+        linear.add_color_stop_rgb(self.offset1, self.color1[0], self.color1[1], 
+                                       self.color1[2])
+        linear.add_color_stop_rgb(self.offset2, self.color2[0], self.color2[1], 
+                                       self.color2[2])
+        cr.set_source(linear)
         cr.fill()
+        
+        # show the calculated color from the gradient
+        col = self.calc_gradient(0.4)
+        cr.rectangle(w/2, 0, w/2 + w/4, h) # Drawing half of the window
+        cr.set_source_rgb(col[0], col[1], col[2])
+        cr.fill()
+        
+        col = self.calc_gradient(0.6)
+        cr.rectangle(w/2 + w/4, 0, w, h) # Drawing half of the window
+        cr.set_source_rgb(col[0], col[1], col[2])
+        cr.fill()
+        
+    def calc_gradient(self, offset):
+             
+        real_offset = (offset - self.offset1) / (self.offset2 - self.offset1)
+        rgb = [0, 0, 0]
+        for i, primary in enumerate (self.color1):
+            rgb[i] = (self.color2[i] - self.color1[i]) * real_offset + self.color1[i]
+        #print rgb, real_offset
+        return rgb
 
-# GTK mumbo-jumbo to show the widget in a window and quit when it's closed
-def run(Widget):
-    window = gtk.Window()
-    window.connect("delete-event", gtk.main_quit)
-    widget = Widget()
-    widget.show()
-    window.add(widget)
-    window.present()
-    gtk.main()
-
-
-
-## Do all your testing in Shapes ##
-
-
-
-class Shapes(Screen):
-    def draw(self, cr, width, height):
-
-        cr.scale(width,height) #Without this line the mask does not seem to work!
-        self.linear = cairo.LinearGradient(0, 0, 1, 1)
-        self.linear.add_color_stop_rgb(0, 0, 0.3, 0.8)
-        self.linear.add_color_stop_rgb(1, 0, 0.8, 0.3)
-
-        cr.rectangle(0, 0, width, height)
-        cr.set_source(self.linear)
-
-        cr.fill()       
-
-run(Shapes)
-
+pyApp = PyApp()
+gtk.main()
