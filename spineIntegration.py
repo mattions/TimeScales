@@ -60,20 +60,20 @@ def save_results(manager, tEquilibrium, tStop, calciumSampling, dtNeuron):
     pickable_vec_refs = manager.convert_vec_refs()
     storage.set_vecRefs(pickable_vec_refs)
     
+    pickable_synVecRefs = manager.convert_syn_vec_refs()
+    storage.set_synVecRefs(pickable_synVecRefs)
+    
     # get the biochemical timecourses
     spine_timecourses = {}
     synVecRefs = []
     for spine in nrnSim.spines:
+        # Retrieving the biochemical timecourses
         spine.ecellMan.converToTimeCourses()
+        
         spine_timecourses[spine.id] = spine.ecellMan.timeCourses
         
-        for synapse in spine.synapses:
-            synVecRef = SynVecRef(syn)
-            print "syn type: %s, synVecRef type: %s" %(synapse.chan_type,
-                                                       synVecRef.chan_type)
-            synVecRefs.append(synVecRef)
+        
     storage.set_timecourses(spine_timecourses)
-    storage.set_synVecRefs(synVecRefs)
     
     loader.save(storage, saving_dir, "storage")
     f = open(os.path.join(saving_dir, 'log.txt'), 'w') 
