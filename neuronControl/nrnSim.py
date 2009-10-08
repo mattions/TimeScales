@@ -101,7 +101,8 @@ class NeuronSim():
             for pos in spine_positions:
                 tmpName = sec.name()
                 tmpName = tmpName.split('.')[1] # Get rid of the MSP_Cell[0] prefix
-                id = len (self.spines) + 1
+                spine_number = len (self.spines) + 1
+                id = 'spine' + str(spine_number)
                 # Instantiate the spine with the biochemical model
                 spine = Spine(id, biochemical=self.biochemical, 
                               filename_bioch_mod=self.biochemical_filename)
