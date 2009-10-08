@@ -19,7 +19,7 @@ class Spine():
                  biochemical=True):
         """ Create a spine with a standard volume of ~0.11 um
         the h is the reference to the main hoc interpreter"""
-        self.id = 'spine' + str(id)
+        self.id = id
         self.neck = self.createNeck()
         self.head = self.createHead(self.neck)
         self.psd = self.createPSD(self.head)
