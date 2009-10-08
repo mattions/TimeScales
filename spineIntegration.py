@@ -66,14 +66,24 @@ def save_results(manager, tEquilibrium, tStop, calciumSampling, dtNeuron):
     # get the biochemical timecourses
     spine_timecourses = {}
     synVecRefs = []
+    spines_id = []
+    spines_pos = []
+    spines_parent_sec = []
+    
     for spine in nrnSim.spines:
         # Retrieving the biochemical timecourses
         spine.ecellMan.converToTimeCourses()
         
         spine_timecourses[spine.id] = spine.ecellMan.timeCourses
-        
+        spines_id.append(spine.id)
+        spines_pos.append(spine.pos)
+        spines_parent_sec.append(spine.parent.name())
         
     storage.set_timecourses(spine_timecourses)
+    storage.set_spines(spines_id, spines_pos, spines_parent_sec)
+    
+    # We need to save spines pos and parent
+    
     
     loader.save(storage, saving_dir, "storage")
     f = open(os.path.join(saving_dir, 'log.txt'), 'w') 
@@ -140,8 +150,12 @@ if __name__ == "__main__":
                               biochemical=True,
                               biochemical_filename="biochemical_circuits/biomd183.eml") 
 
+    # Set the spines
+    
     # Set the stimuls to the synapses    
-    # For now hardcoded than we have to decide _how_ give the input. 
+    # For now hardcoded than we have to decide _how_ give the input.
+    
+     
     for spine in nrnSim.spines:
         for synapse in spine.synapses:
             if synapse.chan_type == 'ampa':
@@ -233,4 +247,5 @@ if __name__ == "__main__":
     #------------------------------------
     # Save the Results
     print "Simulation Ended"
-    sto = save_results(manager, tEquilibrium, tStop, options.calciumSampling, options.dtNeuron)
+    sto = save_results(manager, tEquilibrium, tStop, 
+                       options.calciumSampling, options.dtNeuron)

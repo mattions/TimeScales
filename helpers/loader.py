@@ -84,4 +84,10 @@ class Storage(object):
     def set_synVecRefs(self, synVecRefs):
         """Set the synapses weight"""
         self.synVecRefs = synVecRefs
-     
+        
+    def set_spines(self, spines_id, spines_pos, spines_parent):
+        """Stores the spines id, position and parent segment. 
+        All This info are required to rebuild the model."""
+        self.spines_id = spines_id
+        self.spines_pos = spines_pos
+        self.spines_parent = spines_parent

@@ -134,6 +134,7 @@ class Spine():
         Just an handy variation of the connect method"""
         self.neck.connect(parentSec, parentx, childx)
         self.parent = parentSec
+        self.pos = parentx
     
     def calcAreaSpine(self):
         """Calculate the surface of the spine"""
