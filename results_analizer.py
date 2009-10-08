@@ -22,6 +22,7 @@ if __name__ == "__main__":
     from neuron import h
     import neuronControl
     import helpers
+    from neuronControl.spine import Spine
     
     # Loading the geometry of the neuron
     nrnSim = neuronControl.NeuronSim(mod_path="mod", hoc_path="hoc", 
@@ -35,9 +36,13 @@ if __name__ == "__main__":
     controls.read_only(sto)
     
     # Picking up the spines
-    for i, spine in sto.spines_is:
-        spine_pos = sto.spine_pos[i]
-        spine_parent = sto.spines_parent[i]
+    for i, id in enumerate(sto.spines_id):
+        spine_pos = sto.spines_pos[i]
+        spine_parent_sec = sto.spines_parent[i]
+        for sec in h.allsec():
+            if sec.name() == spine_parent_sec:
+                spine = Spine(id, biochemical=False) # Not loading E-cell
+                spine.attach(sec, spine_pos, 0)
         
         
     
