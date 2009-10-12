@@ -1,8 +1,9 @@
 #!/usr/bin/python
-
+from __future__ import division
 import gtk
 import math
 import cairo
+
 
 class PyApp(gtk.Window):
 
@@ -22,7 +23,8 @@ class PyApp(gtk.Window):
         self.show_all()
     
     def expose(self, widget, event):
-
+        
+        self.window = widget.window
         cr = widget.window.cairo_create()
         w = self.allocation.width
         h = self.allocation.height
@@ -41,24 +43,43 @@ class PyApp(gtk.Window):
         cr.fill()
         
         # show the calculated color from the gradient
-        col = self.calc_gradient(0.4)
-        cr.rectangle(w/2, 0, w/2 + w/4, h) # Drawing half of the window
-        cr.set_source_rgb(col[0], col[1], col[2])
-        cr.fill()
         
-        col = self.calc_gradient(0.6)
-        cr.rectangle(w/2 + w/4, 0, w, h) # Drawing half of the window
+        
+        
+#        col = self.calc_gradient(0.6)
+#        cr.rectangle(w/2 + w/4, 0, w, h) # Drawing half of the window
+#        cr.set_source_rgb(col[0], col[1], col[2])
+#        cr.fill()
+        
+    def set_color_rect(self, col):
+        
+        cr = self.window.cairo_create()
+        w = self.allocation.width
+        h = self.allocation.height
+        cr.rectangle(w/2, 0, w, h) # Drawing half of the window
         cr.set_source_rgb(col[0], col[1], col[2])
         cr.fill()
         
     def calc_gradient(self, offset):
              
-        real_offset = (offset - self.offset1) / (self.offset2 - self.offset1)
+        print offset
         rgb = [0, 0, 0]
         for i, primary in enumerate (self.color1):
-            rgb[i] = (self.color2[i] - self.color1[i]) * real_offset + self.color1[i]
+            rgb[i] = (self.color2[i] - self.color1[i]) * offset + self.color1[i]
         #print rgb, real_offset
         return rgb
-
+    
+    def calc_offset(self, start_v, end_v, v):
+        
+        range = abs(start_v - end_v)
+        delta = abs(start_v - v)
+        # range : delta = 1 : offset
+        offset = delta/range
+        print offset
+        col = self.calc_gradient(offset)
+        self.set_color_rect(col)
+        
+        
+        
 pyApp = PyApp()
 gtk.main()
