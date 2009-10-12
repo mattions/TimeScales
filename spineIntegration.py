@@ -154,8 +154,7 @@ if __name__ == "__main__":
     
     # Set the stimuls to the synapses    
     # For now hardcoded than we have to decide _how_ give the input.
-    
-     
+       
     for spine in nrnSim.spines:
         for synapse in spine.synapses:
             if synapse.chan_type == 'ampa':
@@ -163,6 +162,7 @@ if __name__ == "__main__":
                              number = 10, 
                              interval = 10 # ms between the stimuli
                              )
+                
 
     #==========
     # Recording
