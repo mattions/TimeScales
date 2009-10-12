@@ -43,6 +43,12 @@ if __name__ == "__main__":
             if sec.name() == spine_parent_sec:
                 spine = Spine(id, biochemical=False) # Not loading E-cell
                 spine.attach(sec, spine_pos, 0)
+    # Attaching the vecRef_properly
+    for sec in h.allsec():
+        for vecRef in sto.vecRefs:
+            if sec.name() == vecRef.sec_name:
+                vecRef.sec = sec
+                break
         
         
     
