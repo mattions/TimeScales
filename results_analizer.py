@@ -1,7 +1,16 @@
 # Author Michele Mattioni
 # Wed Sep 16 12:26:40 BST 2009
 
-import helpers 
+import helpers
+import pylab
+
+
+def plot_bio(spine, var):
+    """Plot the biochemical variable"""
+    var_timecourse = spine[var]
+    pylab.plot(var_timecourse[:,0], var_timecourse[:,1], label=var)
+
+
     
 if __name__ == "__main__":
         
@@ -43,14 +52,10 @@ if __name__ == "__main__":
             if sec.name() == spine_parent_sec:
                 spine = Spine(id, biochemical=False) # Not loading E-cell
                 spine.attach(sec, spine_pos, 0)
+    print "In this simulation there were %i spines" % len (sto.spines_id)
     # Attaching the vecRef_properly
     for sec in h.allsec():
         for vecRef in sto.vecRefs:
             if sec.name() == vecRef.sec_name:
                 vecRef.sec = sec
                 break
-        
-        
-    
-    
-    
