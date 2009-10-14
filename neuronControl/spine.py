@@ -20,8 +20,9 @@ class Spine():
         """ Create a spine with a standard volume of ~0.11 um
         the h is the reference to the main hoc interpreter"""
         self.id = id
+        self.head_vol = 0.11 #um
         self.neck = self.createNeck()
-        self.head = self.createHead(self.neck)
+        self.head = self.createHead(self.neck, self.head_vol)
         self.psd = self.createPSD(self.head)
         self.parent = None # the parent section connected to the neck
         self.synapses = self.createSynapses()
@@ -66,15 +67,14 @@ class Spine():
                 
         return neck
         
-    def createHead(self, neck):
+    def createHead(self, neck, head_vol):
         """Create the head of the spine and populate it with the right channels"""
         name_sec = self.id + "_head"
         h("create " + name_sec)
         head = getattr(h, name_sec)
         
-        vol = 0.11 #um
         head.L = 1
-        head.diam = math.sqrt(vol / head.L * math.pi ) * 2
+        head.diam = math.sqrt(head_vol / head.L * math.pi ) * 2
         self.Ra = 150.0
         head.nseg = 7
         head.connect(neck)
