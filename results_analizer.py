@@ -10,7 +10,10 @@ def plot_bio(spine, var):
     var_timecourse = spine[var]
     pylab.plot(var_timecourse[:,0], var_timecourse[:,1], label=var)
 
-
+def plot_syn(syn_vecs, var):
+    """Plot the variable of the synapse"""
+    pylab.figure()
+    pylab.plot(sto.t, syn_vecs[var])
     
 if __name__ == "__main__":
         
