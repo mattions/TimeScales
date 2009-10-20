@@ -22,7 +22,7 @@ def calcWeight(old_weight, CaMKIIbar, n=2, k=4):
     weight = old_weight + delta
     s = "Old weight %f, CAMKIIbar value: %e,\
     calculated delta: %e" %(old_weight, CaMKIIbar, delta)
-    print s
+    #print s
     return weight
 
 
@@ -44,16 +44,14 @@ def update_calcium_spines(ca_concentration, spine_head_vol, ca_sampling_interval
         ca_sampling_interval - Interval to use to sync the electrical concentration \
         with the biochemical.
     """
-    print "Neuron calcium: %f, Ecell Calcium: %f" %(ca_concentration, 
-                                                    spine.ecellMan.ca['Value'])
+#    print "Neuron calcium: %f, Ecell Calcium: %f" %(ca_concentration, 
+#                                                    spine.ecellMan.ca['Value'])
     # converting the concentration in molecules:
     # mM to M (1e-3)
     # um^3 to l (1e-15)
     # 6.022 * 1e23 Avogadro's number
-    ca_ions = ca_concentration * spine_head_vol * 1e-3 * 1e-15 * 6.022 * 1e23
+    ca_ions = ca_concentration * 1e-3 * spine_head_vol  * 1e-15 * 6.022 * 1e23
     spine.ecellMan.ca['Value'] = ca_ions
-    print "Neuron calcium: %f, Ecell Calcium: %f" %(ca_concentration, 
-                                                    spine.ecellMan.ca['Value'])
     spine.ecellMan.ses.run(ca_sampling_interval)
 
 def save_results(manager, tStim, tStop, calciumSampling, dtNeuron):
