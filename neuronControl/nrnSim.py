@@ -56,6 +56,8 @@ class NeuronSim():
             if spines:
                 # Adding the spines
                 self.__distributeSpines()
+            else:
+                self.spines = [] # Allocating the list for the spine to use later.
             
     def run(self, tStop):
         """Run the simulation until tStop"""
