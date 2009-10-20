@@ -127,11 +127,11 @@ if __name__ == "__main__":
     parser = OptionParser(usage)
        
     parser.add_option("--dtNeuron", default=0.025, 
-                  help= "Fixed timestep to use to update neuron. i.e.:0.005")
+                  help= "Fixed timestep to use to update neuron. i.e.:0.005 [ms]")
     
-    parser.add_option("--calciumSampling", default=0.020, 
+    parser.add_option("--calciumSampling", default=0.001, 
                   help= "Fixed interval used to sample the calcium concentration in the Neuron world and\
-                   pass it to the biochemical simulator. i.e.:0.020")
+                   pass it to the biochemical simulator. i.e.:0.001 [s]")
     
     (options, args) = parser.parse_args()
     
