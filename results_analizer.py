@@ -10,6 +10,16 @@ def plot_bio(spine, var):
     var_timecourse = spine[var]
     pylab.plot(var_timecourse[:,0], var_timecourse[:,1], label=var)
 
+def plot_calcium_conc(spine_timecourses, spine_vol):
+    
+    ca_tc = spine_timecourses['ca']
+    ca_molecules = ca_tc[:,1]
+    
+    ca_conc = ca_molecules / (spine_vol * 1e-15 * 6.022 * 1e23)
+    ca_conc = ca_conc * 1e3 # Transform in mM]
+    pylab.plot(ca_tc[:,0], ca_conc)
+    
+
 def plot_syn(syn_vecs, var):
     """Plot the variable of the synapse"""
     pylab.figure()
@@ -55,6 +65,7 @@ if __name__ == "__main__":
             if sec.name() == spine_parent_sec:
                 spine = Spine(id, biochemical=False) # Not loading E-cell
                 spine.attach(sec, spine_pos, 0)
+                nrnSim.spines.append(spine)
     print "In this simulation there were %i spines" % len (sto.spines_id)
     # Attaching the vecRef_properly
     for sec in h.allsec():
