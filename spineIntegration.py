@@ -14,12 +14,15 @@ from nrnvisio.manager import Manager
 from nrnvisio.manager import SynVecRef
 
 
-def calcWeight(CaMKIIbar, n=2, k=4):
+def calcWeight(old_weight, CaMKIIbar, n=2, k=4):
     """Calc the weight of the synapses according to the CaMKII"""
     
     # Dummy function should be changed
-    weight = math.pow(CaMKIIbar, n) / (math.pow(k, n) + 
-                                       math.pow(CaMKIIbar, n))
+    delta = math.pow(CaMKIIbar, n) / (math.pow(k, n) + math.pow(CaMKIIbar, n))
+    weight = old_weight + delta
+    s = "Old weight %f, CAMKIIbar value: %e,\
+    calculated delta: %e" %(old_weight, CaMKIIbar, delta)
+    print s
     return weight
 
 
@@ -213,27 +216,29 @@ if __name__ == "__main__":
     nrnSim.init() # Initilizing neuron
     while h.t < tStop * 1e3: # Using [ms] for NEURON
         h.fadvance() # run Neuron for step
-        # for every ms in NEURON we update the ecellMan
+        #for every ms in NEURON we update the ecellMan
         if numpy.round(h.t, decimals = 4) % ecell_interval_update == 0: 
                 
             for spine in nrnSim.spines:
                 vec_spine_head_cai = manager.get_vector(spine.head, 'cai')
                 vec_spine_head_cali = manager.get_vector(spine.head, 'cali')
-                electrical_ca = vec_spine_head_cai.x[-1] + vec_spine_head_cali.x[-1] 
-                
+                head_cai = vec_spine_head_cai.x[-1]
+                head_cali = vec_spine_head_cali.x[-1]
+                electrical_ca = head_cai + head_cali
+                 
                 update_calcium_spines(electrical_ca, spine.head_vol, 
-                                      calcium_sampling) 
+                                      calcium_sampling)
             
                 # getting the conc of the active CaMKII and set the weight of the synapse
                 CaMKIIbar = spine.ecellMan.CaMKIIbar['Value']
-                weight = calcWeight(CaMKIIbar)
                 
                 # Updating the AMPA synapses
                 for synapse in spine.synapses:
                     if synapse.chan_type == 'ampa':
+                        weight = calcWeight(synapse.netCon.weight[0], CaMKIIbar)
                         synapse.netCon.weight[0] = weight
                         synapse.syn_vecs['weight'].append(weight)
-                 
+                
         if numpy.round(h.t, decimals = 4) % 200 == 0: # printig every two seconds
             logger.debug( "Neuron time [ms]: %f, spines: %s" 
                               % ( h.t, nrnSim.spines))
