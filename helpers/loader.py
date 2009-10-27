@@ -73,6 +73,15 @@ class Storage(object):
     """Class to store in one place: the vecRef for the electrical,
     the timecourses for the spines, the weight of the synapses"""
     
+    def __init__(self, calciumSampling, dtNeuron, neuron_eq, 
+                 ecell_eq):
+        """Set the calcium update, the neuron dt, the neuron 
+        equilibrium and the ecell equilibrium"""
+        self.calciumSampling = calciumSampling
+        self.dtNeuron = dtNeuron
+        self.neuron_eq = neuron_eq
+        self.ecell_eq = ecell_eq
+        
     def set_vecRefs(self, vecRefs):
         """Set the vecRef in the class"""
         self.vecRefs = vecRefs
