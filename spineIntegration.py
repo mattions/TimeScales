@@ -147,10 +147,10 @@ if __name__ == "__main__":
     else:
         tStim = float (args[0])
         tStop = float (args[1])
-        if tStop < tStim:
-            logger.error("tEquilbrium should be bigger of Tstop. \
-            We can't finish before the equilibrium")
-            parser.usage()
+#        if tStop < tStim:
+#            logger.error("tEquilbrium should be bigger of Tstop. \
+#            We can't finish before the equilibrium")
+#            parser.usage()
         
     
     # Processing the options
