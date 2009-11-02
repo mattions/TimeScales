@@ -130,8 +130,8 @@ if __name__ == "__main__":
                                                        # with NEURON in the while
         tStim = float (args[0])
         tStop = float (args[1])
-        tStop = options.tEquilibrium + tStop
-        tStim = options.tEquilibrium + tStim
+        tStop = t_equilibrium + tStop
+        tStim = t_equilibrium + tStim
 #        if tStop < tStim:
 #            logger.error("tEquilbrium should be bigger of Tstop. \
 #            We can't finish before the equilibrium")
