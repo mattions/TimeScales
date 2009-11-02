@@ -27,15 +27,16 @@ class Spine():
         self.parent = None # the parent section connected to the neck
         self.synapses = self.createSynapses()
         
-        # Setting up the biochemical simulator
-        if biochemical:
-            self.ecellMan = self.setupBioSim(filename_bioch_mod)
-        
         # Reset ions
         h.cai0_ca_ion = 0.001        #// mM, Churchill 1998
         h.cao0_ca_ion = 5            #// mM, Churchill 1998 - gives eca = 100 mV
         h.cali0_cal_ion = 0.001        #// mM, Churchill 1998
-        h.calo0_cal_ion = 5            #// mM, Churchill 1998 - gives eca = 100 mVh.cao0_ca_ion = 
+        h.calo0_cal_ion = 5            #// mM, Churchill 1998 - gives eca = 100 mVh.cao0_ca_ion =
+        
+        # Setting up the biochemical simulator
+        if biochemical:
+            self.ecellMan = self.setupBioSim(filename_bioch_mod)
+            self.update_calcium(h.cai0_ca_ion) 
         
     def setupBioSim(self, filename):
         """Initialize the Biochemical Simulator creating the instance of 
@@ -43,7 +44,32 @@ class Spine():
         
         ecellMan = eC.EcellManager(filename)
         ecellMan.createLoggers()
+        # Setting the head volume with the spine head
+        ecellMan.ses.vol = self.head_vol * 1e-15 #Converted in l
+        # Setting the calcium
         return ecellMan
+    
+    def update_calcium(self, electrical_ca_concentration):
+        """Update the calcium using the electrical calcium from the NEURON 
+        section to the ecell compartment
+                
+        params:
+        electrical_ca_concentration - Conc of Calcium in NEURON seg
+        ca_sampling_interval - Interval to use to sync the electrical concentration \
+        with the biochemical.
+        """
+        #print "Neuron calcium: %f, Ecell Calcium: %f" %(ca_concentration, 
+        #                                               spine.ecellMan.ca['Value'])
+        # converting the concentration in molecules:
+        # mM to M (1e-3)
+        electrical_ca_Molar = electrical_ca_concentration * 1e-3
+        # um^3 to l (1e-15)
+        CUBIC_um_TO_LITER = 1e-15
+        # 6.022 * 1e23 Avogadro's number
+        N_Av = 6.022 * 1e23
+        ca_ions = electrical_ca_Molar * self.head_vol * CUBIC_um_TO_LITER * N_Av
+        self.ecellMan.ca['Value'] = ca_ions
+    
         
     def createNeck(self):
         """ Create the neck with the Grunditz value"""
