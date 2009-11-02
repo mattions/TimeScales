@@ -232,4 +232,4 @@ if __name__ == "__main__":
     # Save the Results
     print "Simulation Ended"
     sto = save_results(manager, tStim, tStop, options.calciumSampling, 
-                       options.dtNeuron, options.tEquilibrium)
+                       options.dtNeuron, t_equilibrium)
