@@ -7,11 +7,12 @@ import math
 
 from neuron import h
 
-from neuronControl import nrnSim, synapse, stimul
+from neuronControl import nrnSim, synapse 
 from helpers import Loader, Storage
 
 from nrnvisio.manager import Manager
 from nrnvisio.manager import SynVecRef
+from nrnvisio.stimul import Stimul
 
 
 def calcWeight(old_weight, CaMKIIbar, n=2, k=4):
