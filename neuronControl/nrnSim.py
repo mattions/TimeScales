@@ -81,7 +81,7 @@ class NeuronSim():
         self.spines = []
         
         # Trying one spine only for test
-        spine_positions = [0.5]
+        spine_positions = [0.3, 0.5]
         self.__populateDend(spine_positions, [h.MSP_Cell[0].dend3_1[1]])
 
         
