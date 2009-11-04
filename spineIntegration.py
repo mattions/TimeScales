@@ -7,7 +7,7 @@ import math
 
 from neuron import h
 
-from neuronControl import nrnSim, synapse
+from neuronControl import nrnSim, synapse, stimul
 from helpers import Loader, Storage
 
 from nrnvisio.manager import Manager
