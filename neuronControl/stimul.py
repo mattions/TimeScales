@@ -3,13 +3,13 @@
 
 class Stimul(object):
     """Store the inputs we are going to deliver to the different synapses"""
-    def __init__(self, time, number, chan_type, noise=0, delay=0):
+    def __init__(self, time, number, interval, chan_type, noise=0):
         
         self.time = time
         self.number = number
         self.chan_type = chan_type
         self.noise = noise
-        self.delay = delay
+        self.interval = interval
         
         self.spine = None #Used for logging
     

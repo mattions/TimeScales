@@ -23,7 +23,7 @@ class Synapse(object):
             
         return chan    
     
-    def createStimul(self, start, number, interval, noise):
+    def createStimul(self, stim):
         """Create a netStim object and assign it to the synapse together with 
         a NetConnect one.
         
@@ -34,10 +34,10 @@ class Synapse(object):
         
         # NetStim obj    
         netStim = h.NetStim()
-        netStim.number = number
-        netStim.start = start
-        netStim.interval = interval
-        netStim.noise = noise
+        netStim.number = stim.number
+        netStim.start = stim.time
+        netStim.interval = stim.interval
+        netStim.noise = stim.noise
         self.netStim = netStim # assign the point to the class as attribute
         
         # NetCon obj

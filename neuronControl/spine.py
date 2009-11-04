@@ -75,12 +75,8 @@ class Spine():
     def setStimul(self, stim):
         '''Set the stimul applied to spine'''
         for synapse in self.synapses:            
-            if synapse.chan_type == chan_type:
-                synapse.createStimul(start = time,  
-                             number = number, 
-                             interval = interval, # ms between the stimuli
-                             noise = noise)
-        stim.spine = spine.id
+            synapse.createStimul(stim)
+        stim.spine = self.id
             
     
     def createNeck(self):

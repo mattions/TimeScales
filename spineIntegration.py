@@ -8,11 +8,14 @@ import math
 from neuron import h
 
 from neuronControl import nrnSim, synapse 
+from neuronControl.stimul import Stimul 
+
 from helpers import Loader, Storage
 
 from nrnvisio.manager import Manager
 from nrnvisio.manager import SynVecRef
-from nrnvisio.stimul import Stimul
+
+
 
 
 def calcWeight(old_weight, CaMKIIbar, n=2, k=4):
@@ -148,10 +151,12 @@ if __name__ == "__main__":
     # Set the stimuls to the synapses    
     
     
-    stim1 = Stimul((1 * 1e3) + t_equilibrium, 10, 'ampa')
-    stim2 = Stimul((1.5 * 1e3) + t_equilibrium, 10, 'ampa')
-    spine1.setStim(stim1)
-    spine2.setStim(stim2)
+    stim1 = Stimul((1 * 1e3) + t_equilibrium, 10, 
+                   0.1, 'ampa')
+    stim2 = Stimul((1.5 * 1e3) + t_equilibrium, 10, 
+                   0.1, 'ampa')
+    nrnSim.spines[0].setStimul(stim1)
+    nrnSim.spines[1].setStimul(stim2)
     stims = [stim1, stim2]
     
     
