@@ -35,7 +35,7 @@ def convertCalcium(cai, vol=1e-15):
     
     return numberOfMoleculs
 
-def save_results(manager, tStims, tStop, calciumSampling, dtNeuron, tEquilibrium):
+def save_results(manager, stims, tStop, calciumSampling, dtNeuron, tEquilibrium):
     """Save the results in a directory"""
     loader = Loader()
     saving_dir = loader.create_new_dir(prefix=os.getcwd())
@@ -77,11 +77,12 @@ def save_results(manager, tStims, tStop, calciumSampling, dtNeuron, tEquilibrium
     
     loader.save(storage, saving_dir, "storage")
     f = open(os.path.join(saving_dir, 'log.txt'), 'w') 
-    f.write("tStims [s]: %f\n" % (tStims))
     f.write("tStop [s]: %f\n" % (tStop))
     f.write("calciumSampling [s]: %f\n" % (calciumSampling))
     f.write("dtNeuron [ms]: %f\n" % (dtNeuron))
     f.write("tEquilibrium [s]: %f\n" % (tEquilibrium))
+    for stim in stims:
+        f.write(stim.to_log())
     f.close()
     return storage
 
@@ -117,9 +118,8 @@ if __name__ == "__main__":
     
     # Checking the correct num of args
     
-    if len(args) != 2:
-        parser.error("Incorrect number of arguments. You should provide \
-        the timeOfStimul and the tStop")
+    if len(args) != 1:
+        parser.error("Incorrect number of arguments. You should provide the tStop")
         parser.usage()
     else:
         # Processing the options
@@ -145,20 +145,24 @@ if __name__ == "__main__":
     # Set the spines
     
     # Set the stimuls to the synapses    
-    # For now hardcoded than we have to decide _how_ give the input.
     
-    tStims = numpy.array([0.10, 10.0])
-    tStims = tStims + t_equilibrium
     
-    for spine in nrnSim.spines:
-        for synapse in spine.synapses:
-            for tStim in tStims:            
-                if synapse.chan_type == 'ampa':
-                    # to convert in secs
-                    synapse.createStimul(start = tStim * 1e3,  
-                                 number = 10, 
-                                 interval = 10 # ms between the stimuli
-                                 )
+    stim1 = Stimul((1 * 1e3) + t_equilibrium, 10, 'ampa')
+    stim2 = Stimul((1.5 * 1e3) + t_equilibrium, 10, 'ampa')
+    spine1.setStim(stim1)
+    spine2.setStim(stim2)
+    stims = [stim1, stim2]
+    
+    
+#    for spine in nrnSim.spines:
+#        for synapse in spine.synapses:
+#            for tStim in tStims:            
+#                if synapse.chan_type == 'ampa':
+#                    # to convert in secs
+#                    synapse.createStimul(start = tStim * 1e3,  
+#                                 number = 10, 
+#                                 interval = 10 # ms between the stimuli
+#                                 )
                 
 
     #==========
@@ -218,8 +222,7 @@ if __name__ == "__main__":
                         synapse.syn_vecs['weight'].append(weight)
                 
         if numpy.round(h.t, decimals = 4) % 200 == 0: # printig every two seconds
-            logger.debug( "Neuron time [ms]: %f, spines: %s" 
-                              % ( h.t, nrnSim.spines))
+            logger.debug( "Neuron time [ms]: %f" % h.t)
             logger.debug( "Ecell Time [s] %g: " 
                               %spine.ecellMan.ses.getCurrentTime())
     #
@@ -227,5 +230,5 @@ if __name__ == "__main__":
     #------------------------------------
     # Save the Results
     print "Simulation Ended"
-    sto = save_results(manager, tStims, tStop, options.calciumSampling, 
+    sto = save_results(manager, stims, tStop, options.calciumSampling, 
                        options.dtNeuron, t_equilibrium)

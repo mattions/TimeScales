@@ -26,6 +26,7 @@ class Spine():
         self.psd = self.createPSD(self.head)
         self.parent = None # the parent section connected to the neck
         self.synapses = self.createSynapses()
+        self.stimul = [] #list to store the Stims
         
         # Reset ions
         h.cai0_ca_ion = 0.001        #// mM, Churchill 1998
@@ -71,6 +72,17 @@ class Spine():
         self.ecellMan.ca['Value'] = ca_ions
     
         
+    def setStimul(self, stim):
+        '''Set the stimul applied to spine'''
+        for synapse in self.synapses:            
+            if synapse.chan_type == chan_type:
+                synapse.createStimul(start = time,  
+                             number = number, 
+                             interval = interval, # ms between the stimuli
+                             noise = noise)
+        stim.spine = spine.id
+            
+    
     def createNeck(self):
         """ Create the neck with the Grunditz value"""
         name_sec = self.id + "_neck"

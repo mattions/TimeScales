@@ -23,7 +23,7 @@ class Synapse(object):
             
         return chan    
     
-    def createStimul(self, start=0, number=0, interval=0, noise=0):
+    def createStimul(self, start, number, interval, noise):
         """Create a netStim object and assign it to the synapse together with 
         a NetConnect one.
         
