@@ -55,12 +55,14 @@ class Loader(object):
         
         params:
         filename - path to the binary python object"""
-        
-        FILE = open(filename, 'r')
-        obj = cPickle.load(FILE)
-        FILE.close()
-        print "loaded file %s" %os.path.abspath(filename)
-        return obj
+        try:
+            FILE = open(filename, 'r')
+            obj = cPickle.load(FILE)
+            FILE.close()
+            print "loaded file %s" %os.path.abspath(filename)
+            return obj
+        except:
+            print "impossible to load the file: %s" %filename
     
     def convert_to_numpy(self, vecDict):
         """Convert a dictionary of Hoc Vectors into one of Numpy Vecs"""
