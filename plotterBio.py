@@ -35,3 +35,12 @@ for root, dirs, files in os.walk(top, topdown=False):
         pylab.ylabel("Occupied fraction")
         pylab.xlabel("Time [s]")
         pylab.savefig(root + '/CamKIIbar.png')
+        
+        for synVec in sto.synVecsRefs:
+            pylab.figure()
+            pylab.plot(synVec.syn_vecs['weight'])
+            pylab.xlabel("Time [ms]")
+            pylab.ylabel("Synapse's Weight")
+            t= "%s %s" %(synVec.section_name, synVec.chan_type)
+            pylab.title()
+            pylab.savefig(t + ".png")
