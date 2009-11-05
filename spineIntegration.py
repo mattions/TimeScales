@@ -151,13 +151,15 @@ if __name__ == "__main__":
     # Set the stimuls to the synapses    
     
     
-    stim1 = Stimul((1 * 1e3) + t_equilibrium, 10, 
+    stim1 = Stimul((1  + t_equilibrium) * 1e3, 10, 
                    0.1, 'ampa')
-    stim2 = Stimul((1.5 * 1e3) + t_equilibrium, 10, 
+    stim2 = Stimul((1.5 + t_equilibrium) * 1e3, 10, 
                    0.1, 'ampa')
     nrnSim.spines[0].setStimul(stim1)
     nrnSim.spines[1].setStimul(stim2)
     stims = [stim1, stim2]
+    for stim in stims:
+        print stim.to_log()
     
     
 #    for spine in nrnSim.spines:
