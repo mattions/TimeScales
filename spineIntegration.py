@@ -185,11 +185,13 @@ if __name__ == "__main__":
     variables_to_rec = ['v', 'cai', 'cali', 'ica']
     
     manager = Manager()
-    for spine in nrnSim.spines:
-        sections_list = manager.get_tree(spine.psd)
-        for sec in sections_list:
-            for var in variables_to_rec:
-                manager.add_vecRef(var, sec)
+    for var in variables_to_rec:
+        manager.add_all_vecRef(var)
+#    for spine in nrnSim.spines:
+#        sections_list = manager.get_tree(spine.psd)
+#        for sec in sections_list:
+#            for var in variables_to_rec:
+#                manager.add_vecRef(var, sec)
     
     
     # Recording the synapses
