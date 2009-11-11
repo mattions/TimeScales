@@ -53,12 +53,25 @@ class NeuronSim():
         if msn:
             # Loading the MSN model
             h.load_file(os.path.join(hoc_path, "nacb_main.hoc"))
+            self._set_geometry()
+            
             if spines:
                 # Adding the spines
                 self.__distributeSpines()
             else:
                 self.spines = [] # Allocating the list for the spine to use later.
+    def _set_geometry(self):
+        """Set the geometry of the Neuron to the normal value, without
+        the spine correcting factors applied as in Wolf 2005"""
+        for dend in h.MSP_Cell[0].Mid_Dend:
+            dend.diam = 1 # um
+            dend.L = 20 #um
             
+        for dend in h.MSP_Cell[0].Dist_Dend:
+            dend.diam = 0.5 #um
+            dend.L = 190 #um 
+        
+        
     def run(self, tStop):
         """Run the simulation until tStop"""
         h.tstop = tStop
