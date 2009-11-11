@@ -20,7 +20,7 @@ if __name__ == "__main__":
    pylab.xlabel("Distance from the soma [um]")
    pylab.ylabel("Surface Area [um]/Dendritic Lenght [um^2]")
    
-   terms = [100]
+   terms = [50]
    for x in terms:
       yfit = fit(data, x)
       pylab.plot(data.x, yfit, label="fit %i" %x)
