@@ -3,12 +3,13 @@
 
 
 import pylab
-import scipy
-import numpy
+import scipy as sp
+import numpy as np
+import matplotlib.pyplot as plt
 
 def fit(data, terms):
-   polycoeffs = scipy.polyfit(data.x, data.y, terms)
-   yfit = scipy.polyval(polycoeffs, data.x)
+   polycoeffs = sp.polyfit(data.x, data.y, terms)
+   yfit = sp.polyval(polycoeffs, data.x)
    return yfit
 
 
@@ -16,19 +17,19 @@ if __name__ == "__main__":
 
    data = pylab.csv2rec('spines_distribution_Wilson_1992.csv')
 
-   pylab.plot(data.x, data.y, 'r+', label="data")
-   pylab.xlabel("Distance from the soma [um]")
-   pylab.ylabel("Surface Area [um]/Dendritic Lenght [um^2]")
+   plt.plot(data.x, data.y, 'r+', label="data")
+   plt.xlabel("Distance from the soma [um]")
+   plt.ylabel("Surface Area [um]/Dendritic Lenght [um^2]")
    
    terms = [50]
    for x in terms:
       yfit = fit(data, x)
-      pylab.plot(data.x, yfit, label="fit %i" %x)
+      plt.plot(data.x, yfit, label="fit %i" %x)
 
 
    
 #   yfit = fit(data, terms)
 #   pylab.plot(data.x, yfit, label="fit %i" %terms)
-   pylab.legend()
-   pylab.show()
+   plt.legend()
+   plt.show()
 
