@@ -1,4 +1,4 @@
-from nrnvisio.controls import Controls
+from neuronvisio.controls import Controls
 controls = Controls()
 from neuron import h
 import neuronControl

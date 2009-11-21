@@ -8,7 +8,7 @@ ipython -pylab
 
 run test_spine.py"""
 
-import nrnvisio
+import neuronvisio
 import os
 import numpy
 import pylab
@@ -20,7 +20,7 @@ from neuronControl import Synapse, Spine
 from helpers.graph import Graph
 
 # Starting neuronVisio
-controls = nrnvisio.Controls()
+controls = neuronvisio.Controls()
 
 mod_path = "mod"
 hoc_path = "hoc"
@@ -56,7 +56,7 @@ for synapse in spine1.synapses:
 
 
 # Vectors
-manager = nrnvisio.Manager()
+manager = neuronvisio.Manager()
 vars = ['v', #voltage 
         'cai', #first calcium pool
         'cali' #second calcium pool

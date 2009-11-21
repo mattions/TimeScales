@@ -170,7 +170,7 @@ class Spine():
         self.parent = parentSec
         self.pos = parentx
     
-    def calcAreaSpine(self):
+    def calc_surface_area(self):
         """Calculate the surface of the spine"""
         surface_neck_cyl = 2 * math.pi * (self.neck.diam/2) * (self.neck.diam/2 + self.neck.L)
         surface_head_cyl = 2 * math.pi * (self.head.diam/2) * (self.head.diam/2 + self.head.L)

@@ -12,8 +12,8 @@ from neuronControl.stimul import Stimul
 
 from helpers import Loader, Storage
 
-from nrnvisio.manager import Manager
-from nrnvisio.manager import SynVecRef
+from neuronvisio.manager import Manager
+from neuronvisio.manager import SynVecRef
 
 
 

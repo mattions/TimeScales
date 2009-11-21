@@ -39,7 +39,7 @@ if __name__ == "__main__":
     else:
         storage = args[0]
     
-    from nrnvisio.controls import Controls
+    from neuronvisio.controls import Controls
     controls = Controls()
     from neuron import h
     import neuronControl
