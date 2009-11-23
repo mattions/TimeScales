@@ -1,6 +1,9 @@
 # Author Michele Mattioni
 # Wed Mar 18 17:51:51 GMT 2009
 
+# Importing everything through cython
+import pyximport; pyximport.install()
+
 import logging
 import numpy
 import math
@@ -15,6 +18,8 @@ from helpers import Loader, Storage
 from neuronvisio.manager import Manager
 from neuronvisio.manager import SynVecRef
 
+import mathhelper
+
 
 
 
@@ -28,16 +33,6 @@ def calcWeight(old_weight, CaMKIIbar, n=2, k=4):
     calculated delta: %e" %(old_weight, CaMKIIbar, delta)
     #print s
     return weight
-
-
-def convertCalcium(cai, vol=1e-15):
-    """Convert the internal calcium concentration to the number of molecules."""
-    
-    NAv= 6.022e23
-    numberOfMoleculs = cai * vol * NAv
-    numberOfMoleculs = math.round(numberOfMoleculs)
-    
-    return numberOfMoleculs
 
 def save_results(manager, stims, tStop, calciumSampling, dtNeuron, tEquilibrium):
     """Save the results in a directory"""
@@ -227,7 +222,8 @@ if __name__ == "__main__":
                 # Updating the AMPA synapses
                 for synapse in spine.synapses:
                     if synapse.chan_type == 'ampa':
-                        weight = calcWeight(synapse.netCon.weight[0], CaMKIIbar)
+                        # n =2 k = 4
+                        weight = mathhelper.calcWeight(synapse.netCon.weight[0], CaMKIIbar, 2, 4)
                         synapse.netCon.weight[0] = weight
                         synapse.syn_vecs['weight'].append(weight)
                 
