@@ -2,7 +2,7 @@
 # Wed Mar 18 17:51:51 GMT 2009
 
 # Importing everything through cython
-#import pyximport; pyximport.install()
+import pyximport; pyximport.install()
 
 import logging
 import numpy
