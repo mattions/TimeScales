@@ -4,7 +4,7 @@
 import re
 import os
 
-import pylab
+import matplotlib.pyplot as plt
 
 import helpers
 
@@ -47,42 +47,42 @@ class VisualizerBiochemical(object):
         """Plot the default timecourses
         :param interval: Used in the title"""
         ca_tc = self.timeCourses['ca'] 
-        pylab.figure()
-        pylab.plot(ca_tc[:,0], ca_tc[:,1], label="Calcium")
-        pylab.xlabel("Time [s]")
-        pylab.legend(loc=0)
+        plt.figure()
+        plt.plot(ca_tc[:,0], ca_tc[:,1], label="Calcium")
+        plt.xlabel("Time [s]")
+        plt.legend(loc=0)
         if interval is not None:
             title = "Flux of Calcium Interval: %s [s]" %interval
-            pylab.title(title)
+            plt.title(title)
         
         
         if self.save :
-            pylab.savefig(os.path.join(self.directory, "caInput.png"))
+            plt.savefig(os.path.join(self.directory, "caInput.png"))
             print "figure saved in: %s" % os.path.join(self.directory, "caInput.png")
             #zoom 1
-            pylab.xlim((149.8, 151))
-            pylab.savefig(os.path.join(self.directory, "caInput_zoom1.png"))
+            plt.xlim((149.8, 151))
+            plt.savefig(os.path.join(self.directory, "caInput_zoom1.png"))
             #zoom 2
-            pylab.xlim((160.0, 161.0))
-            pylab.ylim((6,15))
-            pylab.savefig(os.path.join(self.directory, "caInput_zoom2.png"))
+            plt.xlim((160.0, 161.0))
+            plt.ylim((6,15))
+            plt.savefig(os.path.join(self.directory, "caInput_zoom2.png"))
         
         bars = ['PP2Bbar', 'CaMKIIbar']
         pylab.figure()
         for bar in bars:
             bar_tc = self.timeCourses[bar]
-            pylab.plot(bar_tc[:,0], bar_tc[:,1], label=bar)
-            pylab.xlabel("Time [s]")
-            pylab.legend(loc=0)
+            plt.plot(bar_tc[:,0], bar_tc[:,1], label=bar)
+            plt.xlabel("Time [s]")
+            plt.legend(loc=0)
             if interval is not None:
                 title = "Flux of Calcium Interval: %s [s]" %interval
-                pylab.title(title)
+                plt.title(title)
         
         if self.save :
-            pylab.savefig(os.path.join(self.directory, "PP2B_and_CaMKII_activation.png"))
+            plt.savefig(os.path.join(self.directory, "PP2B_and_CaMKII_activation.png"))
             print "figure saved in: %s" % os.path.join(self.directory, "PP2B_and_CaMKII_activation.png")
         else:
-            pylab.show()
+            plt.show()
     
     def write_interval(self, interval):
         open(os.path.join(self.directory, interval), 'w')
@@ -116,8 +116,8 @@ if __name__ == "__main__":
     if options.save:
         matplotlib.use('Agg')
         print "Switching backend to Agg. Batch execution"
-    import pylab
-    
+        
     visualBio = VisualizerBiochemical(directory, save=options.save)
     visualBio.main()
+    
          
