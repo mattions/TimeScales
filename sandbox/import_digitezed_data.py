@@ -8,6 +8,7 @@ import numpy as np
 from numpy import sin, exp
 import matplotlib.pyplot as plt
 from scipy.special import gamma
+import cPickle
 
 def sin_based(x, p):
   
@@ -25,6 +26,15 @@ def double_exp(x, p):
     w, tau1, tau2 = p
     return w * (exp (-x/tau2) - exp(-x/tau1))
 
+def calc_midpoint(cursor_list, x1_list):
+    """Calculate the midpoints"""
+    
+    mid_points = []
+    for i, el in enumerate(cursor_list):
+        mid_point = cursor_list[i] + (x1_list[i] - cursor_list[i])/2
+        mid_points.append(mid_point)
+    return mid_points
+    
 
 class FitHandler(object):
     """Fit the data with a polynomial"""
@@ -36,7 +46,7 @@ class FitHandler(object):
     
     def plot_poly(self, pfit):
         
-        plt.plot(data.x, pfit(data.x), label="fit %i" %pfit.order)
+        plt.plot(data.x, pfit(data.x), label="poly %i" %pfit.order)
     
     def fit_and_plot(self, data, order):
         p = self.fit(data, order)
@@ -48,6 +58,26 @@ class FitHandler(object):
        plt.plot(data.x, data.y, 'k.', label="data")
        plt.xlabel("Distance from the soma [um]")
        plt.ylabel("Surface Area [um]/Dendritic Lenght [um^2]")
+       
+    def integrate_till_value(self, x0, value, poly, increment, 
+                             scale_branch):
+        """Integrate the polynomial from x0 to the value required
+        
+        :Params:
+            x0: starting point for the integration
+            value: objective value to reach
+            poly: polynomial to use to calculate
+            
+        :return:
+            x1: ending point of the integration
+        """
+        delta = 0
+        x1 = x0
+        while value >= delta:
+            x1 += increment
+            delta = poly(x1)/scale_branch - poly(x0)/scale_branch
+            
+        return (x1, delta)
 
 
 class ArbitraryFunctionfit(object):
@@ -72,51 +102,79 @@ if __name__ == "__main__":
     pfh = FitHandler()
     pfh.plot_data(data)
     
-    orders = [17]
-    poly_list = []
-    
-    # Fitting
-    for order in orders:
-       pfit = pfh.fit_and_plot(data, order)
-       poly_list.append(pfit)
+    order = 17
+    pfit = pfh.fit_and_plot(data, order)
     plt.title("Fitting the data")
-    plt.legend()   
+    plt.legend()
+    plt.savefig("Fitted_data.png")
+    
+    
     # Integrating
-    Poly_Integs = []
-    for poly in poly_list:
-        P_Integ = poly.integ()
-        Poly_Integs.append(P_Integ)
+    pInteg = pfit.integ()
     
     plt.figure()
-    labels = []
-    for poly in Poly_Integs:
-        pfh.plot_poly(poly)
-        integrOf = poly.order -1
-        s = 'Integral of %i' % integrOf
-        labels.append( s )
+    pfh.plot_poly(pInteg)
     plt.title("Integral area")
-    plt.legend((labels), loc=0)
-    
-    spine_area_surface = 6.35 # um^2
-    
-    
     # We get the area per number of branch (4):
-    area_per_brach = P_Integ(data.x)/4
-    plt.figure()
+    scale_branch = 4
+    area_per_branch = pInteg(data.x)/scale_branch
     plt.plot(data.x, area_per_branch, label='area branch')
+    plt.legend(loc=0)
+    plt.savefig('integral_area.png')
     
     
-#    plt.figure()
-#    pfh.plot_data(data)
-#    aff = ArbitraryFunctionfit(double_exp)
-#    w, tau1, tau2 = p0 = [1, 10, 40]
-#    est_p, err_est = aff.fit(p0, data.x, data.y)
-#    print "Estimated par: %s, Estimated Err: %s" %(est_p, err_est)
-#    
-#    plt.plot(aff.function(data.x, est_p), label="fit")
+    # Calculating the spine dimension
     
-    plt.show()
+    """
+    Procedure to get this right:
+    
+    - Compute the total surface from Wolf of all the spines
+        # 1525 spines total, 381 per branch
+    - Rescale the whole surface Wolf spines surface to the Wilson one
+    - Compute the spine equivalent surface Wilson2Wolf 
+    - Integrate until the surface in the Wilson world match one spine surface
+    - take the (x_end - x_start)/2 position
+    - iterate 
+    
+    """
+    
+    spine_Wolf = 6.35 # um^2
+    total_number_spines = 1525
+    spines_per_branch = 381
+    
+    
+    total_Wolf = spines_per_branch * spine_Wolf
+    
+    total_Wilson = pInteg(220)/scale_branch #Value of the integral at the last bit
+    
+    # spine_Wolf : spine_Wilson = total_Wolf : total_Wilson
+    spine_Wilson = (spine_Wolf * total_Wilson)/ total_Wolf
+    increment =0.001
 
-   
-       
+    cursor = 0 
+    cursor_list = []
+    x1_list = []
+    delta_list = []
     
+    print "Calculating the mid points"
+     
+    while cursor <= data.x[-1]:
+            x1, delta = pfh.integrate_till_value(cursor, spine_Wilson, pInteg, 
+                             increment, scale_branch)
+            cursor_list.append(cursor)
+            x1_list.append(x1)
+            delta_list.append(delta)
+            cursor = x1 # Resetting the cursor to the x1
+            
+    spines_pos = calc_midpoint(cursor_list, x1_list)
+    plt.figure()
+    plt.hist(spines_pos, bins=30)
+    plt.title("spines distribution for branch")
+    plt.savefig('spines_distribution.png')
+    
+    filename = 'spines_pos.pickle'
+    file = open(filename, 'w')
+    cPickle.dump(spines_pos, file, protocol=0)
+        
+    plt.show()
+   
