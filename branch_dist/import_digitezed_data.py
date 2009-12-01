@@ -55,7 +55,7 @@ class FitHandler(object):
             
         return (x1, delta)
     
-    def calc_spines_pos(cursor_list, x1_list):
+    def calc_spines_pos(self, cursor_list, x1_list):
         """Calculate the spines position, returning the mid point 
         of the interval from the two list."""
         
@@ -136,7 +136,7 @@ if __name__ == "__main__":
             delta_list.append(delta)
             cursor = x1 # Resetting the cursor to the x1
             
-    spines_pos = pfh.calc_midpoint(cursor_list, x1_list)
+    spines_pos = pfh.calc_spines_pos(cursor_list, x1_list)
     plt.figure()
     plt.hist(spines_pos, bins=30)
     plt.title("spines distribution for branch")
