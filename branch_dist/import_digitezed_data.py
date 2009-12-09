@@ -1,13 +1,11 @@
 # Author Michele Mattioni
 # Fri Oct 23 15:41:58 BST 2009
 
-
 import pylab
 import numpy as np
 from numpy import sin, exp
 import matplotlib.pyplot as plt
-import cPickle
-
+from helpers.loader import Loader
 
 
     
@@ -143,7 +141,7 @@ if __name__ == "__main__":
     plt.savefig('spines_distribution.png')
     
     filename = 'spines_pos.pickle'
-    file = open(filename, 'w')
-    cPickle.dump(spines_pos, file, protocol=0)
+    l = Loader()
+    l.save(spines_pos, '.', filename)
         
     plt.show()
