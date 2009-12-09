@@ -61,7 +61,7 @@ class Loader(object):
             FILE.close()
             print "loaded file %s" %os.path.abspath(filename)
             return obj
-        except:
+        except IOError:
             print "impossible to load the file: %s" %filename
     
     def convert_to_numpy(self, vecDict):
