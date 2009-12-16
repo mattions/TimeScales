@@ -1,0 +1,101 @@
+load_file("nrngui.hoc")
+
+print "Testing mapping of SBML file BIOMD000000183_altered_id_replaced.xml on NEURON"
+
+create soma
+access soma
+L = 1
+diam = 1
+
+insert pas  
+
+insert BIOMD000000183_altered_id_replaced
+
+psection()
+
+tstop = 10.0
+dt = 0.01
+steps_per_ms = 100.000000
+
+objref SampleGraph
+SampleGraph = new Graph(0)
+
+minVal = 0
+maxVal = 10
+
+{SampleGraph.size(0,tstop,minVal,maxVal)}
+{SampleGraph.view(0, minVal, tstop, (maxVal-minVal), 100, 500, 500, 300)}
+{
+    SampleGraph.addexpr("soma.camR_Model_1(0.5)", 1, 1)
+    SampleGraph.addexpr("soma.ca_Model_1(0.5)", 2, 1)
+    SampleGraph.addexpr("soma.camR_ca1_A_Model_1(0.5)", 3, 1)
+    SampleGraph.addexpr("soma.camR_ca1_B_Model_1(0.5)", 4, 1)
+    SampleGraph.addexpr("soma.camR_ca1_C_Model_1(0.5)", 5, 1)
+    SampleGraph.addexpr("soma.camR_ca1_D_Model_1(0.5)", 6, 1)
+    SampleGraph.addexpr("soma.camR_ca2_AB_Model_1(0.5)", 7, 1)
+    SampleGraph.addexpr("soma.camR_ca2_AC_Model_1(0.5)", 8, 1)
+    SampleGraph.addexpr("soma.camR_ca2_AD_Model_1(0.5)", 9, 1)
+    SampleGraph.addexpr("soma.camR_ca2_BC_Model_1(0.5)", 10, 1)
+    SampleGraph.addexpr("soma.camR_ca2_BD_Model_1(0.5)", 11, 1)
+    SampleGraph.addexpr("soma.camR_ca2_CD_Model_1(0.5)", 12, 1)
+    SampleGraph.addexpr("soma.camR_ca3_ABC_Model_1(0.5)", 13, 1)
+    SampleGraph.addexpr("soma.camR_ca3_ABD_Model_1(0.5)", 14, 1)
+    SampleGraph.addexpr("soma.camR_ca3_ACD_Model_1(0.5)", 15, 1)
+    SampleGraph.addexpr("soma.camR_ca3_BCD_Model_1(0.5)", 16, 1)
+    SampleGraph.addexpr("soma.camR_ca4_ABCD_Model_1(0.5)", 17, 1)
+    SampleGraph.addexpr("soma.camT_Model_1(0.5)", 18, 1)
+    SampleGraph.addexpr("soma.camT_ca1_A_Model_1(0.5)", 19, 1)
+    SampleGraph.addexpr("soma.camT_ca1_B_Model_1(0.5)", 20, 1)
+    SampleGraph.addexpr("soma.camT_ca1_C_Model_1(0.5)", 21, 1)
+    SampleGraph.addexpr("soma.camT_ca1_D_Model_1(0.5)", 22, 1)
+    SampleGraph.addexpr("soma.camT_ca2_AB_Model_1(0.5)", 23, 1)
+    SampleGraph.addexpr("soma.camT_ca2_AC_Model_1(0.5)", 24, 1)
+    SampleGraph.addexpr("soma.camT_ca2_AD_Model_1(0.5)", 25, 1)
+    SampleGraph.addexpr("soma.camT_ca2_BC_Model_1(0.5)", 26, 1)
+    SampleGraph.addexpr("soma.camT_ca2_BD_Model_1(0.5)", 27, 1)
+    SampleGraph.addexpr("soma.camT_ca2_CD_Model_1(0.5)", 28, 1)
+    SampleGraph.addexpr("soma.camT_ca3_ABC_Model_1(0.5)", 29, 1)
+    SampleGraph.addexpr("soma.camT_ca3_ABD_Model_1(0.5)", 30, 1)
+    SampleGraph.addexpr("soma.camT_ca3_ACD_Model_1(0.5)", 31, 1)
+    SampleGraph.addexpr("soma.camT_ca3_BCD_Model_1(0.5)", 32, 1)
+    SampleGraph.addexpr("soma.camT_ca4_ABCD_Model_1(0.5)", 33, 1)
+    SampleGraph.addexpr("soma.CaMKII_Model_1(0.5)", 34, 1)
+    SampleGraph.addexpr("soma.camR_CaMKII_Model_1(0.5)", 35, 1)
+    SampleGraph.addexpr("soma.camR_ca1_A_CaMKII_Model_1(0.5)", 36, 1)
+    SampleGraph.addexpr("soma.camR_ca1_B_CaMKII_Model_1(0.5)", 37, 1)
+    SampleGraph.addexpr("soma.camR_ca1_C_CaMKII_Model_1(0.5)", 38, 1)
+    SampleGraph.addexpr("soma.camR_ca1_D_CaMKII_Model_1(0.5)", 39, 1)
+    SampleGraph.addexpr("soma.camR_ca2_AB_CaMKII_Model_1(0.5)", 40, 1)
+    SampleGraph.addexpr("soma.camR_ca2_AC_CaMKII_Model_1(0.5)", 41, 1)
+    SampleGraph.addexpr("soma.camR_ca2_AD_CaMKII_Model_1(0.5)", 42, 1)
+    SampleGraph.addexpr("soma.camR_ca2_BC_CaMKII_Model_1(0.5)", 43, 1)
+    SampleGraph.addexpr("soma.camR_ca2_BD_CaMKII_Model_1(0.5)", 44, 1)
+    SampleGraph.addexpr("soma.camR_ca2_CD_CaMKII_Model_1(0.5)", 45, 1)
+    SampleGraph.addexpr("soma.camR_ca3_ABC_CaMKII_Model_1(0.5)", 46, 1)
+    SampleGraph.addexpr("soma.camR_ca3_ABD_CaMKII_Model_1(0.5)", 47, 1)
+    SampleGraph.addexpr("soma.camR_ca3_ACD_CaMKII_Model_1(0.5)", 48, 1)
+    SampleGraph.addexpr("soma.camR_ca3_BCD_CaMKII_Model_1(0.5)", 49, 1)
+    SampleGraph.addexpr("soma.camR_ca4_ABCD_CaMKII_Model_1(0.5)", 50, 1)
+    SampleGraph.addexpr("soma.PP2B_Model_1(0.5)", 51, 1)
+    SampleGraph.addexpr("soma.camR_PP2B_Model_1(0.5)", 52, 1)
+    SampleGraph.addexpr("soma.camR_ca1_A_PP2B_Model_1(0.5)", 53, 1)
+    SampleGraph.addexpr("soma.camR_ca1_B_PP2B_Model_1(0.5)", 54, 1)
+    SampleGraph.addexpr("soma.camR_ca1_C_PP2B_Model_1(0.5)", 55, 1)
+    SampleGraph.addexpr("soma.camR_ca1_D_PP2B_Model_1(0.5)", 56, 1)
+    SampleGraph.addexpr("soma.camR_ca2_AB_PP2B_Model_1(0.5)", 57, 1)
+    SampleGraph.addexpr("soma.camR_ca2_AC_PP2B_Model_1(0.5)", 58, 1)
+    SampleGraph.addexpr("soma.camR_ca2_AD_PP2B_Model_1(0.5)", 59, 1)
+    SampleGraph.addexpr("soma.camR_ca2_BC_PP2B_Model_1(0.5)", 60, 1)
+    SampleGraph.addexpr("soma.camR_ca2_BD_PP2B_Model_1(0.5)", 61, 1)
+    SampleGraph.addexpr("soma.camR_ca2_CD_PP2B_Model_1(0.5)", 62, 1)
+    SampleGraph.addexpr("soma.camR_ca3_ABC_PP2B_Model_1(0.5)", 63, 1)
+    SampleGraph.addexpr("soma.camR_ca3_ABD_PP2B_Model_1(0.5)", 64, 1)
+    SampleGraph.addexpr("soma.camR_ca3_ACD_PP2B_Model_1(0.5)", 65, 1)
+    SampleGraph.addexpr("soma.camR_ca3_BCD_PP2B_Model_1(0.5)", 66, 1)
+    SampleGraph.addexpr("soma.camR_ca4_ABCD_PP2B_Model_1(0.5)", 67, 1)
+    graphList[0].append(SampleGraph)
+}
+
+print "Starting simulation!"
+{run()}
+print "Finished simulation!"
