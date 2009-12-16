@@ -2,6 +2,7 @@
 # date Tue Dec  8 15:55:10 GMT 2009
 
 from helpers.loader import Loader
+import matplotlib
 import matplotlib.pyplot as plt
 
 
@@ -10,8 +11,8 @@ class spinePercentual(object):
     def __init__(self):
         self.soma_radius = 8
         self.prox_ex = self.soma_radius + 20 
-        self.mid_ex = self.prox + 20
-        self.dist_ex = self.mid + 190
+        self.mid_ex = self.prox_ex + 20
+        self.dist_ex = self.mid_ex + 190
 
     def reduce_noise(self, spines_pos):
         """We don't take in account the first 5 spines position"""
@@ -49,15 +50,16 @@ if __name__ == "__main__":
     l = Loader()
     
     spines_pos = l.load('spines_pos.pickle')
-    plt.hist(spines_pos, bins=30, histtype='stepfilled')
+    plt.hist(spines_pos, bins=30, label='normal')
     
     spinePer = spinePercentual()
     spines_pos = spinePer.reduce_noise(spines_pos)
     
-    plt.hist(spines_pos, 30, histtype='stepfilled')
-    plt.legend(('normal', 'noise red'), loc=0)
+    plt.hist(spines_pos, bins=30, label='noise red')
+    plt.legend()
     
     print "Calculating the spines pos normalized to 1"
     spinePer.convert_to_perc(spines_pos)
-    
+    l.save(spinePer.mid, '.', 'mid_spines_per_branch.pickle')
+    l.save(spinePer.dist, '.', 'dist_spines_per_branch.pickle')
     plt.show()
