@@ -18,8 +18,17 @@ from helpers import Loader, Storage
 from neuronvisio.manager import Manager
 from neuronvisio.manager import SynVecRef
 
-import mathhelper
 
+def calcWeight(old_weight, CaMKIIbar, n=2, k=4):
+    """Calc the weight of the synapses according to the CaMKII"""
+    
+    # Dummy function should be changed
+    delta = math.pow(CaMKIIbar, n) / (math.pow(k, n) + math.pow(CaMKIIbar, n))
+    weight = old_weight + delta
+    s = "Old weight %f, CAMKIIbar value: %e,\
+    calculated delta: %e" %(old_weight, CaMKIIbar, delta)
+    #print s
+    return weight
 
 def save_results(manager, stims, tStop, calciumSampling, dtNeuron, tEquilibrium):
     """Save the results in a directory"""
@@ -208,10 +217,8 @@ if __name__ == "__main__":
                 
                 # Updating the AMPA synapses
                 for synapse in spine.synapses:
-                    if synapse.chan_type == 'ampa':
-                        # n =2 k = 4
-                        weight = mathhelper.calcWeight(synapse.netCon.weight[0], 
-                                                       CaMKIIbar, 2, 4)
+                    if synapse.chan_type == 'ampa':                       
+                        weight = calcWeight(synapse.netCon.weight[0], CaMKIIbar)
                         synapse.netCon.weight[0] = weight
                         synapse.syn_vecs['weight'].append(weight)
                 
