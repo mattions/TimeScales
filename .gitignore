@@ -17,3 +17,6 @@ Sims
 
 # The building dir for cython
 build
+
+# Settings eclipse
+.settings
