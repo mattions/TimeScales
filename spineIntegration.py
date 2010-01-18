@@ -1,23 +1,80 @@
 # Author Michele Mattioni
 # Wed Mar 18 17:51:51 GMT 2009
 
-# Importing everything through cython
-#import pyximport; pyximport.install()
-
 import logging
-import numpy
+import numpy as np
 import math
+
+# Importing the database
+import sys
+sys.path.append('./libs')
+import y_serial_v052 as y_serial
+
+import os
 
 from neuron import h
 
 from neuronControl import nrnSim, synapse 
 from neuronControl.stimul import Stimul 
 
-from helpers import Loader, Storage
+from helpers import Loader
 
 from neuronvisio.manager import Manager
 from neuronvisio.manager import SynVecRef
 
+ 
+def store_in_db(manager, stims, tStop, calciumSampling, dtNeuron, tEquilibrium):
+    """Store the simulation results in a database"""
+    loader = Loader()
+    saving_dir = loader.create_new_dir(prefix=os.getcwd())
+    db_name = 'storage.sqlite'
+    db = y_serial.Main(os.path.join(saving_dir, db_name))
+    
+    # Storing the time
+    t = np.array(manager.t)
+    db.insert(t, '#vec time')
+    
+    # Vec Ref
+    pickable_vec_refs = manager.convert_vec_refs()
+    
+    # Vec ref share the 
+    # #vec tag
+    # #var tag
+    # secName
+    for vec_ref in pickable_vec_refs:
+        for var in vec_ref.vecs.keys():
+            notes = '#vec'
+            notes += ' #' + var
+            notes += ' ' + vec_ref.sec_name
+            db.insert(vec_ref.vecs[var], notes)
+    
+    pickable_synVecRefs = manager.convert_syn_vec_refs()
+    
+    for syn_vec_ref in pickable_synVecRefs:
+        for var in syn_vec_ref.syn_vecs.keys():
+            notes = '#synvec'
+            notes += ' #' + var
+            notes += ' #' + syn_vec_ref.chan_type
+            notes += ' ' + syn_vec_ref.section_name
+            db.insert(syn_vec_ref.syn_vecs[var], notes)
+    
+    for spine in nrnSim.spines:
+        # Retrieving the biochemical timecourses
+        spine.ecellMan.converToTimeCourses()
+        time_courses = spine.ecellMan.timeCourses 
+        notes = '#timecourse'
+        notes += ' #' + str(spine.pos)
+        notes += ' #' + spine.parent.name()
+        notes += ' ' + str(spine.id)
+        
+        # Adding a record for each variable
+        for key in time_courses.keys():
+            notes += ' #' + key
+            db.insert(time_courses[key], notes)
+     
+    
+    
+    
 
 def calcWeight(old_weight, CaMKIIbar, n=2, k=4):
     """Calc the weight of the synapses according to the CaMKII"""
@@ -39,7 +96,7 @@ def save_results(manager, stims, tStop, calciumSampling, dtNeuron, tEquilibrium)
     storage  = Storage(calciumSampling, dtNeuron, tEquilibrium)
     
     # Convert the time
-    storage.t = numpy.array(manager.t)
+    storage.t = np.array(manager.t)
     
     # Convert manager to a pickable object
     pickable_vec_refs = manager.convert_vec_refs()
@@ -200,7 +257,7 @@ if __name__ == "__main__":
     while h.t < ( tStop * 1e3): # Using [ms] for NEURON
         h.fadvance() # run Neuron for step
         #for every ms in NEURON we update the ecellMan
-        if numpy.round(h.t, decimals = 4) % ecell_interval_update == 0: 
+        if np.round(h.t, decimals = 4) % ecell_interval_update == 0: 
                 
             for spine in nrnSim.spines:
                 vec_spine_head_cai = manager.get_vector(spine.head, 'cai')
@@ -222,7 +279,7 @@ if __name__ == "__main__":
                         synapse.netCon.weight[0] = weight
                         synapse.syn_vecs['weight'].append(weight)
                 
-        if numpy.round(h.t, decimals = 4) % 200 == 0: # printig every two seconds
+        if np.round(h.t, decimals = 4) % 200 == 0: # printig every two seconds
             logger.debug( "Neuron time [ms]: %f" % h.t)
             logger.debug( "Ecell Time [s] %g: " 
                               %spine.ecellMan.ses.getCurrentTime())
@@ -230,6 +287,8 @@ if __name__ == "__main__":
     
     #------------------------------------
     # Save the Results
-    print "Simulation Ended. Cython used"
-    sto = save_results(manager, stims, tStop, options.calciumSampling, 
+    print "Simulation Ended. Saving results"
+    store_in_db(manager, stims, tStop, options.calciumSampling, 
                        options.dtNeuron, t_equilibrium)
+#    sto = save_results(manager, stims, tStop, options.calciumSampling, 
+#                       options.dtNeuron, t_equilibrium)
