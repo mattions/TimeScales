@@ -1,5 +1,5 @@
 #  y_serial Python module         Version 0.52                Date : 2009-11-22
-# -*- coding: iso-8859-1 -*-
+# -*- coding: utf-8 -*-
 #                                 http://yserial.sourceforge.net
 ''' 
 _______________ y_serial :: Warehouse compressed Python objects with SQLite
