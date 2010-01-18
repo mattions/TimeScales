@@ -94,7 +94,7 @@ if __name__ == "__main__":
             if (i==1) and (j==1):continue
             
             if (i==1) and (j==2):
-                push = QtGui.QPushButton('PushMe', container)
+                push = QtGui.QPushButton('Launch a pylab test', container)
                 push.connect(push, QtCore.SIGNAL('clicked()'), pushed)
                 #push.setAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
                 continue
