@@ -4,10 +4,12 @@
 import neuron
 from neuron import h
 import numpy
-from spine import *
 import os
 import sys
+
+from spine import *
 from synapse import Synapse
+from helpers.loader import Loader
 
 
 class Event():
@@ -94,9 +96,20 @@ class NeuronSim():
         self.spines = []
         
         # Trying one spine only for test
-        spine_positions = [0.3, 0.5]
-        self.__populateDend(spine_positions, [h.MSP_Cell[0].dend3_1[1]])
-
+#        spine_positions = [0.3, 0.5]
+#        self.__populateDend(spine_positions, [h.MSP_Cell[0].dend3_1[1]])
+        
+        l = Loader()
+        
+        #Mid
+        spines_pos_mid = l.load('branch_dist/mid_spines_per_branch.pickle')
+        self.__populateDend(spines_pos_mid, h.MSP_Cell[0].Mid_Dend)
+        
+        #Dist
+        spines_pos_dist = l.load('branch_dist/dist_spines_per_branch.pickle')
+        self.__populateDend(spines_pos_mid, h.MSP_Cell[0].Dist_Dend)
+        
+        
         
         # Distal:
         #spine_positions = [0.1, 0.21, 0.23, 0.25, 0.27, 0.29, 0.30, 0.50, 0.7]
