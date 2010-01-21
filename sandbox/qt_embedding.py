@@ -1,10 +1,5 @@
-"""
-This example demonstrates using Mayavi as a component of a large Qt
-application. 
-
-For this use, Mayavi is embedded in a QWidget. To understand this
-example, please read section :ref`builing-applications`.
-"""
+#Adapted example to show the bug with ipython-dev and qt integration.(0.11 version)
+# Used to work with 0.10.
 
 # First, and before importing any Enthought packages, set the ETS_TOOLKIT
 # environment variable to qt4, to tell Traits that we will use Qt.
@@ -70,10 +65,10 @@ class MayaviQWidget(QtGui.QWidget):
         self.ui.setParent(self)
 
 def pushed():
-    print ("Button pushed")
+    print ("Button pushed - Launching a Pylab test window")
     fig = plt.figure()
     x = np.linspace(0,10)
-    plt.plot(x)
+    plt.plot(x, np.sin(x))
     
 
 if __name__ == "__main__":
@@ -86,24 +81,13 @@ if __name__ == "__main__":
     # define a "complex" layout to test the behaviour
     layout = QtGui.QGridLayout(container)
 
-    # put some stuff around mayavi
-    label_list = []
-    for i in range(3):
-        for j in range(3):
-            # skipping Mayavi widget
-            if (i==1) and (j==1):continue
-            
-            if (i==1) and (j==2):
-                push = QtGui.QPushButton('Launch a pylab test', container)
-                push.connect(push, QtCore.SIGNAL('clicked()'), pushed)
-                #push.setAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
-                continue
+    # button to lanch a pylab window
+    push = QtGui.QPushButton('Launch a pylab test', container)
+    push.connect(push, QtCore.SIGNAL('clicked()'), pushed)
 
-            label = QtGui.QLabel(container)
-            label.setText("Your QWidget at (%d, %d)" % (i,j))
-            label.setAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
-            layout.addWidget(label, i, j)
-            label_list.append(label)
+
+    # put the button over Mayavi
+    layout.addWidget(push, 0,1)
     mayavi_widget = MayaviQWidget(container)
 
     layout.addWidget(mayavi_widget, 1, 1)
