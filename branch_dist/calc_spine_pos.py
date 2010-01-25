@@ -23,18 +23,30 @@ class spinePercentual(object):
     
     def convert_to_perc(self, spines_pos):
         """Convert the position to a normalized per dend pos"""
-        # Divide the spines for dends
-        self.mid = []
-        self.dist = []
+        # Divide the spines for branch
+        
+        # Two mid dendrite for branch
+        self.mids = [[],[]]
+        
+        # 4 Distal dendrite for branch.
+        self.dists = [[],[],[],[]]
         
         for sp in spines_pos:
-            if self.prox_ex < sp < self.mid_ex:
+            if self.prox_ex < sp < self.mid_ex: #Mid dend
+                
                 x = self.calc_perc_pos(self.prox_ex, self.mid_ex, sp)
-                self.mid.append(x)
-            elif self.mid_ex < sp < self.dist_ex:
+                # Add the spine to the dendrite which have less spines
+                shortest = min(self.mids, key=len)
+                
+                shortest.append(x)
+                    
+            elif self.mid_ex < sp < self.dist_ex: # Dist dend
+                
                 x = self.calc_perc_pos(self.mid_ex, self.dist_ex, sp)
-                self.dist.append(x)
-        
+                shortest = min(self.dists, key=len) 
+                shortest.append(x)
+    
+    
         # Insert the spines in perc
     def calc_perc_pos(self, start, end, value):
         """Calc the percentual of the spine in the dends
@@ -60,6 +72,6 @@ if __name__ == "__main__":
     
     print "Calculating the spines pos normalized to 1"
     spinePer.convert_to_perc(spines_pos)
-    l.save(spinePer.mid, '.', 'mid_spines_per_branch.pickle')
-    l.save(spinePer.dist, '.', 'dist_spines_per_branch.pickle')
+    l.save(spinePer.mids, '.', 'mid_spines_per_branch.pickle')
+    l.save(spinePer.dists, '.', 'dist_spines_per_branch.pickle')
     plt.show()

@@ -103,15 +103,43 @@ class NeuronSim():
         
         #Mid
         spines_pos_mid = l.load('branch_dist/mid_spines_per_branch.pickle')
-        self.__populateDend(spines_pos_mid, h.MSP_Cell[0].Mid_Dend)
-        
-        #Dist
-        spines_pos_dist = l.load('branch_dist/dist_spines_per_branch.pickle')
-        self.__populateDend(spines_pos_mid, h.MSP_Cell[0].Dist_Dend)
         
         
+        first_half = [h.MSP_Cell[0].dend1_1[0], h.MSP_Cell[0].dend2_1[0], h.MSP_Cell[0].dend3_1[0],
+        h.MSP_Cell[0].dend4_1[0]]
+        
+        self.__populateDend(spines_pos_mid[0], first_half)
+        
+        second_half = [h.MSP_Cell[0].dend1_2[0], h.MSP_Cell[0].dend2_2[0], h.MSP_Cell[0].dend3_2[0],
+        h.MSP_Cell[0].dend4_2[0]]
+        
+        self.__populateDend(spines_pos_mid[1], second_half)
         
         # Distal:
+        spines_pos_dist = l.load('branch_dist/dist_spines_per_branch.pickle')
+        
+        
+        first_dist = [h.MSP_Cell[0].dend1_1[1], h.MSP_Cell[0].dend2_1[1],
+                      h.MSP_Cell[0].dend3_1[1], h.MSP_Cell[0].dend4_1[1]] 
+        
+        self.__populateDend(spines_pos_dist[0], first_dist)
+        
+        second_dist = [h.MSP_Cell[0].dend1_1[2], h.MSP_Cell[0].dend2_2[2], 
+                       h.MSP_Cell[0].dend3_2[2], h.MSP_Cell[0].dend4_2[2]]
+        
+        self.__populateDend(spines_pos_dist[1], second_dist)
+        
+        third_dist = [h.MSP_Cell[0].dend1_2[1], h.MSP_Cell[0].dend2_2[1], 
+                      h.MSP_Cell[0].dend3_2[1], h.MSP_Cell[0].dend4_2[1]]
+        
+        self.__populateDend(spines_pos_dist[2], third_dist)
+        
+        fourth_dist = [h.MSP_Cell[0].dend1_2[2], h.MSP_Cell[0].dend2_1[2], 
+                       h.MSP_Cell[0].dend3_1[2], h.MSP_Cell[0].dend4_1[2]]
+        
+        self.__populateDend(spines_pos_dist[3], fourth_dist)
+        
+        
         #spine_positions = [0.1, 0.21, 0.23, 0.25, 0.27, 0.29, 0.30, 0.50, 0.7]
         #spine_positions = [0.1, 0.21, 0.25, 0.30, 0.50, 0.7]
         #self.__populateDend(spine_positions, h.MSP_Cell[0].Dist_Dend)
@@ -136,7 +164,7 @@ class NeuronSim():
                               filename_bioch_mod=self.biochemical_filename)
                 spine.attach(sec, pos, 0) # Attaching the spine in the right pos
                 self.spines.append(spine)
-                print "Addedd spine: %s" %spine.id
+                print "Addedd spine: %s, pos %s, sec %s" % (spine.id, pos, sec.name())
                 
     def updateSpines(self):
         "Update the calcium inside the spine"
