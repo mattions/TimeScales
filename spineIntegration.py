@@ -36,14 +36,16 @@ def store_in_db(manager, stims, tStop, calciumSampling, dtNeuron, tEquilibrium):
     
     table = "Vectors"
     # Create the table.
-    sql_stm = "CREATE TABLE IF NOT EXISTS " + table + " (var text, sec_name text, vec blob)"
+    sql_stm = "CREATE TABLE IF NOT EXISTS " + table + " (var TEXT, sec_name TEXT,\
+     vec BLOB)"
     
     cursor.execute(sql_stm)
-    
+    conn.commit()
     # Storing the time
     t = np.array(manager.t)
-    sql_stm = "INSERT INTO " + table + " VALUES(?,?,?)"
-    cursor.execute(sql_stm, 't', None, t)
+    sql_stm = """INSERT INTO """ + table + """ VALUES(?,?,?)"""
+    print sql_stm
+    cursor.execute(sql_stm, ('t', 'None', sqlite3.Binary(t)))
     
     
     # Vec Ref
@@ -55,7 +57,8 @@ def store_in_db(manager, stims, tStop, calciumSampling, dtNeuron, tEquilibrium):
     # secName
     for vec_ref in pickable_vec_refs:
         for var in vec_ref.vecs.keys():
-            cursor.execute(sql_stm, var, vec_ref.sec_name, vec_ref.vecs[var])
+            cursor.execute(sql_stm, (var, vec_ref.sec_name, 
+                                     sqlite3.Binary(vec_ref.vecs[var])))
     
     conn.commit()
     
@@ -65,14 +68,17 @@ def store_in_db(manager, stims, tStop, calciumSampling, dtNeuron, tEquilibrium):
     
     table = "SynVectors"
     # Create the table.
-    sql_stm = "CREATE TABLE IF NOT EXISTS " + table + " (var text, chan_type text, \
-    text sec_name, vec blob)"
+    sql_stm = "CREATE TABLE IF NOT EXISTS " + table + " (var TEXT, chan_type TEXT, \
+    sec_name TEXT, vec BLOB)"
+    cursor.execute(sql_stm)
+    conn.commit()
     
     sql_stm = "INSERT INTO " + table + " VALUES(?,?,?,?)"
     for syn_vec_ref in pickable_synVecRefs:
         for var in syn_vec_ref.syn_vecs.keys():
-            cursor.execute(sql_stm, var, syn_vec_ref.chan_type, 
-                           syn_vec_ref.section_name, syn_vec_ref.syn_vecs[var])
+            cursor.execute(sql_stm, (var, syn_vec_ref.chan_type, 
+                           syn_vec_ref.section_name, 
+                           sqlite3.Binary(syn_vec_ref.syn_vecs[var])))
     
     conn.commit()
     
@@ -80,8 +86,11 @@ def store_in_db(manager, stims, tStop, calciumSampling, dtNeuron, tEquilibrium):
     # timeseries
     table = "Timeseries"
     # Create the table.
-    sql_stm = "CREATE TABLE IF NOT EXISTS " + table + " (text var, real pos, parent text, \
-    text sec_name, vec blob)"
+    sql_stm = "CREATE TABLE IF NOT EXISTS " + table + " (var TEXT, pos REAL, \
+    parent TEXT, sec_name TEXT, vec BLOB)"
+    cursor.execute(sql_stm)
+    conn.commit()
+    
     sql_stm = "INSERT INTO " + table + " VALUES(?,?,?,?,?)"
     for spine in nrnSim.spines:
         # Retrieving the biochemical timecourses
@@ -95,10 +104,20 @@ def store_in_db(manager, stims, tStop, calciumSampling, dtNeuron, tEquilibrium):
         # Adding a record for each variable
         for key in time_courses.keys():
             var = key 
-            cursor.execute(sql_stm, var, pos, parent, sec_name, time_courses[key])
+            cursor.execute(sql_stm, (var, pos, parent, sec_name, 
+                                     sqlite3.Binary(time_courses[key])))
     
     conn.commit()
-    c.close()
+    cursor.close()
+    
+    f = open(os.path.join(saving_dir, 'log.txt'), 'w') 
+    f.write("tStop [s]: %f\n" % (tStop))
+    f.write("calciumSampling [s]: %f\n" % (calciumSampling))
+    f.write("dtNeuron [ms]: %f\n" % (dtNeuron))
+    f.write("tEquilibrium [s]: %f\n" % (tEquilibrium))
+    for stim in stims:
+        f.write(stim.to_log())
+    f.close()
     
 
 def calcWeight(old_weight, CaMKIIbar, n=2, k=4):
