@@ -6,10 +6,10 @@ to NeuronVisio data structure"""
 
 
 import sqlite3
+import cPickle
 
 from neuronvisio.manager import Manager, VecRef, SynVecRef
 from neuron import h
-import cPickle
 
 
 #def get_vecRefs(path_to_sqlite):

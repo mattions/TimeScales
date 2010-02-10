@@ -41,7 +41,7 @@ def store_in_db(manager, stims, tStop, calciumSampling, dtNeuron, tEquilibrium):
     # Storing the time
     t = np.array(manager.t)
     sql_stm = """INSERT INTO """ + table + """ VALUES(?,?,?)"""
-    cursor.execute(sql_stm, ('t', 'None', 
+    cursor.execute(sql_stm, ('t', 'NULL', 
                              sqlite3.Binary(cPickle.dumps((t),-1))))
     
     
