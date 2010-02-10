@@ -47,7 +47,7 @@ def get_vecRefs(path_to_sqlite):
     for row in cursor:
         # vecrRef
         sec_name = str(row[1])
-        print sec_name
+        
         if sec_name != 'NULL':
             
             var = str(row[0])
@@ -60,6 +60,7 @@ def get_vecRefs(path_to_sqlite):
                     break
             if found:
                 vecRef.vecs[var] = array
+                continue #Move to next record
             else:
                 nrn_sec = eval('h.' + sec_name)        
                 vecRef = VecRef(nrn_sec)
@@ -87,7 +88,16 @@ def get_spines(path_to_sqlite):
                     spine.attach(sec, spine_pos, 0)
                     nrnSim.spines.append(spine)
                     break # Stopping adding the same spine
-     
+
+def get_time(path_to_sqlite):
+    
+    conn = sqlite3.connect(path_to_sqlite)
+    cursor = conn.cursor()
+    sql_stm = """SELECT * FROM Vectors WHERE var='t'"""
+    cursor.execute(sql_stm)
+    for row in cursor:
+        array = cPickle.loads(str(row[2]))
+    return array
 
 if __name__ == "__main__":
         
@@ -123,5 +133,6 @@ if __name__ == "__main__":
             if sec.name() == vecRef.sec_name:
                 vecRef.sec = sec
                 break
+    controls.manager.t = get_time(args[0])
     controls.manager.vecRefs = vecRefs
     controls.update_tree_view() # Showing the vectors 
