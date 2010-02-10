@@ -5,12 +5,11 @@ import logging
 import numpy as np
 import math
 
-# Importing the database
 import sys
-sys.path.append('./libs')
-import y_serial_v052 as y_serial
-
 import os
+
+import sqlite3
+import cPickle
 
 from neuron import h
 
@@ -21,8 +20,6 @@ from helpers import Loader
 
 from neuronvisio.manager import Manager
 from neuronvisio.manager import SynVecRef
-
-import sqlite3
 
  
 def store_in_db(manager, stims, tStop, calciumSampling, dtNeuron, tEquilibrium):
@@ -44,8 +41,8 @@ def store_in_db(manager, stims, tStop, calciumSampling, dtNeuron, tEquilibrium):
     # Storing the time
     t = np.array(manager.t)
     sql_stm = """INSERT INTO """ + table + """ VALUES(?,?,?)"""
-    print sql_stm
-    cursor.execute(sql_stm, ('t', 'None', sqlite3.Binary(t)))
+    cursor.execute(sql_stm, ('t', 'None', 
+                             sqlite3.Binary(cPickle.dumps((t),-1))))
     
     
     # Vec Ref
@@ -57,8 +54,9 @@ def store_in_db(manager, stims, tStop, calciumSampling, dtNeuron, tEquilibrium):
     # secName
     for vec_ref in pickable_vec_refs:
         for var in vec_ref.vecs.keys():
+            array = cPickle.dumps(vec_ref.vecs[var], -1)
             cursor.execute(sql_stm, (var, vec_ref.sec_name, 
-                                     sqlite3.Binary(vec_ref.vecs[var])))
+                                     sqlite3.Binary(array)))
     
     conn.commit()
     
@@ -76,9 +74,11 @@ def store_in_db(manager, stims, tStop, calciumSampling, dtNeuron, tEquilibrium):
     sql_stm = "INSERT INTO " + table + " VALUES(?,?,?,?)"
     for syn_vec_ref in pickable_synVecRefs:
         for var in syn_vec_ref.syn_vecs.keys():
+            array = cPickle.dumps(syn_vec_ref.syn_vecs[var], -1)
             cursor.execute(sql_stm, (var, syn_vec_ref.chan_type, 
-                           syn_vec_ref.section_name, 
-                           sqlite3.Binary(syn_vec_ref.syn_vecs[var])))
+                           syn_vec_ref.section_name,
+                           sqlite3.Binary(array))) 
+                           
     
     conn.commit()
     
@@ -103,9 +103,12 @@ def store_in_db(manager, stims, tStop, calciumSampling, dtNeuron, tEquilibrium):
         
         # Adding a record for each variable
         for key in time_courses.keys():
-            var = key 
-            cursor.execute(sql_stm, (var, pos, parent, sec_name, 
-                                     sqlite3.Binary(time_courses[key])))
+            var = key
+            array = cPickle.dumps(time_courses[key], -1)
+            cursor.execute(sql_stm, (var, pos, parent, sec_name,
+                                     sqlite3.Binary(array)))
+                                      
+                                     
     
     conn.commit()
     cursor.close()
