@@ -22,17 +22,29 @@ from helpers import Loader
 from neuronvisio.manager import Manager
 from neuronvisio.manager import SynVecRef
 
+import sqlite3
+
  
 def store_in_db(manager, stims, tStop, calciumSampling, dtNeuron, tEquilibrium):
     """Store the simulation results in a database"""
     loader = Loader()
     saving_dir = loader.create_new_dir(prefix=os.getcwd())
     db_name = 'storage.sqlite'
-    db = y_serial.Main(os.path.join(saving_dir, db_name))
+    
+    conn = sqlite3.connect(os.path.join(saving_dir, db_name))
+    cursor = conn.cursor()
+    
+    table = "Vectors"
+    # Create the table.
+    sql_stm = "CREATE TABLE IF NOT EXISTS " + table + " (var text, sec_name text, vec blob)"
+    
+    cursor.execute(sql_stm)
     
     # Storing the time
     t = np.array(manager.t)
-    db.insert(t, '#vec time')
+    sql_stm = "INSERT INTO " + table + " VALUES(?,?,?)"
+    cursor.execute(sql_stm, 't', None, t)
+    
     
     # Vec Ref
     pickable_vec_refs = manager.convert_vec_refs()
@@ -43,37 +55,50 @@ def store_in_db(manager, stims, tStop, calciumSampling, dtNeuron, tEquilibrium):
     # secName
     for vec_ref in pickable_vec_refs:
         for var in vec_ref.vecs.keys():
-            notes = '#vec'
-            notes += ' #' + var
-            notes += ' ' + vec_ref.sec_name
-            db.insert(vec_ref.vecs[var], notes)
+            cursor.execute(sql_stm, var, vec_ref.sec_name, vec_ref.vecs[var])
     
+    conn.commit()
+    
+    ###############
+    # SynVec
     pickable_synVecRefs = manager.convert_syn_vec_refs()
     
+    table = "SynVectors"
+    # Create the table.
+    sql_stm = "CREATE TABLE IF NOT EXISTS " + table + " (var text, chan_type text, \
+    text sec_name, vec blob)"
+    
+    sql_stm = "INSERT INTO " + table + " VALUES(?,?,?,?)"
     for syn_vec_ref in pickable_synVecRefs:
         for var in syn_vec_ref.syn_vecs.keys():
-            notes = '#synvec'
-            notes += ' #' + var
-            notes += ' #' + syn_vec_ref.chan_type
-            notes += ' ' + syn_vec_ref.section_name
-            db.insert(syn_vec_ref.syn_vecs[var], notes)
+            cursor.execute(sql_stm, var, syn_vec_ref.chan_type, 
+                           syn_vec_ref.section_name, syn_vec_ref.syn_vecs[var])
     
+    conn.commit()
+    
+    ################
+    # timeseries
+    table = "Timeseries"
+    # Create the table.
+    sql_stm = "CREATE TABLE IF NOT EXISTS " + table + " (text var, real pos, parent text, \
+    text sec_name, vec blob)"
+    sql_stm = "INSERT INTO " + table + " VALUES(?,?,?,?,?)"
     for spine in nrnSim.spines:
         # Retrieving the biochemical timecourses
         spine.ecellMan.converToTimeCourses()
         time_courses = spine.ecellMan.timeCourses 
         notes = '#timecourse'
-        notes += ' #' + str(spine.pos)
-        notes += ' #' + spine.parent.name()
-        notes += ' ' + str(spine.id)
+        pos = str(spine.pos)
+        parent = spine.parent.name()
+        sec_name = str(spine.id)
         
         # Adding a record for each variable
         for key in time_courses.keys():
-            notes += ' #' + key
-            db.insert(time_courses[key], notes)
-     
+            var = key 
+            cursor.execute(sql_stm, var, pos, parent, sec_name, time_courses[key])
     
-    
+    conn.commit()
+    c.close()
     
 
 def calcWeight(old_weight, CaMKIIbar, n=2, k=4):
