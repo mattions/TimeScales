@@ -60,10 +60,12 @@ def get_vecRefs(path_to_sqlite):
                     break
             if found:
                 vecRef.vecs[var] = array
+                
                 continue #Move to next record
             else:
                 nrn_sec = eval('h.' + sec_name)        
                 vecRef = VecRef(nrn_sec)
+                vecRef.vecs[var] = array
             
             vecRefs.append(vecRef)
     conn.close()
@@ -110,9 +112,7 @@ if __name__ == "__main__":
     if len(args) != 1:
         parser.error("Incorrect number of arguments")
         parser.usage()
-    else:
-        storage = args[0]
-    
+        
     
     # Loading Neuronvisio
     controls = Controls()
@@ -126,13 +126,6 @@ if __name__ == "__main__":
     get_spines(args[0])
     print "In this simulation there were %i spines" % len (nrnSim.spines)
     
+    controls.manager.load_db(args[0])
     # Attaching the vecRef_properly
-    vecRefs = get_vecRefs(args[0])
-    for sec in h.allsec():
-        for vecRef in vecRefs:
-            if sec.name() == vecRef.sec_name:
-                vecRef.sec = sec
-                break
-    controls.manager.t = get_time(args[0])
-    controls.manager.vecRefs = vecRefs
-    controls.update_tree_view() # Showing the vectors 
+    controls.update_tree_view() # Showing the vectors in the treeview
