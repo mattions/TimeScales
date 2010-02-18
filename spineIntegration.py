@@ -22,43 +22,10 @@ from neuronvisio.manager import Manager
 from neuronvisio.manager import SynVecRef
 
  
-def store_in_db(manager, stims, tStop, calciumSampling, dtNeuron, tEquilibrium):
-    """Store the simulation results in a database"""
-    loader = Loader()
-    saving_dir = loader.create_new_dir(prefix=os.getcwd())
-    db_name = 'storage.sqlite'
+def save_inputs_in_db(filename):
     
-    conn = sqlite3.connect(os.path.join(saving_dir, db_name))
+    conn = sqlite3.connect(filename)
     cursor = conn.cursor()
-    
-    table = "Vectors"
-    # Create the table.
-    sql_stm = "CREATE TABLE IF NOT EXISTS " + table + " (var TEXT, sec_name TEXT,\
-     vec BLOB)"
-    
-    cursor.execute(sql_stm)
-    conn.commit()
-    # Storing the time
-    t = np.array(manager.t)
-    sql_stm = """INSERT INTO """ + table + """ VALUES(?,?,?)"""
-    cursor.execute(sql_stm, ('t', 'NULL', 
-                             sqlite3.Binary(cPickle.dumps((t),-1))))
-    
-    
-    # Vec Ref
-    pickable_vec_refs = manager.convert_vec_refs()
-    
-    # Vec ref share the 
-    # #vec tag
-    # #var tag
-    # secName
-    for vec_ref in pickable_vec_refs:
-        for var in vec_ref.vecs.keys():
-            array = cPickle.dumps(vec_ref.vecs[var], -1)
-            cursor.execute(sql_stm, (var, vec_ref.sec_name, 
-                                     sqlite3.Binary(array)))
-    
-    conn.commit()
     
     ###############
     # SynVec
@@ -78,9 +45,13 @@ def store_in_db(manager, stims, tStop, calciumSampling, dtNeuron, tEquilibrium):
             cursor.execute(sql_stm, (var, syn_vec_ref.chan_type, 
                            syn_vec_ref.section_name,
                            sqlite3.Binary(array))) 
-                           
-    
     conn.commit()
+    cursor.close()
+    
+def save_timeseries_in_db(filename):
+        
+    conn = sqlite3.connect(filename)
+    cursor = conn.cursor()
     
     ################
     # timeseries
@@ -106,21 +77,10 @@ def store_in_db(manager, stims, tStop, calciumSampling, dtNeuron, tEquilibrium):
             var = key
             array = cPickle.dumps(time_courses[key], -1)
             cursor.execute(sql_stm, (var, pos, parent, sec_name,
-                                     sqlite3.Binary(array)))
-                                      
-                                     
-    
+                                     sqlite3.Binary(array)))    
     conn.commit()
     cursor.close()
-    
-    f = open(os.path.join(saving_dir, 'log.txt'), 'w') 
-    f.write("tStop [s]: %f\n" % (tStop))
-    f.write("calciumSampling [s]: %f\n" % (calciumSampling))
-    f.write("dtNeuron [ms]: %f\n" % (dtNeuron))
-    f.write("tEquilibrium [s]: %f\n" % (tEquilibrium))
-    for stim in stims:
-        f.write(stim.to_log())
-    f.close()
+
     
 
 def calcWeight(old_weight, CaMKIIbar, n=2, k=4):
@@ -134,47 +94,8 @@ def calcWeight(old_weight, CaMKIIbar, n=2, k=4):
     #print s
     return weight
 
-def save_results(manager, stims, tStop, calciumSampling, dtNeuron, tEquilibrium):
+def write_log(saving_dir, tStop, calciumSampling, dtNeuron, tEquilibrium, stims):
     """Save the results in a directory"""
-    loader = Loader()
-    saving_dir = loader.create_new_dir(prefix=os.getcwd())
-    
-    # Storage object
-    storage  = Storage(calciumSampling, dtNeuron, tEquilibrium)
-    
-    # Convert the time
-    storage.t = np.array(manager.t)
-    
-    # Convert manager to a pickable object
-    pickable_vec_refs = manager.convert_vec_refs()
-    storage.set_vecRefs(pickable_vec_refs)
-    
-    pickable_synVecRefs = manager.convert_syn_vec_refs()
-    storage.set_synVecRefs(pickable_synVecRefs)
-    
-    # get the biochemical timecourses
-    spine_timecourses = {}
-    synVecRefs = []
-    spines_id = []
-    spines_pos = []
-    spines_parent_sec = []
-    
-    for spine in nrnSim.spines:
-        # Retrieving the biochemical timecourses
-        spine.ecellMan.converToTimeCourses()
-        
-        spine_timecourses[spine.id] = spine.ecellMan.timeCourses
-        spines_id.append(spine.id)
-        spines_pos.append(spine.pos)
-        spines_parent_sec.append(spine.parent.name())
-        
-    storage.set_timecourses(spine_timecourses)
-    storage.set_spines(spines_id, spines_pos, spines_parent_sec)
-    
-    # We need to save spines pos and parent
-    
-    
-    loader.save(storage, saving_dir, "storage")
     f = open(os.path.join(saving_dir, 'log.txt'), 'w') 
     f.write("tStop [s]: %f\n" % (tStop))
     f.write("calciumSampling [s]: %f\n" % (calciumSampling))
@@ -183,7 +104,7 @@ def save_results(manager, stims, tStop, calciumSampling, dtNeuron, tEquilibrium)
     for stim in stims:
         f.write(stim.to_log())
     f.close()
-    return storage
+    print "Simulation saved in %s" % saving_dir
 
 if __name__ == "__main__":
 
@@ -248,12 +169,14 @@ if __name__ == "__main__":
     
     stim1 = Stimul((1  + t_equilibrium) * 1e3, 10, 
                    0.1, 'ampa')
-    stim2 = Stimul((1.5 + t_equilibrium) * 1e3, 10, 
+    stim2 = Stimul((1.1 + t_equilibrium) * 1e3, 10, 
                    0.1, 'ampa')
     nrnSim.spines[0].setStimul(stim1)
     nrnSim.spines[1].setStimul(stim2)
-    stims = [stim1, stim2]
-    for stim in stims:
+    
+    manager = Manager()
+    manager.stims = [stim1, stim2]
+    for stim in manager.stims:
         print stim.to_log()
     
     
@@ -279,7 +202,6 @@ if __name__ == "__main__":
     
     variables_to_rec = ['v', 'cai', 'cali', 'ica']
     
-    manager = Manager()
     for var in variables_to_rec:
         manager.add_all_vecRef(var)
 #    for spine in nrnSim.spines:
@@ -335,7 +257,18 @@ if __name__ == "__main__":
     #------------------------------------
     # Save the Results
     print "Simulation Ended. Saving results"
-    store_in_db(manager, stims, tStop, options.calciumSampling, 
-                       options.dtNeuron, t_equilibrium)
-#    sto = save_results(manager, stims, tStop, options.calciumSampling, 
-#                       options.dtNeuron, t_equilibrium)
+    saving_dir = manager.create_new_dir()
+    db_name = 'storage.sqlite'
+    filename = os.path.join(saving_dir, db_name)
+    # Saving the vectors
+    manager.store_in_db(filename)
+    
+    # Saving the inputs
+    save_inputs_in_db(filename)
+    
+    # Saving the timeseries
+    save_timeseries_in_db(filename)
+    
+    #Writing the log
+    write_log(saving_dir, tStop, options.calciumSampling, options.dtNeuron, 
+              t_equilibrium, manager.stims)
