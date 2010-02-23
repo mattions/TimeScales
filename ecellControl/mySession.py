@@ -77,6 +77,7 @@ class Session:
                 aModelName = aModel
                 anEml = eml.Eml( aFileObject )
             finally:
+                print "Closing the file"
                 aFileObject.close()
                 
         elif isinstance( aModel, file ):
@@ -87,9 +88,12 @@ class Session:
                    os.chdir( dirname )
             # if the type is file object
             aFileObject = aModel
-            aModelName = aModel.name
-            anEml = eml.Eml( aFileObject )
-            aFileObject.close()
+            try:
+                aModelName = aModel.name
+                anEml = eml.Eml( aFileObject )
+            finally:
+                print "Closing the file"
+                aFileObject.close()
             
         else:
             # When the type doesn't match
