@@ -1,7 +1,8 @@
 # Author Michele Mattioni
 # Fri Jan 30 15:57:01 GMT 2009
 
-import ecell.Session
+#import ecell.Session as Session
+import mySession as Session
 import ecell.ecs
 import ecell.config
 import ecell.emc
@@ -15,9 +16,9 @@ class EcellManager():
         ecell.ecs.setDMSearchPath( os.pathsep.join( ecell.config.dm_path ) )
         self.sim = ecell.emc.Simulator()
         if ecell.config.version < '3.2.0':
-            self.ses = ecell.Session.Session(self.sim, changeDirectory=False)
+            self.ses = Session.Session(self.sim, changeDirectory=False)
         else:
-            self.ses = ecell.Session.Session(self.sim)
+            self.ses = Session.Session(self.sim)
         
         # Load the model
         self.ses.loadModel(filename)
