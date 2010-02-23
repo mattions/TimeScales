@@ -77,8 +77,9 @@ class Session:
                 aModelName = aModel
                 anEml = eml.Eml( aFileObject )
             finally:
-                print "Closing the file"
+                print "Closing the file and removing the object"
                 aFileObject.close()
+                del aFileObject
                 
         elif isinstance( aModel, file ):
             # change directory to file's home directory
