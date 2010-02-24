@@ -8,7 +8,8 @@ ipython -pylab
 
 run test_spine.py"""
 
-import neuronvisio
+
+from neuronvisio.controls import Controls
 import os
 import numpy
 import pylab
@@ -16,11 +17,11 @@ import pylab
 from neuron import h
 import neuron
 
-from neuronControl import Synapse, Spine
+from neuronControl import Synapse, Spine, Stimul
 from helpers.graph import Graph
 
 # Starting neuronVisio
-controls = neuronvisio.Controls()
+controls = Controls()
 
 mod_path = "mod"
 hoc_path = "hoc"
@@ -44,28 +45,32 @@ preface_string = "preface = \"" + preface_pos + "\""
 h(preface_string)
 h.load_file(os.path.join(hoc_path, "all_tau_vecs.hoc"))
 h.load_file('stdrun.hoc')
-spine1 = Spine("1", 
+spine1 = Spine("spine1", 
                filename_bioch_mod ="biochemical_circuits/biomd183_noCalcium.eml")
 
 # AMPA Syn
 for synapse in spine1.synapses:
     if synapse.chan_type == 'ampa':
-        synapse.createStimul(start = 200, number = 5, interval = 5, noise = 0)
+        stim = Stimul(time = 200, number = 5, interval = 5, chan_type = 'ampa', noise = 0)
+        synapse.createStimul(stim)
 
 #NMDA Syn
 
 
 # Vectors
-manager = neuronvisio.Manager()
+
 vars = ['v', #voltage 
         'cai', #first calcium pool
         'cali' #second calcium pool
         ]
 for var in vars:
-    manager.add_all_vecRef(var)
+    controls.manager.add_all_vecRef(var)
     
 for synapse in spine1.synapses:
-    manager.add_synVecRef(synapse)
+    controls.manager.add_synVecRef(synapse)
+
+
+controls.update_tree_view()
 
 #import neuron.gui
 h.v_init = -87.75 # Setting the initial vm
@@ -87,8 +92,8 @@ def go():
     manager.plotVecs(cali_vecs, 'cali')
     manager.plotVecs(v_vecs, 'v')
         
-    graph.plotVoltage(vecsVolt, spine1.synapses['ampa'].synVecs)
-    pylab.title("AMPA syn")
-    graph.plotVoltage(vecsVolt, spine1.synapses['nmda'].synVecs)
-    pylab.title("NMDA syn")
+#    graph.plotVoltage(vecsVolt, spine1.synapses['ampa'].synVecs)
+#    pylab.title("AMPA syn")
+#    graph.plotVoltage(vecsVolt, spine1.synapses['nmda'].synVecs)
+#    pylab.title("NMDA syn")
     pylab.show()
