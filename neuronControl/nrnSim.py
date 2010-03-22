@@ -26,13 +26,9 @@ class Event():
 
 class NeuronSim():
     """General class to control NEURON"""
-    def __init__(self, hoc_path="hoc", mod_path="mod", msn=True, spines=True, 
-                 biochemical=True, biochemical_filename=None):
+    def __init__(self, hoc_path="hoc", mod_path="mod", msn=True, spines=True):
         """Load and initiate all the hoc and mod file. Can load the model of the neuron
         or otherwise can just expose general method"""
-        
-        self.biochemical=biochemical
-        self.biochemical_filename=biochemical_filename
         
         # Mod file are always in a mod directory
         if not os.path.exists(mod_path) :
