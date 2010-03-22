@@ -15,8 +15,7 @@ class Spine():
     """
     
     def __init__(self, id, 
-                 filename_bioch_mod="../biochemical_circuits/biomd183_noCalcium.eml",
-                 biochemical=True):
+                 filename_bioch_mod="../biochemical_circuits/biomd183_noCalcium.eml"):
         """ Create a spine with a standard volume of ~0.11 um
         the h is the reference to the main hoc interpreter"""
         self.id = id
@@ -26,7 +25,7 @@ class Spine():
         self.psd = self.createPSD(self.head)
         self.parent = None # the parent section connected to the neck
         self.synapses = self.createSynapses()
-        self.stimul = [] #list to store the Stims
+        self.filename = filename_bioch_mod
         
         # Reset ions
         h.cai0_ca_ion = 0.001        #// mM, Churchill 1998
@@ -34,21 +33,16 @@ class Spine():
         h.cali0_cal_ion = 0.001        #// mM, Churchill 1998
         h.calo0_cal_ion = 5            #// mM, Churchill 1998 - gives eca = 100 mVh.cao0_ca_ion =
         
-        # Setting up the biochemical simulator
-        if biochemical:
-            self.ecellMan = self.setupBioSim(filename_bioch_mod)
-            self.update_calcium(h.cai0_ca_ion) 
-        
-    def setupBioSim(self, filename):
+    def setupBioSim(self):
         """Initialize the Biochemical Simulator creating the instance of 
         the object to control the simulation"""
         
-        ecellMan = eC.EcellManager(filename)
+        ecellMan = eC.EcellManager(self.filename)
         ecellMan.createLoggers()
         # Setting the head volume with the spine head
         ecellMan.ses.vol = self.head_vol * 1e-15 #Converted in l
-        # Setting the calcium
-        return ecellMan
+        self.ecellMan = ecellMan
+        
     
     def update_calcium(self, electrical_ca_concentration):
         """Update the calcium using the electrical calcium from the NEURON 

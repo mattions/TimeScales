@@ -85,7 +85,7 @@ def get_spines(path_to_sqlite):
                 spine_name = str(row[3])
                 # Check if the spine is already there in one section
                 if not hasattr(h, spine_name + "_head"):
-                    spine = Spine(spine_name, biochemical=False) # Not loading E-cell
+                    spine = Spine(spine_name) # Not loading E-cell
                     spine_pos = float(row[1])
                     spine.attach(sec, spine_pos, 0)
                     nrnSim.spines.append(spine)
@@ -120,8 +120,8 @@ if __name__ == "__main__":
     # Loading the geometry of the neuron
     
     nrnSim = neuronControl.NeuronSim(mod_path="mod", hoc_path="hoc", 
-                              spines=False, # We load without spines!  
-                              biochemical=False)
+                              spines=False, # We load without spines!
+                              )
     # Picking up the spines
     get_spines(args[0])
     print "In this simulation there were %i spines" % len (nrnSim.spines)

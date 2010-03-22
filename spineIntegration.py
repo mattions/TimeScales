@@ -162,20 +162,30 @@ if __name__ == "__main__":
     
     nrnSim = neuronControl.NeuronSim(mod_path=mod_path, hoc_path=hoc_path, 
                               spines=True, 
-                              biochemical=True,
                               biochemical_filename="biochemical_circuits/biomd183.eml") 
-
-    # Set the spines
     
     # Set the stimuls to the synapses    
-    
+    stimulated_spines = [nrnSim.spines[0], nrnSim.spines[1]]
     
     stim1 = Stimul((1  + t_equilibrium) * 1e3, 10, 
                    0.1, 'ampa')
+    stim1_nmda = Stimul((1  + t_equilibrium) * 1e3, 10, 
+                   0.1, 'nmda')
     stim2 = Stimul((1.1 + t_equilibrium) * 1e3, 10, 
                    0.1, 'ampa')
+    stim2_nmda = Stimul((1.1 + t_equilibrium) * 1e3, 10, 
+                   0.1, 'nmda')
+    
+    # Set the biochemical spines
+    
+    for stimulated_spine in stimulated_spines:
+        stimulated_spine.setupBioSim()
+        
+         
     nrnSim.spines[0].setStimul(stim1)
+    nrnSim.spines[0].setStimul(stim1_nmda)
     nrnSim.spines[1].setStimul(stim2)
+    nrnSim.spines[1].setStimul(stim2_nmda)
     
     manager = Manager()
     manager.stims = [stim1, stim2]
@@ -207,11 +217,6 @@ if __name__ == "__main__":
     
     for var in variables_to_rec:
         manager.add_all_vecRef(var)
-#    for spine in nrnSim.spines:
-#        sections_list = manager.get_tree(spine.psd)
-#        for sec in sections_list:
-#            for var in variables_to_rec:
-#                manager.add_vecRef(var, sec)
     
     
     # Recording the synapses
@@ -232,30 +237,31 @@ if __name__ == "__main__":
         if np.round(h.t, decimals = 4) % ecell_interval_update == 0: 
                 
             for spine in nrnSim.spines:
-                vec_spine_head_cai = manager.get_vector(spine.head, 'cai')
-                vec_spine_head_cali = manager.get_vector(spine.head, 'cali')
-                head_cai = vec_spine_head_cai.x[-1]
-                head_cali = vec_spine_head_cali.x[-1]
-                electrical_ca = head_cai + head_cali
+                if hasattr(spine, 'ecellMan'):
+                    vec_spine_head_cai = manager.get_vector(spine.head, 'cai')
+                    vec_spine_head_cali = manager.get_vector(spine.head, 'cali')
+                    head_cai = vec_spine_head_cai.x[-1]
+                    head_cali = vec_spine_head_cali.x[-1]
+                    electrical_ca = head_cai + head_cali
+                    
+                    spine.update_calcium(electrical_ca)
+                    spine.ecellMan.ses.run(calcium_sampling)
                 
-                spine.update_calcium(electrical_ca)
-                spine.ecellMan.ses.run(calcium_sampling)
-            
-                # getting the conc of the active CaMKII and set the weight of the synapse
-                CaMKIIbar = spine.ecellMan.CaMKIIbar['Value']
-                
-                # Updating the AMPA synapses
-                for synapse in spine.synapses:
-                    if synapse.chan_type == 'ampa':                       
-                        weight = calcWeight(synapse.netCon.weight[0], CaMKIIbar)
-                        synapse.netCon.weight[0] = weight
-                        synapse.syn_vecs['weight'].append(weight)
+                    # getting the conc of the active CaMKII and set the weight of the synapse
+                    CaMKIIbar = spine.ecellMan.CaMKIIbar['Value']
+                    
+                    # Updating the AMPA synapses
+                    for synapse in spine.synapses:
+                        if synapse.chan_type == 'ampa':                       
+                            weight = calcWeight(synapse.netCon.weight[0], CaMKIIbar)
+                            synapse.netCon.weight[0] = weight
+                            synapse.syn_vecs['weight'].append(weight)
                 
         if np.round(h.t, decimals = 4) % 200 == 0: # printig every two seconds
             logger.debug( "Neuron time [ms]: %f" % h.t)
-            logger.debug( "Ecell Time [s] %g: " 
-                              %spine.ecellMan.ses.getCurrentTime())
-    #
+            if hasattr(spine, 'ecellMan'):
+                logger.debug( "Ecell Time [s] %g: " 
+                                  %spine.ecellMan.ses.getCurrentTime())
     
     #------------------------------------
     # Save the Results
