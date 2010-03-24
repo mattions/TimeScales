@@ -67,21 +67,22 @@ def save_timeseries_in_db(filename):
     
     sql_stm = "INSERT INTO " + table + " VALUES(?,?,?,?,?)"
     for spine in nrnSim.spines:
-        # Retrieving the biochemical timecourses
-        spine.ecellMan.converToTimeCourses()
-        time_courses = spine.ecellMan.timeCourses 
-        notes = '#timecourse'
-        pos = str(spine.pos)
-        parent = spine.parent.name()
-        sec_name = str(spine.id)
-        
-        # Adding a record for each variable
-        for key in time_courses.keys():
-            var = key
-            array = cPickle.dumps(time_courses[key], -1)
-            cursor.execute(sql_stm, (var, pos, parent, sec_name,
-                                     sqlite3.Binary(array)))    
-    conn.commit()
+        if hasattr(spine, 'ecellMan'):
+            # Retrieving the biochemical timecourses
+            spine.ecellMan.converToTimeCourses()
+            time_courses = spine.ecellMan.timeCourses 
+            notes = '#timecourse'
+            pos = str(spine.pos)
+            parent = spine.parent.name()
+            sec_name = str(spine.id)
+            
+            # Adding a record for each variable
+            for key in time_courses.keys():
+                var = key
+                array = cPickle.dumps(time_courses[key], -1)
+                cursor.execute(sql_stm, (var, pos, parent, sec_name,
+                                         sqlite3.Binary(array)))    
+        conn.commit()
     cursor.close()
 
     
