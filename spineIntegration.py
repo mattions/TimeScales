@@ -46,7 +46,7 @@ def save_inputs_in_db(filename):
         for var in syn_vec_ref.syn_vecs.keys():
             array = cPickle.dumps(syn_vec_ref.syn_vecs[var], -1)
             cursor.execute(sql_stm, (var, syn_vec_ref.chan_type, 
-                           syn_vec_ref.section_name,
+                           syn_vec_ref.sec_name,
                            sqlite3.Binary(array))) 
     conn.commit()
     cursor.close()
@@ -208,6 +208,7 @@ if __name__ == "__main__":
     #==========
     # Recording
     # - Variables in the section
+    
     # - Synaptic weight
     # - Biochemical timecourse (done in the spines already)
     #==========
@@ -225,7 +226,7 @@ if __name__ == "__main__":
     for spine in nrnSim.spines:
         for syn in spine.synapses:
             synVec = manager.add_synVecRef(syn)
-    
+            
     
 
     
