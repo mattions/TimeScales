@@ -126,6 +126,6 @@ if __name__ == "__main__":
     get_spines(args[0])
     print "In this simulation there were %i spines" % len (nrnSim.spines)
     
-    controls.manager.load_db(args[0])
+    controls.load_db(args[0])
     # Attaching the vecRef_properly
-    controls.update_tree_view() # Showing the vectors in the treeview
+#    controls.update_tree_view() # Showing the vectors in the treeview
