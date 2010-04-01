@@ -11,7 +11,7 @@ class Stimul(object):
         self.noise = noise
         self.interval = interval
         
-        self.spine = None #Used for logging
+#        self.spine = None #Used for logging
     
     def to_log(self):
         s = "spine %s, time %s [ms], number %s\n" %(self.spine, self.time, self.number)
