@@ -20,6 +20,8 @@ class Synapse(object):
             chan = h.AMPA(position, sec = self.section)
         elif chan_type == 'nmda':
             chan = h.NMDA(position, sec = self.section)
+        elif chan_type == 'gaba':
+            chan = h.GABA(position, sec = self.section)
             
         return chan    
     
