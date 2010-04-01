@@ -177,6 +177,8 @@ if __name__ == "__main__":
     stim2_nmda = Stimul((1.1 + t_equilibrium) * 1e3, 10, 
                    0.1, 'nmda')
     
+    stim_gaba = Stimul((0.2 + t_equilibrium) * 1e3, 10, 
+                   0.1, 'nmda') 
     # Set the biochemical spines
     
     for stimulated_spine in stimulated_spines:
@@ -187,6 +189,7 @@ if __name__ == "__main__":
     nrnSim.spines[0].setStimul(stim1_nmda)
     nrnSim.spines[1].setStimul(stim2)
     nrnSim.spines[1].setStimul(stim2_nmda)
+    #nrnSim.
     
     manager = Manager()
     manager.stims = [stim1, stim2]
