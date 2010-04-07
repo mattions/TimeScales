@@ -56,7 +56,7 @@ class NeuronSim():
             
             self.biochemical_filename = biochemical_filename
             # Adding the spines
-            self.__distributeSpines(spine_dist)
+            self.__distributeSpines(spines_dist)
         
         h.load_file("stdrun.hoc")
         h.v_init = -87.75 #Setting the vinit 
