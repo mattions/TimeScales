@@ -306,7 +306,7 @@ if __name__ == "__main__":
         secs = parameters['section_to_plot']
         vecs_to_plot = build_vecs_to_plot(var, secs, manager.vecRefs)
         manager.plotVecs(vecs_to_plot, figure_num=i)
-        fig_file = 'plot' + str(i)
+        fig_file = 'plot_' + var
         plt.savefig(os.path.join(saving_dir, fig_file))
           
     #Writing the log
