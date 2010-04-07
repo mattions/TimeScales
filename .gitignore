@@ -20,3 +20,6 @@ build
 
 # Settings eclipse
 .settings
+
+# Sumatra
+.smt
