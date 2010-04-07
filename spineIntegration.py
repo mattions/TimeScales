@@ -24,6 +24,8 @@ from helpers import Loader
 from neuronvisio.manager import Manager
 from neuronvisio.manager import SynVecRef
 
+import matplotlib
+matplotlib.use('AGG')
 import matplotlib.pyplot as plt
  
 def save_inputs_in_db(filename):

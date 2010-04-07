@@ -13,4 +13,4 @@ spines_dist = 'two' #spines_dist = 'all' or spines_dist=zero #Number of spines
 # Plotting
 
 var_to_plot=['v','cai','cali','ica']
-section_to_plot=['soma','spine1','spine2']
+section_to_plot=['MSP_Cell[0].soma','spine1_head','spine2_head']
