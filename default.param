@@ -7,4 +7,4 @@ calciumSampling = 0.001 # calcium sampling [s]
 tEquilibrium = 0.0 # Equilibrium time. The systems (both Neuron and ecell) 
                    # are ran till the equilibrium before the upgrade
 tStop = 0.1 # Time to stop the siumaltion [s]
-spines_dist = 'zero' #spines_dist = 'all' or spines_dist=None #Number of spines 
+spines_dist = 'two' #spines_dist = 'all' or spines_dist=zero #Number of spines 
