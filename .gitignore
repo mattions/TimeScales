@@ -14,6 +14,7 @@ mod/i686
 
 # The directory with the Sims
 Sims
+Data
 
 # The building dir for cython
 build
