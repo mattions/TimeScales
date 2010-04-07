@@ -99,7 +99,7 @@ class NeuronSim():
             ## Trying some spines only for test
             spine_positions = [0.3, 0.5]
             self.__populateDend(spine_positions, [h.MSP_Cell[0].dend3_1[1]])
-        elif spine_dit == 'all':
+        elif spine_dist == 'all':
             l = Loader()
             
             # Mid:
