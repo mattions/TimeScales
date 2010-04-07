@@ -120,8 +120,8 @@ if __name__ == "__main__":
     # Loading the geometry of the neuron
     
     nrnSim = neuronControl.NeuronSim(mod_path="mod", hoc_path="hoc", 
-                              spines=False, # We load without spines!
-                              )
+                                     spines_dist='zero' # Loading with no spine.
+                                     )
     # Picking up the spines
     get_spines(args[0])
     print "In this simulation there were %i spines" % len (nrnSim.spines)
