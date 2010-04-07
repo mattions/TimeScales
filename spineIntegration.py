@@ -110,6 +110,16 @@ def write_log(saving_dir, tStop, calciumSampling, dtNeuron, tEquilibrium, stims)
     f.close()
     print "Simulation saved in %s" % saving_dir
 
+def building_vecs_to_plot(var, secs, vecRefs):
+    """Create the dictionary of section->vectors to plot"""
+    vecs_to_plot = {}
+    for secName in secs:
+        for vecref in vecRefs:
+            if secName == vecref.sec_name:
+                if vecref.vecs.has_key(var):
+                    vecs_to_plot[secName] = vecref.vecs[var]
+    return vecs_to_plot
+
 if __name__ == "__main__":
 
     import os
@@ -287,6 +297,15 @@ if __name__ == "__main__":
     # Saving the timeseries
     save_timeseries_in_db(filename)
     
+    #Let's save same plot
+    
+    for i, var in enumerate(parameters['var_to_plot']):
+        secs = parameters['section_to_plot']
+        vecs_to_plot = build_vecs_to_plot(var, secs, manager.vecRefs)
+        manager.plotVecs(vecs_to_plot, figure_num=i)
+        fig_file = 'plot' + str(i)
+        matplotlib.plt.savefig(os.path.join(saving_dir, fig_file))
+          
     #Writing the log
     #write_log(saving_dir, tStop, options.calciumSampling, options.dtNeuron, 
      #         t_equilibrium, manager.stims)
