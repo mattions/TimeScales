@@ -110,7 +110,7 @@ def write_log(saving_dir, tStop, calciumSampling, dtNeuron, tEquilibrium, stims)
     f.close()
     print "Simulation saved in %s" % saving_dir
 
-def building_vecs_to_plot(var, secs, vecRefs):
+def build_vecs_to_plot(var, secs, vecRefs):
     """Create the dictionary of section->vectors to plot"""
     vecs_to_plot = {}
     for secName in secs:
