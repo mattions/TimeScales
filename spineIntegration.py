@@ -209,7 +209,7 @@ if __name__ == "__main__":
     nrnSim.spines[1].setStimul(stim2_nmda)
     #nrnSim.
     
-    manager = Manager(backend=backend)
+    manager = Manager()
     manager.stims = [stim1, stim2]
     for stim in manager.stims:
         print stim.to_log()
