@@ -1,0 +1,10 @@
+# Parameters file for simulation.
+# Should be used with spineIntegration.py
+
+
+dtNeuron = 0.025 # integration dt [ms]
+calciumSampling = 0.001 # calcium sampling [s]
+tEquilibrium = 0.0 # Equilibrium time. The systems (both Neuron and ecell) 
+                   # are ran till the equilibrium before the upgrade
+tStop = 0.1 # Time to stop the siumaltion [s]
+spines_dist = 'test' #spines_dist = 'normal' # Two values: test or normal
