@@ -24,6 +24,7 @@ from helpers import Loader
 from neuronvisio.manager import Manager
 from neuronvisio.manager import SynVecRef
 
+import matplotlib.pyplot as plt
  
 def save_inputs_in_db(filename):
     
@@ -304,7 +305,7 @@ if __name__ == "__main__":
         vecs_to_plot = build_vecs_to_plot(var, secs, manager.vecRefs)
         manager.plotVecs(vecs_to_plot, figure_num=i)
         fig_file = 'plot' + str(i)
-        matplotlib.plt.savefig(os.path.join(saving_dir, fig_file))
+        plt.savefig(os.path.join(saving_dir, fig_file))
           
     #Writing the log
     #write_log(saving_dir, tStop, options.calciumSampling, options.dtNeuron, 
