@@ -137,7 +137,6 @@ if __name__ == "__main__":
     parameter_file = sys.argv[1]
     parameters = {}
     execfile(parameter_file, parameters) # reading the params
-    print parameters
        
 #    parser.add_option("--dtNeuron", default=0.025, 
 #                  help= "Fixed timestep to use to update neuron. Default: 0.005 [ms]")
@@ -276,7 +275,7 @@ if __name__ == "__main__":
     #------------------------------------
     # Save the Results
     print "Simulation Ended. Saving results"
-    saving_dir = manager.create_new_dir()
+    saving_dir = manager.create_new_dir(root='Data')
     db_name = 'storage.sqlite'
     filename = os.path.join(saving_dir, db_name)
     # Saving the vectors
