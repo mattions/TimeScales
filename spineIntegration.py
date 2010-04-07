@@ -166,7 +166,7 @@ if __name__ == "__main__":
     mod_path="mod"
     
     nrnSim = neuronControl.NeuronSim(mod_path=mod_path, hoc_path=hoc_path, 
-                              spines=parameters['spines_dist'], 
+                              spines_dist=parameters['spines_dist'], 
                               biochemical_filename="biochemical_circuits/biomd183.eml") 
     
     # Set the stimuls to the synapses    

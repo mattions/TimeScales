@@ -92,7 +92,7 @@ class NeuronSim():
     
     def __distributeSpines(self, spine_dist):
         """Attach spines to the dendrites"""
-        if spine_dist == None:
+        if spine_dist == 'zero':
             self.spines = []
         elif spine_dist == 'two':
             ## Trying one spine only for test
