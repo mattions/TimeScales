@@ -92,10 +92,11 @@ class NeuronSim():
     
     def __distributeSpines(self, spine_dist):
         """Attach spines to the dendrites"""
+        self.spines = []
         if spine_dist == 'zero':
-            self.spines = []
+          pass  
         elif spine_dist == 'two':
-            ## Trying one spine only for test
+            ## Trying some spines only for test
             spine_positions = [0.3, 0.5]
             self.__populateDend(spine_positions, [h.MSP_Cell[0].dend3_1[1]])
         elif spine_dit == 'all':
