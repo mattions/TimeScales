@@ -25,7 +25,7 @@ from neuronvisio.manager import Manager
 from neuronvisio.manager import SynVecRef
 
 import matplotlib
-matplotlib.use('AGG')
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
  
 def save_inputs_in_db(filename):
@@ -235,7 +235,7 @@ if __name__ == "__main__":
 
     # Recording the sections
     
-    variables_to_rec = ['v', 'cai', 'cali', 'ica']
+    variables_to_rec = parameters['var_to_plot']
     
     for var in variables_to_rec:
         manager.add_all_vecRef(var)
@@ -306,6 +306,19 @@ if __name__ == "__main__":
         secs = parameters['section_to_plot']
         vecs_to_plot = build_vecs_to_plot(var, secs, manager.vecRefs)
         manager.plotVecs(vecs_to_plot, figure_num=i)
+        
+        if var == 'v':
+            plt.ylabel("Voltage [mV]")
+            plt.xlabel("Time [ms]")
+            
+        elif var == 'cai' or var == 'cali':
+            plt.xlabel("Time [ms]")
+            plt.ylabel("Concentration [mM]")
+        
+        elif var == 'ica':
+            plt.xlabel("Time [ms]")
+            plt.ylabel("Current [nA]")
+            
         fig_file = 'plot_' + var
         plt.savefig(os.path.join(saving_dir, fig_file))
           
