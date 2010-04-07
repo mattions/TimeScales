@@ -112,7 +112,6 @@ def write_log(saving_dir, tStop, calciumSampling, dtNeuron, tEquilibrium, stims)
 
 if __name__ == "__main__":
 
-    from optparse import OptionParser
     import os
     import neuronControl
     
@@ -128,33 +127,39 @@ if __name__ == "__main__":
     #add ch to logger
     logger.addHandler(ch)
     
-    usage= "usage: %prog [options] tStop"
-    parser = OptionParser(usage)
+    
+    if len(sys.argv) != 2:
+        print("No parameter file supplied. Abort.")
+        usage = 'python spineIntegration.py parameters_file.param'
+        print usage
+        sys.exit()
+        
+    parameter_file = sys.argv[1]
+    parameters = {}
+    execfile(parameter_file, parameters) # reading the params
+    print parameters
        
-    parser.add_option("--dtNeuron", default=0.025, 
-                  help= "Fixed timestep to use to update neuron. Default: 0.005 [ms]")
-    parser.add_option("--calciumSampling", default=0.001, 
-                  help= "Fixed interval used to sample the calcium concentration in the Neuron world and\
-                   pass it to the biochemical simulator. Default: 0.001 [s]")
-    parser.add_option("--tEquilibrium", default=0,
-                      help= "Time to run the system to reach the equilibrium, Default: 0 [s]")
-    (options, args) = parser.parse_args()
+#    parser.add_option("--dtNeuron", default=0.025, 
+#                  help= "Fixed timestep to use to update neuron. Default: 0.005 [ms]")
+#    parser.add_option("--calciumSampling", default=0.001, 
+#                  help= "Fixed interval used to sample the calcium concentration in the Neuron world and\
+#                   pass it to the biochemical simulator. Default: 0.001 [s]")
+#    parser.add_option("--tEquilibrium", default=0,
+#                      help= "Time to run the system to reach the equilibrium, Default: 0 [s]")
+#    (options, args) = parser.parse_args()
     
     # Checking the correct num of args
     
-    if len(args) != 1:
-        parser.error("Incorrect number of arguments. You should provide the tStop")
-        parser.usage()
-    else:
-        # Processing the options
-        h.dt = float(options.dtNeuron)
-        calcium_sampling = float(options.calciumSampling)
-        t_equilibrium = float(options.tEquilibrium)
-        ecell_interval_update = calcium_sampling * 1e3 # we need [ms] to sync 
-                                                       # with NEURON in the while
-        
-        tStop = float (args[0])
-        tStop = t_equilibrium + tStop
+    
+    
+    # Processing the options
+    h.dt = parameters['dtNeuron']
+    calcium_sampling = parameters['calciumSampling']
+    t_equilibrium = parameters['tEquilibrium']
+    ecell_interval_update = calcium_sampling * 1e3 # we need [ms] to sync 
+                                                   # with NEURON in the while
+    tStop = parameters['tStop']
+    tStop = t_equilibrium + tStop
                                                    
     logger.debug("Starting Spine integration")
     
@@ -284,5 +289,5 @@ if __name__ == "__main__":
     save_timeseries_in_db(filename)
     
     #Writing the log
-    write_log(saving_dir, tStop, options.calciumSampling, options.dtNeuron, 
-              t_equilibrium, manager.stims)
+    #write_log(saving_dir, tStop, options.calciumSampling, options.dtNeuron, 
+     #         t_equilibrium, manager.stims)
