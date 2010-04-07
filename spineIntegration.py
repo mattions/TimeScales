@@ -25,7 +25,8 @@ from neuronvisio.manager import Manager
 from neuronvisio.manager import SynVecRef
 
 import matplotlib
-matplotlib.use('Agg')
+backend = 'Agg'
+matplotlib.use(backend)
 import matplotlib.pyplot as plt
  
 def save_inputs_in_db(filename):
@@ -208,7 +209,7 @@ if __name__ == "__main__":
     nrnSim.spines[1].setStimul(stim2_nmda)
     #nrnSim.
     
-    manager = Manager()
+    manager = Manager(backend=backend)
     manager.stims = [stim1, stim2]
     for stim in manager.stims:
         print stim.to_log()
@@ -291,6 +292,7 @@ if __name__ == "__main__":
     saving_dir = manager.create_new_dir(root='Data')
     db_name = 'storage.sqlite'
     filename = os.path.join(saving_dir, db_name)
+    print "Results will be saved in %s" %filename
     # Saving the vectors
     manager.store_in_db(filename)
     
