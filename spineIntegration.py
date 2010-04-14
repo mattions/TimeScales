@@ -8,7 +8,7 @@ import math
 import sys
 import os
 
-import sqlite3
+
 import cPickle
 
 from neuron import h
