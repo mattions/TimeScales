@@ -123,7 +123,7 @@ if __name__ == "__main__":
                                      spines_dist='zero' # Loading with no spine.
                                      )
     # Picking up the spines
-    get_spines(args[0])
+    #get_spines(args[0])
     print "In this simulation there were %i spines" % len (nrnSim.spines)
     
     controls.load_db(args[0])
