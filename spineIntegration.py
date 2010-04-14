@@ -8,9 +8,6 @@ import math
 import sys
 import os
 
-#this is just to import sqlite properly!
-sys.path.append('/ebi/research/software/Linux_x86_64/opt/stow/python-2.6.1/lib/python2.6/lib-dynload/')
-
 import sqlite3
 import cPickle
 
