@@ -294,7 +294,7 @@ if __name__ == "__main__":
     manager.store_in_db(filename)
       
     # Saving the timeseries
-    save_timeseries_in_db(filename)
+    #save_timeseries_in_db(filename)
     
     #Let's save same plot
     
