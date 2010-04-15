@@ -292,10 +292,7 @@ if __name__ == "__main__":
     print "Results will be saved in %s" %filename
     # Saving the vectors
     manager.store_in_db(filename)
-    
-    # Saving the inputs
-    save_inputs_in_db(filename)
-    
+      
     # Saving the timeseries
     save_timeseries_in_db(filename)
     
