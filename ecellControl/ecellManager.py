@@ -12,7 +12,7 @@ import numpy
 class EcellManager():
     """Control and instatiate the ecell simulator embedding it in an handy python object"""
     
-    def __init__(self, filename="../biochemical_circuits/biomd183.eml"):
+    def __init__(self, filename=None):
         ecell.ecs.setDMSearchPath( os.pathsep.join( ecell.config.dm_path ) )
         self.sim = ecell.emc.Simulator()
         if ecell.config.version < '3.2.0':
@@ -22,8 +22,13 @@ class EcellManager():
         
         # Load the model
         self.ses.loadModel(filename)
-        self.molToTrack = ('ca','moles_bound_ca_per_moles_cam',
-                           'Rbar','PP2Bbar','CaMKIIbar')
+        self.molToTrack = ('ca',
+                           'moles_bound_ca_per_moles_cam',
+                           'Rbar',
+                           'PP2Bbar', 
+                           'CaMKIIbar', 
+                           'PP1abar' # Active PP1/Total PP1
+                           )
         # Tracking the calcium
         self.ca =  self.ses.createEntityStub( 'Variable:/Spine:ca' )
         self.CaMKIIbar = self.ses.createEntityStub( 'Variable:/Spine:CaMKIIbar' )
@@ -85,7 +90,7 @@ class EcellManager():
             pylab.savefig(os.path.join(dir, "caInput.png"))
             print "figure saved in: %s" % os.path.join(dir, "caInput.png")
         
-        bars = ['PP2Bbar', 'CaMKIIbar']
+        bars = ['PP2Bbar', 'CaMKIIbar', 'PP1abar']
         pylab.figure()
         for bar in bars:
             bar_tc = self.timeCourses[bar]
@@ -115,7 +120,7 @@ class EcellManager():
 ##############################################
 # Testing method
 
-def testCalciumTrain(filename="../biochemical_circuits/biomd183.eml"):
+def testCalciumTrain(filename="../biochemical_circuits/biomd183_loop.eml"):
     """Run a test simulation wit a train of calcium input"""
     
     print "Test the results of a train of calcium"""
@@ -123,7 +128,7 @@ def testCalciumTrain(filename="../biochemical_circuits/biomd183.eml"):
     ecellManager.createLoggers()
     ecellManager.ca_in = ecellManager.ses.createEntityStub('Process:/Spine:ca_in')
     print "Model loaded, loggers created. Integration start."
-    ecellManager.ses.run(200)
+    ecellManager.ses.run(300)
     print "Calcium Train"
     ecellManager.calciumTrain(spikes=5, interval=0.005)
     ecellManager.ses.run(400)
