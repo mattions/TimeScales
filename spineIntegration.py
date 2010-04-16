@@ -8,9 +8,6 @@ import math
 import sys
 import os
 
-
-import cPickle
-
 from neuron import h
 
 from neuronControl import nrnSim, synapse 
@@ -26,32 +23,7 @@ backend = 'Agg'
 matplotlib.use(backend)
 import matplotlib.pyplot as plt
  
-def save_inputs_in_db(filename):
-    
-    conn = sqlite3.connect(filename)
-    cursor = conn.cursor()
-    
-    ###############
-    # SynVec
-    pickable_synVecRefs = manager.convert_syn_vec_refs()
-    
-    table = "SynVectors"
-    # Create the table.
-    sql_stm = "CREATE TABLE IF NOT EXISTS " + table + " (var TEXT, chan_type TEXT, \
-    sec_name TEXT, vec BLOB)"
-    cursor.execute(sql_stm)
-    conn.commit()
-    
-    sql_stm = "INSERT INTO " + table + " VALUES(?,?,?,?)"
-    for syn_vec_ref in pickable_synVecRefs:
-        for var in syn_vec_ref.syn_vecs.keys():
-            array = cPickle.dumps(syn_vec_ref.syn_vecs[var], -1)
-            cursor.execute(sql_stm, (var, syn_vec_ref.chan_type, 
-                           syn_vec_ref.sec_name,
-                           sqlite3.Binary(array))) 
-    conn.commit()
-    cursor.close()
-    
+   
 def save_timeseries_in_db(filename):
         
     conn = sqlite3.connect(filename)
@@ -148,19 +120,6 @@ if __name__ == "__main__":
     parameter_file = sys.argv[1]
     parameters = {}
     execfile(parameter_file, parameters) # reading the params
-       
-#    parser.add_option("--dtNeuron", default=0.025, 
-#                  help= "Fixed timestep to use to update neuron. Default: 0.005 [ms]")
-#    parser.add_option("--calciumSampling", default=0.001, 
-#                  help= "Fixed interval used to sample the calcium concentration in the Neuron world and\
-#                   pass it to the biochemical simulator. Default: 0.001 [s]")
-#    parser.add_option("--tEquilibrium", default=0,
-#                      help= "Time to run the system to reach the equilibrium, Default: 0 [s]")
-#    (options, args) = parser.parse_args()
-    
-    # Checking the correct num of args
-    
-    
     
     # Processing the options
     h.dt = parameters['dtNeuron']
