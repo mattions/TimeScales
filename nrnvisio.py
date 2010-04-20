@@ -11,7 +11,7 @@ import sys
 if __name__ == '__main__':
     
     controls = Controls()
-    if sys.argv != 2:
+    if len(sys.argv) == 2:
         controls.load_db(sys.argv[1])
     
          
