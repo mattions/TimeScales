@@ -29,10 +29,10 @@ def plot_calcium_conc(spine_timecourses, spine_vol):
     plt.plot(ca_tc[:,0], ca_conc)
     
 
-def plot_syn(syn_vecs, var):
+def plot_syn(vecs, var):
     """Plot the variable of the synapse"""
     pylab.figure()
-    plt.plot(sto.t, syn_vecs[var])
+    plt.plot(sto.t, vecs[var])
     
 def get_vecRefs(path_to_sqlite):
     conn = sqlite3.connect(path_to_sqlite)

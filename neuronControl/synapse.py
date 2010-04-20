@@ -11,7 +11,7 @@ class Synapse(object):
         self.chan_type = chan_type
         self.section = section
         self.chan = self.createChannel(chan_type, position)
-        self.syn_vecs = {} # Dictionary to record all the vectors 
+        self.vecs = {} # Dictionary to record all the vectors 
         
         
     def createChannel(self, chan_type, position):
@@ -57,14 +57,14 @@ class Synapse(object):
         
         # Record the stimuls
         # The NetCon needs a record allocated to use to record the stuff
-        self.syn_vecs["stimul"] = h.Vector()
-        self.netCon.record(self.syn_vecs["stimul"])
+        self.vecs["stimul"] = h.Vector()
+        self.netCon.record(self.vecs["stimul"])
         
         # Record the current into the synaptic chan 
-        self.syn_vecs["i"] = h.Vector()
-        self.syn_vecs["i"].record(self.chan._ref_i)        
+        self.vecs["i"] = h.Vector()
+        self.vecs["i"].record(self.chan._ref_i)        
         
         # Record the weight with a list. No doable with a Vector
         # It's filled in the main loop.
-        self.syn_vecs['weight'] = []
+        self.vecs['weight'] = []
         

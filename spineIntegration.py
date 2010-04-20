@@ -234,7 +234,7 @@ if __name__ == "__main__":
                         if synapse.chan_type == 'ampa':                       
                             weight = calcWeight(synapse.netCon.weight[0], CaMKIIbar)
                             synapse.netCon.weight[0] = weight
-                            synapse.syn_vecs['weight'].append(weight)
+                            synapse.vecs['weight'].append(weight)
                 
         if np.round(h.t, decimals = 4) % 200 == 0: # printig every two seconds
             logger.debug( "Neuron time [ms]: %f" % h.t)

@@ -35,7 +35,7 @@ def plotting_synaptic_weights(root, synVecRefs):
     "plotting the weight for all the synapses"
     for synVec in synVecRefs:
         plt.figure()
-        plt.plot(synVec.syn_vecs['weight'])
+        plt.plot(synVec.vecs['weight'])
         plt.xlabel("Time [ms]")
         plt.ylabel("Synapse's Weight")
         t= "%s %s" %(synVec.section_name, synVec.chan_type)
