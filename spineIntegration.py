@@ -22,7 +22,7 @@ backend = 'Agg'
 matplotlib.use(backend)
 import matplotlib.pyplot as plt
  
-from neuronvisio.table import Base
+from neuronvisio.db.tables import Base
  
 class TimeSeries(Base):
     
