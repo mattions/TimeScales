@@ -16,13 +16,23 @@ from neuronControl.stimul import Stimul
 from helpers import Loader
 
 from neuronvisio.manager import Manager
-from neuronvisio.manager import SynVecRef
 
 import matplotlib
 backend = 'Agg'
 matplotlib.use(backend)
 import matplotlib.pyplot as plt
  
+from neronvisio.table import Base
+ 
+class TimeSeries(Base):
+    
+    __tablename__ = 'timeseries'
+    
+    id = Column(Integer, primary_key=True)
+    var = Column(Text)
+    vec = Column(PickleType)
+    sec_name = Column(Text)
+    details = Column(Text)
    
 def save_timeseries_in_db(filename):
         
