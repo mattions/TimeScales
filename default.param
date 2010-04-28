@@ -10,6 +10,7 @@ tEquilibrium = 0.0 # Equilibrium time. The systems (both Neuron and ecell)
 tStop = 0.1 # Time to stop the siumaltion [s]
 spines_dist = 'two' #spines_dist = 'all' or spines_dist=zero #Number of spines
 
+kir_fact = 0.5
 # Ecell
 
 biochemical_filename="biochemical_circuits/biomd183_loop.eml" 

@@ -104,6 +104,14 @@ def build_vecs_to_plot(var, secs, vecRefs):
                     vecs_to_plot[secName] = vecref.vecs[var]
     return vecs_to_plot
 
+def kir_factors(qfact):
+    for sec in h.allsec():
+        for seg in sec:
+            for mech in seg:
+                if mech.name() == 'kir':
+                    mech.qfact = qfact
+
+
 if __name__ == "__main__":
 
     import os
@@ -149,7 +157,7 @@ if __name__ == "__main__":
     nrnSim = neuronControl.NeuronSim(mod_path=mod_path, hoc_path=hoc_path, 
                               spines_dist=parameters['spines_dist'], 
                               biochemical_filename=parameters['biochemical_filename']) 
-    
+    kir_factors(parameters['kir_fact'])
     # Set the stimuls to the synapses    
     stimulated_spines = [nrnSim.spines[0], nrnSim.spines[1]]
     
