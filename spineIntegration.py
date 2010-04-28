@@ -104,6 +104,14 @@ def build_vecs_to_plot(var, secs, vecRefs):
                     vecs_to_plot[secName] = vecref.vecs[var]
     return vecs_to_plot
 
+def kir_factors(qfact):
+    for sec in h.allsec():
+        for seg in sec:
+            for mech in seg:
+                if mech.name() == 'kir':
+                    mech.qfact = qfact
+
+
 if __name__ == "__main__":
 
     import os
