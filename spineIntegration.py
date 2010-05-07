@@ -158,36 +158,46 @@ if __name__ == "__main__":
                               spines_dist=parameters['spines_dist'], 
                               biochemical_filename=parameters['biochemical_filename']) 
     kir_factors(parameters['kir_fact'])
-    # Set the stimuls to the synapses    
-    stimulated_spines = [nrnSim.spines[0], nrnSim.spines[1]]
+    # Set the stimuls to the synapses
     
-    stim1 = Stimul((1  + t_equilibrium) * 1e3, 10, 
-                   0.1, 'ampa')
-    stim1_nmda = Stimul((1  + t_equilibrium) * 1e3, 10, 
-                   0.1, 'nmda')
-    stim2 = Stimul((1.1 + t_equilibrium) * 1e3, 10, 
-                   0.1, 'ampa')
-    stim2_nmda = Stimul((1.1 + t_equilibrium) * 1e3, 10, 
-                   0.1, 'nmda')
-    
-    stim_gaba = Stimul((0.2 + t_equilibrium) * 1e3, 10, 
-                   0.1, 'nmda') 
-    # Set the biochemical spines
-    
-    for stimulated_spine in stimulated_spines:
-        stimulated_spine.setupBioSim()
-        
-         
-    nrnSim.spines[0].setStimul(stim1)
-    nrnSim.spines[0].setStimul(stim1_nmda)
-    nrnSim.spines[1].setStimul(stim2)
-    nrnSim.spines[1].setStimul(stim2_nmda)
-    #nrnSim.
-    
-    manager = Manager()
-    manager.stims = [stim1, stim2]
-    for stim in manager.stims:
-        print stim.to_log()
+    stim_spines = parameters['stimulated_spines']
+    for spine in stim_spines.keys():
+        for stim_par in stim_spines[spine.id]:
+            stim = Stimul((stim_par[0] + t_equilibrium)* 1e3, stim_par[1],
+                            stim_par[2], stim_par[3])
+            spine.setStimul(stim)
+                        
+             
+     
+#    stimulated_spines = [nrnSim.spines[0], nrnSim.spines[1]]
+#    
+#    stim1 = Stimul((1  + t_equilibrium) * 1e3, 10, 
+#                   0.1, 'ampa')
+#    stim1_nmda = Stimul((1  + t_equilibrium) * 1e3, 10, 
+#                   0.1, 'nmda')
+#    stim2 = Stimul((1.1 + t_equilibrium) * 1e3, 10, 
+#                   0.1, 'ampa')
+#    stim2_nmda = Stimul((1.1 + t_equilibrium) * 1e3, 10, 
+#                   0.1, 'nmda')
+#    
+#    stim_gaba = Stimul((0.2 + t_equilibrium) * 1e3, 10, 
+#                   0.1, 'nmda') 
+#    # Set the biochemical spines
+#    
+#    for stimulated_spine in stimulated_spines:
+#        stimulated_spine.setupBioSim()
+#        
+#         
+#    nrnSim.spines[0].setStimul(stim1)
+#    nrnSim.spines[0].setStimul(stim1_nmda)
+#    nrnSim.spines[1].setStimul(stim2)
+#    nrnSim.spines[1].setStimul(stim2_nmda)
+#    #nrnSim.
+#    
+#    manager = Manager()
+#    manager.stims = [stim1, stim2]
+#    for stim in manager.stims:
+#        print stim.to_log()
     
     
 #    for spine in nrnSim.spines:
