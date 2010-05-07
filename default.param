@@ -11,28 +11,28 @@
     "spine1" : ['ampa_s1', 'nmda_s1'],
     "spine2" : ['ampa_s2', 'nmda_s2'],
     "ampa_s1" : 
-        {t_stim : 1, # t_stim [s]  
-         numbers : 10, # number
-         delay : 0.1, # delay [s]
-         type: "ampa" # , type
+        {"t_stim" : 1, # t_stim [s]  
+         "numbers" : 10, # number
+         "delay" : 0.1, # delay [s]
+         "type" : "ampa" # , type
          },
     "ampa_s2" :
-        {t_stim : 1.1, # t_stim [s]  
-         numbers : 10, # number
-         delay : 0.1, # delay [s]
-         type: "ampa" # , type
+        {"t_stim" : 1.1, # t_stim [s]  
+         "numbers" : 10, # number
+         "delay" : 0.1, # delay [s]
+         "type" : "ampa" # , type
          },
     "nmda_s1" :
-        {t_stim : 1, # t_stim [s]  
-         numbers : 10, # number
-         delay : 0.1, # delay [s]
-         type: "nmda" # , type
+        {"t_stim" : 1, # t_stim [s]  
+         "numbers" : 10, # number
+         "delay" : 0.1, # delay [s]
+         "type" : "nmda" # , type
          },
     "nmda_s2" :
-        {t_stim : 1.1, # t_stim [s]  
-         numbers : 10, # number
-         delay : 0.1, # delay [s]
-         type: "nmda" # , type
+        {"t_stim" : 1.1, # t_stim [s]  
+         "numbers" : 10, # number
+         "delay" : 0.1, # delay [s]
+         "type" : "nmda" # , type
          },
     kir_fact : 0.5,
     biochemical_filename : "biochemical_circuits/biomd183_loop.eml",
