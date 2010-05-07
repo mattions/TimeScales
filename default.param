@@ -34,8 +34,8 @@
          "delay" : 0.1, # delay [s]
          "type" : "nmda" # , type
          },
-    kir_fact : 0.5,
-    biochemical_filename : "biochemical_circuits/biomd183_loop.eml",
-    var_to_plot : ['v','cai','cali','ica'],
-    section_to_plot : ['MSP_Cell[0].soma','spine1_head','spine2_head']    
+    "kir_fact" : 0.5,
+    "biochemical_filename" : "biochemical_circuits/biomd183_loop.eml",
+    "var_to_plot" : ['v','cai','cali','ica'],
+    "section_to_plot" : ['MSP_Cell[0].soma','spine1_head','spine2_head']    
 }
