@@ -160,6 +160,11 @@ if __name__ == "__main__":
                               spines_dist=param['spines_dist'], 
                               biochemical_filename=param['biochemical_filename']) 
     kir_factors(param['kir_fact'])
+    
+    
+    # Create Manager
+    manager = Manager()
+    
     # Set the stimuls to the synapses
     
     stim_spines = param['stimulated_spines']
@@ -167,7 +172,8 @@ if __name__ == "__main__":
         if spine_id in param.keys():
             for spine in nrnSim.spines:
                 if spine_id == spine.id:
-                    for stim_par in param[spine.id]:
+                    for stim_id in param[spine.id]:
+                        stim_par = param[stim_id]
                         stim = Stimul((stim_par['t_stim'] + t_equilibrium)* 1e3, 
                                       stim_par['numbers'], 
                                       stim_par['delay'], 
@@ -201,7 +207,6 @@ if __name__ == "__main__":
 #    nrnSim.spines[1].setStimul(stim2_nmda)
 #    #nrnSim.
 #    
-#    manager = Manager()
 #    manager.stims = [stim1, stim2]
 #    for stim in manager.stims:
 #        print stim.to_log()
@@ -228,7 +233,7 @@ if __name__ == "__main__":
 
     # Recording the sections
     
-    variables_to_rec = parameters['var_to_plot']
+    variables_to_rec = param['var_to_plot']
     
     for var in variables_to_rec:
         manager.add_all_vecRef(var)
