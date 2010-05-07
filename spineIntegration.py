@@ -168,7 +168,6 @@ if __name__ == "__main__":
             for spine in nrnSim.spines:
                 if spine_id == spine.id:
                     for stim_par in param[spine.id]:
-                        print stim_par[0], stim_par[1], stim_par[2], stim_par[3]
                         stim = Stimul((stim_par['t_stim'] + t_equilibrium)* 1e3, 
                                       stim_par['numbers'], 
                                       stim_par['delay'], 
