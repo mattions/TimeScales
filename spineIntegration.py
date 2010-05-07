@@ -22,7 +22,7 @@ backend = 'Agg'
 matplotlib.use(backend)
 import matplotlib.pyplot as plt
 
-from NeuroTools import parameters
+from sumatra.external.NeuroTools import parameters
 
 from sqlalchemy import Column, Integer, Text, PickleType 
 from neuronvisio.db.tables import Base
