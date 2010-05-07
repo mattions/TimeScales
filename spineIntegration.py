@@ -22,6 +22,8 @@ backend = 'Agg'
 matplotlib.use(backend)
 import matplotlib.pyplot as plt
 
+from NeuroTools import parameters
+
 from sqlalchemy import Column, Integer, Text, PickleType 
 from neuronvisio.db.tables import Base
  
@@ -137,16 +139,16 @@ if __name__ == "__main__":
         sys.exit()
         
     parameter_file = sys.argv[1]
-    parameters = {}
-    execfile(parameter_file, parameters) # reading the params
+    param = parameters.ParameterSet(parameter_file)
+    
     
     # Processing the options
-    h.dt = parameters['dtNeuron']
-    calcium_sampling = parameters['calciumSampling']
-    t_equilibrium = parameters['tEquilibrium']
+    h.dt = param['dtNeuron']
+    calcium_sampling = param['calciumSampling']
+    t_equilibrium = param['tEquilibrium']
     ecell_interval_update = calcium_sampling * 1e3 # we need [ms] to sync 
                                                    # with NEURON in the while
-    tStop = parameters['tStop']
+    tStop = param['tStop']
     tStop = t_equilibrium + tStop
                                                    
     logger.debug("Starting Spine integration")
@@ -155,20 +157,22 @@ if __name__ == "__main__":
     mod_path="mod"
     
     nrnSim = neuronControl.NeuronSim(mod_path=mod_path, hoc_path=hoc_path, 
-                              spines_dist=parameters['spines_dist'], 
-                              biochemical_filename=parameters['biochemical_filename']) 
-    kir_factors(parameters['kir_fact'])
+                              spines_dist=param['spines_dist'], 
+                              biochemical_filename=param['biochemical_filename']) 
+    kir_factors(param['kir_fact'])
     # Set the stimuls to the synapses
     
-    stim_spines = parameters['stimulated_spines']
+    stim_spines = param['stimulated_spines']
     for spine_id in stim_spines:
-        if spine_id in parameters.keys():
+        if spine_id in param.keys():
             for spine in nrnSim.spines:
                 if spine_id == spine.id:
-                    for stim_par in parameters[spine.id]:
+                    for stim_par in param[spine.id]:
                         print stim_par[0], stim_par[1], stim_par[2], stim_par[3]
-                        stim = Stimul((stim_par[0] + t_equilibrium)* 1e3, 
-                                      stim_par[1], stim_par[2], stim_par[3])
+                        stim = Stimul((stim_par['t_stim'] + t_equilibrium)* 1e3, 
+                                      stim_par['numbers'], 
+                                      stim_par['delay'], 
+                                      stim_par['type'])
                         spine.setStimul(stim)
                         
              
@@ -290,8 +294,8 @@ if __name__ == "__main__":
     
     #Let's save same plot
     
-    for i, var in enumerate(parameters['var_to_plot']):
-        secs = parameters['section_to_plot']
+    for i, var in enumerate(param['var_to_plot']):
+        secs = param['section_to_plot']
         vecs_to_plot = build_vecs_to_plot(var, secs, manager.vecRefs)
         manager.plotVecs(vecs_to_plot, figure_num=i)
         
