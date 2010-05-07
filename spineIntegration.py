@@ -161,12 +161,14 @@ if __name__ == "__main__":
     # Set the stimuls to the synapses
     
     stim_spines = parameters['stimulated_spines']
-    for spine in stim_spines.keys():
-        if spine.id in parameters.keys():
-            for stim_par in parameters[spine.id]:
-                stim = Stimul((stim_par[0] + t_equilibrium)* 1e3, stim_par[1],
-                                stim_par[2], stim_par[3])
-                spine.setStimul(stim)
+    for spine_id in stim_spines:
+        if spine_id in parameters.keys():
+            for spine in nrnSim.spines:
+                if spine_id == spine.id:
+                    for stim_par in parameters[spine.id]:
+                        stim = Stimul((stim_par[0] + t_equilibrium)* 1e3, stim_par[1],
+                                        stim_par[2], stim_par[3])
+                        spine.setStimul(stim)
                         
              
      
