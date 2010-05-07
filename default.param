@@ -1,30 +1,41 @@
 # Parameters file for simulation.
 # Should be used with spineIntegration.py
-
-
-dtNeuron = 0.025 # integration dt [ms]
-calciumSampling = 0.001 # calcium sampling [s]
-tEquilibrium = 0.0 # Equilibrium time. The systems (both Neuron and ecell) 
+{
+    "dtNeuron" : 0.025,  # integration dt [ms]
+    "calciumSampling" : 0.001, # calcium sampling [s]
+    "tEquilibrium" : 0.0, # Equilibrium time. The systems (both Neuron and ecell) 
                    # are ran till the equilibrium before the upgrade
-tStop = 0.1 # Time to stop the siumaltion [s]
-spines_dist = 'two' #spines_dist = 'all' or spines_dist=zero #Number of spines
-
-
-stimulated_spines = ['spine1', 'spine2']
-spine1 = ['ampa_s1', 'nmda_s1']
-spine2 = ['ampa_s2', 'nmda_s2']
-
-ampa_s1 = [1, 10, 0.1, "ampa"] # t_stim [s], number, delay [s], type
-ampa_s2 = [1.1, 10, 0.1, "ampa"] # t_stim [s], number, delay [s], type
-nmda_s1 = [1, 10, 0.1, "nmda"] # t_stim [s], number, delay [s], type
-nmda_s1 = [1.1, 10, 0.1, "nmda"] # t_stim [s], number, delay [s], type
-
-kir_fact = 0.5
-# Ecell
-
-biochemical_filename="biochemical_circuits/biomd183_loop.eml" 
-
-# Plotting
-
-var_to_plot=['v','cai','cali','ica']
-section_to_plot=['MSP_Cell[0].soma','spine1_head','spine2_head']
+    "tStop" : 0.1, # Time to stop the siumaltion [s]
+    "spines_dist" : "two," #spines_dist = 'all' or spines_dist=zero #Number of spines
+    "stimulated_spines" : ['spine1', 'spine2'],
+    "spine1" : ['ampa_s1', 'nmda_s1'],
+    "spine2" : ['ampa_s2', 'nmda_s2'],
+    "ampa_s1" : 
+        {t_stim : 1, # t_stim [s]  
+         numbers : 10, # number
+         delay : 0.1, # delay [s]
+         type: "ampa" # , type
+         },
+    "ampa_s2" :
+        {t_stim : 1.1, # t_stim [s]  
+         numbers : 10, # number
+         delay : 0.1, # delay [s]
+         type: "ampa" # , type
+         }
+    "nmda_s1" :
+        {t_stim : 1, # t_stim [s]  
+         numbers : 10, # number
+         delay : 0.1, # delay [s]
+         type: "nmda" # , type
+         },
+    "nmda_s2" :
+        {t_stim : 1.1, # t_stim [s]  
+         numbers : 10, # number
+         delay : 0.1, # delay [s]
+         type: "nmda" # , type
+         },
+    kir_fact : 0.5,
+    biochemical_filename : "biochemical_circuits/biomd183_loop.eml",
+    var_to_plot : ['v','cai','cali','ica'],
+    section_to_plot : ['MSP_Cell[0].soma','spine1_head','spine2_head']    
+}
