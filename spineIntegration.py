@@ -162,10 +162,11 @@ if __name__ == "__main__":
     
     stim_spines = parameters['stimulated_spines']
     for spine in stim_spines.keys():
-        for stim_par in stim_spines[spine.id]:
-            stim = Stimul((stim_par[0] + t_equilibrium)* 1e3, stim_par[1],
-                            stim_par[2], stim_par[3])
-            spine.setStimul(stim)
+        if spine.id in parameters.keys():
+            for stim_par in parameters[spine.id]:
+                stim = Stimul((stim_par[0] + t_equilibrium)* 1e3, stim_par[1],
+                                stim_par[2], stim_par[3])
+                spine.setStimul(stim)
                         
              
      
