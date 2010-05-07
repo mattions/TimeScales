@@ -179,50 +179,7 @@ if __name__ == "__main__":
                                       stim_par['delay'], 
                                       stim_par['type'])
                         spine.setStimul(stim)
-                        
-             
-     
-#    stimulated_spines = [nrnSim.spines[0], nrnSim.spines[1]]
-#    
-#    stim1 = Stimul((1  + t_equilibrium) * 1e3, 10, 
-#                   0.1, 'ampa')
-#    stim1_nmda = Stimul((1  + t_equilibrium) * 1e3, 10, 
-#                   0.1, 'nmda')
-#    stim2 = Stimul((1.1 + t_equilibrium) * 1e3, 10, 
-#                   0.1, 'ampa')
-#    stim2_nmda = Stimul((1.1 + t_equilibrium) * 1e3, 10, 
-#                   0.1, 'nmda')
-#    
-#    stim_gaba = Stimul((0.2 + t_equilibrium) * 1e3, 10, 
-#                   0.1, 'nmda') 
-#    # Set the biochemical spines
-#    
-#    for stimulated_spine in stimulated_spines:
-#        stimulated_spine.setupBioSim()
-#        
-#         
-#    nrnSim.spines[0].setStimul(stim1)
-#    nrnSim.spines[0].setStimul(stim1_nmda)
-#    nrnSim.spines[1].setStimul(stim2)
-#    nrnSim.spines[1].setStimul(stim2_nmda)
-#    #nrnSim.
-#    
-#    manager.stims = [stim1, stim2]
-#    for stim in manager.stims:
-#        print stim.to_log()
-    
-    
-#    for spine in nrnSim.spines:
-#        for synapse in spine.synapses:
-#            for tStim in tStims:            
-#                if synapse.chan_type == 'ampa':
-#                    # to convert in secs
-#                    synapse.createStimul(start = tStim * 1e3,  
-#                                 number = 10, 
-#                                 interval = 10 # ms between the stimuli
-#                                 )
                 
-
     #==========
     # Recording
     # - Variables in the section
@@ -317,7 +274,3 @@ if __name__ == "__main__":
             
         fig_file = 'plot_' + var
         plt.savefig(os.path.join(saving_dir, fig_file))
-          
-    #Writing the log
-    #write_log(saving_dir, tStop, options.calciumSampling, options.dtNeuron, 
-     #         t_equilibrium, manager.stims)
