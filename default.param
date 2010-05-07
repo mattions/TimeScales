@@ -14,10 +14,10 @@ stimulated_spines = ['spine1', 'spine2']
 spine1 = ['ampa_s1', 'nmda_s1']
 spine2 = ['ampa_s2', 'nmda_s2']
 
-ampa_s1 = [1, 10, 0.1, 'ampa'] # t_stim [s], number, delay [s], type
-ampa_s2 = [1.1, 10, 0.1, 'ampa'] # t_stim [s], number, delay [s], type
-nmda_s1 = [1, 10, 0.1, 'nmda'] # t_stim [s], number, delay [s], type
-nmda_s1 = [1.1, 10, 0.1, 'nmda'] # t_stim [s], number, delay [s], type
+ampa_s1 = [1, 10, 0.1, "ampa"] # t_stim [s], number, delay [s], type
+ampa_s2 = [1.1, 10, 0.1, "ampa"] # t_stim [s], number, delay [s], type
+nmda_s1 = [1, 10, 0.1, "nmda"] # t_stim [s], number, delay [s], type
+nmda_s1 = [1.1, 10, 0.1, "nmda"] # t_stim [s], number, delay [s], type
 
 kir_fact = 0.5
 # Ecell
