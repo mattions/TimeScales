@@ -10,18 +10,15 @@ import os
 
 from neuron import h
 
-from neuronControl import nrnSim, synapse 
-from neuronControl.stimul import Stimul 
-
-from helpers import Loader
-
-from neuronvisio.manager import Manager
-
 import matplotlib
 backend = 'Agg'
 matplotlib.use(backend)
 import matplotlib.pyplot as plt
 
+from neuronControl import nrnSim, synapse 
+from neuronControl.stimul import Stimul 
+
+from neuronvisio.manager import Manager
 from sumatra.external.NeuroTools import parameters
 
 from sqlalchemy import Column, Integer, Text, PickleType 
