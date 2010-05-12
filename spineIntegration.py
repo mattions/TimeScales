@@ -103,12 +103,12 @@ def build_vecs_to_plot(var, secs, vecRefs):
                     vecs_to_plot[secName] = vecref.vecs[var]
     return vecs_to_plot
 
-def kir_factors(qfact):
+def kir_gkbar(gkbar):
     for sec in h.allsec():
         for seg in sec:
             for mech in seg:
                 if mech.name() == 'kir':
-                    mech.qfact = qfact
+                    mech.gkbar = gkbar
 
 
 if __name__ == "__main__":
@@ -156,7 +156,8 @@ if __name__ == "__main__":
     nrnSim = neuronControl.NeuronSim(mod_path=mod_path, hoc_path=hoc_path, 
                               spines_dist=param['spines_dist'], 
                               biochemical_filename=param['biochemical_filename']) 
-    kir_factors(param['kir_fact'])
+    
+    kir_gkbar(param['kir_gkbar'])
     
     
     # Create Manager
