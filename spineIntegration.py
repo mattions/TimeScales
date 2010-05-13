@@ -261,6 +261,7 @@ if __name__ == "__main__":
         if var == 'v':
             plt.ylabel("Voltage [mV]")
             plt.xlabel("Time [ms]")
+            plt.ylim(-90) # Setting the minimum limits
             
         elif var == 'cai' or var == 'cali':
             plt.xlabel("Time [ms]")
