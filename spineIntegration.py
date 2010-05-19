@@ -201,7 +201,11 @@ if __name__ == "__main__":
             synVec = manager.add_synVecRef(syn)
             
     
-
+    # Quick I clamp test
+    iclamp = h.IClamp(h.MSP_Cell[0].soma(0.5))
+    iclamp.delay = 10 
+    iclamp.dur = 250
+    iclamp.amp = 0.248
     
     ##------------------------------------------------------------------------------ 
     ## Experiment
