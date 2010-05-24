@@ -37,5 +37,6 @@
     "kir_gkbar" : 0.00016, # S/cm2
     "biochemical_filename" : "biochemical_circuits/biomd183_loop.eml",
     "var_to_plot" : ['v','cai','cali','ica'],
-    "section_to_plot" : ['MSP_Cell[0].soma','spine1_head','spine2_head']    
+    "section_to_plot" : ['MSP_Cell[0].soma', 'MSP_Cell[0].dend3_1_1', 
+    'MSP_Cell[0].dend_3_1_0', 'MSP_Cell[0].dend3', 'spine1_head','spine2_head']    
 }

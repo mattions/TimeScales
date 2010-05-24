@@ -191,7 +191,9 @@ if __name__ == "__main__":
     variables_to_rec = param['var_to_plot']
     
     for var in variables_to_rec:
-        manager.add_all_vecRef(var)
+        for sec in h.allsec():
+            if sec.name() in param['section_to_plot']:
+                manager.add_vecRef(var, sec)
     
     
     # Recording the synapses
