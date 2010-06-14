@@ -21,18 +21,26 @@ from neuronControl.stimul import Stimul
 from neuronvisio.manager import Manager
 from sumatra.external.NeuroTools import parameters
 
-from sqlalchemy import Column, Integer, Text, PickleType 
-from neuronvisio.db.tables import Base
+import tables 
+from neuronvisio.manager import BaseRef
+
  
-class TimeSeries(Base):
+class TimeSeries(BaseRef):
     
-    __tablename__ = 'timeseries'
+    def init(self):
+        BaseRef.__init__()
     
     id = Column(Integer, primary_key=True)
     var = Column(Text)
     vec = Column(PickleType)
     sec_name = Column(Text)
     details = Column(Text)
+   
+
+def save_timeseries_in_hdf(filename):
+    hdf_holder = tables.openFile(filename, 'a')
+    
+    
    
 def save_timeseries_in_db(filename):
         
@@ -110,6 +118,13 @@ def kir_gkbar(gkbar):
                 if mech.name() == 'kir':
                     mech.gkbar = gkbar
 
+
+def iClamptest(delay=10, duration=250, amplititude=0.248):
+    """# Quick Iclamp test to check the current dynamics"""
+    iclamp = h.IClamp(h.MSP_Cell[0].soma(0.5))
+    iclamp.delay = delay
+    iclamp.dur = duration
+    iclamp.amp = amplititude
 
 if __name__ == "__main__":
 
@@ -203,11 +218,7 @@ if __name__ == "__main__":
             synVec = manager.add_synVecRef(syn)
             
     
-    # Quick I clamp test
-    iclamp = h.IClamp(h.MSP_Cell[0].soma(0.5))
-    iclamp.delay = 10 
-    iclamp.dur = 250
-    iclamp.amp = 0.248
+
     
     ##------------------------------------------------------------------------------ 
     ## Experiment
@@ -215,28 +226,28 @@ if __name__ == "__main__":
     while h.t < ( tStop * 1e3): # Using [ms] for NEURON
         h.fadvance() # run Neuron for step
         #for every ms in NEURON we update the ecellMan
-        if np.round(h.t, decimals = 4) % ecell_interval_update == 0: 
-                
-            for spine in nrnSim.spines:
-                if hasattr(spine, 'ecellMan'):
-                    vec_spine_head_cai = manager.get_vector(spine.head, 'cai')
-                    vec_spine_head_cali = manager.get_vector(spine.head, 'cali')
-                    head_cai = vec_spine_head_cai.x[-1]
-                    head_cali = vec_spine_head_cali.x[-1]
-                    electrical_ca = head_cai + head_cali
-                    
-                    spine.update_calcium(electrical_ca)
-                    spine.ecellMan.ses.run(calcium_sampling)
-                
-                    # getting the conc of the active CaMKII and set the weight of the synapse
-                    CaMKIIbar = spine.ecellMan.CaMKIIbar['Value']
-                    
-                    # Updating the AMPA synapses
-                    for synapse in spine.synapses:
-                        if synapse.chan_type == 'ampa':                       
-                            weight = calcWeight(synapse.netCon.weight[0], CaMKIIbar)
-                            synapse.netCon.weight[0] = weight
-                            synapse.vecs['weight'].append(weight)
+#        if np.round(h.t, decimals = 4) % ecell_interval_update == 0: 
+#                
+#            for spine in nrnSim.spines:
+#                if hasattr(spine, 'ecellMan'):
+#                    vec_spine_head_cai = manager.get_vector(spine.head, 'cai')
+#                    vec_spine_head_cali = manager.get_vector(spine.head, 'cali')
+#                    head_cai = vec_spine_head_cai.x[-1]
+#                    head_cali = vec_spine_head_cali.x[-1]
+#                    electrical_ca = head_cai + head_cali
+#                    
+#                    spine.update_calcium(electrical_ca)
+#                    spine.ecellMan.ses.run(calcium_sampling)
+#                
+#                    # getting the conc of the active CaMKII and set the weight of the synapse
+#                    CaMKIIbar = spine.ecellMan.CaMKIIbar['Value']
+#                    
+#                    # Updating the AMPA synapses
+#                    for synapse in spine.synapses:
+#                        if synapse.chan_type == 'ampa':                       
+#                            weight = calcWeight(synapse.netCon.weight[0], CaMKIIbar)
+#                            synapse.netCon.weight[0] = weight
+#                            synapse.vecs['weight'].append(weight)
                 
         if np.round(h.t, decimals = 4) % 200 == 0: # printig every two seconds
             logger.debug( "Neuron time [ms]: %f" % h.t)
@@ -248,11 +259,11 @@ if __name__ == "__main__":
     # Save the Results
     print "Simulation Ended. Saving results"
     saving_dir = manager.create_new_dir(root='Data')
-    db_name = 'storage.sqlite'
+    hdf_name = 'storage.h5'
     filename = os.path.join(saving_dir, db_name)
     print "Results will be saved in %s" %filename
     # Saving the vectors
-    manager.store_in_db(filename)
+    manager.save_to_hdf(filename)
       
     # Saving the timeseries
     #save_timeseries_in_db(filename)
