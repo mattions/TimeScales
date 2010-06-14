@@ -260,7 +260,7 @@ if __name__ == "__main__":
     print "Simulation Ended. Saving results"
     saving_dir = manager.create_new_dir(root='Data')
     hdf_name = 'storage.h5'
-    filename = os.path.join(saving_dir, db_name)
+    filename = os.path.join(saving_dir, hdf_name)
     print "Results will be saved in %s" %filename
     # Saving the vectors
     manager.save_to_hdf(filename)
