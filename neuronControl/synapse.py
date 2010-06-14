@@ -57,14 +57,17 @@ class Synapse(object):
         
         # Record the stimuls
         # The NetCon needs a record allocated to use to record the stuff
-        self.vecs["stimul"] = h.Vector()
-        self.netCon.record(self.vecs["stimul"])
+        stimul = "stimul_" + self.chan_type
+        self.vecs[stimul] = h.Vector()
+        self.netCon.record(self.vecs[stimul])
         
-        # Record the current into the synaptic chan 
-        self.vecs["i"] = h.Vector()
-        self.vecs["i"].record(self.chan._ref_i)        
+        # Record the current into the synaptic chan
+        i = "i_" + self.chan_type
+        self.vecs[i] = h.Vector()
+        self.vecs[i].record(self.chan._ref_i)        
         
         # Record the weight with a list. No doable with a Vector
         # It's filled in the main loop.
-        self.vecs['weight'] = []
+        weight = 'weight_' + self.chan_type
+        self.vecs[weight] = []
         
