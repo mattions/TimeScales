@@ -25,16 +25,16 @@ import tables
 from neuronvisio.manager import BaseRef
 
  
-class TimeSeries(BaseRef):
-    
-    def init(self):
-        BaseRef.__init__()
-    
-    id = Column(Integer, primary_key=True)
-    var = Column(Text)
-    vec = Column(PickleType)
-    sec_name = Column(Text)
-    details = Column(Text)
+#class TimeSeries(BaseRef):
+#    
+#    def init(self):
+#        BaseRef.__init__()
+#    
+#    id = Column(Integer, primary_key=True)
+#    var = Column(Text)
+#    vec = Column(PickleType)
+#    sec_name = Column(Text)
+#    details = Column(Text)
    
 
 def save_timeseries_in_hdf(filename):
