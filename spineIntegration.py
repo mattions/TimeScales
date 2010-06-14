@@ -25,22 +25,47 @@ import tables
 from neuronvisio.manager import BaseRef
 
  
-#class TimeSeries(BaseRef):
-#    
-#    def init(self):
-#        BaseRef.__init__()
-#    
-#    id = Column(Integer, primary_key=True)
-#    var = Column(Text)
-#    vec = Column(PickleType)
-#    sec_name = Column(Text)
-#    details = Column(Text)
+class TimeSeries(BaseRef):
+    
+    def init(self, sec_name, vecs):
+        BaseRef.__init__()
+        self.sec_name = sec_name
+        self.vecs = vecs
    
 
-def save_timeseries_in_hdf(filename):
+def add_timeseries(manager):
     hdf_holder = tables.openFile(filename, 'a')
-    
-    
+    for spine in nrnSim.spines:
+        if hasattr(spine, 'ecellMan'):
+            # Retrieving the biochemical timecourses
+            spine.ecellMan.converToTimeCourses()
+            time_courses = spine.ecellMan.timeCourses 
+            
+            pos = str(spine.pos)
+            parent = spine.parent.name()
+            detail = parent + "_" + pos
+            sec_name = str(spine.id)
+            
+            # Adding a record for each variable
+            vecs = {}
+            time = None
+            for var in time_courses.keys():
+                time = time_courses[key][0]
+                vecs[var] = time_courses[key][1]
+                
+            timeseriesRef = TimeSeries(sec_name=sec_name, 
+                                       vecs=vecs,
+                                       detail= detail)
+            name = timeseriesRef.__class__.__name__
+            
+            
+            if name in manager.refs.keys(): # append if exist
+                manager.refs[name].append(timeseriesRef)
+                
+            else: # create the list and add the time
+                manager.refs[name] = [timeseriesRef]
+                manager.group[name] = time
+                
    
 def save_timeseries_in_db(filename):
         
@@ -257,16 +282,17 @@ if __name__ == "__main__":
     
     #------------------------------------
     # Save the Results
+    
+    # Add timeseries
+    add_timeseries(manager)
+    
     print "Simulation Ended. Saving results"
     saving_dir = manager.create_new_dir(root='Data')
     hdf_name = 'storage.h5'
     filename = os.path.join(saving_dir, hdf_name)
     print "Results will be saved in %s" %filename
-    # Saving the vectors
+    # Saving everything
     manager.save_to_hdf(filename)
-      
-    # Saving the timeseries
-    #save_timeseries_in_db(filename)
     
     #Let's save same plot
     
