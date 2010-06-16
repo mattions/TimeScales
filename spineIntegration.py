@@ -27,12 +27,13 @@ from neuronvisio.manager import BaseRef
  
 class TimeSeries(BaseRef):
     
-    def init(self, sec_name=None, vecs=None, detail=None):
+    def __init__(self, sec_name=None, vecs=None, detail=None):
+        
         BaseRef.__init__(self)
         self.sec_name = sec_name
         self.vecs = vecs
         self.detail = detail
-   
+
 
 def add_timeseries(manager):
     print nrnSim.spines
