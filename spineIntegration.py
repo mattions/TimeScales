@@ -298,7 +298,7 @@ if __name__ == "__main__":
     
     for i, var in enumerate(param['var_to_plot']):
         secs = param['section_to_plot']
-        vecs_to_plot = build_vecs_to_plot(var, secs, manager.vecRefs)
+        vecs_to_plot = build_vecs_to_plot(var, secs, manager.refs['VecRef'])
         manager.plotVecs(vecs_to_plot, figure_num=i)
         
         if var == 'v':
