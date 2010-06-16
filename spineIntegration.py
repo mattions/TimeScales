@@ -57,15 +57,7 @@ def add_timeseries(manager):
             timeseriesRef = TimeSeries(sec_name=sec_name, 
                                        vecs=vecs,
                                        detail= detail)
-            name = timeseriesRef.__class__.__name__
-            
-            
-            if manager.refs.has_key(name): # append if exist
-                manager.refs[name].append(timeseriesRef)
-                
-            else: # create the list and add the time
-                manager.refs[name] = [timeseriesRef]
-                manager.group[name] = time
+            manager.add_ref(timeseriesRef, time)
             print manager.refs
         else:
             print "Not ecell instance in spine: %s" %spine.id
