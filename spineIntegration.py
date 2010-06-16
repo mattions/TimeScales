@@ -27,8 +27,8 @@ from neuronvisio.manager import BaseRef
  
 class TimeSeries(BaseRef):
     
-    def init(self, sec_name, vecs, detail):
-        BaseRef.__init__()
+    def init(self, sec_name=None, vecs=None, detail=None):
+        BaseRef.__init__(self)
         self.sec_name = sec_name
         self.vecs = vecs
         self.detail = detail
@@ -55,9 +55,9 @@ def add_timeseries(manager):
                 time = time_courses[var][0]
                 vecs[var] = time_courses[var][1]
                 
-            timeseriesRef = TimeSeries(sec_name, 
-                                       vecs,
-                                       detail)
+            timeseriesRef = TimeSeries(sec_name=sec_name, 
+                                       vecs=vecs,
+                                       detail=detail)
             manager.add_ref(timeseriesRef, time)
             print manager.refs
         else:
