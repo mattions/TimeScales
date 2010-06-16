@@ -213,7 +213,7 @@ if __name__ == "__main__":
                                       stim_par['delay'], 
                                       stim_par['type'])
                         spine.setStimul(stim)
-                        spine.setupBioSim()
+                        spine.setupBioSim() # Initializing ecell
                 
     #==========
     # Recording

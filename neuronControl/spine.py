@@ -36,13 +36,13 @@ class Spine():
     def setupBioSim(self):
         """Initialize the Biochemical Simulator creating the instance of 
         the object to control the simulation"""
-        
-        ecellMan = eC.EcellManager(self.filename)
-        ecellMan.createLoggers()
-        # Setting the head volume with the spine head
-        ecellMan.ses.vol = self.head_vol * 1e-15 #Converted in l
-        self.ecellMan = ecellMan
-        print "Ecell initialized in spine: %s" %self.id
+        if not hasattr(self, ecellMan):
+            ecellMan = eC.EcellManager(self.filename)
+            ecellMan.createLoggers()
+            # Setting the head volume with the spine head
+            ecellMan.ses.vol = self.head_vol * 1e-15 #Converted in l
+            self.ecellMan = ecellMan
+            print "Ecell initialized in spine: %s" %self.id
         
     
     def update_calcium(self, electrical_ca_concentration):
