@@ -5,7 +5,7 @@
     "calciumSampling" : 0.001, # calcium sampling [s]
     "tEquilibrium" : 0.0, # Equilibrium time. The systems (both Neuron and ecell) 
                    # are ran till the equilibrium before the upgrade
-    "tStop" : 0.1, # Time to stop the siumaltion [s]
+    "tStop" : 0.01, # Time to stop the siumaltion [s]
     "spines_dist" : "two", #spines_dist = 'all' or spines_dist=zero #Number of spines
     "stimulated_spines" : ['spine1', 'spine2'],
     "spine1" : ['ampa_s1', 'nmda_s1'],
