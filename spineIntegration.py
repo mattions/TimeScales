@@ -60,7 +60,7 @@ def add_timeseries(manager):
                                        vecs=vecs,
                                        detail=detail)
             manager.add_ref(timeseriesRef, time)
-            print manager.refs
+            
         else:
             print "Not ecell instance in spine: %s" %spine.id
                             
