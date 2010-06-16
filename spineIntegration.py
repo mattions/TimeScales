@@ -251,28 +251,28 @@ if __name__ == "__main__":
     while h.t < ( tStop * 1e3): # Using [ms] for NEURON
         h.fadvance() # run Neuron for step
         #for every ms in NEURON we update the ecellMan
-#        if np.round(h.t, decimals = 4) % ecell_interval_update == 0: 
-#                
-#            for spine in nrnSim.spines:
-#                if hasattr(spine, 'ecellMan'):
-#                    vec_spine_head_cai = manager.get_vector(spine.head, 'cai')
-#                    vec_spine_head_cali = manager.get_vector(spine.head, 'cali')
-#                    head_cai = vec_spine_head_cai.x[-1]
-#                    head_cali = vec_spine_head_cali.x[-1]
-#                    electrical_ca = head_cai + head_cali
-#                    
-#                    spine.update_calcium(electrical_ca)
-#                    spine.ecellMan.ses.run(calcium_sampling)
-#                
-#                    # getting the conc of the active CaMKII and set the weight of the synapse
-#                    CaMKIIbar = spine.ecellMan.CaMKIIbar['Value']
-#                    
-#                    # Updating the AMPA synapses
-#                    for synapse in spine.synapses:
-#                        if synapse.chan_type == 'ampa':                       
-#                            weight = calcWeight(synapse.netCon.weight[0], CaMKIIbar)
-#                            synapse.netCon.weight[0] = weight
-#                            synapse.vecs['weight'].append(weight)
+        if np.round(h.t, decimals = 4) % ecell_interval_update == 0: 
+                
+            for spine in nrnSim.spines:
+                if hasattr(spine, 'ecellMan'):
+                    vec_spine_head_cai = manager.get_vector(spine.head, 'cai')
+                    vec_spine_head_cali = manager.get_vector(spine.head, 'cali')
+                    head_cai = vec_spine_head_cai.x[-1]
+                    head_cali = vec_spine_head_cali.x[-1]
+                    electrical_ca = head_cai + head_cali
+                    
+                    spine.update_calcium(electrical_ca)
+                    spine.ecellMan.ses.run(calcium_sampling)
+                
+                    # getting the conc of the active CaMKII and set the weight of the synapse
+                    CaMKIIbar = spine.ecellMan.CaMKIIbar['Value']
+                    
+                    # Updating the AMPA synapses
+                    for synapse in spine.synapses:
+                        if synapse.chan_type == 'ampa':                       
+                            weight = calcWeight(synapse.netCon.weight[0], CaMKIIbar)
+                            synapse.netCon.weight[0] = weight
+                            synapse.vecs['weight'].append(weight)
                 
         if np.round(h.t, decimals = 4) % 200 == 0: # printig every two seconds
             logger.debug( "Neuron time [ms]: %f" % h.t)
