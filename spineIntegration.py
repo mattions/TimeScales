@@ -55,9 +55,9 @@ def add_timeseries(manager):
                 time = time_courses[var][0]
                 vecs[var] = time_courses[var][1]
                 
-            timeseriesRef = TimeSeries(sec_name=sec_name, 
-                                       vecs=vecs,
-                                       detail= detail)
+            timeseriesRef = TimeSeries(sec_name, 
+                                       vecs,
+                                       detail)
             manager.add_ref(timeseriesRef, time)
             print manager.refs
         else:
