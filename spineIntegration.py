@@ -34,8 +34,9 @@ class TimeSeries(BaseRef):
    
 
 def add_timeseries(manager):
-    
+    print nrnSim.spines
     for spine in nrnSim.spines:
+        
         if hasattr(spine, 'ecellMan'):
             # Retrieving the biochemical timecourses
             spine.ecellMan.converToTimeCourses()
@@ -65,7 +66,10 @@ def add_timeseries(manager):
             else: # create the list and add the time
                 manager.refs[name] = [timeseriesRef]
                 manager.group[name] = time
-                
+            print manager.refs
+        else:
+            print "Not ecell instance in spine: %s" %spine.id
+                            
    
 def save_timeseries_in_db(filename):
         
