@@ -27,10 +27,11 @@ from neuronvisio.manager import BaseRef
  
 class TimeSeries(BaseRef):
     
-    def init(self, sec_name, vecs):
+    def init(self, sec_name, vecs, detail):
         BaseRef.__init__()
         self.sec_name = sec_name
         self.vecs = vecs
+        self.detail = detail
    
 
 def add_timeseries(manager):
