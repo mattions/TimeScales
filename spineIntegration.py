@@ -34,7 +34,7 @@ class TimeSeries(BaseRef):
    
 
 def add_timeseries(manager):
-    hdf_holder = tables.openFile(filename, 'a')
+    
     for spine in nrnSim.spines:
         if hasattr(spine, 'ecellMan'):
             # Retrieving the biochemical timecourses
@@ -59,7 +59,7 @@ def add_timeseries(manager):
             name = timeseriesRef.__class__.__name__
             
             
-            if name in manager.refs.keys(): # append if exist
+            if manager.refs.has_key(name): # append if exist
                 manager.refs[name].append(timeseriesRef)
                 
             else: # create the list and add the time
