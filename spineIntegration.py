@@ -28,7 +28,7 @@ from neuronvisio.manager import BaseRef
 class TimeSeries(BaseRef):
     
     def init(self, sec_name=None, vecs=None, detail=None):
-        BaseRef.__init__()
+        BaseRef.__init__(self)
         self.sec_name = sec_name
         self.vecs = vecs
         self.detail = detail
