@@ -42,6 +42,7 @@ class Spine():
         # Setting the head volume with the spine head
         ecellMan.ses.vol = self.head_vol * 1e-15 #Converted in l
         self.ecellMan = ecellMan
+        print "Ecell initialized in spine: %s" %self.id
         
     
     def update_calcium(self, electrical_ca_concentration):
