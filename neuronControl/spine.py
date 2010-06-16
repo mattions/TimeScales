@@ -36,7 +36,7 @@ class Spine():
     def setupBioSim(self):
         """Initialize the Biochemical Simulator creating the instance of 
         the object to control the simulation"""
-        if not hasattr(self, ecellMan):
+        if not hasattr(self, 'ecellMan'):
             ecellMan = eC.EcellManager(self.filename)
             ecellMan.createLoggers()
             # Setting the head volume with the spine head
