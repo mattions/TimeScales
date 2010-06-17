@@ -53,8 +53,8 @@ def add_timeseries(manager):
             vecs = {}
             time = None
             for var in time_courses.keys():
-                time = time_courses[var][0]
-                vecs[var] = time_courses[var][1]
+                time = time_courses[var][:,0]
+                vecs[var] = time_courses[var][:,1]
                 
             timeseriesRef = TimeSeries(sec_name=sec_name, 
                                        vecs=vecs,
