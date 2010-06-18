@@ -62,44 +62,7 @@ def add_timeseries(manager):
             manager.add_ref(timeseriesRef, time)
             
         else:
-            print "Not ecell instance in spine: %s" %spine.id
-                            
-   
-def save_timeseries_in_db(filename):
-        
-    conn = sqlite3.connect(filename)
-    cursor = conn.cursor()
-    
-    ################
-    # timeseries
-    table = "Timeseries"
-    # Create the table.
-    sql_stm = "CREATE TABLE IF NOT EXISTS " + table + " (var TEXT, pos REAL, \
-    parent TEXT, sec_name TEXT, vec BLOB)"
-    cursor.execute(sql_stm)
-    conn.commit()
-    
-    sql_stm = "INSERT INTO " + table + " VALUES(?,?,?,?,?)"
-    for spine in nrnSim.spines:
-        if hasattr(spine, 'ecellMan'):
-            # Retrieving the biochemical timecourses
-            spine.ecellMan.converToTimeCourses()
-            time_courses = spine.ecellMan.timeCourses 
-            notes = '#timecourse'
-            pos = str(spine.pos)
-            parent = spine.parent.name()
-            sec_name = str(spine.id)
-            
-            # Adding a record for each variable
-            for key in time_courses.keys():
-                var = key
-                array = cPickle.dumps(time_courses[key], -1)
-                cursor.execute(sql_stm, (var, pos, parent, sec_name,
-                                         sqlite3.Binary(array)))    
-        conn.commit()
-    cursor.close()
-
-    
+            print "Not ecell instance in spine: %s" %spine.id    
 
 def calcWeight(old_weight, CaMKIIbar, n=2, k=4):
     """Calc the weight of the synapses according to the CaMKII"""
@@ -231,8 +194,10 @@ if __name__ == "__main__":
     
     for var in variables_to_rec:
         for sec in h.allsec():
-            if sec.name() in param['section_to_plot']:
-                manager.add_vecRef(var, sec)
+            manager.add_all_vecRef(var) # Saving all the vecRef for testing
+#            if sec.name() in param['section_to_plot']:
+#                manager.add_vecRef(var, sec)
+    
     
     
     # Recording the synapses
