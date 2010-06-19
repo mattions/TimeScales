@@ -194,15 +194,15 @@ if __name__ == "__main__":
     
     for var in variables_to_rec:
         for sec in h.allsec():
-            manager.add_all_vecRef(var) # Saving all the vecRef for testing
-#            if sec.name() in param['section_to_plot']:
-#                manager.add_vecRef(var, sec)
+            #manager.add_all_vecRef(var) # Saving all the vecRef for testing
+            if sec.name() in param['section_to_plot']:
+                manager.add_vecRef(var, sec)
     
     
     
     # Recording the synapses
     
-    for spine in nrnSim.spines:
+    for spine in stim_spines:
         for syn in spine.synapses:
             synVec = manager.add_synVecRef(syn)
             
