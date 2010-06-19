@@ -202,9 +202,11 @@ if __name__ == "__main__":
     
     # Recording the synapses
     
-    for spine in stim_spines:
-        for syn in spine.synapses:
-            synVec = manager.add_synVecRef(syn)
+    for stim_spine in stim_spines:
+        for spine in nrnSim.spines:
+            if stim_spine == spine.id:
+                for syn in spine.synapses:
+                    synVec = manager.add_synVecRef(syn)
             
     
 
