@@ -169,16 +169,15 @@ if __name__ == "__main__":
     stim_spines = param['stimulated_spines']
     for spine_id in stim_spines:
         if spine_id in param.keys():
-            for spine in nrnSim.spines:
-                if spine_id == spine.id:
-                    for stim_id in param[spine.id]:
-                        stim_par = param[stim_id]
-                        stim = Stimul((stim_par['t_stim'] + t_equilibrium)* 1e3, 
-                                      stim_par['numbers'], 
-                                      stim_par['delay'], 
-                                      stim_par['type'])
-                        spine.setStimul(stim)
-                        spine.setupBioSim() # Initializing ecell
+            spine = nrnSim.spines[spine_id]
+            for stim_id in param[spine.id]:
+                stim_par = param[stim_id]
+                stim = Stimul((stim_par['t_stim'] + t_equilibrium)* 1e3, 
+                              stim_par['numbers'], 
+                              stim_par['delay'], 
+                              stim_par['type'])
+                spine.setStimul(stim)
+                spine.setupBioSim() # Initializing ecell
                 
     #==========
     # Recording
@@ -203,13 +202,9 @@ if __name__ == "__main__":
     # Recording the synapses
     
     for stim_spine in stim_spines:
-        for spine in nrnSim.spines:
-            if stim_spine == spine.id:
-                for syn in spine.synapses:
-                    synVec = manager.add_synVecRef(syn)
-            
-    
-
+        spine = nrnSim.spines[stim_spine]
+        for syn in spine.synapses:
+            synVec = manager.add_synVecRef(syn)
     
     ##------------------------------------------------------------------------------ 
     ## Experiment
@@ -219,7 +214,8 @@ if __name__ == "__main__":
         #for every ms in NEURON we update the ecellMan
         if np.round(h.t, decimals = 4) % ecell_interval_update == 0: 
                 
-            for spine in nrnSim.spines:
+            for spine_id in stim_spines :
+                spine = nrnSim.spines[spine_id]
                 if hasattr(spine, 'ecellMan'):
                     vec_spine_head_cai = manager.get_vector(spine.head, 'cai')
                     vec_spine_head_cali = manager.get_vector(spine.head, 'cali')
