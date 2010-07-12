@@ -195,7 +195,7 @@ if __name__ == "__main__":
         for sec in h.allsec():
             #manager.add_all_vecRef(var) # Saving all the vecRef for testing
             if sec.name() in param['section_to_plot']:
-                manager.add_vecRef(var, sec)
+                manager.add_vecRef(var, sec, param['time_resolution_neuron'])
     
     
     
