@@ -111,6 +111,11 @@ def iClamptest(delay=10, duration=250, amplititude=0.248):
     iclamp.delay = delay
     iclamp.dur = duration
     iclamp.amp = amplititude
+    
+def calcStim(onset_time, delay, duration, number):
+    pass
+
+
 
 if __name__ == "__main__":
 
