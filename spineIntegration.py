@@ -62,7 +62,7 @@ def add_timeseries(manager):
             manager.add_ref(timeseriesRef, time)
             
         else:
-            print "Not ecell instance in spine: %s" %spine.id    
+            print "Not ecell instance in spine: %s" %spine    
 
 def calcWeight(old_weight, CaMKIIbar, n=2, k=4):
     """Calc the weight of the synapses according to the CaMKII"""
@@ -211,12 +211,6 @@ if __name__ == "__main__":
         for syn in spine.synapses:
             synVec = manager.add_synVecRef(syn)
             
-            
-    # Using the multithread:
-    h.load_file('parcom.hoc')
-    p = h.ParallelComputeTool()
-    p.nthread(4)
-    p.multisplit(True)
     
     ##------------------------------------------------------------------------------ 
     ## Experiment
