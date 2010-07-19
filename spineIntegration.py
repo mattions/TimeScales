@@ -36,33 +36,29 @@ class TimeSeries(BaseRef):
 
 
 def add_timeseries(manager):
-    print nrnSim.spines
-    for spine in nrnSim.spines:
+    for spine_id in param['stimulated_spines']:
         
-        if hasattr(spine, 'ecellMan'):
-            # Retrieving the biochemical timecourses
-            spine.ecellMan.converToTimeCourses()
-            time_courses = spine.ecellMan.timeCourses 
+        spine = nrnSim.spines[spine_id]
+        # Retrieving the biochemical timecourses
+        spine.ecellMan.converToTimeCourses()
+        time_courses = spine.ecellMan.timeCourses 
+        
+        pos = str(spine.pos)
+        parent = spine.parent.name()
+        detail = parent + "_" + pos
+        sec_name = str(spine.id)
+        
+        # Adding a record for each variable
+        vecs = {}
+        time = None
+        for var in time_courses.keys():
+            time = time_courses[var][:,0]
+            vecs[var] = time_courses[var][:,1]
             
-            pos = str(spine.pos)
-            parent = spine.parent.name()
-            detail = parent + "_" + pos
-            sec_name = str(spine.id)
-            
-            # Adding a record for each variable
-            vecs = {}
-            time = None
-            for var in time_courses.keys():
-                time = time_courses[var][:,0]
-                vecs[var] = time_courses[var][:,1]
-                
-            timeseriesRef = TimeSeries(sec_name=sec_name, 
-                                       vecs=vecs,
-                                       detail=detail)
-            manager.add_ref(timeseriesRef, time)
-            
-        else:
-            print "Not ecell instance in spine: %s" %spine    
+        timeseriesRef = TimeSeries(sec_name=sec_name, 
+                                   vecs=vecs,
+                                   detail=detail)
+        manager.add_ref(timeseriesRef, time)    
 
 def calcWeight(old_weight, CaMKIIbar, n=2, k=4):
     """Calc the weight of the synapses according to the CaMKII"""
