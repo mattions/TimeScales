@@ -210,6 +210,13 @@ if __name__ == "__main__":
         spine = nrnSim.spines[stim_spine]
         for syn in spine.synapses:
             synVec = manager.add_synVecRef(syn)
+            
+            
+    # Using the multithread:
+    h.load_file('parcom.hoc')
+    p = h.ParallelComputeTool()
+    p.nthread(4)
+    p.multisplit(True)
     
     ##------------------------------------------------------------------------------ 
     ## Experiment
