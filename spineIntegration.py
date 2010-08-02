@@ -36,70 +36,29 @@ class TimeSeries(BaseRef):
 
 
 def add_timeseries(manager):
-    print nrnSim.spines
-    for spine in nrnSim.spines:
+    for spine_id in param['stimulated_spines']:
         
-        if hasattr(spine, 'ecellMan'):
-            # Retrieving the biochemical timecourses
-            spine.ecellMan.converToTimeCourses()
-            time_courses = spine.ecellMan.timeCourses 
-            
-            pos = str(spine.pos)
-            parent = spine.parent.name()
-            detail = parent + "_" + pos
-            sec_name = str(spine.id)
-            
-            # Adding a record for each variable
-            vecs = {}
-            time = None
-            for var in time_courses.keys():
-                time = time_courses[var][0]
-                vecs[var] = time_courses[var][1]
-                
-            timeseriesRef = TimeSeries(sec_name=sec_name, 
-                                       vecs=vecs,
-                                       detail=detail)
-            manager.add_ref(timeseriesRef, time)
-            
-        else:
-            print "Not ecell instance in spine: %s" %spine.id
-                            
-   
-def save_timeseries_in_db(filename):
+        spine = nrnSim.spines[spine_id]
+        # Retrieving the biochemical timecourses
+        spine.ecellMan.converToTimeCourses()
+        time_courses = spine.ecellMan.timeCourses 
         
-    conn = sqlite3.connect(filename)
-    cursor = conn.cursor()
-    
-    ################
-    # timeseries
-    table = "Timeseries"
-    # Create the table.
-    sql_stm = "CREATE TABLE IF NOT EXISTS " + table + " (var TEXT, pos REAL, \
-    parent TEXT, sec_name TEXT, vec BLOB)"
-    cursor.execute(sql_stm)
-    conn.commit()
-    
-    sql_stm = "INSERT INTO " + table + " VALUES(?,?,?,?,?)"
-    for spine in nrnSim.spines:
-        if hasattr(spine, 'ecellMan'):
-            # Retrieving the biochemical timecourses
-            spine.ecellMan.converToTimeCourses()
-            time_courses = spine.ecellMan.timeCourses 
-            notes = '#timecourse'
-            pos = str(spine.pos)
-            parent = spine.parent.name()
-            sec_name = str(spine.id)
+        pos = str(spine.pos)
+        parent = spine.parent.name()
+        detail = parent + "_" + pos
+        sec_name = str(spine.id)
+        
+        # Adding a record for each variable
+        vecs = {}
+        time = None
+        for var in time_courses.keys():
+            time = time_courses[var][:,0]
+            vecs[var] = time_courses[var][:,1]
             
-            # Adding a record for each variable
-            for key in time_courses.keys():
-                var = key
-                array = cPickle.dumps(time_courses[key], -1)
-                cursor.execute(sql_stm, (var, pos, parent, sec_name,
-                                         sqlite3.Binary(array)))    
-        conn.commit()
-    cursor.close()
-
-    
+        timeseriesRef = TimeSeries(sec_name=sec_name, 
+                                   vecs=vecs,
+                                   detail=detail)
+        manager.add_ref(timeseriesRef, time)    
 
 def calcWeight(old_weight, CaMKIIbar, n=2, k=4):
     """Calc the weight of the synapses according to the CaMKII"""
@@ -148,6 +107,11 @@ def iClamptest(delay=10, duration=250, amplititude=0.248):
     iclamp.delay = delay
     iclamp.dur = duration
     iclamp.amp = amplititude
+    
+def calcStim(onset_time, delay, duration, number):
+    pass
+
+
 
 if __name__ == "__main__":
 
@@ -206,16 +170,15 @@ if __name__ == "__main__":
     stim_spines = param['stimulated_spines']
     for spine_id in stim_spines:
         if spine_id in param.keys():
-            for spine in nrnSim.spines:
-                if spine_id == spine.id:
-                    for stim_id in param[spine.id]:
-                        stim_par = param[stim_id]
-                        stim = Stimul((stim_par['t_stim'] + t_equilibrium)* 1e3, 
-                                      stim_par['numbers'], 
-                                      stim_par['delay'], 
-                                      stim_par['type'])
-                        spine.setStimul(stim)
-                        spine.setupBioSim() # Initializing ecell
+            spine = nrnSim.spines[spine_id]
+            for stim_id in param[spine.id]:
+                stim_par = param[stim_id]
+                stim = Stimul((stim_par['t_stim'] + t_equilibrium)* 1e3, 
+                              stim_par['numbers'], 
+                              stim_par['delay'], 
+                              stim_par['type'])
+                spine.setStimul(stim)
+                spine.setupBioSim() # Initializing ecell
                 
     #==========
     # Recording
@@ -231,18 +194,19 @@ if __name__ == "__main__":
     
     for var in variables_to_rec:
         for sec in h.allsec():
+            #manager.add_all_vecRef(var) # Saving all the vecRef for testing
             if sec.name() in param['section_to_plot']:
-                manager.add_vecRef(var, sec)
+                manager.add_vecRef(var, sec, param['time_resolution_neuron'])
+    
     
     
     # Recording the synapses
     
-    for spine in nrnSim.spines:
+    for stim_spine in stim_spines:
+        spine = nrnSim.spines[stim_spine]
         for syn in spine.synapses:
             synVec = manager.add_synVecRef(syn)
             
-    
-
     
     ##------------------------------------------------------------------------------ 
     ## Experiment
@@ -252,7 +216,8 @@ if __name__ == "__main__":
         #for every ms in NEURON we update the ecellMan
         if np.round(h.t, decimals = 4) % ecell_interval_update == 0: 
                 
-            for spine in nrnSim.spines:
+            for spine_id in stim_spines :
+                spine = nrnSim.spines[spine_id]
                 if hasattr(spine, 'ecellMan'):
                     vec_spine_head_cai = manager.get_vector(spine.head, 'cai')
                     vec_spine_head_cali = manager.get_vector(spine.head, 'cali')

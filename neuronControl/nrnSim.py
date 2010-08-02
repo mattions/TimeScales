@@ -92,7 +92,7 @@ class NeuronSim():
     
     def __distributeSpines(self, spine_dist):
         """Attach spines to the dendrites"""
-        self.spines = []
+        self.spines = {}
         if spine_dist == 'zero':
           pass  
         elif spine_dist == 'two':
@@ -164,7 +164,7 @@ class NeuronSim():
                 # Instantiate the spine with the biochemical model
                 spine = Spine(id, filename_bioch_mod=self.biochemical_filename)
                 spine.attach(sec, pos, 0) # Attaching the spine in the right pos
-                self.spines.append(spine)
+                self.spines[spine.id] = spine
                 print "Addedd spine: %s, pos %s, sec %s" % (spine.id, pos, sec.name())
                 
     def updateSpines(self):
