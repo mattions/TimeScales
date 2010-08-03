@@ -11,6 +11,7 @@ import os
 from neuron import h
 
 import matplotlib
+from ecellControl.ecellManager import ecellManager
 backend = 'Agg'
 matplotlib.use(backend)
 import matplotlib.pyplot as plt
@@ -107,10 +108,103 @@ def iClamptest(delay=10, duration=250, amplititude=0.248):
     iclamp.delay = delay
     iclamp.dur = duration
     iclamp.amp = amplititude
-    
-def calcStim(onset_time, delay, duration, number):
-    pass
 
+def advance_neuron(tmp_tstop):
+    """
+    Advance Neuron till tmp_tstop.
+       
+    Parameters
+    ----------
+    tmp_stop: Temporary tstop. It has to be expressed in milliseconds.
+    """
+    nrnSim.run(tmp_tstop)
+    
+def advance_ecell(spines, tmp_tstop):
+    """
+    Advance ecell till tmp_tstop.
+    
+    Paramters:
+    ----------
+    tmp_tstop: Temporary tstop. It has to be expressed in seconds
+    """
+    for spine in spines:
+        t = spine.ecellMan.getCurrentTime()
+        delta = tmp_tstop - t
+        spine.ecellMan.ses.run(delta)
+
+def synch_simulators(tmp_tstop, stim_spines, delta_calcium_sampling):
+    """
+    Calculate the synapse weight, using the calcium in the spine_heads 
+    as input.
+    
+    Synch the two simulators using the following steps:
+    1. Calculate the calcium concentration in the spines head in 
+    NEURON and set this value in ecell.
+    2. Advance ecell for the specified_delta
+    3. Update the electric weight of the synapses in NEURON
+    """
+    
+    for spine_id in stim_spines :
+        spine = nrnSim.spines[spine_id]
+        sync_calcium(spine)
+    advance_ecell(delta_calcium_sampling)
+    update_synapse_weight(stim_spine)
+
+def sync_calcium(spine):
+    """"
+    Calculate the calcium in the spine_head and synch it with ecell. 
+    """
+    if hasattr(spine, 'ecellMan'):
+        vec_spine_head_cai = manager.get_vector(spine.head, 'cai')
+        vec_spine_head_cali = manager.get_vector(spine.head, 'cali')
+        head_cai = vec_spine_head_cai.x[-1]
+        head_cali = vec_spine_head_cali.x[-1]
+        electrical_ca = head_cai + head_cali
+        spine.update_calcium(electrical_ca)
+
+
+def update_synape_weight(spine):
+    """
+    Update the electrical weight's synapses using active CaMKII 
+    """    
+    # getting the conc of the active CaMKII
+    CaMKIIbar = spine.ecellMan.CaMKIIbar['Value']
+    
+    # Updating the AMPA synapses
+    for synapse in spine.synapses:
+        if synapse.chan_type == 'ampa':                       
+            weight = calcWeight(synapse.netCon.weight[0], CaMKIIbar)
+            synapse.netCon.weight[0] = weight
+            synapse.vecs['weight_ampa'].append(weight)
+
+def create_excitatory_inputs(stim_spines):
+    """
+    Create the excitatory inputs according to the parametes file.
+    
+    Create the NEURON inputs on each synapses according to the parameters.
+    Set and initialize the ecell biochemical simulator in the stimulated
+    spine."""
+    
+    excitatory_stimuli = []
+    
+    for spine_id in stim_spines:
+        if spine_id in param.keys():
+            spine = nrnSim.spines[spine_id]
+            for stim_id in param[spine.id]:
+                stim_par = param[stim_id]
+                stim = Stimul((stim_par['t_stim'] + t_equilibrium)* 1e3, 
+                              stim_par['numbers'], 
+                              stim_par['delay'], 
+                              stim_par['type'])
+                stims_time = stim.get_stim_times()
+                print "Stim time: %s" % stims_time
+                excitatory_stimuli.extend(stims_time)
+                spine.setStimul(stim)
+                spine.setupBioSim() # Initializing ecell
+    
+    
+    return excitatory_stimuli
+    
 
 
 if __name__ == "__main__":
@@ -144,11 +238,11 @@ if __name__ == "__main__":
     # Processing the options
     h.dt = param['dtNeuron']
     calcium_sampling = param['calciumSampling']
-    t_equilibrium = param['tEquilibrium']
+    t_equilibrium_neuron = param['tEquilibrium_neuron']
+    t_equilibrium_ecell = param['tEquilibrium_ecell']
     ecell_interval_update = calcium_sampling * 1e3 # we need [ms] to sync 
                                                    # with NEURON in the while
-    tStop = param['tStop']
-    tStop = t_equilibrium + tStop
+    tStop_final = param['tStop']
                                                    
     logger.debug("Starting Spine integration")
     
@@ -160,7 +254,9 @@ if __name__ == "__main__":
                               biochemical_filename=param['biochemical_filename']) 
     
     kir_gkbar(param['kir_gkbar'])
-    
+
+    #--------------------------------------------------------------------------
+    # Recording and stimul
     
     # Create Manager
     manager = Manager()
@@ -168,26 +264,13 @@ if __name__ == "__main__":
     # Set the stimuls to the synapses
     
     stim_spines = param['stimulated_spines']
-    for spine_id in stim_spines:
-        if spine_id in param.keys():
-            spine = nrnSim.spines[spine_id]
-            for stim_id in param[spine.id]:
-                stim_par = param[stim_id]
-                stim = Stimul((stim_par['t_stim'] + t_equilibrium)* 1e3, 
-                              stim_par['numbers'], 
-                              stim_par['delay'], 
-                              stim_par['type'])
-                spine.setStimul(stim)
-                spine.setupBioSim() # Initializing ecell
+    extitatory_stims = create_excitatory_inputs(stim_spines)
+    # Recording the synapses
+    for stim_spine in stim_spines:
+        spine = nrnSim.spines[stim_spine]
+        for syn in spine.synapses:
+            synVec = manager.add_synVecRef(syn)
                 
-    #==========
-    # Recording
-    # - Variables in the section
-    
-    # - Synaptic weight
-    # - Biochemical timecourse (done in the spines already)
-    #==========
-
     # Recording the sections
     
     variables_to_rec = param['var_to_plot']
@@ -197,20 +280,43 @@ if __name__ == "__main__":
             #manager.add_all_vecRef(var) # Saving all the vecRef for testing
             if sec.name() in param['section_to_plot']:
                 manager.add_vecRef(var, sec, param['time_resolution_neuron'])
-    
-    
-    
-    # Recording the synapses
-    
-    for stim_spine in stim_spines:
-        spine = nrnSim.spines[stim_spine]
-        for syn in spine.synapses:
-            synVec = manager.add_synVecRef(syn)
             
     
     ##------------------------------------------------------------------------------ 
     ## Experiment
     nrnSim.init() # Initializing neuron
+    
+    # equilibrium
+    
+    advance_neuron(t_equilibrium_neuron * 1e3)
+    advance_ecell(stim_spines, t_equilibrium_ecell)
+    
+    calculate_next_synch()
+#    in_buffer_time():
+#        synch_simulators(tmp_tstop, stim_spines, delta_calcium_sampling)
+#    else:
+#        advance_neuron
+    """
+    we need:
+    
+    Decision method:
+    if in buffer_time:
+        synch()
+        
+    else:
+        advance_neuron(tmp_tstop)
+        advance_ecell(tmp_tstop)
+        update_synapse_weight()
+        
+    
+    1. Advance Neuron Method
+    2. Advance Ecell Method
+    3. Swapping Method
+    
+    def advance_neuron(tmp_tstop):
+        
+    """
+    
     while h.t < ( tStop * 1e3): # Using [ms] for NEURON
         h.fadvance() # run Neuron for step
         #for every ms in NEURON we update the ecellMan

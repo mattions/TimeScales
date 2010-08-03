@@ -12,6 +12,20 @@ class Stimul(object):
         self.interval = interval
         
 #        self.spine = None #Used for logging
+    def get_stims_time():
+        """
+        Calculate the list of all the stims time.
+        
+        Return the list of all the stimul applied in this stimuli.
+        """
+        stims_time = []
+        for i in range(self.number):
+            if not stims_time: 
+                stims_time.append(self.time + self.interval)
+            else: #List contains at least one el. Adding from there.
+                stims_time.append(stims_time[-1] + self.interval)
+        return stims_time
+            
     
     def to_log(self):
         s = "spine %s, time %s [ms], number %s\n" %(self.spine, self.time, self.number)

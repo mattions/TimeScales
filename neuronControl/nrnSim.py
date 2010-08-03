@@ -76,8 +76,7 @@ class NeuronSim():
     def run(self, tStop):
         """Run the simulation until tStop"""
         h.tstop = tStop
-        while h.t < h.tstop :
-            h.fadvance()
+        h.run()
             # update the plotting system here.
         
     def init(self, v_init=-87.75):

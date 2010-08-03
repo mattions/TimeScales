@@ -3,8 +3,8 @@
 {
     "dtNeuron" : 0.025,  # integration dt [ms]
     "calciumSampling" : 0.001, # calcium sampling [s]
-    "tEquilibrium" : 0.0, # Equilibrium time. The systems (both Neuron and ecell) 
-                   # are ran till the equilibrium before the upgrade
+    "tEquilibrium_neuron" : 0.0, # in seconds
+    "tEquilibrium_ecell" : 0.0, # in seconds
     "tStop" : 0.005, # Time to stop the siumaltion [s]
     "time_resolution_neuron" : 0.1, # Recording at every ms 
     "spines_dist" : "all", #spines_dist = 'all' or spines_dist=zero #Number of spines
