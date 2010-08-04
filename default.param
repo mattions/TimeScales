@@ -6,6 +6,7 @@
     "tEquilibrium_neuron" : 0.0, # in seconds
     "tEquilibrium_ecell" : 0.0, # in seconds
     "tStop" : 0.005, # Time to stop the siumaltion [s]
+    "t_buffer" : 100 #ms 
     "time_resolution_neuron" : 0.1, # Recording at every ms 
     "spines_dist" : "all", #spines_dist = 'all' or spines_dist=zero #Number of spines
     "stimulated_spines" : ['spine1', 'spine2'],

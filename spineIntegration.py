@@ -144,11 +144,15 @@ def synch_simulators(tmp_tstop, stim_spines, delta_calcium_sampling):
     3. Update the electric weight of the synapses in NEURON
     """
     
-    for spine_id in stim_spines :
-        spine = nrnSim.spines[spine_id]
-        sync_calcium(spine)
-    advance_ecell(delta_calcium_sampling)
-    update_synapse_weight(stim_spine)
+    while h.t < tmp_tstop:
+        h.fadvance() # run Neuron for step
+        #for every ms in NEURON we update the ecellMan
+        if np.round(h.t, decimals = 4) % ecell_interval_update == 0:
+            for spine_id in stim_spines :
+                spine = nrnSim.spines[spine_id]
+                sync_calcium(spine)
+            advance_ecell(delta_calcium_sampling)
+        update_synapse_weight(stim_spine)
 
 def sync_calcium(spine):
     """"
@@ -204,26 +208,43 @@ def create_excitatory_inputs(stim_spines):
     
     
     return excitatory_stimuli
+
+
+def advance_quickly(tmp_tstop, stim_spines):
+    """
+    Advance the two simulators quickly in an independent way. Synapse weight 
+    is synchronized at the end
+    """
+    print "Advancing quickly to %s" %tmp_stop
+    advance_neuron(tmp_tstop)
+    advance_ecell(t_equilibrium_ecell + (tmp_stop / 1e3) ) #Ecell works in seconds
+    for spine in stim_spines:
+        update_synape_weight(spine)
     
+def run_simulation(tStop_final, t_buffer):
+    """
+    Run the simulation. If input synchronizes the two simulators, 
+    otherwise run each on its own and advance quickly
+    
+        
+    """
+    while h.t < tStop_final:
+    
+        t_stim = excitatory_stims.pop(0)
+        print "Current Neuron Time: %s" %h.t
+        print "Remaining inputs: %s" %excitatory_stims
+        
+        if t_stim > h.t + t_buffer:
+            advance_quickly(t_stim, stim_spines)
+        else:
+            tmp_stop = t_stim + t_buffer
+            synch_simulators(tmp_tstop, stim_spines, delta_calcium_sampling)
 
 
 if __name__ == "__main__":
 
     import os
     import neuronControl
-    
-    logger = logging.getLogger("spineIntegration")
-    logger.setLevel(logging.DEBUG)
-    #create console handler and set level to debug
-    ch = logging.StreamHandler()
-    ch.setLevel(logging.DEBUG)
-    #create formatter
-    formatter = logging.Formatter("%(name)s - %(levelname)s - %(message)s")
-    #add formatter to ch
-    ch.setFormatter(formatter)
-    #add ch to logger
-    logger.addHandler(ch)
-    
     
     if len(sys.argv) != 2:
         print("No parameter file supplied. Abort.")
@@ -244,7 +265,7 @@ if __name__ == "__main__":
                                                    # with NEURON in the while
     tStop_final = param['tStop']
                                                    
-    logger.debug("Starting Spine integration")
+    print("Starting Spine integration")
     
     hoc_path = "hoc"
     mod_path="mod"
@@ -264,7 +285,7 @@ if __name__ == "__main__":
     # Set the stimuls to the synapses
     
     stim_spines = param['stimulated_spines']
-    extitatory_stims = create_excitatory_inputs(stim_spines)
+    excitatory_stims = create_excitatory_inputs(stim_spines)
     # Recording the synapses
     for stim_spine in stim_spines:
         spine = nrnSim.spines[stim_spine]
@@ -290,65 +311,8 @@ if __name__ == "__main__":
     
     advance_neuron(t_equilibrium_neuron * 1e3)
     advance_ecell(stim_spines, t_equilibrium_ecell)
-    
-    calculate_next_synch()
-#    in_buffer_time():
-#        synch_simulators(tmp_tstop, stim_spines, delta_calcium_sampling)
-#    else:
-#        advance_neuron
-    """
-    we need:
-    
-    Decision method:
-    if in buffer_time:
-        synch()
-        
-    else:
-        advance_neuron(tmp_tstop)
-        advance_ecell(tmp_tstop)
-        update_synapse_weight()
-        
-    
-    1. Advance Neuron Method
-    2. Advance Ecell Method
-    3. Swapping Method
-    
-    def advance_neuron(tmp_tstop):
-        
-    """
-    
-    while h.t < ( tStop * 1e3): # Using [ms] for NEURON
-        h.fadvance() # run Neuron for step
-        #for every ms in NEURON we update the ecellMan
-        if np.round(h.t, decimals = 4) % ecell_interval_update == 0: 
-                
-            for spine_id in stim_spines :
-                spine = nrnSim.spines[spine_id]
-                if hasattr(spine, 'ecellMan'):
-                    vec_spine_head_cai = manager.get_vector(spine.head, 'cai')
-                    vec_spine_head_cali = manager.get_vector(spine.head, 'cali')
-                    head_cai = vec_spine_head_cai.x[-1]
-                    head_cali = vec_spine_head_cali.x[-1]
-                    electrical_ca = head_cai + head_cali
-                    
-                    spine.update_calcium(electrical_ca)
-                    spine.ecellMan.ses.run(calcium_sampling)
-                
-                    # getting the conc of the active CaMKII and set the weight of the synapse
-                    CaMKIIbar = spine.ecellMan.CaMKIIbar['Value']
-                    
-                    # Updating the AMPA synapses
-                    for synapse in spine.synapses:
-                        if synapse.chan_type == 'ampa':                       
-                            weight = calcWeight(synapse.netCon.weight[0], CaMKIIbar)
-                            synapse.netCon.weight[0] = weight
-                            synapse.vecs['weight_ampa'].append(weight)
-                
-        if np.round(h.t, decimals = 4) % 200 == 0: # printig every two seconds
-            logger.debug( "Neuron time [ms]: %f" % h.t)
-            if hasattr(spine, 'ecellMan'):
-                logger.debug( "Ecell Time [s] %g: " 
-                                  %spine.ecellMan.ses.getCurrentTime())
+    t_buffer = param['t_buffer']
+    run_simulation(tStop_final, t_buffer)
     
     #------------------------------------
     # Save the Results
