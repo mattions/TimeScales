@@ -217,9 +217,9 @@ def advance_quickly(tmp_tstop, stim_spines_id):
     Advance the two simulators quickly in an independent way. Synapse weight 
     is synchronized at the end
     """
-    print "Advancing quickly to %s" %tmp_stop
+    print "Advancing quickly to %s" %tmp_tstop
     advance_neuron(tmp_tstop)
-    advance_ecell(t_equilibrium_ecell + (tmp_stop / 1e3) ) #Ecell works in seconds
+    advance_ecell(t_equilibrium_ecell + (tmp_tstop / 1e3), stim_spines_id ) #Ecell works in seconds
     for spine_id in stim_spines_id:
         update_synape_weight(nrnSim.spines[spine_id])
     
@@ -231,17 +231,19 @@ def run_simulation(tStop_final, t_buffer):
         
     """
     while h.t < tStop_final:
-    
-        t_stim = excitatory_stims.pop(0)
-        print "Current Neuron Time: %s" %h.t
-        print "Remaining inputs: %s" %excitatory_stims
-        
-        if t_stim > h.t + t_buffer:
-            advance_quickly(t_stim, stim_spines_id)
+        if excitatory_stims:
+            t_stim = excitatory_stims.pop(0)
+            print "Current Neuron Time: %s" %h.t
+            print "Remaining inputs: %s" %excitatory_stims
+            
+            if t_stim > h.t + t_buffer:
+                advance_quickly(t_stim, stim_spines_id)
+            else:
+                tmp_stop = t_stim + t_buffer
+                synch_simulators(tmp_tstop, stim_spines_id, delta_calcium_sampling)
         else:
-            tmp_stop = t_stim + t_buffer
-            synch_simulators(tmp_tstop, stim_spines_id, delta_calcium_sampling)
-
+            print "No excitatory input remaining. Quickly to the end"
+            advance_quickly(tStop_final, stim_spines_id)
 
 if __name__ == "__main__":
 
