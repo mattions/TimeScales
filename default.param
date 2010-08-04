@@ -3,35 +3,35 @@
 {
     "dtNeuron" : 0.025,  # integration dt [ms]
     "calciumSampling" : 0.001, # calcium sampling [s]
-    "tEquilibrium_neuron" : 0.0, # in seconds
-    "tEquilibrium_ecell" : 0.0, # in seconds
-    "tStop" : 0.005, # Time to stop the siumaltion [s]
-    "t_buffer" : 100 #ms 
+    "tEquilibrium_neuron" : 20, # in milliseconds
+    "tEquilibrium_ecell" : 300, # in seconds
+    "tStop" : 3000, # Time to stop (NEURON time is the reference) the simulation [ms]
+    "t_buffer" : 100, #ms 
     "time_resolution_neuron" : 0.1, # Recording at every ms 
-    "spines_dist" : "all", #spines_dist = 'all' or spines_dist=zero #Number of spines
+    "spines_dist" : "two", #spines_dist = 'all' or spines_dist=zero #Number of spines
     "stimulated_spines" : ['spine1', 'spine2'],
     "spine1" : ['ampa_s1', 'nmda_s1'],
     "spine2" : ['ampa_s2', 'nmda_s2'],
     "ampa_s1" : 
-        {"t_stim" : 1, # t_stim [s]  
+        {"t_stim" : 2, # t_stim [s]  
          "numbers" : 10, # number
          "delay" : 0.1, # delay [s]
          "type" : "ampa" # , type
          },
     "ampa_s2" :
-        {"t_stim" : 1.1, # t_stim [s]  
+        {"t_stim" : 2.1, # t_stim [s]  
          "numbers" : 10, # number
          "delay" : 0.1, # delay [s]
          "type" : "ampa" # , type
          },
     "nmda_s1" :
-        {"t_stim" : 1, # t_stim [s]  
+        {"t_stim" : 2, # t_stim [s]  
          "numbers" : 10, # number
          "delay" : 0.1, # delay [s]
          "type" : "nmda" # , type
          },
     "nmda_s2" :
-        {"t_stim" : 1.1, # t_stim [s]  
+        {"t_stim" : 2.1, # t_stim [s]  
          "numbers" : 10, # number
          "delay" : 0.1, # delay [s]
          "type" : "nmda" # , type

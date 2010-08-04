@@ -208,7 +208,7 @@ if __name__ == "__main__":
     import helpers     
     loader = helpers.Loader()
 
-    #ecellManager = testChangeCalciumValue(interval, caValue)
+#    ecellManager = testChangeCalciumValue(interval, caValue)
     ecellManager = testCalciumTrain()
     
     if options.save == True:

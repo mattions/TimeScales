@@ -12,7 +12,7 @@ class Stimul(object):
         self.interval = interval
         
 #        self.spine = None #Used for logging
-    def get_stims_time():
+    def get_stims_time(self):
         """
         Calculate the list of all the stims time.
         
