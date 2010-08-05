@@ -64,7 +64,7 @@ class Synapse(object):
         # Record the current into the synaptic chan
         i = "i_" + self.chan_type
         self.vecs[i] = h.Vector()
-        self.vecs[i].record(self.chan._ref_i)        
+        self.vecs[i].record(self.chan._ref_i) 
         
         # Record the weight with a list. No doable with a Vector
         # It's filled in the main loop.
