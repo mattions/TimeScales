@@ -231,10 +231,15 @@ def run_simulation(tStop_final, t_buffer, delta_calcium_sampling):
     """
     Run the simulation. If input synchronizes the two simulators, 
     otherwise run each on its own and advance quickly
-    
         
     """
-    while h.t <= tStop_final:
+    
+    
+    while round(h.t, 2) < tStop_final:
+        
+        
+        print ("Inside the while. Current NEURON time: %s tstop: %s") %(h.t, tStop_final)
+        print ("Assertion h.t <= tStop_final: %s") %(h.t <= tStop_final)
         if excitatory_stims:
             t_stim = excitatory_stims.pop(0)
             print "Remaining inputs: %s" %(excitatory_stims)
