@@ -49,14 +49,14 @@ def write_log(saving_dir, tStop, calciumSampling, dtNeuron, tEquilibrium, stims)
     f.close()
     print "Simulation saved in %s" % saving_dir
 
-def build_vecs_to_plot(var, secs, vecRefs):
+def build_vecs_to_plot(var, secs, anyRefs):
     """Create the dictionary of section->vectors to plot"""
     vecs_to_plot = {}
     for secName in secs:
-        for vecref in vecRefs:
-            if secName == vecref.sec_name:
-                if vecref.vecs.has_key(var):
-                    vecs_to_plot[secName] = vecref.vecs[var]
+        for ref in anyRefs:
+            if secName == ref.sec_name:
+                if ref.vecs.has_key(var):
+                    vecs_to_plot[secName] = ref.vecs[var]
     return vecs_to_plot
 
 def kir_gkbar(gkbar):
