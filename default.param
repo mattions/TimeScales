@@ -9,7 +9,7 @@
     "tStop" : 5000, # Time to stop (NEURON time is the reference) the simulation [ms]
     "t_buffer" : 10, #ms 
     "time_resolution_neuron" : 0.1, # Recording at every ms 
-    "spines_dist" : "two", #spines_dist = 'all' or spines_dist=zero #Number of spines
+    "spines_dist" : "all", #spines_dist = 'all' or spines_dist=zero #Number of spines
     "stimulated_spines" : ['spine1', 'spine2'],
     "spine1" : ['ampa_s1', 'nmda_s1'],
     "spine2" : ['ampa_s2', 'nmda_s2'],
