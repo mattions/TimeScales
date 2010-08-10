@@ -23,43 +23,8 @@ from neuronvisio.manager import Manager
 from sumatra.external.NeuroTools import parameters
 
 import tables 
-from neuronvisio.manager import BaseRef
+from extref import ExtRef 
 
- 
-class TimeSeries(BaseRef):
-    
-    def __init__(self, sec_name=None, vecs=None, detail=None):
-        
-        BaseRef.__init__(self)
-        self.sec_name = sec_name
-        self.vecs = vecs
-        self.detail = detail
-
-
-def add_timeseries(manager):
-    for spine_id in param['stimulated_spines']:
-        
-        spine = nrnSim.spines[spine_id]
-        # Retrieving the biochemical timecourses
-        spine.ecellMan.converToTimeCourses()
-        time_courses = spine.ecellMan.timeCourses 
-        
-        pos = str(spine.pos)
-        parent = spine.parent.name()
-        detail = parent + "_" + pos
-        sec_name = str(spine.id)
-        
-        # Adding a record for each variable
-        vecs = {}
-        time = None
-        for var in time_courses.keys():
-            time = time_courses[var][:,0]
-            vecs[var] = time_courses[var][:,1]
-            
-        timeseriesRef = TimeSeries(sec_name=sec_name, 
-                                   vecs=vecs,
-                                   detail=detail)
-        manager.add_ref(timeseriesRef, time)    
 
 def calcWeight(old_weight, CaMKIIbar, n=2, k=4):
     """Calc the weight of the synapses according to the CaMKII"""
@@ -128,10 +93,13 @@ def advance_ecell(spine, delta_t):
     ----------
     tmp_tstop: Temporary tstop. It has to be expressed in seconds
     """
-    print ("Advancing ecell in: %s of: %s seconds") %(spine.id, delta_t)
-    spine.ecellMan.ses.run(delta_t)
     current_time = spine.ecellMan.ses.getCurrentTime()
-    print ("Current time: %s") %current_time
+    print ("Ecell current time: %s in: %s. Adavancing of: %s seconds.") %(current_time,
+                                                                           spine.id, 
+                                                                           delta_t)
+    spine.ecellMan.ses.run(delta_t)
+    
+    
 
 def synch_simulators(tmp_tstop, stim_spines_id, delta_calcium_sampling):
     """
@@ -181,7 +149,13 @@ def update_synape_weight(spine):
         if synapse.chan_type == 'ampa':                       
             weight = calcWeight(synapse.netCon.weight[0], CaMKIIbar)
             synapse.netCon.weight[0] = weight
-            synapse.vecs['weight_ampa'].append(weight)
+            # The weight of the ampa is a double list
+            # Check the specs in synapse weight for more info. 
+            synapse.weight[0].append(h.t)
+            synapse.weight[1].append(weight)
+            print "Updating synapse weight in %s, time: %s, weight: %s" %(spine.id,
+                                                                               h.t,
+                                                                               weight)
 
 def create_excitatory_inputs(stim_spines_id):
     """
@@ -207,6 +181,7 @@ def create_excitatory_inputs(stim_spines_id):
                 spine.setStimul(stim)
                 spine.setupBioSim() # Initializing ecell
     
+    excitatory_stimuli.sort()
     print "Excitatory stim [ms]: %s " % excitatory_stimuli
     return excitatory_stimuli
 
@@ -234,12 +209,14 @@ def run_simulation(tStop_final, t_buffer, delta_calcium_sampling):
         
     """
     
-    
+    # Getting the calcium before the stims
+    for spine_id in param['stimulated_spines']:
+        spine = nrnSim.spines[spine_id]
+        update_synape_weight(spine)
+        
     while round(h.t, 2) < tStop_final:
         
-        
         print ("Inside the while. Current NEURON time: %s tstop: %s") %(h.t, tStop_final)
-        print ("Assertion h.t <= tStop_final: %s") %(h.t <= tStop_final)
         if excitatory_stims:
             t_stim = excitatory_stims.pop(0)
             print "Remaining inputs: %s" %(excitatory_stims)
@@ -251,7 +228,12 @@ def run_simulation(tStop_final, t_buffer, delta_calcium_sampling):
                 synch_simulators(tmp_tstop, stim_spines_id, delta_calcium_sampling)
         else:
             print "No excitatory input remaining. Quickly to the end"
-            advance_quickly(tStop_final, stim_spines_id)
+        advance_quickly(tStop_final, stim_spines_id)
+    
+    # Recording last 
+    for spine_id in param['stimulated_spines']:
+        spine = nrnSim.spines[spine_id]
+        update_synape_weight(spine) 
 
 if __name__ == "__main__":
 
@@ -334,7 +316,11 @@ if __name__ == "__main__":
     # Save the Results
     
     # Add timeseries
-    add_timeseries(manager)
+    extRef = ExtRef()
+    extRef.add_timeseries(manager, param['stimulated_spines'], nrnSim)
+    
+    # Saving the weight
+    extRef.add_weights(manager, param['stimulated_spines'], nrnSim)
     
     print "Simulation Ended. Saving results"
     saving_dir = manager.create_new_dir(root='Data')

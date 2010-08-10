@@ -12,6 +12,7 @@ class Synapse(object):
         self.section = section
         self.chan = self.createChannel(chan_type, position)
         self.vecs = {} # Dictionary to record all the vectors 
+        self.weight =  [[],[]]
         
         
     def createChannel(self, chan_type, position):
@@ -53,6 +54,8 @@ class Synapse(object):
         """Create the vector to measure the activity of the synapse
         
         :param syn -  The synapse to record
+        Remember: The weight on the synapse is a special one and holds the time 
+        (from Neuron) and the corrispondent value.
         """
         
         # Record the stimuls
@@ -66,8 +69,5 @@ class Synapse(object):
         self.vecs[i] = h.Vector()
         self.vecs[i].record(self.chan._ref_i) 
         
-        # Record the weight with a list. No doable with a Vector
-        # It's filled in the main loop.
-        weight = 'weight_' + self.chan_type
-        self.vecs[weight] = []
+        
         
