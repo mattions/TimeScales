@@ -6,10 +6,10 @@
     	# to be synchronized within ecell and Neuron . 
     "tEquilibrium_neuron" : 100, # in milliseconds
     "tEquilibrium_ecell" : 300, # in seconds
-    "tStop" : 5000, # Time to stop (NEURON time is the reference) the simulation [ms]
+    "tStop" : 300, # Time to stop (NEURON time is the reference) the simulation [ms]
     "t_buffer" : 10, #ms 
     "time_resolution_neuron" : 0.1, # Recording at every ms 
-    "spines_dist" : "all", #spines_dist = 'all' or spines_dist=zero #Number of spines
+    "spines_dist" : "two", #spines_dist = 'all' or spines_dist=zero #Number of spines
     "stimulated_spines" : ['spine1', 'spine2'],
     "spine1" : ['ampa_s1', 'nmda_s1'],
     "spine2" : ['ampa_s2', 'nmda_s2'],
@@ -21,7 +21,7 @@
          },
     "ampa_s2" :
         {"t_stim" : 0.130, # t_stim [s]  
-         "numbers" : 2, # number
+         "numbers" : 10, # number
          "delay" : 0.1, # delay [s]
          "type" : "ampa" # , type
          },
@@ -33,7 +33,7 @@
          },
     "nmda_s2" :
         {"t_stim" : 0.130, # t_stim [s]  
-         "numbers" : 2, # number
+         "numbers" : 10, # number
          "delay" : 0.1, # delay [s]
          "type" : "nmda" # , type
          },
