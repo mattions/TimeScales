@@ -157,7 +157,7 @@ def update_synape_weight(spine):
                                                                                h.t,
                                                                                weight)
 
-def create_excitatory_inputs(stim_spines_id):
+def create_excitatory_inputs(stim_spines_id, neuron_time_interval):
     """
     Create the excitatory inputs according to the parametes file.
     
@@ -178,7 +178,7 @@ def create_excitatory_inputs(stim_spines_id):
                               stim_par['type'])
                 stims_time = stim.get_stims_time()
                 excitatory_stimuli.extend(stims_time)
-                spine.setStimul(stim)
+                spine.setStimul(stim, neuron_time_interval)
                 spine.setupBioSim() # Initializing ecell
     
     excitatory_stimuli.sort()
@@ -278,7 +278,8 @@ if __name__ == "__main__":
     # Set the stimuls to the synapses
     
     stim_spines_id = param['stimulated_spines']
-    excitatory_stims = create_excitatory_inputs(stim_spines_id)
+    excitatory_stims = create_excitatory_inputs(stim_spines_id,
+                                                param['time_resolution_neuron'])
 
     # Recording the sections
     
@@ -294,7 +295,7 @@ if __name__ == "__main__":
     for spine_id in stim_spines_id:
         spine = nrnSim.spines[spine_id]
         for syn in spine.synapses:
-            manager.add_synVecRef(syn)
+            manager.add_synVecRef(syn, param['time_resolution_neuron'])
     
     
     ##------------------------------------------------------------------------------ 

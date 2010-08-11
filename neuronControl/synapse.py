@@ -26,7 +26,7 @@ class Synapse(object):
             
         return chan    
     
-    def createStimul(self, stim):
+    def createStimul(self, stim, neuron_time_resolution):
         """Create a netStim object and assign it to the synapse together with 
         a NetConnect one.
         
@@ -48,9 +48,9 @@ class Synapse(object):
         netCon.weight[0] = 1
         self.netCon = netCon # assign the point to the class as attribute
         
-        self.createVec() # Recording the synapse
+        self.createVec(neuron_time_resolution) # Recording the synapse
         
-    def createVec(self):
+    def createVec(self, neuron_time_resolution):
         """Create the vector to measure the activity of the synapse
         
         :param syn -  The synapse to record
@@ -62,12 +62,19 @@ class Synapse(object):
         # The NetCon needs a record allocated to use to record the stuff
         stimul = "stimul_" + self.chan_type
         self.vecs[stimul] = h.Vector()
-        self.netCon.record(self.vecs[stimul])
+        if neuron_time_resolution is None:
+            self.netCon.record(self.vecs[stimul])
+        else:
+            self.netCon.record(self.vecs[stimul], neuron_time_resolution)
         
         # Record the current into the synaptic chan
         i = "i_" + self.chan_type
         self.vecs[i] = h.Vector()
-        self.vecs[i].record(self.chan._ref_i) 
+        if neuron_time_resolution is None:
+            self.vecs[i].record(self.chan._ref_i)
+        else:
+            self.vecs[i].record(self.chan._ref_i, neuron_time_resolution)
+             
         
         
         
