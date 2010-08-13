@@ -230,6 +230,7 @@ def run_simulation(tStop_final, t_buffer, delta_calcium_sampling):
         else:
             print "No excitatory input remaining. Quickly to the end"
             advance_quickly(tStop_final, stim_spines_id)
+            h.fadvance() # This is to force the latest step and avoid the infinite loop.
     
     # Recording last 
     for spine_id in param['stimulated_spines']:
