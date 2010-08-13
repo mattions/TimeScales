@@ -67,10 +67,10 @@ class Spine():
         self.ecellMan.ca['Value'] = ca_ions
     
         
-    def setStimul(self, stim):
+    def setStimul(self, stim, neuron_time_interval):
         '''Set the stimul applied to spine'''
         for synapse in self.synapses:            
-            synapse.createStimul(stim)
+            synapse.createStimul(stim, neuron_time_interval)
         stim.spine = self.id
             
     

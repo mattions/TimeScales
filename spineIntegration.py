@@ -82,7 +82,6 @@ def advance_neuron(tmp_tstop):
     ----------
     tmp_stop: Temporary tstop. It has to be expressed in milliseconds.
     """
-    print ("Adavancing Neuron untill tmp_tstop [ms]: %s" %tmp_tstop)
     nrnSim.run(tmp_tstop)
     
 def advance_ecell(spine, delta_t):
@@ -94,9 +93,9 @@ def advance_ecell(spine, delta_t):
     tmp_tstop: Temporary tstop. It has to be expressed in seconds
     """
     current_time = spine.ecellMan.ses.getCurrentTime()
-    print ("Ecell current time: %s in: %s. Adavancing of: %s seconds.") %(current_time,
-                                                                           spine.id, 
-                                                                           delta_t)
+#    print ("Ecell current time: %s in %s. Advancing of: %s seconds.") %(current_time,
+#                                                                           spine.id, 
+#                                                                           delta_t)
     spine.ecellMan.ses.run(delta_t)
     
     
@@ -153,7 +152,7 @@ def update_synape_weight(spine):
             # Check the specs in synapse weight for more info. 
             synapse.weight[0].append(h.t)
             synapse.weight[1].append(weight)
-            print "Updating synapse weight in %s, time: %s, weight: %s" %(spine.id,
+            print "Updating synapse weight in %s, time [ms]: %s, weight: %s" %(spine.id,
                                                                                h.t,
                                                                                weight)
 
@@ -193,9 +192,9 @@ def advance_quickly(tmp_tstop, stim_spines_id):
     """
     delta_ecell = tmp_tstop - h.t
     delta_ecell_seconds = delta_ecell / 1e3
-    print ("Advance quickly routine.")
+    print ("\nAdvance quickly routine.")
     print ("Current Neuron time: %s, aimed tstop[ms]: %s") %(h.t, tmp_tstop)
-    print ("Delta applied on Ecell simulator [s]: %s") % delta_ecell_seconds
+    print ("Delta applied on Ecell simulator [s]: %s\n") % delta_ecell_seconds
     advance_neuron(tmp_tstop)
     for spine_id in stim_spines_id:
         spine = nrnSim.spines[spine_id]
@@ -214,21 +213,23 @@ def run_simulation(tStop_final, t_buffer, delta_calcium_sampling):
         spine = nrnSim.spines[spine_id]
         update_synape_weight(spine)
         
-    while round(h.t, 2) < tStop_final:
+    while h.t < tStop_final:
         
-        print ("Inside the while. Current NEURON time: %s tstop: %s") %(h.t, tStop_final)
         if excitatory_stims:
             t_stim = excitatory_stims.pop(0)
-            print "Remaining inputs: %s" %(excitatory_stims)
-            
-            if t_stim > h.t + t_buffer:
+            print "Current Neuron time: %s. Current t_stim: %s, remaining input: %s" %(h.t,
+                                                                                       t_stim,
+                                                                                       excitatory_stims)
+            if h.t < t_stim:
                 advance_quickly(t_stim, stim_spines_id)
-            else:
                 tmp_tstop = t_stim + t_buffer
-                synch_simulators(tmp_tstop, stim_spines_id, delta_calcium_sampling)
+                synch_simulators(tmp_tstop, stim_spines_id, delta_calcium_sampling) 
+                
+                    
+                
         else:
             print "No excitatory input remaining. Quickly to the end"
-        advance_quickly(tStop_final, stim_spines_id)
+            advance_quickly(tStop_final, stim_spines_id)
     
     # Recording last 
     for spine_id in param['stimulated_spines']:
@@ -295,7 +296,7 @@ if __name__ == "__main__":
     for spine_id in stim_spines_id:
         spine = nrnSim.spines[spine_id]
         for syn in spine.synapses:
-            manager.add_synVecRef(syn, param['time_resolution_neuron'])
+            manager.add_synVecRef(syn)
     
     
     ##------------------------------------------------------------------------------ 

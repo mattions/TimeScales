@@ -47,7 +47,6 @@ class Synapse(object):
         netCon = h.NetCon(netStim, self.chan)
         netCon.weight[0] = 1
         self.netCon = netCon # assign the point to the class as attribute
-        
         self.createVec(neuron_time_resolution) # Recording the synapse
         
     def createVec(self, neuron_time_resolution):
@@ -62,11 +61,7 @@ class Synapse(object):
         # The NetCon needs a record allocated to use to record the stuff
         stimul = "stimul_" + self.chan_type
         self.vecs[stimul] = h.Vector()
-        if neuron_time_resolution is None:
-            self.netCon.record(self.vecs[stimul])
-        else:
-            self.netCon.record(self.vecs[stimul], neuron_time_resolution)
-        
+        self.netCon.record(self.vecs[stimul])
         # Record the current into the synaptic chan
         i = "i_" + self.chan_type
         self.vecs[i] = h.Vector()
