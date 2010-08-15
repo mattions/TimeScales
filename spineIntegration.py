@@ -315,12 +315,6 @@ if __name__ == "__main__":
     t_buffer = param['t_buffer']
     run_simulation(tStop_final, t_buffer, delta_calcium_sampling)
     
-    # Running ecell a bit more to have a proper dev on the curve
-    for spine_id in stim_spines_id:
-        spine = nrnSim.spines[spine_id]
-        advance_ecell(spine, param['followup_ecell'])
-        update_synape_weight(spine)
-    
     #------------------------------------
     # Save the Results
     
