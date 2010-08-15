@@ -6,7 +6,7 @@
     	# to be synchronized within ecell and Neuron . 
     "tEquilibrium_neuron" : 1, # in milliseconds
     "tEquilibrium_ecell" : 300, # in seconds
-    "tStop_neuron" : 300, # [ms] Time to stop (NEURON time is the reference) the simulation
+    "tStop" : 300, # [ms] Time to stop (NEURON time is the reference) the simulation
     "followup_ecell": 300, # [s] Ecell will run  
     "t_buffer" : 10, #ms 
     "time_resolution_neuron" : 0.1, # Recording at every ms 
