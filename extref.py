@@ -59,6 +59,10 @@ class ExtRef(object):
             timeseriesRef = TimeSeries(sec_name=sec_name, 
                                        vecs=vecs,
                                        detail=detail)
+            # Ecell use an adaptative time for the integration so the time is different
+            # for each spine.
+            # We create a custum timeseries to differentiate within them
+            timeseriesRef.group_id = "timeSeries_" + spine.id
             manager.add_ref(timeseriesRef, time)
             
     def add_weights(self, manager, stim_spines, nrnSim):

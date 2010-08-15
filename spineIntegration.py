@@ -93,9 +93,9 @@ def advance_ecell(spine, delta_t):
     tmp_tstop: Temporary tstop. It has to be expressed in seconds
     """
     current_time = spine.ecellMan.ses.getCurrentTime()
-#    print ("Ecell current time: %s in %s. Advancing of: %s seconds.") %(current_time,
-#                                                                           spine.id, 
-#                                                                           delta_t)
+    len_current_time = len (spine.ecellMan.loggers['ca'].getData()[:,0])
+    print ("Ecell current time: %s in %s. Advancing of: %s seconds.\
+    Current time len: %s") %(current_time, spine.id, delta_t, len_current_time)
     spine.ecellMan.ses.run(delta_t)
     
     
