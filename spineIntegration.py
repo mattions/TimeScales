@@ -26,14 +26,12 @@ import tables
 from extref import ExtRef 
 
 
-def calcWeight(old_weight, CaMKIIbar, n=2, k=4):
+def calcWeight(CaMKIIbar, n=2, k=4):
     """Calc the weight of the synapses according to the CaMKII"""
     
     # Dummy function should be changed
-    delta = math.pow(CaMKIIbar, n) / (math.pow(k, n) + math.pow(CaMKIIbar, n))
-    weight = old_weight + delta
-    s = "Old weight %f, CAMKIIbar value: %e,\
-    calculated delta: %e" %(old_weight, CaMKIIbar, delta)
+    weight = math.pow(CaMKIIbar, n) / (math.pow(k, n) + math.pow(CaMKIIbar, n))
+    s = "Weight %s, CAMKIIbar value: %s" %(weight, CaMKIIbar)
     #print s
     return weight
 
@@ -74,7 +72,7 @@ def iClamptest(delay=10, duration=250, amplititude=0.248):
     iclamp.dur = duration
     iclamp.amp = amplititude
 
-def advance_neuron(tmp_tstop):
+def advance_neuron(tmp_tstop, weight_sampling):
     """
     Advance Neuron till tmp_tstop.
        
@@ -82,20 +80,25 @@ def advance_neuron(tmp_tstop):
     ----------
     tmp_stop: Temporary tstop. It has to be expressed in milliseconds.
     """
-    nrnSim.run(tmp_tstop)
+    time_remaining = tmp_tstop - h.t
+    while time_remaining > weight_sampling:
+        tmp_stop_sampling = h.t + weight_sampling
+        nrnSim.run(tmp_stop_sampling)
+        time_remaining = tmp_tstop  -h.t
     
 def advance_ecell(spine, delta_t):
     """
     Advance ecell simulator in `spine` of `delta_t`.
     
-    Paramters:
+    Parameters:
     ----------
     tmp_tstop: Temporary tstop. It has to be expressed in seconds
     """
     current_time = spine.ecellMan.ses.getCurrentTime()
     len_current_time = len (spine.ecellMan.loggers['ca'].getData()[:,0])
-    print ("Ecell current time: %s in %s. Advancing of: %s seconds.\
-    Current time len: %s") %(current_time, spine.id, delta_t, len_current_time)
+    print ("Ecell current time: %s in %s. Advancing of: %s seconds.") %(current_time, 
+                                                                        spine.id, 
+                                                                        delta_t)
     spine.ecellMan.ses.run(delta_t)
     
     
@@ -185,7 +188,7 @@ def create_excitatory_inputs(stim_spines_id, neuron_time_interval):
     return excitatory_stimuli
 
 
-def advance_quickly(tmp_tstop, stim_spines_id):
+def advance_quickly(tmp_tstop, stim_spines_id, weight_sampling):
     """
     Advance the two simulators quickly in an independent way. Synapse weight 
     is synchronized at the end
@@ -195,13 +198,13 @@ def advance_quickly(tmp_tstop, stim_spines_id):
     print ("\nAdvance quickly routine.")
     print ("Current Neuron time: %s, aimed tstop[ms]: %s") %(h.t, tmp_tstop)
     print ("Delta applied on Ecell simulator [s]: %s\n") % delta_ecell_seconds
-    advance_neuron(tmp_tstop)
+    advance_neuron(tmp_tstop, weight_sampling)
     for spine_id in stim_spines_id:
         spine = nrnSim.spines[spine_id]
         advance_ecell(spine, delta_ecell_seconds)
         update_synape_weight(spine)
     
-def run_simulation(tStop_final, t_buffer, delta_calcium_sampling):
+def run_simulation(tStop_final, t_buffer, delta_calcium_sampling, weight_sampling):
     """
     Run the simulation. If input synchronizes the two simulators, 
     otherwise run each on its own and advance quickly
@@ -221,7 +224,7 @@ def run_simulation(tStop_final, t_buffer, delta_calcium_sampling):
                                                                                        t_stim,
                                                                                        excitatory_stims)
             if h.t < t_stim:
-                advance_quickly(t_stim, stim_spines_id)
+                advance_quickly(t_stim, stim_spines_id, weight_sampling)
                 tmp_tstop = t_stim + t_buffer
                 synch_simulators(tmp_tstop, stim_spines_id, delta_calcium_sampling) 
                 
@@ -229,7 +232,7 @@ def run_simulation(tStop_final, t_buffer, delta_calcium_sampling):
                 
         else:
             print "No excitatory input remaining. Quickly to the end"
-            advance_quickly(tStop_final, stim_spines_id)
+            advance_quickly(tStop_final, stim_spines_id, weight_sampling)
             h.fadvance() # This is to force the latest step and avoid the infinite loop.
     
     # Recording last 
@@ -307,13 +310,13 @@ if __name__ == "__main__":
     # equilibrium
     print ("#--#")
     print ("Equilibrium run for the two simulators") 
-    advance_neuron(t_equilibrium_neuron)
+    advance_neuron(t_equilibrium_neuron, param['weight_sampling'])
     for spine_id in stim_spines_id:
         advance_ecell(nrnSim.spines[spine_id], t_equilibrium_ecell)
     print ("Equilibrium run finished. Starting normal simulation.")
     print ("#--#")
     t_buffer = param['t_buffer']
-    run_simulation(tStop_final, t_buffer, delta_calcium_sampling)
+    run_simulation(tStop_final, t_buffer, delta_calcium_sampling, param['weight_sampling'])
     
     #------------------------------------
     # Save the Results
