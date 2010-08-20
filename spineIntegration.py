@@ -72,7 +72,7 @@ def iClamptest(delay=10, duration=250, amplititude=0.248):
     iclamp.dur = duration
     iclamp.amp = amplititude
 
-def advance_neuron(tmp_tstop, weight_sampling):
+def advance_neuron(tmp_tstop, weight_sampling, stim_spines_id):
     """
     Advance Neuron till tmp_tstop.
        
@@ -82,9 +82,14 @@ def advance_neuron(tmp_tstop, weight_sampling):
     """
     time_remaining = tmp_tstop - h.t
     while time_remaining > weight_sampling:
+        # Updating the weight in the spine
+        for spine_id in stim_spines_id:
+            spine = nrnSim.spines[spine_id]
+            update_synape_weight(spine)
         tmp_stop_sampling = h.t + weight_sampling
         nrnSim.run(tmp_stop_sampling)
         time_remaining = tmp_tstop  -h.t
+        
     
 def advance_ecell(spine, delta_t):
     """
@@ -198,11 +203,7 @@ def advance_quickly(tmp_tstop, stim_spines_id, weight_sampling):
     print ("\nAdvance quickly routine.")
     print ("Current Neuron time: %s, aimed tstop[ms]: %s") %(h.t, tmp_tstop)
     print ("Delta applied on Ecell simulator [s]: %s\n") % delta_ecell_seconds
-    advance_neuron(tmp_tstop, weight_sampling)
-    for spine_id in stim_spines_id:
-        spine = nrnSim.spines[spine_id]
-        advance_ecell(spine, delta_ecell_seconds)
-        update_synape_weight(spine)
+    advance_neuron(tmp_tstop, weight_sampling, stim_spines_id)
     
 def run_simulation(tStop_final, t_buffer, delta_calcium_sampling, weight_sampling):
     """
@@ -310,7 +311,7 @@ if __name__ == "__main__":
     # equilibrium
     print ("#--#")
     print ("Equilibrium run for the two simulators") 
-    advance_neuron(t_equilibrium_neuron, param['weight_sampling'])
+    advance_neuron(t_equilibrium_neuron, param['weight_sampling'], stim_spines_id)
     for spine_id in stim_spines_id:
         advance_ecell(nrnSim.spines[spine_id], t_equilibrium_ecell)
     print ("Equilibrium run finished. Starting normal simulation.")
