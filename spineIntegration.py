@@ -26,13 +26,18 @@ import tables
 from extref import ExtRef 
 
 
-def calcWeight(CaMKIIbar, n=2, k=4):
+def calcWeight(CaMKIIbar, PP2Bbar, alpha, beta, n=3, k=0.5):
     """Calc the weight of the synapses according to the CaMKII"""
     
-    # Dummy function should be changed
-    weight = math.pow(CaMKIIbar, n) / (math.pow(k, n) + math.pow(CaMKIIbar, n))
-    s = "Weight %s, CAMKIIbar value: %s" %(weight, CaMKIIbar)
-    #print s
+    # CaMKII term
+    CaMKII_factor = math.pow(CaMKIIbar, n) / (math.pow(k, n) + math.pow(CaMKIIbar, n))
+    Phosphatase_factor = math.pow(PP2Bbar, n) / (math.pow(k, n) + math.pow(PP2Bbar, n))
+    scaled_CaMKII_factor = alpha * CaMKII_factor
+    scaled_Phospatese_factor = beta * Phosphatase_factor 
+    weight = 1 + scaled_CaMKII_factor - scaled_Phospatese_factor
+    s = "Weight: %s CaMKII factor %s, Phosphatase factor %s" %(weight,
+                                                               scaled_CaMKII_factor,
+                                                               scaled_Phospatese_factor)
     return weight
 
 def write_log(saving_dir, tStop, calciumSampling, dtNeuron, tEquilibrium, stims):
@@ -72,7 +77,7 @@ def iClamptest(delay=10, duration=250, amplititude=0.248):
     iclamp.dur = duration
     iclamp.amp = amplititude
 
-def advance_neuron(tmp_tstop, weight_sampling, stim_spines_id):
+def advance_neuron(tmp_tstop):
     """
     Advance Neuron till tmp_tstop.
        
@@ -80,35 +85,26 @@ def advance_neuron(tmp_tstop, weight_sampling, stim_spines_id):
     ----------
     tmp_stop: Temporary tstop. It has to be expressed in milliseconds.
     """
-    time_remaining = tmp_tstop - h.t
-    while time_remaining > weight_sampling:
-        # Updating the weight in the spine
-        for spine_id in stim_spines_id:
-            spine = nrnSim.spines[spine_id]
-            update_synape_weight(spine)
-        tmp_stop_sampling = h.t + weight_sampling
-        nrnSim.run(tmp_stop_sampling)
-        time_remaining = tmp_tstop  -h.t
-        
+    nrnSim.run(tmp_tstop)
     
 def advance_ecell(spine, delta_t):
     """
     Advance ecell simulator in `spine` of `delta_t`.
     
-    Parameters:
+    Paramters:
     ----------
     tmp_tstop: Temporary tstop. It has to be expressed in seconds
     """
     current_time = spine.ecellMan.ses.getCurrentTime()
     len_current_time = len (spine.ecellMan.loggers['ca'].getData()[:,0])
-    print ("Ecell current time: %s in %s. Advancing of: %s seconds.") %(current_time, 
-                                                                        spine.id, 
-                                                                        delta_t)
+    print ("Ecell current time: %s in %s. Advancing of: %s seconds.\
+    Current time len: %s") %(current_time, spine.id, delta_t, len_current_time)
     spine.ecellMan.ses.run(delta_t)
     
     
 
-def synch_simulators(tmp_tstop, stim_spines_id, delta_calcium_sampling):
+def synch_simulators(tmp_tstop, stim_spines_id, delta_calcium_sampling,
+                     alpha, beta):
     """
     Calculate the synapse weight, using the calcium in the spine_heads 
     as input.
@@ -129,7 +125,7 @@ def synch_simulators(tmp_tstop, stim_spines_id, delta_calcium_sampling):
                 spine = nrnSim.spines[spine_id]
                 sync_calcium(spine)
                 advance_ecell(spine, delta_calcium_sampling / 1e3)
-                update_synape_weight(spine)
+                update_synape_weight(spine, alpha, beta)
 
 def sync_calcium(spine):
     """"
@@ -144,17 +140,18 @@ def sync_calcium(spine):
         spine.update_calcium(electrical_ca)
 
 
-def update_synape_weight(spine):
+def update_synape_weight(spine, alpha, beta):
     """
     Update the electrical weight's synapses using active CaMKII 
     """    
     # getting the conc of the active CaMKII
     CaMKIIbar = spine.ecellMan.CaMKIIbar['Value']
+    PP2Bbar = spine.ecellMan.PP2Bbar['Value']
     
     # Updating the AMPA synapses
     for synapse in spine.synapses:
         if synapse.chan_type == 'ampa':                       
-            weight = calcWeight(synapse.netCon.weight[0], CaMKIIbar)
+            weight = calcWeight(alpha, beta, CaMKIIbar, PP2Bbar)
             synapse.netCon.weight[0] = weight
             # The weight of the ampa is a double list
             # Check the specs in synapse weight for more info. 
@@ -193,7 +190,7 @@ def create_excitatory_inputs(stim_spines_id, neuron_time_interval):
     return excitatory_stimuli
 
 
-def advance_quickly(tmp_tstop, stim_spines_id, weight_sampling):
+def advance_quickly(tmp_tstop, stim_spines_id):
     """
     Advance the two simulators quickly in an independent way. Synapse weight 
     is synchronized at the end
@@ -203,9 +200,13 @@ def advance_quickly(tmp_tstop, stim_spines_id, weight_sampling):
     print ("\nAdvance quickly routine.")
     print ("Current Neuron time: %s, aimed tstop[ms]: %s") %(h.t, tmp_tstop)
     print ("Delta applied on Ecell simulator [s]: %s\n") % delta_ecell_seconds
-    advance_neuron(tmp_tstop, weight_sampling, stim_spines_id)
+    advance_neuron(tmp_tstop)
+    for spine_id in stim_spines_id:
+        spine = nrnSim.spines[spine_id]
+        advance_ecell(spine, delta_ecell_seconds)
+        update_synape_weight(spine)
     
-def run_simulation(tStop_final, t_buffer, delta_calcium_sampling, weight_sampling):
+def run_simulation(tStop_final, t_buffer, delta_calcium_sampling):
     """
     Run the simulation. If input synchronizes the two simulators, 
     otherwise run each on its own and advance quickly
@@ -225,7 +226,7 @@ def run_simulation(tStop_final, t_buffer, delta_calcium_sampling, weight_samplin
                                                                                        t_stim,
                                                                                        excitatory_stims)
             if h.t < t_stim:
-                advance_quickly(t_stim, stim_spines_id, weight_sampling)
+                advance_quickly(t_stim, stim_spines_id)
                 tmp_tstop = t_stim + t_buffer
                 synch_simulators(tmp_tstop, stim_spines_id, delta_calcium_sampling) 
                 
@@ -233,7 +234,7 @@ def run_simulation(tStop_final, t_buffer, delta_calcium_sampling, weight_samplin
                 
         else:
             print "No excitatory input remaining. Quickly to the end"
-            advance_quickly(tStop_final, stim_spines_id, weight_sampling)
+            advance_quickly(tStop_final, stim_spines_id)
             h.fadvance() # This is to force the latest step and avoid the infinite loop.
     
     # Recording last 
@@ -311,13 +312,14 @@ if __name__ == "__main__":
     # equilibrium
     print ("#--#")
     print ("Equilibrium run for the two simulators") 
-    advance_neuron(t_equilibrium_neuron, param['weight_sampling'], stim_spines_id)
+    advance_neuron(t_equilibrium_neuron)
     for spine_id in stim_spines_id:
         advance_ecell(nrnSim.spines[spine_id], t_equilibrium_ecell)
     print ("Equilibrium run finished. Starting normal simulation.")
     print ("#--#")
     t_buffer = param['t_buffer']
-    run_simulation(tStop_final, t_buffer, delta_calcium_sampling, param['weight_sampling'])
+    run_simulation(tStop_final, t_buffer, delta_calcium_sampling,
+                   param['alpha'], param['beta'])
     
     #------------------------------------
     # Save the Results
