@@ -26,15 +26,18 @@ import tables
 from extref import ExtRef 
 
 
-def calcWeight(old_weight, CaMKIIbar, n=2, k=4):
+def calcWeight(CaMKIIbar, PP2Bbar, alpha, beta, n=3, k=0.5):
     """Calc the weight of the synapses according to the CaMKII"""
     
-    # Dummy function should be changed
-    delta = math.pow(CaMKIIbar, n) / (math.pow(k, n) + math.pow(CaMKIIbar, n))
-    weight = old_weight + delta
-    s = "Old weight %f, CAMKIIbar value: %e,\
-    calculated delta: %e" %(old_weight, CaMKIIbar, delta)
-    #print s
+    # CaMKII term
+    CaMKII_factor = math.pow(CaMKIIbar, n) / (math.pow(k, n) + math.pow(CaMKIIbar, n))
+    Phosphatase_factor = math.pow(PP2Bbar, n) / (math.pow(k, n) + math.pow(PP2Bbar, n))
+    scaled_CaMKII_factor = alpha * CaMKII_factor
+    scaled_Phospatese_factor = beta * Phosphatase_factor 
+    weight = 1 + scaled_CaMKII_factor - scaled_Phospatese_factor
+    s = "Weight: %s CaMKII factor %s, Phosphatase factor %s" %(weight,
+                                                               scaled_CaMKII_factor,
+                                                               scaled_Phospatese_factor)
     return weight
 
 def write_log(saving_dir, tStop, calciumSampling, dtNeuron, tEquilibrium, stims):
@@ -100,7 +103,8 @@ def advance_ecell(spine, delta_t):
     
     
 
-def synch_simulators(tmp_tstop, stim_spines_id, delta_calcium_sampling):
+def synch_simulators(tmp_tstop, stim_spines_id, delta_calcium_sampling,
+                     alpha, beta):
     """
     Calculate the synapse weight, using the calcium in the spine_heads 
     as input.
@@ -121,7 +125,7 @@ def synch_simulators(tmp_tstop, stim_spines_id, delta_calcium_sampling):
                 spine = nrnSim.spines[spine_id]
                 sync_calcium(spine)
                 advance_ecell(spine, delta_calcium_sampling / 1e3)
-                update_synape_weight(spine)
+                update_synape_weight(spine, alpha, beta)
 
 def sync_calcium(spine):
     """"
@@ -136,17 +140,18 @@ def sync_calcium(spine):
         spine.update_calcium(electrical_ca)
 
 
-def update_synape_weight(spine):
+def update_synape_weight(spine, alpha, beta):
     """
     Update the electrical weight's synapses using active CaMKII 
     """    
     # getting the conc of the active CaMKII
     CaMKIIbar = spine.ecellMan.CaMKIIbar['Value']
+    PP2Bbar = spine.ecellMan.PP2Bbar['Value']
     
     # Updating the AMPA synapses
     for synapse in spine.synapses:
         if synapse.chan_type == 'ampa':                       
-            weight = calcWeight(synapse.netCon.weight[0], CaMKIIbar)
+            weight = calcWeight(alpha, beta, CaMKIIbar, PP2Bbar)
             synapse.netCon.weight[0] = weight
             # The weight of the ampa is a double list
             # Check the specs in synapse weight for more info. 
@@ -313,7 +318,8 @@ if __name__ == "__main__":
     print ("Equilibrium run finished. Starting normal simulation.")
     print ("#--#")
     t_buffer = param['t_buffer']
-    run_simulation(tStop_final, t_buffer, delta_calcium_sampling)
+    run_simulation(tStop_final, t_buffer, delta_calcium_sampling,
+                   param['alpha'], param['beta'])
     
     #------------------------------------
     # Save the Results

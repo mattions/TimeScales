@@ -10,6 +10,8 @@
     "t_buffer" : 10, #ms 
     "time_resolution_neuron" : 0.1, # Recording at every ms 
     "spines_dist" : "two", #spines_dist = 'all' or spines_dist=zero #Number of spines
+    "alpha": 1, # Scaling factor for the weight of the CaMKII 
+    "beta": 1, # Scaling factor for the weight of the PP2B
     "stimulated_spines" : ['spine1', 'spine2'],
     "spine1" : ['ampa_s1', 'nmda_s1'],
     "spine2" : ['ampa_s2', 'nmda_s2'],
