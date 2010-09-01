@@ -191,6 +191,7 @@ def testChangeCalciumValue(interval, caValue, filename="../biochemical_circuits/
 
 def plotWeight(timecourses, dir=None):
     import spineIntegration as spI
+    import numpy as np
     scaled_CaMKII = []
     for x in timecourses['CaMKIIbar'][:,1]:
         scaled_CaMKII.append(spI.calc_CaMKII_factor(x, 
@@ -203,6 +204,8 @@ def plotWeight(timecourses, dir=None):
                                                          param['beta'], 
                                                          param['n'],
                                                          param['k']))
+    scaled_CaMKII = np.array(scaled_CaMKII)
+    scaled_PP2Bbar = np.array(scaled_PP2Bbar)
     weight = 1 + scaled_CaMKII - scaled_Phospatese
     plt.figure()
     plt.plot(scaled_CaMKII, label='Scaled_CaMKIIbar')
