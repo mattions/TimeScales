@@ -46,7 +46,7 @@ def calc_CaMKII_factor(CaMKIIbar, alpha, n, k):
     scaled_CaMKII_factor = alpha * CaMKII_factor
     return scaled_CaMKII_factor
 
-def calc_Phospatase_factor(PP2bar, beta, n, k):
+def calc_Phospatase_factor(PP2Bbar, beta, n, k):
     """Phospatase apport for the synaptic plasticity rule"""
     Phosphatase_factor = math.pow(PP2Bbar, n) / (math.pow(k, n) + math.pow(PP2Bbar, n))
     scaled_Phospatese_factor = beta * Phosphatase_factor
