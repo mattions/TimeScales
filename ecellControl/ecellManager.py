@@ -189,7 +189,7 @@ def testChangeCalciumValue(interval, caValue, filename="../biochemical_circuits/
     return ecellManager
 
 
-def plotWeight(timecourses):
+def plotWeight(timecourses, dir=None):
     import spineIntegration as spI
     scaled_CaMKII = []
     for x in timecourses['CaMKIIbar'][:,1]:
@@ -247,5 +247,7 @@ if __name__ == "__main__":
         dir = loader.create_new_dir(prefix=os.getcwd())
         loader.save(ecellManager.timeCourses,  dir, "timeCourses")
         ecellManager.plotTimeCourses(save=True, dir=dir)
+        plotWeight(ecellManager.timeCourses, dir=dir)
     else:
         ecellManager.plotTimeCourses()
+        plotWeight(ecellManager.timeCourses)
