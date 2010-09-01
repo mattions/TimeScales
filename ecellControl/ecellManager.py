@@ -8,6 +8,7 @@ import ecell.config
 import ecell.emc
 import os
 import numpy
+from sumatra.external.NeuroTools import parameters
 
 class EcellManager():
     """Control and instatiate the ecell simulator embedding it in an handy python object"""
@@ -47,6 +48,24 @@ class EcellManager():
         
         self.loggers = loggers
         
+        
+    def calcWeight(CaMKIIbar, PP2Bbar, alpha, beta, n=3, k=0.5):
+        """Calc the weight of the synapses according to the CaMKII and Pospahtases
+        PP2B and PP1"""
+    
+        # CaMKII term
+        CaMKII_factor = math.pow(CaMKIIbar, n) / (math.pow(k, n) + 
+                                                  math.pow(CaMKIIbar, n))
+        Phosphatase_factor = math.pow(PP2Bbar, n) / (math.pow(k, n) + 
+                                                     math.pow(PP2Bbar, n))
+        scaled_CaMKII_factor = alpha * CaMKII_factor
+        scaled_Phospatese_factor = beta * Phosphatase_factor 
+        weight = 1 + scaled_CaMKII_factor - scaled_Phospatese_factor
+        s = "Weight: %s CaMKII factor %s, Phosphatase factor %s" %(weight,
+                                                                   scaled_CaMKII_factor,
+                                                                   scaled_Phospatese_factor)
+        return weight
+        
     
     def calcium_peak(self, k_value, duration):
         """
@@ -75,38 +94,32 @@ class EcellManager():
                          )
             self.ses.run(interval)
     
-    def plotTimeCourses(self, interval=None, save=False, dir=None):
+    def plotTimeCourses(self, save=False, dir=None):
         """Plot the default timecourses"""
         ca_tc = self.timeCourses['ca'] 
-        pylab.figure()
-        pylab.plot(ca_tc[:,0], ca_tc[:,1], label="Calcium")
-        pylab.xlabel("Time [s]")
-        pylab.legend(loc=0)
-        if interval is not None:
-            title = "Flux of Calcium Interval: %s [s]" %interval
-            pylab.title(title)
+        plt.figure()
+        plt.plot(ca_tc[:,0], ca_tc[:,1], label="Calcium")
+        plt.xlabel("Time [s]")
+        plt.legend(loc=0)
         
         if save :
-            pylab.savefig(os.path.join(dir, "caInput.png"))
+            plt.savefig(os.path.join(dir, "caInput.png"))
             print "figure saved in: %s" % os.path.join(dir, "caInput.png")
         
         bars = ['PP2Bbar', 'CaMKIIbar', 'PP1abar']
-        pylab.figure()
+        plt.figure()
         for bar in bars:
             bar_tc = self.timeCourses[bar]
-            pylab.plot(bar_tc[:,0], bar_tc[:,1], label=bar)
-            pylab.xlabel("Time [s]")
-            pylab.legend(loc=0)
-            if interval is not None:
-                title = "Flux of Calcium Interval: %s [s]" %interval
-                pylab.title(title)
+            plt.plot(bar_tc[:,0], bar_tc[:,1], label=bar)
+            plt.xlabel("Time [s]")
+            plt.legend(loc=0)
         
         if save :
-            pylab.savefig(os.path.join(dir, "PP2B_and_CaMKII_activation.png"))
+            plt.savefig(os.path.join(dir, "PP2B_and_CaMKII_activation.png"))
             print "figure saved in: %s" % os.path.join(dir, 
                                                        "PP2B_and_CaMKII_activation.png")
         else:
-            pylab.show()
+            plt.show()
         
     def converToTimeCourses(self):
         timeCourses = {}
@@ -120,7 +133,7 @@ class EcellManager():
 ##############################################
 # Testing method
 
-def testCalciumTrain(filename="../biochemical_circuits/biomd183_loop.eml"):
+def testCalciumTrain(spikes_number, interval, filename):
     """Run a test simulation wit a train of calcium input"""
     
     print "Test the results of a train of calcium"""
@@ -130,7 +143,7 @@ def testCalciumTrain(filename="../biochemical_circuits/biomd183_loop.eml"):
     print "Model loaded, loggers created. Integration start."
     ecellManager.ses.run(300)
     print "Calcium Train"
-    ecellManager.calciumTrain(spikes=5, interval=0.005)
+    ecellManager.calciumTrain(spikes=30, interval=0.001)
     ecellManager.ses.run(400)
     ecellManager.converToTimeCourses()
     print "CalciumTrain Test Concluded\n##################"
@@ -174,50 +187,65 @@ def testChangeCalciumValue(interval, caValue, filename="../biochemical_circuits/
     ecellManager.converToTimeCourses()
     print "ChangeCalciumValue Test Concluded\n##################"
     return ecellManager
+
+
+def plotWeight(timecourses):
+    import spineIntegration as spI
+    scaled_CaMKII = []
+    for x in timecourses['CaMKIIbar'][:,1]:
+        scaled_CaMKII.append(spI.calc_CaMKII_factor(x, 
+                                                    param['alpha'], 
+                                                    param['n'], 
+                                                    param['k']))
+    scaled_PP2Bbar = []
+    for x in timecourses['PP2Bbar'][:,1]:
+        scaled_PP2Bbar.append(spI.calc_Phospatase_factor(x,
+                                                         param['beta'], 
+                                                         param['n'],
+                                                         param['k']))
+    weight = 1 + scaled_CaMKII_factor - scaled_Phospatese_factor
+    plt.figure()
+    plt.plot(scaled_CaMKII, label='Scaled_CaMKIIbar')
+    plt.plot(scaled_PP2Bbar, label='Scaled_PP2Bbar')
+    plt.plot(weight, label='weight')
+    if dir is not None:
+        plt.savefig(os.path.join(dir, "weight.png"))
+        
+    
+        
         
 if __name__ == "__main__":
     
-    import os
-    from optparse import OptionParser
-    usage= "usage: %prog [options] interval calciumValue.\n\
-    Run the simulator using the interval [s] to update the calcium between different run\
-    \ninterval - The interval between the stop of the simulators. Used to sample tha calcium\
-    \ncalciumValue - The value of the calcium to pump into the system\
-                      The frequency of the spike and the duration are hardcoded."
-    parser = OptionParser(usage)
-    parser.add_option("-s", "--save", action="store_true", 
-                      help= "If True save the graphs and the log")
-
-    (options, args) = parser.parse_args()
-     
-    
-    if len(args) != 2:
-        parser.error("Incorrect number of arguments")
-        parser.usage()
-    else:
-        interval = float(args[0])
-        caValue = float(args[1])
-        print "Interval %f, Save option %s" %( interval, options.save)
+    import sys
+    if len(sys.argv) != 2:
+        print("No parameter file supplied. Abort.")
+        usage = 'python ecellManager.py ecellControl.param'
+        print usage
+        sys.exit()
+        
+    parameter_file = sys.argv[1]
+    param = parameters.ParameterSet(parameter_file)
     
     ## Setting the mat plotlib backend
     import matplotlib
-    if options.save == True:
+    if param['interactive'] == False:
         matplotlib.use('Agg')
         print "Switching backend to Agg. Batch execution"
-    import pylab
-    import helpers     
+    import matplotlib.pyplot as plt
+    import helpers
     loader = helpers.Loader()
 
 #    ecellManager = testChangeCalciumValue(interval, caValue)
-    ecellManager = testCalciumTrain()
+    if param['running_type'] == 'train':
+        ecellManager = testCalciumTrain(param['num_spikes'],
+                                        param['delay'],
+                                        param['biochemical_filename'])
     
-    if options.save == True:
+
+    
+    if param['interactive'] == False:
         dir = loader.create_new_dir(prefix=os.getcwd())
         loader.save(ecellManager.timeCourses,  dir, "timeCourses")
-        ecellManager.plotTimeCourses(interval, save=options.save, dir=dir)
-        f = open(os.path.join(dir, 'log.txt'), 'w') 
-        f.write("Test of the supply of the calcium to the biochemical model\n\
-        Interval used in this simulation: %f\n" % (interval))
-        f.close()
+        ecellManager.plotTimeCourses(save=True, dir=dir)
     else:
         ecellManager.plotTimeCourses()

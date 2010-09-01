@@ -30,28 +30,28 @@ def calcWeight(CaMKIIbar, PP2Bbar, alpha, beta, n=3, k=0.5):
     """Calc the weight of the synapses according to the CaMKII"""
     
     # CaMKII term
-    CaMKII_factor = math.pow(CaMKIIbar, n) / (math.pow(k, n) + math.pow(CaMKIIbar, n))
-    Phosphatase_factor = math.pow(PP2Bbar, n) / (math.pow(k, n) + math.pow(PP2Bbar, n))
-    scaled_CaMKII_factor = alpha * CaMKII_factor
-    scaled_Phospatese_factor = beta * Phosphatase_factor 
+    scaled_CaMKII_factor = calc_CaMKII_factor(CaMKIIbar, alpha, n, k)
+    scaled_Phospatase_factor = calc_Phospatase_factor(PP2Bbar, beta, n, k)    
     weight = 1 + scaled_CaMKII_factor - scaled_Phospatese_factor
     s = "Weight: %s CaMKII factor %s, Phosphatase factor %s" %(weight,
                                                                scaled_CaMKII_factor,
                                                                scaled_Phospatese_factor)
     return weight
 
-def write_log(saving_dir, tStop, calciumSampling, dtNeuron, tEquilibrium, stims):
-    """Save the results in a directory"""
-    f = open(os.path.join(saving_dir, 'log.txt'), 'w') 
-    f.write("tStop [s]: %f\n" % (tStop))
-    f.write("calciumSampling [s]: %f\n" % (calciumSampling))
-    f.write("dtNeuron [ms]: %f\n" % (dtNeuron))
-    f.write("tEquilibrium [s]: %f\n" % (tEquilibrium))
-    for stim in stims:
-        f.write(stim.to_log())
-    f.close()
-    print "Simulation saved in %s" % saving_dir
 
+def calc_CaMKII_factor(CaMKIIbar, alpha, n, k):
+    """Calculate the apport of the scaled CaMKII"""
+    CaMKII_factor = math.pow(CaMKIIbar, n) / (math.pow(k, n) + 
+                                              math.pow(CaMKIIbar, n))
+    scaled_CaMKII_factor = alpha * CaMKII_factor
+    return scaled_CaMKII_factor
+
+def calc_Phospatase_factor(PP2bar, beta, n, k):
+    """Phospatase apport for the synaptic plasticity rule"""
+    Phosphatase_factor = math.pow(PP2Bbar, n) / (math.pow(k, n) + math.pow(PP2Bbar, n))
+    scaled_Phospatese_factor = beta * Phosphatase_factor
+    return scaled_Phospatese_factor
+    
 def build_vecs_to_plot(var, secs, anyRefs):
     """Create the dictionary of section->vectors to plot"""
     vecs_to_plot = {}
