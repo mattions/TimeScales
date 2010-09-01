@@ -203,7 +203,7 @@ def plotWeight(timecourses, dir=None):
                                                          param['beta'], 
                                                          param['n'],
                                                          param['k']))
-    weight = 1 + scaled_CaMKII_factor - scaled_Phospatese_factor
+    weight = 1 + scaled_CaMKII - scaled_Phospatese
     plt.figure()
     plt.plot(scaled_CaMKII, label='Scaled_CaMKIIbar')
     plt.plot(scaled_PP2Bbar, label='Scaled_PP2Bbar')
