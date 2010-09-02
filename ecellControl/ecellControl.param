@@ -6,8 +6,8 @@
     "biochemical_filename" : "biochemical_circuits/biomd183_loop.eml",
     "n" : 3,
     "k" : 0.5,
-    "num_spikes" : 100,
-    "delay" : 0.001,
+    "num_spikes" : 300,
+    "delay" : 0.0005,
     "running_type" : "train", # or value "value"
-    "interactive" : False 
+    "interactive" : True 
 }

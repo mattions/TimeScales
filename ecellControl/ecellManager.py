@@ -118,8 +118,6 @@ class EcellManager():
             plt.savefig(os.path.join(dir, "PP2B_and_CaMKII_activation.png"))
             print "figure saved in: %s" % os.path.join(dir, 
                                                        "PP2B_and_CaMKII_activation.png")
-        else:
-            plt.show()
         
     def converToTimeCourses(self):
         timeCourses = {}
@@ -185,34 +183,35 @@ def testChangeCalciumValue(interval, caValue, filename="../biochemical_circuits/
         #print ecellManager.ses.getCurrentTime()
         
     ecellManager.converToTimeCourses()
-    print "ChangeCalciumValue Test Concluded\n##################"
+    print "ChangeCalciumValue Test Concluded"
     return ecellManager
 
 
-def plotWeight(timecourses, dir=None):
+def plotWeight(timecourses, alpha, beta, n, k, dir=None):
     import spineIntegration as spI
     import numpy as np
     scaled_CaMKII = []
     for x in timecourses['CaMKIIbar'][:,1]:
         scaled_CaMKII.append(spI.calc_CaMKII_factor(x, 
-                                                    param['alpha'], 
-                                                    param['n'], 
-                                                    param['k']))
+                                                    alpha, 
+                                                    n, 
+                                                    k))
     scaled_PP2Bbar = []
     for x in timecourses['PP2Bbar'][:,1]:
         scaled_PP2Bbar.append(spI.calc_Phospatase_factor(x,
-                                                         param['beta'], 
-                                                         param['n'],
-                                                         param['k']))
+                                                         beta, 
+                                                         n,
+                                                         k))
     scaled_CaMKII = np.array(scaled_CaMKII)
     scaled_PP2Bbar = np.array(scaled_PP2Bbar)
-    weight = 1 + scaled_CaMKII - scaled_Phospatese
+    weight = 1 + scaled_CaMKII - scaled_PP2Bbar
     plt.figure()
     plt.plot(scaled_CaMKII, label='Scaled_CaMKIIbar')
     plt.plot(scaled_PP2Bbar, label='Scaled_PP2Bbar')
     plt.plot(weight, label='weight')
     if dir is not None:
         plt.savefig(os.path.join(dir, "weight.png"))
+    return (weight, scaled_CaMKII, scaled_PP2Bbar)
         
     
         
@@ -250,7 +249,10 @@ if __name__ == "__main__":
         dir = loader.create_new_dir(prefix=os.getcwd())
         loader.save(ecellManager.timeCourses,  dir, "timeCourses")
         ecellManager.plotTimeCourses(save=True, dir=dir)
-        plotWeight(ecellManager.timeCourses, dir=dir)
+        plotWeight(ecellManager.timeCourses, param['alpha'], 
+                   param['beta'], param['k'], param['n'], dir=dir)
     else:
         ecellManager.plotTimeCourses()
-        plotWeight(ecellManager.timeCourses)
+        plotWeight(ecellManager.timeCourses, param['alpha'], 
+        param['beta'], param['k'], param['n'])
+        plt.show()
