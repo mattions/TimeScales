@@ -93,31 +93,6 @@ class EcellManager():
                          0.00001 #Really fast spike to avoid the overlap
                          )
             self.ses.run(interval)
-    
-    def plotTimeCourses(self, save=False, dir=None):
-        """Plot the default timecourses"""
-        ca_tc = self.timeCourses['ca'] 
-        plt.figure()
-        plt.plot(ca_tc[:,0], ca_tc[:,1], label="Calcium")
-        plt.xlabel("Time [s]")
-        plt.legend(loc=0)
-        
-        if save :
-            plt.savefig(os.path.join(dir, "caInput.png"))
-            print "figure saved in: %s" % os.path.join(dir, "caInput.png")
-        
-        bars = ['PP2Bbar', 'CaMKIIbar', 'PP1abar']
-        plt.figure()
-        for bar in bars:
-            bar_tc = self.timeCourses[bar]
-            plt.plot(bar_tc[:,0], bar_tc[:,1], label=bar)
-            plt.xlabel("Time [s]")
-            plt.legend(loc=0)
-        
-        if save :
-            plt.savefig(os.path.join(dir, "PP2B_and_CaMKII_activation.png"))
-            print "figure saved in: %s" % os.path.join(dir, 
-                                                       "PP2B_and_CaMKII_activation.png")
         
     def converToTimeCourses(self):
         timeCourses = {}
@@ -141,7 +116,7 @@ def testCalciumTrain(spikes_number, interval, filename):
     print "Model loaded, loggers created. Integration start."
     ecellManager.ses.run(300)
     print "Calcium Train"
-    ecellManager.calciumTrain(spikes=30, interval=0.001)
+    ecellManager.calciumTrain(spikes=spikes_number, interval=interval)
     ecellManager.ses.run(400)
     ecellManager.converToTimeCourses()
     print "CalciumTrain Test Concluded\n##################"
@@ -186,32 +161,69 @@ def testChangeCalciumValue(interval, caValue, filename="../biochemical_circuits/
     print "ChangeCalciumValue Test Concluded"
     return ecellManager
 
+def plotTimeCourses(timeCourses, save=False, dir=None):
+     """Plot the default timecourses"""
+     ca_tc = timeCourses['ca'] 
+     plt.figure()
+     plt.plot(ca_tc[:,0], ca_tc[:,1], label="Calcium")
+     plt.xlabel("Time [s]")
+     plt.legend(loc=0)
+     
+     if save :
+         plt.savefig(os.path.join(dir, "caInput.png"))
+         print "figure saved in: %s" % os.path.join(dir, "caInput.png")
+     
+     bars = ['PP2Bbar', 'CaMKIIbar', 'PP1abar']
+     plt.figure()
+     for bar in bars:
+         bar_tc = timeCourses[bar]
+         plt.plot(bar_tc[:,0], bar_tc[:,1], label=bar)
+         plt.xlabel("Time [s]")
+         plt.legend(loc=0)
+     
+     if save :
+         plt.savefig(os.path.join(dir, "PP2B_and_CaMKII_activation.png"))
+         print "figure saved in: %s" % os.path.join(dir, 
+                                                    "PP2B_and_CaMKII_activation.png")
 
-def plotWeight(timecourses, alpha, beta, n, k, dir=None):
+
+def plotWeight(timecourses, alpha, beta, n_kyn, k_kyn, 
+               n_pho, k_pho, weight_baseline, dir=None):
     import spineIntegration as spI
     import numpy as np
+    import matplotlib.pyplot as plt
     scaled_CaMKII = []
+    time = timecourses['CaMKIIbar'][:,0] # time equal for everything
     for x in timecourses['CaMKIIbar'][:,1]:
         scaled_CaMKII.append(spI.calc_CaMKII_factor(x, 
                                                     alpha, 
-                                                    n, 
-                                                    k))
+                                                    n_kyn, 
+                                                    k_kyn))
     scaled_PP2Bbar = []
     for x in timecourses['PP2Bbar'][:,1]:
         scaled_PP2Bbar.append(spI.calc_Phospatase_factor(x,
                                                          beta, 
-                                                         n,
-                                                         k))
+                                                         n_pho,
+                                                         k_pho))
     scaled_CaMKII = np.array(scaled_CaMKII)
     scaled_PP2Bbar = np.array(scaled_PP2Bbar)
-    weight = 1 + scaled_CaMKII - scaled_PP2Bbar
+    weight = weight_baseline + scaled_CaMKII - scaled_PP2Bbar
     plt.figure()
-    plt.plot(scaled_CaMKII, label='Scaled_CaMKIIbar')
-    plt.plot(scaled_PP2Bbar, label='Scaled_PP2Bbar')
-    plt.plot(weight, label='weight')
+    plt.plot(time, scaled_CaMKII, label='Scaled_CaMKIIbar')
+    plt.plot(time, scaled_PP2Bbar, label='Scaled_PP2Bbar')
+    plt.plot(time, weight, label='weight')
+    #plt.plot(time, weight_baseline, label='w_b')
+    title = r"$\alpha=%s, \beta=%s, n_{kyn}=%s, k_{kin}=%s, n_{pho}=%s, k_{pho}=%s$" %(alpha,
+                                                                              beta,
+                                                                              n_kyn,
+                                                                              k_kyn,
+                                                                              n_pho,
+                                                                              k_pho)
+    plt.title(title)
+    plt.legend(loc=0)
     if dir is not None:
         plt.savefig(os.path.join(dir, "weight.png"))
-    return (weight, scaled_CaMKII, scaled_PP2Bbar)
+    return (weight, scaled_CaMKII, scaled_PP2Bbar, time)
         
     
         
@@ -248,11 +260,16 @@ if __name__ == "__main__":
     if param['interactive'] == False:
         dir = loader.create_new_dir(prefix=os.getcwd())
         loader.save(ecellManager.timeCourses,  dir, "timeCourses")
-        ecellManager.plotTimeCourses(save=True, dir=dir)
+        plotTimeCourses(ecellManager.timeCourses, save=True, dir=dir)
         plotWeight(ecellManager.timeCourses, param['alpha'], 
-                   param['beta'], param['k'], param['n'], dir=dir)
+                   param['beta'], param['n_kyn'], 
+                   param['k_kyn'], param['n_pho'],
+                   param['k_pho'], param['weight_baseline'],
+                   dir=dir)
     else:
-        ecellManager.plotTimeCourses()
+        plotTimeCourses(ecellManager.timeCourses)
         plotWeight(ecellManager.timeCourses, param['alpha'], 
-        param['beta'], param['k'], param['n'])
+                   param['beta'], param['n_kyn'], 
+                   param['k_kyn'], param['n_pho'],
+                   param['k_pho'], param['weight_baseline'])
         plt.show()

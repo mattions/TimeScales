@@ -4,8 +4,11 @@
     "alpha": 1, # Scaling factor for the weight of the CaMKII 
     "beta": 1, # Scaling factor for the weight of the PP2B
     "biochemical_filename" : "biochemical_circuits/biomd183_loop.eml",
-    "n" : 3,
-    "k" : 0.5,
+    "n_kyn" : 3,
+    "k_kyn" : 0.5,
+	"n_pho" : 3,
+    "k_pho" : 0.5,
+    "weight_baseline" : 1.201,
     "num_spikes" : 300,
     "delay" : 0.0005,
     "running_type" : "train", # or value "value"
