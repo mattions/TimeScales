@@ -1285,6 +1285,16 @@ System System( /Spine )
 		MolarConc	0.0;
 		Value	@(1e-15*6.02e23*0);
 	}
+	Variable Variable( AMPA_weight )
+	{
+		Name	AMPA_weight;
+		Value	0.0;
+	}
+	
+	
+	
+	
+	
 	Process ExpressionFluxProcess( ca_pump )
 	{
 		vmax	4e-3;
@@ -6351,5 +6361,17 @@ System System( /Spine )
 		FireMethod	"P0.Value=X0.Value/X1.Value";
 		StepperID	Passive;
 		VariableReferenceList	[P0 Variable:/Spine:PKAbar 1] [X1 Variable:/Spine:totPKA 0] [X0 Variable:/Spine:PKAinmodel 0];
+	}
+	# Calculating the variation of the AMPAR
+	Process PythonProcess( calculating_AMPAR_weight )
+	{
+	
+		IsContinuos 0;
+		FireMethod "P0.Value = pow(S0.Value, 3) / (pow(0.5, 3) + pow(S0.Value, 3) ) - 
+								pow(S1.Value, 3) / (pow(0.5, 3) + pow(S1.Value, 3) )"
+								
+		VariableReferenceList	 	[S0 Variable:/Spine:CaMKIIbar 0] 
+									[S1 Variable:/Spine:PP2Bbar 0] 
+									[P0 Variable:/Spine:AMPA_weight 1];
 	}
 }
