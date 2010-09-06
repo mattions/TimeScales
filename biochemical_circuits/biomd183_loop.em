@@ -1285,15 +1285,21 @@ System System( /Spine )
 		MolarConc	0.0;
 		Value	@(1e-15*6.02e23*0);
 	}
+	Variable Variable( scaled_CaMKIIbar )
+	{
+		Name	scaled_CaMKIIbar;
+		Value	0.0;
+	}
+	Variable Variable( scaled_PP2Bbar )
+	{
+		Name	scaled_PP2Bbar;
+		Value	0.0;
+	}
 	Variable Variable( AMPA_weight )
 	{
 		Name	AMPA_weight;
 		Value	0.0;
-	}
-	
-	
-	
-	
+	}	
 	
 	Process ExpressionFluxProcess( ca_pump )
 	{
@@ -6362,16 +6368,38 @@ System System( /Spine )
 		StepperID	Passive;
 		VariableReferenceList	[P0 Variable:/Spine:PKAbar 1] [X1 Variable:/Spine:totPKA 0] [X0 Variable:/Spine:PKAinmodel 0];
 	}
+	
 	# Calculating the variation of the AMPAR
-
+	Process PythonProcess( scaled_CaMKIIbar )
+	{
+        	
+		StepperID	@(MAIN_STEPPER);
+		IsContinuous 1;
+        FireMethod		"P0.Value = pow(S0.Velocity, 3) / (pow( 0.5, 3) + pow(S0.Velocity, 3) )";
+								
+		VariableReferenceList	 	[P0 Variable:/Spine:scaled_CaMKIIbar 1] 
+		                            [S0 Variable:/Spine:CaMKIIbar 0];
+	}
+	
+	Process PythonProcess( scaled_PP2Bbar )
+	{
+        	
+		StepperID	@(MAIN_STEPPER);
+		IsContinuous 1;
+        FireMethod		"P0.Value = pow(S0.Velocity, 3) / (pow( 0.5, 3) + pow(S0.Velocity, 3) )";
+								
+		VariableReferenceList	 	[P0 Variable:/Spine:scaled_PP2Bbar 1] 
+		                            [S0 Variable:/Spine:PP2Bbar 0];
+	}
+	
     Process PythonFluxProcess( calculating_AMPAR_weight )
 	{
-	
+        	
 		StepperID	@(MAIN_STEPPER);
-		Expression "pow(S0.MolarConc,3)/(pow(0.5,3)+pow(S0.MolarConc,3))-pow(S1.MolarConc,3)/(pow(0.5,3)+pow(S1.MolarConc,3))";
+        Expression "S0.Value + S1.Value";
 								
 		VariableReferenceList	 	[P0 Variable:/Spine:AMPA_weight 1] 
-		                            [S0 Variable:/Spine:CaMKIIbar 0] 
-		                            [S1 Variable:/Spine:PP2Bbar 0];
-	}	
+		                            [S0 Variable:/Spine:scaled_CaMKIIbar 0] 
+		                            [S1 Variable:/Spine:scaled_PP2Bbar 0];
+	}
 }

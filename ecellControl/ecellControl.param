@@ -1,14 +1,8 @@
 # Parameters file for simulation.
 # Should be used with ecellManager.py
 {
-    "alpha": 1, # Scaling factor for the weight of the CaMKII 
-    "beta": 1, # Scaling factor for the weight of the PP2B
-    "biochemical_filename" : "biochemical_circuits/biomd183_loop.eml",
-    "n_kyn" : 3,
-    "k_kyn" : 0.5,
-	"n_pho" : 3,
-    "k_pho" : 0.5,
-    "weight_baseline" : 1.201,
+	"biochemical_filename" : "biochemical_circuits/biomd183_loop.eml",
+    "weight_baseline" : 0,
     "num_spikes" : 30,
     "delay" : 0.001,
     "running_type" : "train", # or value "value"

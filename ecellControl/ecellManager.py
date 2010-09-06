@@ -29,7 +29,7 @@ class EcellManager():
                            'PP2Bbar', 
                            'CaMKIIbar', 
                            'PP1abar', # Active PP1/Total PP1
-                           'AMPA_weight'
+                           'AMPA_weight',
                            )
         # Tracking the calcium
         self.ca =  self.ses.createEntityStub( 'Variable:/Spine:ca' )
