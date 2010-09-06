@@ -2936,6 +2936,18 @@ DE1
 </value>
 </property>
 </variable>
+<variable class="Variable" id="AMPA_weight">
+<property name="Name">
+<value>
+AMPA_weight
+</value>
+</property>
+<property name="Value">
+<value>
+0.0
+</value>
+</property>
+</variable>
 <process class="ExpressionFluxProcess" id="ca_pump">
 <property name="vmax">
 <value>
@@ -41361,6 +41373,53 @@ X0
 </value>
 <value>
 Variable:/Spine:PKAinmodel
+</value>
+<value>
+0
+</value>
+</value>
+</property>
+</process>
+<process class="PythonFluxProcess" id="calculating_AMPAR_weight">
+<property name="StepperID">
+<value>
+DE1
+</value>
+</property>
+<property name="Expression">
+<value>
+pow(S0.MolarConc,3)/(pow(0.5,3)+pow(S0.MolarConc,3))-pow(S1.MolarConc,3)/(pow(0.5,3)+pow(S1.MolarConc,3))
+</value>
+</property>
+<property name="VariableReferenceList">
+<value>
+<value>
+P0
+</value>
+<value>
+Variable:/Spine:AMPA_weight
+</value>
+<value>
+1
+</value>
+</value>
+<value>
+<value>
+S0
+</value>
+<value>
+Variable:/Spine:CaMKIIbar
+</value>
+<value>
+0
+</value>
+</value>
+<value>
+<value>
+S1
+</value>
+<value>
+Variable:/Spine:PP2Bbar
 </value>
 <value>
 0

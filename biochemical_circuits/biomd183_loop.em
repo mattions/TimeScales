@@ -6363,15 +6363,15 @@ System System( /Spine )
 		VariableReferenceList	[P0 Variable:/Spine:PKAbar 1] [X1 Variable:/Spine:totPKA 0] [X0 Variable:/Spine:PKAinmodel 0];
 	}
 	# Calculating the variation of the AMPAR
-	Process PythonProcess( calculating_AMPAR_weight )
+
+    Process PythonFluxProcess( calculating_AMPAR_weight )
 	{
 	
-		IsContinuos 0;
-		FireMethod "P0.Value = pow(S0.Value, 3) / (pow(0.5, 3) + pow(S0.Value, 3) ) - 
-								pow(S1.Value, 3) / (pow(0.5, 3) + pow(S1.Value, 3) )"
+		StepperID	@(MAIN_STEPPER);
+		Expression "pow(S0.MolarConc,3)/(pow(0.5,3)+pow(S0.MolarConc,3))-pow(S1.MolarConc,3)/(pow(0.5,3)+pow(S1.MolarConc,3))";
 								
-		VariableReferenceList	 	[S0 Variable:/Spine:CaMKIIbar 0] 
-									[S1 Variable:/Spine:PP2Bbar 0] 
-									[P0 Variable:/Spine:AMPA_weight 1];
-	}
+		VariableReferenceList	 	[P0 Variable:/Spine:AMPA_weight 1] 
+		                            [S0 Variable:/Spine:CaMKIIbar 0] 
+		                            [S1 Variable:/Spine:PP2Bbar 0];
+	}	
 }
