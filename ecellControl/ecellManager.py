@@ -29,6 +29,8 @@ class EcellManager():
                            'PP2Bbar', 
                            'CaMKIIbar', 
                            'PP1abar', # Active PP1/Total PP1
+                           'scaled_CaMKIIbar',
+                           'scaled_PP2Bbar',
                            'AMPA_weight',
                            )
         # Tracking the calcium

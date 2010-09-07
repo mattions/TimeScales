@@ -1285,21 +1285,20 @@ System System( /Spine )
 		MolarConc	0.0;
 		Value	@(1e-15*6.02e23*0);
 	}
-	Variable Variable( scaled_CaMKIIbar )
+	Variable Variable( AMPAR-P )
 	{
-		Name	scaled_CaMKIIbar;
+		Name	AMPAR-P;
 		Value	0.0;
 	}
-	Variable Variable( scaled_PP2Bbar )
+	Variable Variable( AMPAR )
 	{
-		Name	scaled_PP2Bbar;
-		Value	0.0;
-	}
-	Variable Variable( AMPA_weight )
-	{
-		Name	AMPA_weight;
+		Name	AMPAR;
 		Value	0.0;
 	}	
+	
+	
+	
+	
 	
 	Process ExpressionFluxProcess( ca_pump )
 	{
@@ -6370,36 +6369,31 @@ System System( /Spine )
 	}
 	
 	# Calculating the variation of the AMPAR
-	Process PythonProcess( scaled_CaMKIIbar )
+	Process ExpressionFluxProcess( AMPAR-Phosphorylation )
 	{
         	
 		StepperID	@(MAIN_STEPPER);
-		IsContinuous 1;
-        FireMethod		"P0.Value = pow(S0.Velocity, 3) / (pow( 0.5, 3) + pow(S0.Velocity, 3) )";
+        kcat 10; # r3 on D'alcantara Model 2003 EJ Of Neuroscience
+        Km  x; Grab it from D'alcantara
+        
+        Expression	"kcat * S0.Value * S1.MolarConc / (S1.MolarConc + Km)";
 								
-		VariableReferenceList	 	[P0 Variable:/Spine:scaled_CaMKIIbar 1] 
-		                            [S0 Variable:/Spine:CaMKIIbar 0];
+		VariableReferenceList	 	[S0 Variable:/Spine:CaMKIIbar 0]
+		                            [S1 Variable:/Spine:AMPAR -1]
+		                            [P0 Variable:/Spine:AMPAR-P 1];
+	}
+	Process ExpressionFluxProcess( AMPAR-Dephosphorylation )
+	{
+        	
+		StepperID	@(MAIN_STEPPER);
+        kcat 1.0; # r2 on D'alcantara Model 2003 EJ Of Neuroscience
+        
+        Expression	"kcat * S0.Value";
+								
+		VariableReferenceList	 	[S0 Variable:/Spine:PP2Bbar 0]
+		                            [S1 Variable:/Spine:AMPAR-P -1]
+		                            [P0 Variable:/Spine:AMPAR 1];
 	}
 	
-	Process PythonProcess( scaled_PP2Bbar )
-	{
-        	
-		StepperID	@(MAIN_STEPPER);
-		IsContinuous 1;
-        FireMethod		"P0.Value = pow(S0.Velocity, 3) / (pow( 0.5, 3) + pow(S0.Velocity, 3) )";
-								
-		VariableReferenceList	 	[P0 Variable:/Spine:scaled_PP2Bbar 1] 
-		                            [S0 Variable:/Spine:PP2Bbar 0];
-	}
-	
-    Process PythonFluxProcess( calculating_AMPAR_weight )
-	{
-        	
-		StepperID	@(MAIN_STEPPER);
-        Expression "S0.Value + S1.Value";
-								
-		VariableReferenceList	 	[P0 Variable:/Spine:AMPA_weight 1] 
-		                            [S0 Variable:/Spine:scaled_CaMKIIbar 0] 
-		                            [S1 Variable:/Spine:scaled_PP2Bbar 0];
-	}
+
 }

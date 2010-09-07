@@ -41404,20 +41404,25 @@ Variable:/Spine:PKAinmodel
 </value>
 </property>
 </process>
-<process class="PythonProcess" id="scaled_CaMKIIbar">
+<process class="ExpressionFluxProcess" id="scaled_CaMKIIbar">
 <property name="StepperID">
 <value>
 DE1
 </value>
 </property>
-<property name="IsContinuous">
+<property name="n">
 <value>
-1
+3
 </value>
 </property>
-<property name="FireMethod">
+<property name="k">
 <value>
-P0.Value = pow(S0.Velocity, 3) / (pow( 0.5, 3) + pow(S0.Velocity, 3) )
+0.5
+</value>
+</property>
+<property name="Expression">
+<value>
+pow(S0.Value, n) / (pow( k, n) + pow(S0.Value, n) )
 </value>
 </property>
 <property name="VariableReferenceList">
@@ -41445,20 +41450,25 @@ Variable:/Spine:CaMKIIbar
 </value>
 </property>
 </process>
-<process class="PythonProcess" id="scaled_PP2Bbar">
+<process class="ExpressionFluxProcess" id="scaled_PP2Bbar">
 <property name="StepperID">
 <value>
 DE1
 </value>
 </property>
-<property name="IsContinuous">
+<property name="n">
 <value>
-1
+3
 </value>
 </property>
-<property name="FireMethod">
+<property name="k">
 <value>
-P0.Value = pow(S0.Velocity, 3) / (pow( 0.5, 3) + pow(S0.Velocity, 3) )
+0.5
+</value>
+</property>
+<property name="Expression">
+<value>
+pow(S0.Value, n) / (pow( k, n) + pow(S0.Value, n) )
 </value>
 </property>
 <property name="VariableReferenceList">
@@ -41486,15 +41496,15 @@ Variable:/Spine:PP2Bbar
 </value>
 </property>
 </process>
-<process class="PythonFluxProcess" id="calculating_AMPAR_weight">
+<process class="PythonProcess" id="calculating_AMPAR_weight">
 <property name="StepperID">
 <value>
 DE1
 </value>
 </property>
-<property name="Expression">
+<property name="FireMethod">
 <value>
-S0.Value + S1.Value
+P0.Value = S0.Value - S1.Value
 </value>
 </property>
 <property name="VariableReferenceList">
