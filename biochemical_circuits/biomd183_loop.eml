@@ -41415,7 +41415,7 @@ DE1
 </property>
 <property name="Expression">
 <value>
-kcat * S0.MolarConc * pow(S1.MolarConc, n) / (pow(KM, n) + pow(S1.MolarConc, n)
+kcat * S1.MolarConc * pow(S0.MolarConc, n) / (pow(KM, n) + pow(S0.MolarConc, n))
 </value>
 </property>
 <property name="VariableReferenceList">
@@ -41477,7 +41477,7 @@ DE1
 </property>
 <property name="Expression">
 <value>
-kcat * S0.MolarConc * pow(S1.MolarConc, n) / (pow(KM, n) + pow(S1.MolarConc, n)
+kcat * S1.MolarConc * pow(S0.MolarConc, n) / (pow(KM, n) + pow(S0.MolarConc, n))
 </value>
 </property>
 <property name="VariableReferenceList">

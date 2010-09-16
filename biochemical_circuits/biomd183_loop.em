@@ -6377,7 +6377,7 @@ System System( /Spine )
         KM  90.0001e-6; # (transforming uM in M) Supplemental Material Hayer and Bhalla 2005
         n 4; # For cooperativity.
         
-        Expression	"kcat * S0.MolarConc * pow(S1.MolarConc, n) / (pow(KM, n) + pow(S1.MolarConc, n)";
+        Expression	"kcat * S1.MolarConc * pow(S0.MolarConc, n) / (pow(KM, n) + pow(S0.MolarConc, n))";
 								
 		VariableReferenceList	 	[S0 Variable:/Spine:total_CaMKII_active 0]
 		                            [S1 Variable:/Spine:AMPAR -1]
@@ -6392,7 +6392,7 @@ System System( /Spine )
         KM 4.97061e-6; # (transofmring uM in M. From Hayer and Bhalla 2005)
         n 4;
         
-        Expression	"kcat * S0.MolarConc * pow(S1.MolarConc, n) / (pow(KM, n) + pow(S1.MolarConc, n)";
+        Expression	"kcat * S1.MolarConc * pow(S0.MolarConc, n) / (pow(KM, n) + pow(S0.MolarConc, n))";
 								
 		VariableReferenceList	 	[S0 Variable:/Spine:total_PP2B_bound 0]
 		                            [S1 Variable:/Spine:AMPAR_P -1]
