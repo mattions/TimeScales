@@ -1285,9 +1285,9 @@ System System( /Spine )
 		MolarConc	0.0;
 		Value	@(1e-15*6.02e23*0);
 	}
-	Variable Variable( AMPAR-P )
+	Variable Variable( AMPAR_P )
 	{
-		Name	AMPAR-P;
+		Name	AMPAR_P;
 		Value	0.0;
 	}
 	Variable Variable( AMPAR )
@@ -6369,32 +6369,33 @@ System System( /Spine )
 	}
 	
 	# Calculating the variation of the AMPAR
-	Process ExpressionFluxProcess( AMPAR-Phosphorylation )
+	Process ExpressionFluxProcess( AMPAR_Phosphorylation )
 	{
         	
 		StepperID	@(MAIN_STEPPER);
         kcat 0.5; # Supplemental Material Hayer and Bhalla 2005
-        KM  90.0001 *1e-6; # (transforming uM in M) Supplemental Material Hayer and Bhalla 2005
-        n = 4; # For cooperativity.
+        KM  90.0001e-6; # (transforming uM in M) Supplemental Material Hayer and Bhalla 2005
+        n 4; # For cooperativity.
         
         Expression	"kcat * S0.MolarConc * pow(S1.MolarConc, n) / (pow(KM, n) + pow(S1.MolarConc, n)";
 								
 		VariableReferenceList	 	[S0 Variable:/Spine:total_CaMKII_active 0]
 		                            [S1 Variable:/Spine:AMPAR -1]
-		                            [P0 Variable:/Spine:AMPAR-P 1];
+		                            [P0 Variable:/Spine:AMPAR_P 1];
 	}
-	Process ExpressionFluxProcess( AMPAR-Dephosphorylation )
+	
+	Process ExpressionFluxProcess( AMPAR_Dephosphorylation )
 	{
         	
 		StepperID	@(MAIN_STEPPER);
         kcat 2; 
-        KM 4.97061* 1e-6; # (transofmring uM in M. From Hayer and Bhalla 2005
-        n = 4;
+        KM 4.97061e-6; # (transofmring uM in M. From Hayer and Bhalla 2005)
+        n 4;
         
         Expression	"kcat * S0.MolarConc * pow(S1.MolarConc, n) / (pow(KM, n) + pow(S1.MolarConc, n)";
 								
 		VariableReferenceList	 	[S0 Variable:/Spine:total_PP2B_bound 0]
-		                            [S1 Variable:/Spine:AMPAR-P -1]
+		                            [S1 Variable:/Spine:AMPAR_P -1]
 		                            [P0 Variable:/Spine:AMPAR 1];
 	}
 	

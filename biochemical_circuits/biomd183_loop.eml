@@ -2936,10 +2936,10 @@ DE1
 </value>
 </property>
 </variable>
-<variable class="Variable" id="scaled_CaMKIIbar">
+<variable class="Variable" id="AMPAR_P">
 <property name="Name">
 <value>
-scaled_CaMKIIbar
+AMPAR_P
 </value>
 </property>
 <property name="Value">
@@ -2948,22 +2948,10 @@ scaled_CaMKIIbar
 </value>
 </property>
 </variable>
-<variable class="Variable" id="scaled_PP2Bbar">
+<variable class="Variable" id="AMPAR">
 <property name="Name">
 <value>
-scaled_PP2Bbar
-</value>
-</property>
-<property name="Value">
-<value>
-0.0
-</value>
-</property>
-</variable>
-<variable class="Variable" id="AMPA_weight">
-<property name="Name">
-<value>
-AMPA_weight
+AMPAR
 </value>
 </property>
 <property name="Value">
@@ -41404,127 +41392,39 @@ Variable:/Spine:PKAinmodel
 </value>
 </property>
 </process>
-<process class="ExpressionFluxProcess" id="scaled_CaMKIIbar">
+<process class="ExpressionFluxProcess" id="AMPAR_Phosphorylation">
 <property name="StepperID">
 <value>
 DE1
 </value>
 </property>
-<property name="n">
-<value>
-3
-</value>
-</property>
-<property name="k">
+<property name="kcat">
 <value>
 0.5
 </value>
 </property>
-<property name="Expression">
+<property name="KM">
 <value>
-pow(S0.Value, n) / (pow( k, n) + pow(S0.Value, n) )
-</value>
-</property>
-<property name="VariableReferenceList">
-<value>
-<value>
-P0
-</value>
-<value>
-Variable:/Spine:scaled_CaMKIIbar
-</value>
-<value>
-1
-</value>
-</value>
-<value>
-<value>
-S0
-</value>
-<value>
-Variable:/Spine:CaMKIIbar
-</value>
-<value>
-0
-</value>
-</value>
-</property>
-</process>
-<process class="ExpressionFluxProcess" id="scaled_PP2Bbar">
-<property name="StepperID">
-<value>
-DE1
+90.0001e-6
 </value>
 </property>
 <property name="n">
 <value>
-3
-</value>
-</property>
-<property name="k">
-<value>
-0.5
+4
 </value>
 </property>
 <property name="Expression">
 <value>
-pow(S0.Value, n) / (pow( k, n) + pow(S0.Value, n) )
+kcat * S0.MolarConc * pow(S1.MolarConc, n) / (pow(KM, n) + pow(S1.MolarConc, n)
 </value>
 </property>
 <property name="VariableReferenceList">
 <value>
 <value>
-P0
-</value>
-<value>
-Variable:/Spine:scaled_PP2Bbar
-</value>
-<value>
-1
-</value>
-</value>
-<value>
-<value>
 S0
 </value>
 <value>
-Variable:/Spine:PP2Bbar
-</value>
-<value>
-0
-</value>
-</value>
-</property>
-</process>
-<process class="PythonProcess" id="calculating_AMPAR_weight">
-<property name="StepperID">
-<value>
-DE1
-</value>
-</property>
-<property name="FireMethod">
-<value>
-P0.Value = S0.Value - S1.Value
-</value>
-</property>
-<property name="VariableReferenceList">
-<value>
-<value>
-P0
-</value>
-<value>
-Variable:/Spine:AMPA_weight
-</value>
-<value>
-1
-</value>
-</value>
-<value>
-<value>
-S0
-</value>
-<value>
-Variable:/Spine:scaled_CaMKIIbar
+Variable:/Spine:total_CaMKII_active
 </value>
 <value>
 0
@@ -41535,10 +41435,83 @@ Variable:/Spine:scaled_CaMKIIbar
 S1
 </value>
 <value>
-Variable:/Spine:scaled_PP2Bbar
+Variable:/Spine:AMPAR
+</value>
+<value>
+-1
+</value>
+</value>
+<value>
+<value>
+P0
+</value>
+<value>
+Variable:/Spine:AMPAR_P
+</value>
+<value>
+1
+</value>
+</value>
+</property>
+</process>
+<process class="ExpressionFluxProcess" id="AMPAR_Dephosphorylation">
+<property name="StepperID">
+<value>
+DE1
+</value>
+</property>
+<property name="kcat">
+<value>
+2
+</value>
+</property>
+<property name="KM">
+<value>
+4.97061e-6
+</value>
+</property>
+<property name="n">
+<value>
+4
+</value>
+</property>
+<property name="Expression">
+<value>
+kcat * S0.MolarConc * pow(S1.MolarConc, n) / (pow(KM, n) + pow(S1.MolarConc, n)
+</value>
+</property>
+<property name="VariableReferenceList">
+<value>
+<value>
+S0
+</value>
+<value>
+Variable:/Spine:total_PP2B_bound
 </value>
 <value>
 0
+</value>
+</value>
+<value>
+<value>
+S1
+</value>
+<value>
+Variable:/Spine:AMPAR_P
+</value>
+<value>
+-1
+</value>
+</value>
+<value>
+<value>
+P0
+</value>
+<value>
+Variable:/Spine:AMPAR
+</value>
+<value>
+1
 </value>
 </value>
 </property>
