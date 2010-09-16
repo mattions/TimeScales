@@ -6373,12 +6373,13 @@ System System( /Spine )
 	{
         	
 		StepperID	@(MAIN_STEPPER);
-        kcat 10; # r3 on D'alcantara Model 2003 EJ Of Neuroscience
-        Km  x; Grab it from D'alcantara
+        kcat 0.5; # Supplemental Material Hayer and Bhalla 2005
+        KM  90.0001 *1e-6; # (transforming uM in M) Supplemental Material Hayer and Bhalla 2005
+        n = 4; # For cooperativity.
         
-        Expression	"kcat * S0.Value * S1.MolarConc / (S1.MolarConc + Km)";
+        Expression	"kcat * S0.MolarConc * pow(S1.MolarConc, n) / (pow(KM, n) + pow(S1.MolarConc, n)";
 								
-		VariableReferenceList	 	[S0 Variable:/Spine:CaMKIIbar 0]
+		VariableReferenceList	 	[S0 Variable:/Spine:total_CaMKII_active 0]
 		                            [S1 Variable:/Spine:AMPAR -1]
 		                            [P0 Variable:/Spine:AMPAR-P 1];
 	}
@@ -6386,11 +6387,13 @@ System System( /Spine )
 	{
         	
 		StepperID	@(MAIN_STEPPER);
-        kcat 1.0; # r2 on D'alcantara Model 2003 EJ Of Neuroscience
+        kcat 2; 
+        KM 4.97061* 1e-6; # (transofmring uM in M. From Hayer and Bhalla 2005
+        n = 4;
         
-        Expression	"kcat * S0.Value";
+        Expression	"kcat * S0.MolarConc * pow(S1.MolarConc, n) / (pow(KM, n) + pow(S1.MolarConc, n)";
 								
-		VariableReferenceList	 	[S0 Variable:/Spine:PP2Bbar 0]
+		VariableReferenceList	 	[S0 Variable:/Spine:total_PP2B_bound 0]
 		                            [S1 Variable:/Spine:AMPAR-P -1]
 		                            [P0 Variable:/Spine:AMPAR 1];
 	}
