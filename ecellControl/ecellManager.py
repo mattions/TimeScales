@@ -30,7 +30,7 @@ class EcellManager():
                            'CaMKIIbar', 
                            'PP1abar', # Active PP1/Total PP1
                            'AMPAR', # 
-                           'AMPAR-P'
+                           'AMPAR_P'
                            )
         # Tracking the calcium
         self.ca =  self.ses.createEntityStub( 'Variable:/Spine:ca' )
@@ -232,12 +232,13 @@ def plotWeight(timecourses, weight_baseline, dir=None):
     import numpy as np
     import matplotlib.pyplot as plt
     scaled_CaMKII = []
-    time = timecourses['CaMKIIbar'][:,0] # time equal for everything
+    time = timecourses['AMPAR'][:,0] # time equal for everything
 
 
-    weight = weight_baseline + timecourses['AMPA_weight'][:,0]
+
     plt.figure()
-    plt.plot(time, weight, label='weight')
+    plt.plot(time, timecourses['AMPAR'][:,1], label='AMPAR')
+    plt.plot(time, timecourses['AMPAR_P'][:,1], label='AMPAR_P')
     #plt.plot(time, weight_baseline, label='w_b')
     title = "AMPA weight, calculated from E-Cell"
     plt.title(title)

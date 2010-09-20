@@ -1287,13 +1287,13 @@ System System( /Spine )
 	}
 	Variable Variable( AMPAR_P )
 	{
-		Name	AMPAR_P;
-		Value	0.0;
+		MolarConc	0.0;
+		Value	@(1e-15*6.02e23*0.0);
 	}
 	Variable Variable( AMPAR )
 	{
-		Name	AMPAR;
-		Value	0.0;
+		MolarConc	0.0092593e-6; # Bulk concentration AMPAR, from Hayer and Bhalla 2005
+		Value	@(1e-15*6.02e23*0.0092593e-6);
 	}	
 	
 	

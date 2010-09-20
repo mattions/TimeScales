@@ -2937,9 +2937,9 @@ DE1
 </property>
 </variable>
 <variable class="Variable" id="AMPAR_P">
-<property name="Name">
+<property name="MolarConc">
 <value>
-AMPAR_P
+0.0
 </value>
 </property>
 <property name="Value">
@@ -2949,14 +2949,14 @@ AMPAR_P
 </property>
 </variable>
 <variable class="Variable" id="AMPAR">
-<property name="Name">
+<property name="MolarConc">
 <value>
-AMPAR
+0.0092593e-6
 </value>
 </property>
 <property name="Value">
 <value>
-0.0
+5.5740986
 </value>
 </property>
 </variable>
