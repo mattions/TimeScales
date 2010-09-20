@@ -41408,14 +41408,9 @@ DE1
 90.0001e-6
 </value>
 </property>
-<property name="n">
-<value>
-4
-</value>
-</property>
 <property name="Expression">
 <value>
-kcat * S1.MolarConc * pow(S0.MolarConc, n) / (pow(KM, n) + pow(S0.MolarConc, n))
+kcat * S0.MolarConc *  (S1.MolarConc / (S1.MolarConc + KM)) *self.getSuperSystem().SizeN_A
 </value>
 </property>
 <property name="VariableReferenceList">
@@ -41447,68 +41442,6 @@ P0
 </value>
 <value>
 Variable:/Spine:AMPAR_P
-</value>
-<value>
-1
-</value>
-</value>
-</property>
-</process>
-<process class="ExpressionFluxProcess" id="AMPAR_Dephosphorylation">
-<property name="StepperID">
-<value>
-DE1
-</value>
-</property>
-<property name="kcat">
-<value>
-2
-</value>
-</property>
-<property name="KM">
-<value>
-4.97061e-6
-</value>
-</property>
-<property name="n">
-<value>
-4
-</value>
-</property>
-<property name="Expression">
-<value>
-kcat * S1.MolarConc * pow(S0.MolarConc, n) / (pow(KM, n) + pow(S0.MolarConc, n))
-</value>
-</property>
-<property name="VariableReferenceList">
-<value>
-<value>
-S0
-</value>
-<value>
-Variable:/Spine:total_PP2B_bound
-</value>
-<value>
-0
-</value>
-</value>
-<value>
-<value>
-S1
-</value>
-<value>
-Variable:/Spine:AMPAR_P
-</value>
-<value>
--1
-</value>
-</value>
-<value>
-<value>
-P0
-</value>
-<value>
-Variable:/Spine:AMPAR
 </value>
 <value>
 1
