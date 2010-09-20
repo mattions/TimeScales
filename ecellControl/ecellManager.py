@@ -47,6 +47,12 @@ class EcellManager():
             loggers[mol]  = self.ses.createLoggerStub( "Variable:/Spine:" + mol 
                                                        + ":Value" )
             loggers[mol].create() # This creat the Logger Object in the backend
+
+            if mol == 'AMPAR_P': # recording the concentration
+                mol = mol + '_Conc'
+                loggers[mol]  = self.ses.createLoggerStub( "Variable:/Spine:" + mol 
+                                                           + ":MolarConc" )
+                loggers[mol].create() # This creat the Logger Object in the backend
         
         self.loggers = loggers
         
