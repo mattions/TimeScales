@@ -6,5 +6,5 @@
     "num_spikes" : 30,
     "delay" : 0.001,
     "running_type" : "train", # or value "value"
-    "interactive" : True 
+    "interactive" : False 
 }

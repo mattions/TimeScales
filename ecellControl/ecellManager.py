@@ -245,7 +245,6 @@ def plotWeight(timecourses, weight_baseline, dir=None):
     plt.legend(loc=0)
     if dir is not None:
         plt.savefig(os.path.join(dir, "weight.png"))
-    return weight
         
 if __name__ == "__main__":
     
