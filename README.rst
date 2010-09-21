@@ -9,4 +9,4 @@ Storing here for future references::
 
 This is for the weight checking::
 
-	smt run -m ecellControl/ecellManager.py ecellControl/ecellControl.param -r "Testing AMPA weight"
+	bsub -R "rusage[mem=500]" smt run -m ecellControl/ecellManager.py ecellControl/ecellControl.param -r "Testing AMPA weight"
