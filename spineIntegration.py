@@ -318,8 +318,7 @@ if __name__ == "__main__":
     print ("Equilibrium run finished. Starting normal simulation.")
     print ("#--#")
     t_buffer = param['t_buffer']
-    run_simulation(tStop_final, t_buffer, delta_calcium_sampling,
-                   param['alpha'], param['beta'])
+    run_simulation(tStop_final, t_buffer, delta_calcium_sampling)
     
     #------------------------------------
     # Save the Results
