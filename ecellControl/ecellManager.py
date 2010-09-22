@@ -189,43 +189,7 @@ def plotTimeCourses(timeCourses, save=False, dir=None):
                                                     "PP2B_and_CaMKII_activation.png")
 
 
-#def plotWeight(timecourses, alpha, beta, n_kyn, k_kyn, 
-#               n_pho, k_pho, weight_baseline, dir=None):
-#    import spineIntegration as spI
-#    import numpy as np
-#    import matplotlib.pyplot as plt
-#    scaled_CaMKII = []
-#    time = timecourses['CaMKIIbar'][:,0] # time equal for everything
-#    for x in timecourses['CaMKIIbar'][:,1]:
-#        scaled_CaMKII.append(spI.calc_CaMKII_factor(x, 
-#                                                    alpha, 
-#                                                    n_kyn, 
-#                                                    k_kyn))
-#    scaled_PP2Bbar = []
-#    for x in timecourses['PP2Bbar'][:,1]:
-#        scaled_PP2Bbar.append(spI.calc_Phospatase_factor(x,
-#                                                         beta, 
-#                                                         n_pho,
-#                                                         k_pho))
-#    scaled_CaMKII = np.array(scaled_CaMKII)
-#    scaled_PP2Bbar = np.array(scaled_PP2Bbar)
-#    weight = weight_baseline + scaled_CaMKII - scaled_PP2Bbar
-#    plt.figure()
-#    plt.plot(time, scaled_CaMKII, label='Scaled_CaMKIIbar')
-#    plt.plot(time, scaled_PP2Bbar, label='Scaled_PP2Bbar')
-#    plt.plot(time, weight, label='weight')
-#    #plt.plot(time, weight_baseline, label='w_b')
-#    title = r"$\alpha=%s, \beta=%s, n_{kyn}=%s, k_{kin}=%s, n_{pho}=%s, k_{pho}=%s$" %(alpha,
-#                                                                              beta,
-#                                                                              n_kyn,
-#                                                                              k_kyn,
-#                                                                              n_pho,
-#                                                                              k_pho)
-#    plt.title(title)
-#    plt.legend(loc=0)
-#    if dir is not None:
-#        plt.savefig(os.path.join(dir, "weight.png"))
-#    return (weight, scaled_CaMKII, scaled_PP2Bbar, time)
+
         
 def plotWeight(timecourses, weight_baseline, dir=None):
     import spineIntegration as spI
