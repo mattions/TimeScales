@@ -77,8 +77,7 @@ def advance_ecell(spine, delta_t):
     
     
 
-def synch_simulators(tmp_tstop, stim_spines_id, delta_calcium_sampling,
-                     alpha, beta):
+def synch_simulators(tmp_tstop, stim_spines_id, delta_calcium_sampling):
     """
     Calculate the synapse weight, using the calcium in the spine_heads 
     as input.
