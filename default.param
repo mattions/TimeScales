@@ -8,7 +8,7 @@
     #"tEquilibrium_neuron" : 1, # in milliseconds
     "tEquilibrium_ecell" : 300, # in seconds
     #"tEquilibrium_ecell" : 1, # in seconds
-    "tStop" : 10000, # [ms] Time to stop (NEURON time is the reference) the simulation  
+    "tStop" : 15000, # [ms] Time to stop (NEURON time is the reference) the simulation  
     "t_buffer" : 10, #ms 
     "time_resolution_neuron" : 0.1, # Recording at every ms
     "weight_sampling" : 50, # Total ms when the weight of the synapses will be updated 
@@ -19,25 +19,25 @@
     "spine2" : ['ampa_s2', 'nmda_s2'],
     "ampa_s1" : 
         {"t_stim" : 0.230, # t_stim [s]  
-         "numbers" : 1000, # number
+         "numbers" : 10000, # number
          "delay" : 0.02, # delay [s]
          "type" : "ampa" # , type
          },
     "ampa_s2" :
         {"t_stim" : 0.130, # t_stim [s]  
-         "numbers" : 1000, # number
+         "numbers" : 10000, # number
          "delay" : 0.02, # delay [s]
          "type" : "ampa" # , type
          },
     "nmda_s1" :
         {"t_stim" : 0.230, # t_stim [s]  
-         "numbers" : 1000, # number
+         "numbers" : 10000, # number
          "delay" : 0.02, # delay [s]
          "type" : "nmda" # , type
          },
     "nmda_s2" :
         {"t_stim" : 0.130, # t_stim [s]  
-         "numbers" : 1000, # number
+         "numbers" : 10000, # number
          "delay" : 0.02, # delay [s]
          "type" : "nmda" # , type
          },
