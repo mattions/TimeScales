@@ -166,6 +166,7 @@ def testChangeCalciumValue(interval, caValue, filename="../biochemical_circuits/
 
 def plotTimeCourses(timeCourses, save=False, dir=None):
      """Plot the default timecourses"""
+     import matplotlib.pyplot as plt
      ca_tc = timeCourses['ca'] 
      plt.figure()
      plt.plot(ca_tc[:,0], ca_tc[:,1], label="Calcium")
@@ -193,8 +194,6 @@ def plotTimeCourses(timeCourses, save=False, dir=None):
 
         
 def plotWeight(timecourses, weight_baseline, dir=None):
-    import spineIntegration as spI
-    import numpy as np
     import matplotlib.pyplot as plt
     scaled_CaMKII = []
     time = timecourses['AMPAR'][:,0] # time equal for everything
