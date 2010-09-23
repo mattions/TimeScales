@@ -201,7 +201,6 @@ def plotWeight(timecourses, dir=None):
 
 
     plt.figure()
-    plt.plot(time, timecourses['AMPAR'][:,1], label='AMPAR')
     plt.plot(time, timecourses['AMPAR_P'][:,1], label='AMPAR_P')
     #plt.plot(time, weight_baseline, label='w_b')
     title = "AMPA weight, calculated from E-Cell"
@@ -209,6 +208,10 @@ def plotWeight(timecourses, dir=None):
     plt.legend(loc=0)
     if dir is not None:
         plt.savefig(os.path.join(dir, "weight.png"))
+    plt.plot(time, timecourses['AMPAR'][:,1], label='AMPAR')
+    plt.legend(loc=0)
+    if dir is not None:
+        plt.savefig(os.path.join(dir, "weight_both.png"))
         
 if __name__ == "__main__":
     
