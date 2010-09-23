@@ -337,6 +337,7 @@ if __name__ == "__main__":
         fig_file = 'plot_' + var
         plt.savefig(os.path.join(saving_dir, fig_file))
 
+    from ecellControl import ecellManager as eM
     for stim_spine in param['stimulated_spines']:
-        ecellManager.plotTimeCourses(stim_spine.timeCourses, save=True, dir=saving_dir)
-        ecellManager.plotWeight(stim_spine.timeCourses, save=True, dir=saving_dir)
+        eM.plotTimeCourses(stim_spine.timeCourses, save=True, dir=saving_dir)
+        eM.plotWeight(stim_spine.timeCourses, save=True, dir=saving_dir)
