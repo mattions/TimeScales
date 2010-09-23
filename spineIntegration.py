@@ -202,7 +202,7 @@ def run_simulation(tStop_final, t_buffer, delta_calcium_sampling, weight_baselin
                                                                                        t_stim,
                                                                                        excitatory_stims)
             if h.t < t_stim:
-                advance_quickly(t_stim, stim_spines_id)
+                advance_quickly(t_stim, stim_spines_id, weight_baseline)
                 tmp_tstop = t_stim + t_buffer
                 synch_simulators(tmp_tstop, stim_spines_id, delta_calcium_sampling) 
                 
@@ -210,7 +210,7 @@ def run_simulation(tStop_final, t_buffer, delta_calcium_sampling, weight_baselin
                 
         else:
             print "No excitatory input remaining. Quickly to the end"
-            advance_quickly(tStop_final, stim_spines_id)
+            advance_quickly(tStop_final, stim_spines_id, weight_baseline)
             h.fadvance() # This is to force the latest step and avoid the infinite loop.
     
     # Recording last 
