@@ -25,32 +25,6 @@ from sumatra.external.NeuroTools import parameters
 import tables 
 from extref import ExtRef 
 
-
-def calcWeight(CaMKIIbar, PP2Bbar, alpha, beta, n=3, k=0.5):
-    """Calc the weight of the synapses according to the CaMKII"""
-    
-    # CaMKII term
-    scaled_CaMKII_factor = calc_CaMKII_factor(CaMKIIbar, alpha, n, k)
-    scaled_Phospatase_factor = calc_Phospatase_factor(PP2Bbar, beta, n, k)    
-    weight = 1 + scaled_CaMKII_factor - scaled_Phospatese_factor
-    s = "Weight: %s CaMKII factor %s, Phosphatase factor %s" %(weight,
-                                                               scaled_CaMKII_factor,
-                                                               scaled_Phospatese_factor)
-    return weight
-
-
-def calc_CaMKII_factor(CaMKIIbar, alpha, n, k):
-    """Calculate the apport of the scaled CaMKII"""
-    CaMKII_factor = math.pow(CaMKIIbar, n) / (math.pow(k, n) + 
-                                              math.pow(CaMKIIbar, n))
-    scaled_CaMKII_factor = alpha * CaMKII_factor
-    return scaled_CaMKII_factor
-
-def calc_Phospatase_factor(PP2Bbar, beta, n, k):
-    """Phospatase apport for the synaptic plasticity rule"""
-    Phosphatase_factor = math.pow(PP2Bbar, n) / (math.pow(k, n) + math.pow(PP2Bbar, n))
-    scaled_Phospatese_factor = beta * Phosphatase_factor
-    return scaled_Phospatese_factor
     
 def build_vecs_to_plot(var, secs, anyRefs):
     """Create the dictionary of section->vectors to plot"""
@@ -140,18 +114,20 @@ def sync_calcium(spine):
         spine.update_calcium(electrical_ca)
 
 
-def update_synape_weight(spine, alpha, beta):
+def update_synape_weight(spine, baseline):
     """
-    Update the electrical weight's synapses using active CaMKII 
+    Update the electrical weight's synapses.
+    
+    spine : the spine where the weight should be updated
+    baseline : the equilibrium concentration of AMPAR-P which we use as reference
+    and  put equal to one.
     """    
-    # getting the conc of the active CaMKII
-    CaMKIIbar = spine.ecellMan.CaMKIIbar['Value']
-    PP2Bbar = spine.ecellMan.PP2Bbar['Value']
     
     # Updating the AMPA synapses
     for synapse in spine.synapses:
         if synapse.chan_type == 'ampa':                       
-            weight = calcWeight(alpha, beta, CaMKIIbar, PP2Bbar)
+        # Retrieve the value of the weight.
+            weight = spine.ampar_P/baseline
             synapse.netCon.weight[0] = weight
             # The weight of the ampa is a double list
             # Check the specs in synapse weight for more info. 
@@ -190,7 +166,7 @@ def create_excitatory_inputs(stim_spines_id, neuron_time_interval):
     return excitatory_stimuli
 
 
-def advance_quickly(tmp_tstop, stim_spines_id):
+def advance_quickly(tmp_tstop, stim_spines_id, weight_baseline):
     """
     Advance the two simulators quickly in an independent way. Synapse weight 
     is synchronized at the end
@@ -204,9 +180,9 @@ def advance_quickly(tmp_tstop, stim_spines_id):
     for spine_id in stim_spines_id:
         spine = nrnSim.spines[spine_id]
         advance_ecell(spine, delta_ecell_seconds)
-        update_synape_weight(spine)
+        update_synape_weight(spine, weight_baseline)
     
-def run_simulation(tStop_final, t_buffer, delta_calcium_sampling):
+def run_simulation(tStop_final, t_buffer, delta_calcium_sampling, weight_baseline):
     """
     Run the simulation. If input synchronizes the two simulators, 
     otherwise run each on its own and advance quickly
@@ -216,7 +192,7 @@ def run_simulation(tStop_final, t_buffer, delta_calcium_sampling):
     # Getting the calcium before the stims
     for spine_id in param['stimulated_spines']:
         spine = nrnSim.spines[spine_id]
-        update_synape_weight(spine)
+        update_synape_weight(spine, weight_baseline)
         
     while h.t < tStop_final:
         
@@ -240,7 +216,7 @@ def run_simulation(tStop_final, t_buffer, delta_calcium_sampling):
     # Recording last 
     for spine_id in param['stimulated_spines']:
         spine = nrnSim.spines[spine_id]
-        update_synape_weight(spine) 
+        update_synape_weight(spine, weight_baseline) 
 
 if __name__ == "__main__":
 
@@ -318,7 +294,7 @@ if __name__ == "__main__":
     print ("Equilibrium run finished. Starting normal simulation.")
     print ("#--#")
     t_buffer = param['t_buffer']
-    run_simulation(tStop_final, t_buffer, delta_calcium_sampling)
+    run_simulation(tStop_final, t_buffer, delta_calcium_sampling, param['weight_baseline'])
     
     #------------------------------------
     # Save the Results
@@ -360,3 +336,7 @@ if __name__ == "__main__":
             
         fig_file = 'plot_' + var
         plt.savefig(os.path.join(saving_dir, fig_file))
+
+    for stim_spine in param['stimulated_spines']:
+        ecellManager.plotTimeCourses(stim_spine.timeCourses, save=True, dir=saving_dir)
+        ecellManager.plotWeight(stim_spine.timeCourses, save=True, dir=saving_dir)
