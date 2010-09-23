@@ -193,7 +193,7 @@ def plotTimeCourses(timeCourses, save=False, dir=None):
 
 
         
-def plotWeight(timecourses, weight_baseline, dir=None):
+def plotWeight(timecourses, dir=None):
     import matplotlib.pyplot as plt
     scaled_CaMKII = []
     time = timecourses['AMPAR'][:,0] # time equal for everything
@@ -243,9 +243,8 @@ if __name__ == "__main__":
         dir = loader.create_new_dir(prefix=os.getcwd())
         loader.save(ecellManager.timeCourses,  dir, "timeCourses")
         plotTimeCourses(ecellManager.timeCourses, save=True, dir=dir)
-        plotWeight(ecellManager.timeCourses, param['weight_baseline'],
-                   dir=dir)
+        plotWeight(ecellManager.timeCourses, dir=dir)
     else:
         plotTimeCourses(ecellManager.timeCourses)
-        plotWeight(ecellManager.timeCourses, param['weight_baseline'])
+        plotWeight(ecellManager.timeCourses)
         plt.show()
