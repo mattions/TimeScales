@@ -77,7 +77,7 @@ def advance_ecell(spine, delta_t):
     
     
 
-def synch_simulators(tmp_tstop, stim_spines_id, delta_calcium_sampling):
+def synch_simulators(tmp_tstop, stim_spines_id, delta_calcium_sampling, weight_baseline):
     """
     Calculate the synapse weight, using the calcium in the spine_heads 
     as input.
@@ -98,7 +98,7 @@ def synch_simulators(tmp_tstop, stim_spines_id, delta_calcium_sampling):
                 spine = nrnSim.spines[spine_id]
                 sync_calcium(spine)
                 advance_ecell(spine, delta_calcium_sampling / 1e3)
-                update_synape_weight(spine, alpha, beta)
+                update_synape_weight(spine, weight_baseline)
 
 def sync_calcium(spine):
     """"
@@ -203,7 +203,8 @@ def run_simulation(tStop_final, t_buffer, delta_calcium_sampling, weight_baselin
             if h.t < t_stim:
                 advance_quickly(t_stim, stim_spines_id, weight_baseline)
                 tmp_tstop = t_stim + t_buffer
-                synch_simulators(tmp_tstop, stim_spines_id, delta_calcium_sampling) 
+                synch_simulators(tmp_tstop, stim_spines_id, delta_calcium_sampling,
+                                 weight_baseline) 
                 
                     
                 
