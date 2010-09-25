@@ -198,7 +198,7 @@ def run_simulation(tStop_final, t_buffer, delta_calcium_sampling, weight_baselin
             t_stim = excitatory_stims.pop(0)
             print "Current Neuron time: %s. Current t_stim: %s, remaining input: %s" %(h.t,
                                                                                        t_stim,
-                                                                                       excitatory_stims)
+                                                                                       len(excitatory_stims))
             if h.t < t_stim:
                 advance_quickly(t_stim, stim_spines_id, weight_baseline)
                 tmp_tstop = t_stim + t_buffer
