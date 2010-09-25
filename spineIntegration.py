@@ -161,7 +161,6 @@ def create_excitatory_inputs(stim_spines_id, neuron_time_interval):
                 spine.setupBioSim() # Initializing ecell
     
     excitatory_stimuli.sort()
-    print "Excitatory stim [ms]: %s " % excitatory_stimuli
     return excitatory_stimuli
 
 
