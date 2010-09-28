@@ -329,7 +329,7 @@ if __name__ == "__main__":
             plt.xlabel("Time [ms]")
             plt.ylabel("Concentration [mM]")
         
-        elif var == 'ica':
+        elif var == 'ica' or var == 'ical':
             plt.xlabel("Time [ms]")
             plt.ylabel("Current [nA]")
             
