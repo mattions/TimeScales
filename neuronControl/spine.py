@@ -39,6 +39,9 @@ class Spine():
         if not hasattr(self, 'ecellMan'):
             ecellMan = eC.EcellManager(self.filename)
             ecellMan.createLoggers()
+            
+            # Creating the process to use to update as calcium derivate value
+            ecellManager.ca_in = ecellManager.ses.createEntityStub('Process:/Spine:ca_in')
             # Setting the head volume with the spine head
             ecellMan.ses.vol = self.head_vol * 1e-15 #Converted in l
             self.ecellMan = ecellMan
@@ -64,7 +67,7 @@ class Spine():
         # 6.022 * 1e23 Avogadro's number
         N_Av = 6.022 * 1e23
         ca_ions = electrical_ca_Molar * self.head_vol * CUBIC_um_TO_LITER * N_Av
-        self.ecellMan.ca['Value'] = ca_ions
+        self.ecellMan.ca_in['Value'] = ca_ions
     
         
     def setStimul(self, stim, neuron_time_interval):
