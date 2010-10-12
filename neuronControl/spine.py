@@ -41,7 +41,7 @@ class Spine():
             ecellMan.createLoggers()
             
             # Creating the process to use to update as calcium derivate value
-            ecellManager.ca_in = ecellManager.ses.createEntityStub('Process:/Spine:ca_in')
+            ecellMan.ca_in = ecellMan.ses.createEntityStub('Process:/Spine:ca_in')
             # Setting the head volume with the spine head
             ecellMan.ses.vol = self.head_vol * 1e-15 #Converted in l
             self.ecellMan = ecellMan
