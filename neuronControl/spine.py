@@ -67,7 +67,8 @@ class Spine():
         # 6.022 * 1e23 Avogadro's number
         N_Av = 6.022 * 1e23
         ca_ions = electrical_ca_Molar * self.head_vol * CUBIC_um_TO_LITER * N_Av
-        self.ecellMan.ca_in['Activity'] = ca_ions
+        self.ecellMan.ca['Value'] = ca_ions
+        #self.ecellMan.ca_in['Activity'] = ca_ions
     
         
     def setStimul(self, stim, neuron_time_interval):
