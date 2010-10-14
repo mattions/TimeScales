@@ -178,7 +178,7 @@ def advance_quickly(tmp_tstop, stim_spines_id, weight_baseline):
         advance_ecell(spine, delta_ecell_seconds)
         update_synape_weight(spine, weight_baseline)
     
-def run_simulation(tStop_final, t_buffer, delta_calcium_sampling, weight_baseline):
+def run_simulation(tStop_final, delta_calcium_sampling, weight_baseline):
     """
     Run the simulation. If input synchronizes the two simulators, 
     otherwise run each on its own and advance quickly
@@ -295,8 +295,7 @@ if __name__ == "__main__":
         advance_ecell(nrnSim.spines[spine_id], t_equilibrium_ecell)
     print ("Equilibrium run finished. Starting normal simulation.")
     print ("#--#")
-    t_buffer = param['t_buffer']
-    run_simulation(tStop_final, t_buffer, delta_calcium_sampling, param['weight_baseline'])
+    run_simulation(tStop_final, delta_calcium_sampling, param['weight_baseline'])
     
     #------------------------------------
     # Save the Results
