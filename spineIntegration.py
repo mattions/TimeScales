@@ -91,14 +91,12 @@ def synch_simulators(tmp_tstop, stim_spines_id, delta_calcium_sampling, weight_b
     print ("Synchronizing sims till [ms] %s") %tmp_tstop
     
     while h.t < tmp_tstop:
-        h.fadvance() # run Neuron for step
-        #for every ms in NEURON we update the ecellMan
-        if np.round(h.t, decimals = 4) % delta_calcium_sampling == 0:
-            for spine_id in stim_spines_id :
-                spine = nrnSim.spines[spine_id]
-                sync_calcium(spine)
-                advance_ecell(spine, delta_calcium_sampling / 1e3)
-                update_synape_weight(spine, weight_baseline)
+        h.fadvance() # Advancing NEURON for the delta.
+    for spine_id in stim_spines_id :
+        spine = nrnSim.spines[spine_id]
+        sync_calcium(spine)
+        advance_ecell(spine, delta_calcium_sampling / 1e3) #ecell accept seconds
+        update_synape_weight(spine, weight_baseline)
 
 def sync_calcium(spine):
     """"
@@ -201,8 +199,13 @@ def run_simulation(tStop_final, t_buffer, delta_calcium_sampling, weight_baselin
                                                                                        len(excitatory_stims))
             if h.t < t_stim:
                 advance_quickly(t_stim, stim_spines_id, weight_baseline)
-                tmp_tstop = t_stim + t_buffer
-                synch_simulators(tmp_tstop, stim_spines_id, delta_calcium_sampling,
+                
+                # We calculate the new temporary tstop and we will synch the
+                #sims 'till there.
+                
+                tmp_tstop = t_stim + delta_calcium_sampling
+                synch_simulators(tmp_tstop, stim_spines_id, 
+                                 delta_calcium_sampling,
                                  weight_baseline) 
                 
                     
