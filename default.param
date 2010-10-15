@@ -19,25 +19,25 @@
     "spine2" : ['ampa_s2', 'nmda_s2'],
     "ampa_s1" : 
         {"t_stim" : 0.130, # t_stim [s]  
-         "numbers" : 100, # number
+         "numbers" : 1, # number
          "delay" : 0.02, # delay [s]
          "type" : "ampa" # , type
          },
     "ampa_s2" :
         {"t_stim" : 0.230, # t_stim [s]  
-         "numbers" : 100, # number
+         "numbers" : 1, # number
          "delay" : 0.02, # delay [s]
          "type" : "ampa" # , type
          },
     "nmda_s1" :
         {"t_stim" : 0.130, # t_stim [s]  
-         "numbers" : 100, # number
+         "numbers" : 1, # number
          "delay" : 0.02, # delay [s]
          "type" : "nmda" # , type
          },
     "nmda_s2" :
         {"t_stim" : 0.230, # t_stim [s]  
-         "numbers" : 100, # number
+         "numbers" : 1, # number
          "delay" : 0.02, # delay [s]
          "type" : "nmda" # , type
          },
