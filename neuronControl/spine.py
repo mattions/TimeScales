@@ -65,6 +65,7 @@ class Spine():
 #        N_Av = 6.022 * 1e23
 #        ca_ions = electrical_ca_Molar * self.head_vol * CUBIC_um_TO_LITER * N_Av
         #self.ecellMan.ca['Value'] = ca_ions
+        print "K used for the flux %s" %k_ca_flux
         self.ecellMan.ca_in['k'] = k_ca_flux
         #self.ecellMan.ca_pump['k'] = 0
         #self.ecellMan.ca_leak['k'] = 0
