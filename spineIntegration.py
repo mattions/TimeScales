@@ -98,20 +98,45 @@ def synch_simulators(tmp_tstop, stim_spines_id, delta_calcium_sampling, weight_b
                 spine = nrnSim.spines[spine_id]
                 sync_calcium(spine)
                 advance_ecell(spine, delta_calcium_sampling / 1e3)
+                spine.ecellMan.ca_in['k'] = 0
                 update_synape_weight(spine, weight_baseline)
 
-def sync_calcium(spine):
+def sync_calcium(spine, dtNeuron, delta_calcium_sampling):
     """"
-    Calculate the calcium in the spine_head and synch it with ecell. 
+    Calculate the flux of the calcium in the spine_head and synch 
+    it with ecell. 
     """
     if hasattr(spine, 'ecellMan'):
-        vec_spine_head_cai = manager.get_vector(spine.head, 'cai')
-        vec_spine_head_cali = manager.get_vector(spine.head, 'cali')
-        head_cai = vec_spine_head_cai.x[-1]
-        head_cali = vec_spine_head_cali.x[-1]
-        electrical_ca = head_cai + head_cali
-        spine.update_calcium(electrical_ca)
+        
+        k_ca_flux, ca_conc_start = get_calcium_flux(dtNeuron, 
+                                                    delta_calcium_sampling, 
+                                                    spine)
+        spine.update_calcium(k_ca_flux, ca_conc_start)
 
+def get_calcium_flux(dtNeuron, delta_calcium_sampling, spine):
+    """
+    Retrieving the calcium in the interval. end is always -1 because is
+    the last timepoint available, start is when the interval has begun
+    """
+    delta = dtNeuron / delta_calcium_sampling
+    start = -delta
+    # Getting the calcium value
+    vec_spine_head_cai = manager.get_vector(spine.head, 'cai')
+    vec_spine_head_cali = manager.get_vector(spine.head, 'cali')
+    
+    head_cai = vec_spine_head_cai.x[start]
+    head_cali = vec_spine_head_cali.x[start]
+    electrical_ca_start = head_cai + head_cali
+    
+    head_cai = vec_spine_head_cai.x[-1]
+    head_cali = vec_spine_head_cali.x[-1]
+    electrical_ca_end = head_cai + head_cali
+    
+    # Calculating the flux
+    k_calcium_flux = electrical_ca_end - electrical_ca_start / delta
+    
+    return (k_calcium_flux, electrical_ca_start)
+    
 
 def update_synape_weight(spine, baseline):
     """
@@ -202,7 +227,8 @@ def run_simulation(tStop_final, t_buffer, delta_calcium_sampling, weight_baselin
             if h.t < t_stim:
                 advance_quickly(t_stim, stim_spines_id, weight_baseline)
                 tmp_tstop = t_stim + t_buffer
-                synch_simulators(tmp_tstop, stim_spines_id, delta_calcium_sampling,
+                synch_simulators(tmp_tstop, stim_spines_id, 
+                                 delta_calcium_sampling,
                                  weight_baseline) 
                 
                     

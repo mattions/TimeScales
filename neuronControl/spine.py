@@ -45,7 +45,7 @@ class Spine():
             print "Ecell initialized in spine: %s" %self.id
         
     
-    def update_calcium(self, electrical_ca_concentration):
+    def update_calcium(self, k_ca_flux, electrical_ca_concentration):
         """Update the calcium using the electrical calcium from the NEURON 
         section to the ecell compartment
                 
@@ -65,6 +65,9 @@ class Spine():
         N_Av = 6.022 * 1e23
         ca_ions = electrical_ca_Molar * self.head_vol * CUBIC_um_TO_LITER * N_Av
         self.ecellMan.ca['Value'] = ca_ions
+        self.ecellMan.ca_in['k'] = k_ca_flux
+        #self.ecellMan.ca_pump['k'] = 0
+        #self.ecellMan.ca_leak['k'] = 0
     
         
     def setStimul(self, stim, neuron_time_interval):
