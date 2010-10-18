@@ -115,7 +115,7 @@ def testCalciumTrain(spikes_number, interval, filename):
     print "Test the results of a train of calcium"""
     ecellManager = EcellManager(filename)
     ecellManager.createLoggers()
-    ecellManager.ca_in = ecellManager.ses.createEntityStub('Process:/Spine:ca_in')
+    #ecellManager.ca_in = ecellManager.ses.createEntityStub('Process:/Spine:ca_in')
     print "Model loaded, loggers created. Integration start."
     ecellManager.ses.run(300)
     print "Calcium Train"
