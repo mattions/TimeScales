@@ -77,7 +77,10 @@ def advance_ecell(spine, delta_t):
     
     
 
-def synch_simulators(tmp_tstop, stim_spines_id, delta_calcium_sampling, weight_baseline):
+def synch_simulators(tmp_tstop, stim_spines_id,
+                     dtNeuron,
+                     delta_calcium_sampling, 
+                     weight_baseline):
     """
     Calculate the synapse weight, using the calcium in the spine_heads 
     as input.
@@ -96,7 +99,7 @@ def synch_simulators(tmp_tstop, stim_spines_id, delta_calcium_sampling, weight_b
         if np.round(h.t, decimals = 4) % delta_calcium_sampling == 0:
             for spine_id in stim_spines_id :
                 spine = nrnSim.spines[spine_id]
-                sync_calcium(spine)
+                sync_calcium(spine, dtNeuron, delta_calcium_sampling)
                 advance_ecell(spine, delta_calcium_sampling / 1e3)
                 spine.ecellMan.ca_in['k'] = 0
                 update_synape_weight(spine, weight_baseline)
@@ -205,7 +208,8 @@ def advance_quickly(tmp_tstop, stim_spines_id, weight_baseline):
         advance_ecell(spine, delta_ecell_seconds)
         update_synape_weight(spine, weight_baseline)
     
-def run_simulation(tStop_final, t_buffer, delta_calcium_sampling, weight_baseline):
+def run_simulation(tStop_final, t_buffer, dtNeuron,
+                   delta_calcium_sampling, weight_baseline):
     """
     Run the simulation. If input synchronizes the two simulators, 
     otherwise run each on its own and advance quickly
@@ -227,7 +231,8 @@ def run_simulation(tStop_final, t_buffer, delta_calcium_sampling, weight_baselin
             if h.t < t_stim:
                 advance_quickly(t_stim, stim_spines_id, weight_baseline)
                 tmp_tstop = t_stim + t_buffer
-                synch_simulators(tmp_tstop, stim_spines_id, 
+                synch_simulators(tmp_tstop, stim_spines_id,
+                                 dtNeuron,
                                  delta_calcium_sampling,
                                  weight_baseline) 
                 
@@ -319,7 +324,8 @@ if __name__ == "__main__":
     print ("Equilibrium run finished. Starting normal simulation.")
     print ("#--#")
     t_buffer = param['t_buffer']
-    run_simulation(tStop_final, t_buffer, delta_calcium_sampling, param['weight_baseline'])
+    run_simulation(tStop_final, t_buffer, 
+                   h.dt, delta_calcium_sampling, param['weight_baseline'])
     
     #------------------------------------
     # Save the Results
