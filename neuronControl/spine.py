@@ -67,7 +67,7 @@ class Spine():
         milliseconds = 1e-3
         factor = millimolar_to_number / milliseconds
         k_converted = k_ca_flux * factor
-        print "k for the flux before unit convertion: %s and after: " %(k_ca_flux,
+        print "k for the flux before unit convertion: %s and after: %s" %(k_ca_flux,
                                                                         k_converted)
         
         self.ecellMan.ca_in['k'] = k_converted
