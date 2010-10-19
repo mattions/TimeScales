@@ -138,7 +138,7 @@ def get_calcium_flux(dtNeuron, delta_calcium_sampling, spine):
     # Calculating the flux
     k_calcium_flux = (electrical_ca_end - electrical_ca_start) / delta_calcium_sampling
     
-    return (k_calcium_flux, electrical_ca_start)
+    return k_calcium_flux
     
 
 def update_synape_weight(spine, baseline):
