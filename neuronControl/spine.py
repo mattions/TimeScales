@@ -46,29 +46,32 @@ class Spine():
             print "Ecell initialized in spine: %s" %self.id
         
     
-    def update_calcium(self, k_ca_flux, electrical_ca_concentration):
+    def update_calcium(self, k_ca_flux):
         """Update the calcium using the electrical calcium from the NEURON 
         section to the ecell compartment
+        
+        The constant is in mM/ms. We need to convert to number/seconds
                 
         params:
-        electrical_ca_concentration - Conc of Calcium in NEURON seg
-        ca_sampling_interval - Interval to use to sync the electrical concentration \
-        with the biochemical.
+        the constant for the Constant Flux in ecell.
         """
         #print "Neuron calcium: %f, Ecell Calcium: %f" %(ca_concentration, 
         #                                               spine.ecellMan.ca['Value'])
         # converting the concentration in molecules:
-        # mM to M (1e-3)
-#        electrical_ca_Molar = electrical_ca_concentration * 1e-3
-#        # um^3 to l (1e-15)
-#        CUBIC_um_TO_LITER = 1e-15
-#        # 6.022 * 1e23 Avogadro's number
-#        N_Av = 6.022 * 1e23
-#        ca_ions = electrical_ca_Molar * self.head_vol * CUBIC_um_TO_LITER * N_Av
-        #self.ecellMan.ca['Value'] = ca_ions
-        print "K used for the flux %s" %k_ca_flux
-        self.ecellMan.ca_in['k'] = k_ca_flux
-        self.k_flux.append(k_ca_flux)
+        # um^3 to l (1e-15)
+        CUBIC_um_TO_LITER = 1e-15
+        # 6.022 * 1e23 Avogadro's number
+        N_Av = 6.022 * 1e23
+        # mM to M (1e-3) at the beginning for mM to M
+        millimolar_to_number = 1e-3 * self.head_vol * CUBIC_um_TO_LITER * N_Av
+        milliseconds = 1e-3
+        factor = millimolar_to_number / milliseconds
+        k_converted = k_ca_flux * factor
+        print "k for the flux before unit convertion: %s and after: " %(k_ca_flux,
+                                                                        k_converted)
+        
+        self.ecellMan.ca_in['k'] = k_converted
+        self.k_flux.append(k_converted)
         #self.ecellMan.ca_pump['k'] = 0
         #self.ecellMan.ca_leak['k'] = 0
     

@@ -111,10 +111,11 @@ def sync_calcium(spine, dtNeuron, delta_calcium_sampling):
     """
     if hasattr(spine, 'ecellMan'):
         
-        k_ca_flux, ca_conc_start = get_calcium_flux(dtNeuron, 
-                                                    delta_calcium_sampling, 
-                                                    spine)
-        spine.update_calcium(k_ca_flux, ca_conc_start)
+        k_ca_flux = get_calcium_flux(dtNeuron, 
+                                     delta_calcium_sampling, 
+                                     spine)
+        # Unit conversion in update_calcium
+        spine.update_calcium(k_ca_flux)
 
 def get_calcium_flux(dtNeuron, delta_calcium_sampling, spine):
     """
