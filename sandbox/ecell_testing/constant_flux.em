@@ -18,12 +18,12 @@ System System( / )
 		Value	1e-18;
 	}
 
-	Variable Variable( S )
+	Variable Variable( S1 )
 	{
-		Value	1000000;
+		Value	0;
 	}
 	
-	Variable Variable( P )
+	Variable Variable( S2 )
 	{
 		Value	0;
 	}
@@ -33,13 +33,18 @@ System System( / )
 		Value	1000;
 	}
 	
-	Process MichaelisUniUniFluxProcess( E )
+	Process ConstantFluxProcess( C_S1 )
 	{
-		VariableReferenceList	[ S0 :.:S -1 ]
- 					[ P0 :.:P 1 ]
-					[ C0 :.:E 0 ];
-		KmS	1;
-		KcF	10;
+		k 10;
+		VariableReferenceList	[ S0 :.:S1 1 ];
+		
+	}
+	
+	Process ConstantFluxProcess( C_S2 )
+	{
+		k 0.003;
+		VariableReferenceList	[ S0 :.:S2 1 ];
+		
 	}	
 }
 
