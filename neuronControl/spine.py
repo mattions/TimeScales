@@ -26,6 +26,7 @@ class Spine():
         self.parent = None # the parent section connected to the neck
         self.synapses = self.createSynapses()
         self.filename = filename_bioch_mod
+        self.k_flux = []
         
         # Reset ions
         h.cai0_ca_ion = 0.001        #// mM, Churchill 1998
@@ -67,6 +68,7 @@ class Spine():
         #self.ecellMan.ca['Value'] = ca_ions
         print "K used for the flux %s" %k_ca_flux
         self.ecellMan.ca_in['k'] = k_ca_flux
+        self.k_flux.append(k_ca_flux)
         #self.ecellMan.ca_pump['k'] = 0
         #self.ecellMan.ca_leak['k'] = 0
     

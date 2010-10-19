@@ -84,6 +84,7 @@ class ExtRef(object):
                         time = syn.weight[0]
                         weight = syn.weight[1]
                         vecs['weight'] = weight
+                        vecs['k_flux'] = spine.k_flux
                         weightRef = WeightRef(sec_name=sec_name,
                                               vecs=vecs,
                                               detail=detail)
