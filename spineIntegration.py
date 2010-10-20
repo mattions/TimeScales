@@ -122,7 +122,7 @@ def get_calcium_flux(dtNeuron, delta_calcium_sampling, spine):
     Retrieving the calcium in the interval. end is always -1 because is
     the last timepoint available, start is when the interval has begun
     """
-    start_index = -int(dtNeuron / delta_calcium_sampling)
+    start_index = -int(delta_calcium_sampling / dtNeuron)
     # Getting the calcium value
     vec_spine_head_cai = manager.get_vector(spine.head, 'cai')
     vec_spine_head_cali = manager.get_vector(spine.head, 'cali')
