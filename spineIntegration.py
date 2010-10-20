@@ -134,7 +134,8 @@ def get_calcium_flux(dtNeuron, delta_calcium_sampling, spine):
     head_cai = vec_spine_head_cai.x[-1]
     head_cali = vec_spine_head_cali.x[-1]
     electrical_ca_end = head_cai + head_cali
-    electrical_diff = electrical_ca_end - electrical_ca_start 
+    electrical_diff = electrical_ca_end - electrical_ca_start
+    print "Len vecs: %s start_idx: %s" %(len(head_cali), start_index)
     print "Electrical calcium start: %s end: %s difference: %s" %(electrical_ca_start,
                                                                   electrical_ca_end,
                                                                   electrical_diff)
