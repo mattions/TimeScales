@@ -45,5 +45,7 @@
     "biochemical_filename" : "biochemical_circuits/biomd183_loop.eml",
     "var_to_plot" : ['v','cai','cali','ica'],
     "section_to_plot" : ['MSP_Cell[0].soma', 'MSP_Cell[0].dend3_1[1]', 
-    'MSP_Cell[0].dend3_1[0]', 'MSP_Cell[0].dend3', 'spine1_head','spine2_head']    
+    'MSP_Cell[0].dend3_1[0]', 'MSP_Cell[0].dend3', 'spine1_head','spine2_head'],
+    "ca_leak_vmax" : 4e-3,
+    "ca_pump_vmax" : 4e-3    
 }

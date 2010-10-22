@@ -37,6 +37,8 @@ class EcellManager():
         self.CaMKIIbar = self.ses.createEntityStub( 'Variable:/Spine:CaMKIIbar' )
         self.ampar_P = self.ses.createEntityStub('Variable:/Spine:AMPAR_P')
         self.ca_in = self.ses.createEntityStub('Process:/Spine:ca_in')
+        self.ca_leak = self.ses.createEntityStub('Process:/Spine:ca_leak')
+        self.ca_pump = self.ses.createEntityStub('Process:/Spine:ca_pump')
         
     def createLoggers(self):
         """Create the logger to track the speces"""
