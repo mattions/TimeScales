@@ -72,8 +72,9 @@ class Spine():
         
         self.ecellMan.ca_in['k'] = k_converted
         self.k_flux.append(k_converted)
-        #self.ecellMan.ca_pump['k'] = 0
-        #self.ecellMan.ca_leak['k'] = 0
+        # Disabling the leak and the pump
+        self.ecellMan.ca_pump['k'] = 0
+        self.ecellMan.ca_leak['k'] = 0
     
         
     def setStimul(self, stim, neuron_time_interval):
