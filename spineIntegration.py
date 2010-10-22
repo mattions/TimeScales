@@ -104,7 +104,7 @@ def synch_simulators(tmp_tstop, stim_spines_id,
                 # Re-enabling pump and leak. Stopping flux from the input.
                 spine.ecellMan.ca_in['k'] = 0
                 spine.ecellMan.ca_leak['vmax'] = param['ca_leak_vmax']
-                spine.ecellMan.ca_pump['vmax'] = param['ca_pum_vmax']
+                spine.ecellMan.ca_pump['vmax'] = param['ca_pump_vmax']
                 update_synape_weight(spine, weight_baseline)
 
 def sync_calcium(spine, dtNeuron, delta_calcium_sampling):
