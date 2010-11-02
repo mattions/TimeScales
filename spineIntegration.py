@@ -93,6 +93,7 @@ def synch_simulators(tmp_tstop, stim_spines_id,
     """
     print ("Synchronizing sims till [ms] %s") %tmp_tstop
     
+    t_synch_start = h.t
     while h.t < tmp_tstop:
         h.fadvance() # run Neuron for step
         #for every ms in NEURON we update the ecellMan
@@ -100,13 +101,16 @@ def synch_simulators(tmp_tstop, stim_spines_id,
             for spine_id in stim_spines_id :
                 spine = nrnSim.spines[spine_id]
                 sync_calcium(spine, dtNeuron, delta_calcium_sampling)
-                advance_ecell(spine, delta_calcium_sampling / 1e3)
+                advance_ecell(spine, (h.t - t_synch_start) / 1e3)
                 # Stopping flux from the input.
                 spine.ecellMan.ca_in['k'] = 0
                 # Re-enabling pump and leak. 
                 spine.ecellMan.ca_leak['vmax'] = param['ca_leak_vmax']
                 spine.ecellMan.ca_pump['vmax'] = param['ca_pump_vmax']
                 update_synape_weight(spine, weight_baseline)
+            t_synch_start = h.t # Resetting the t_start to the new NEURON time.
+        
+           
 
 def sync_calcium(spine, dtNeuron, delta_calcium_sampling):
     """"
