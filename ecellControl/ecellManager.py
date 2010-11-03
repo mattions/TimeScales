@@ -177,8 +177,9 @@ def plotTimeCourses(timeCourses, save=False, dir=None, name=None, x_start=None):
      plt.legend(loc=0)
      
      if save :
-         plt.savefig(os.path.join(dir, "caInput.png"))
-         print "figure saved in: %s" % os.path.join(dir, name +"_caInput.png")
+         filename = name +"_caInput.png"
+         plt.savefig(os.path.join(dir, filename))
+         print "figure saved in: %s" % os.path.join(dir, filename)
      
      bars = ['PP2Bbar', 'CaMKIIbar', 'PP1abar']
      plt.figure()
@@ -190,9 +191,10 @@ def plotTimeCourses(timeCourses, save=False, dir=None, name=None, x_start=None):
          plt.legend(loc=0)
      
      if save :
-         plt.savefig(os.path.join(dir, "PP2B_and_CaMKII_activation.png"))
-         print "figure saved in: %s" % os.path.join(dir, 
-                                                    "PP2B_and_CaMKII_activation.png")
+         filename = name + "_PP2B_and_CaMKII_activation.png"
+         plt.savefig(os.path.join(dir, filename))
+         print "figure saved in: %s" % os.path.join(dir, filename) 
+                                                    
 
 
 
