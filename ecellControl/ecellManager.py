@@ -166,18 +166,19 @@ def testChangeCalciumValue(interval, caValue, filename="../biochemical_circuits/
     print "ChangeCalciumValue Test Concluded"
     return ecellManager
 
-def plotTimeCourses(timeCourses, save=False, dir=None):
+def plotTimeCourses(timeCourses, save=False, dir=None, name=None, x_start=None):
      """Plot the default timecourses"""
      import matplotlib.pyplot as plt
      ca_tc = timeCourses['ca'] 
      plt.figure()
      plt.plot(ca_tc[:,0], ca_tc[:,1], label="Calcium")
      plt.xlabel("Time [s]")
+     plt.xlim(x_start, )
      plt.legend(loc=0)
      
      if save :
          plt.savefig(os.path.join(dir, "caInput.png"))
-         print "figure saved in: %s" % os.path.join(dir, "caInput.png")
+         print "figure saved in: %s" % os.path.join(dir, name +"_caInput.png")
      
      bars = ['PP2Bbar', 'CaMKIIbar', 'PP1abar']
      plt.figure()
@@ -185,6 +186,7 @@ def plotTimeCourses(timeCourses, save=False, dir=None):
          bar_tc = timeCourses[bar]
          plt.plot(bar_tc[:,0], bar_tc[:,1], label=bar)
          plt.xlabel("Time [s]")
+         plt.xlim(x_start, )
          plt.legend(loc=0)
      
      if save :

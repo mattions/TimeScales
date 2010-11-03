@@ -383,5 +383,7 @@ if __name__ == "__main__":
     from ecellControl import ecellManager as eM
     for stim_spine in param['stimulated_spines']:
         spine = nrnSim.spines[spine_id]
-        eM.plotTimeCourses(spine.ecellMan.timeCourses, save=True, dir=saving_dir)
+        eM.plotTimeCourses(spine.ecellMan.timeCourses, save=True, 
+                           dir=saving_dir, name=spine.id, 
+                           x_start=param['tEquilibrium_ecell'])
         eM.plotWeight(spine.ecellMan.timeCourses, dir=saving_dir)
