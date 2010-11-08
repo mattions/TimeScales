@@ -97,7 +97,7 @@ class Spine():
         neck.Ra = 100.0 #
         
         #neck.insert("pas")
-        #neck.insert("kir")
+        neck.insert("kir")
         
         h.factors_catrack() # Called on the NMOD catrack
         neck.insert("catrack")
@@ -120,7 +120,7 @@ class Spine():
         head.connect(neck)
         
         #head.insert("pas")
-        #head.insert("kir")
+        head.insert("kir")
         head.insert("can")
         head.insert("caq")
         head.insert("car")
