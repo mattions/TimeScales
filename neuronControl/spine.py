@@ -96,8 +96,8 @@ class Spine():
         #neck.Ra = 150.0 # Used by Grunditz et al 2008 (see supplemental material)
         neck.Ra = 100.0 #
         
-        neck.insert("pas")
-        #neck.insert("kir")
+        #neck.insert("pas")
+        neck.insert("kir")
         
         h.factors_catrack() # Called on the NMOD catrack
         neck.insert("catrack")
@@ -119,8 +119,8 @@ class Spine():
         head.nseg = 7
         head.connect(neck)
         
-        head.insert("pas")
-        #head.insert("kir")
+        #head.insert("pas")
+        head.insert("kir")
         head.insert("can")
         head.insert("caq")
         head.insert("car")
