@@ -6,7 +6,7 @@ import time
 
 
 nrnSim = neuronControl.NeuronSim(mod_path="mod", hoc_path="hoc", 
-                              spines_dist='two', 
+                              spines_dist='all', 
                               biochemical_filename="biochemical_circuits/biomd183_noCalcium.eml")
 
 #start= time.time()
