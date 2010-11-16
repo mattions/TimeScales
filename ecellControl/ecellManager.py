@@ -50,6 +50,10 @@ class EcellManager():
             loggers[mol]  = self.ses.createLoggerStub( "Variable:/Spine:" + mol 
                                                        + ":Value" )
             loggers[mol].create() # This creat the Logger Object in the backend
+            if mol == 'ca':
+                loggers['ca_conc']  = self.ses.createLoggerStub( "Variable:/Spine:" + mol 
+                                                       + ":MolarConc" )
+                loggers['ca_conc'].create() # This creat the Logger Object in the backend
         
         self.loggers = loggers
         

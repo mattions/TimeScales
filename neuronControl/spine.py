@@ -63,12 +63,17 @@ class Spine():
         # 6.022 * 1e23 Avogadro's number
         N_Av = 6.022 * 1e23
         # mM to M (1e-3) at the beginning for mM to M
+        # However ms will eliminate with mM
+        # mM/ms = M/s
+        # So we just change it to numbers
         # Not anymore, because the unit of constant Flux is second -1
         # So keep out the millimolar
+        #millimolar_to_number = 1e-3 * self.head_vol * CUBIC_um_TO_LITER * N_Av
+        #milliseconds = 1e-3
+        #factor = millimolar_to_number / milliseconds
         millimolar_to_number = self.head_vol * CUBIC_um_TO_LITER * N_Av
-        milliseconds = 1e-3
-        factor = millimolar_to_number / milliseconds
-        k_converted = k_ca_flux * factor
+        
+        k_converted = k_ca_flux * millimolar_to_number
         print "k for the flux before unit convertion: %s and after: %s" %(k_ca_flux,
                                                                         k_converted)
         
