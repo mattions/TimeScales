@@ -46,7 +46,7 @@ class Spine():
             print "Ecell initialized in spine: %s" %self.id
         
     
-    def update_calcium(self, k_ca_flux):
+    def update_calcium(self, ca_target_Neuron, k_ca_flux):
         """Update the calcium using the electrical calcium from the NEURON 
         section to the ecell compartment
         
@@ -62,23 +62,16 @@ class Spine():
         CUBIC_um_TO_LITER = 1e-15
         # 6.022 * 1e23 Avogadro's number
         N_Av = 6.022 * 1e23
-        # mM to M (1e-3) at the beginning for mM to M
-        # However ms will eliminate with mM
-        # mM/ms = M/s
-        # So we just change it to numbers
-        # Not anymore, because the unit of constant Flux is second -1
-        # So keep out the millimolar
-        #millimolar_to_number = 1e-3 * self.head_vol * CUBIC_um_TO_LITER * N_Av
-        #milliseconds = 1e-3
-        #factor = millimolar_to_number / milliseconds
-        millimolar_to_number = self.head_vol * CUBIC_um_TO_LITER * N_Av
+        millimolar_to_number = 1e-3 * self.head_vol * CUBIC_um_TO_LITER * N_Av
         
-        k_converted = k_ca_flux * millimolar_to_number
-        print "k for the flux before unit convertion: %s and after: %s" %(k_ca_flux,
-                                                                        k_converted)
+        # Calculating the number of calcium desired
+        ca_target = ca_target_Neuron * millimolar_to_number
+        ca_start = self.ecellMan.ca['Value']
+        # Calculating the flux required
+        k_flux = ca_target/ca_start 
         
-        self.ecellMan.ca_in['k'] = k_converted
-        self.k_flux.append(k_converted)
+        self.ecellMan.ca_in['k'] = k_flux
+        self.k_flux.append(k_flux)
         # Disabling the leak and the pump
         self.ecellMan.ca_pump['vmax'] = 0
         self.ecellMan.ca_leak['vmax'] = 0
