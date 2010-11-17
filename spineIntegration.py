@@ -119,6 +119,9 @@ def sync_calcium(spine, dtNeuron, delta_calcium_sampling):
     """
     if hasattr(spine, 'ecellMan'):
         
+        vec_spine_head_cai = manager.get_vector(spine.head, 'cai')
+        vec_spine_head_cali = manager.get_vector(spine.head, 'cali')
+        
         head_cai = vec_spine_head_cai.x[-1]
         head_cali = vec_spine_head_cali.x[-1]
         electrical_ca_end = head_cai + head_cali

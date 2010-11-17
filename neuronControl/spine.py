@@ -46,17 +46,10 @@ class Spine():
             print "Ecell initialized in spine: %s" %self.id
         
     
-    def update_calcium(self, ca_target_Neuron, k_ca_flux):
+    def update_calcium(self, ca_target_Neuron):
         """Update the calcium using the electrical calcium from the NEURON 
         section to the ecell compartment
-        
-        The constant is in mM/ms. We need to convert to number/seconds
-                
-        params:
-        the constant for the Constant Flux in ecell.
         """
-        #print "Neuron calcium: %f, Ecell Calcium: %f" %(ca_concentration, 
-        #                                               spine.ecellMan.ca['Value'])
         # converting the concentration in molecules:
         # um^3 to l (1e-15)
         CUBIC_um_TO_LITER = 1e-15
