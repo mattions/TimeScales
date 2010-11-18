@@ -46,7 +46,7 @@ class Spine():
             print "Ecell initialized in spine: %s" %self.id
         
     
-    def update_calcium(self, ca_target_Neuron):
+    def update_calcium(self, ca_target_Neuron, delta_calcium):
         """Update the calcium using the electrical calcium from the NEURON 
         section to the ecell compartment
         """
@@ -61,7 +61,7 @@ class Spine():
         ca_target = ca_target_Neuron * millimolar_to_number
         ca_start = self.ecellMan.ca['Value']
         # Calculating the flux required
-        k_flux = ca_target/ca_start 
+        k_flux = (ca_target - ca_start)/delta_calcium 
         
         self.ecellMan.ca_in['k'] = k_flux
         self.k_flux.append(k_flux)

@@ -127,7 +127,7 @@ def sync_calcium(spine, dtNeuron, delta_calcium_sampling):
         electrical_ca_end = head_cai + head_cali
         
         # Unit conversion in update_calcium
-        spine.update_calcium(electrical_ca_end)
+        spine.update_calcium(electrical_ca_end, delta_calcium_sampling)
 
 #def get_calcium_flux(dtNeuron, delta_calcium_sampling, spine):
 #    """
