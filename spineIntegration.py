@@ -312,9 +312,9 @@ if __name__ == "__main__":
     
     for var in variables_to_rec:
         for sec in h.allsec():
-            #manager.add_all_vecRef(var) # Saving all the vecRef for testing
-            if sec.name() in param['section_to_plot']:
-                manager.add_vecRef(var, sec, param['time_resolution_neuron'])
+            manager.add_all_vecRef(var, param['time_resolution_neuron']) # Saving all the vecRef for testing
+#            if sec.name() in param['section_to_plot']:
+#                manager.add_vecRef(var, sec, param['time_resolution_neuron'])
             
     # Recording the synapses
     for spine_id in stim_spines_id:
