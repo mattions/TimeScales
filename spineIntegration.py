@@ -119,42 +119,38 @@ def sync_calcium(spine, dtNeuron, delta_calcium_sampling):
     """
     if hasattr(spine, 'ecellMan'):
         
-        vec_spine_head_cai = manager.get_vector(spine.head, 'cai')
-        vec_spine_head_cali = manager.get_vector(spine.head, 'cali')
-        
-        head_cai = vec_spine_head_cai.x[-1]
-        head_cali = vec_spine_head_cali.x[-1]
-        electrical_ca_end = head_cai + head_cali
-        
+        k_ca_flux = get_calcium_flux(dtNeuron, 
+                                     delta_calcium_sampling, 
+                                     spine)
         # Unit conversion in update_calcium
-        spine.update_calcium(electrical_ca_end, delta_calcium_sampling)
+        spine.update_calcium(k_ca_flux)
 
-#def get_calcium_flux(dtNeuron, delta_calcium_sampling, spine):
-#    """
-#    Retrieving the calcium in the interval. end is always -1 because is
-#    the last timepoint available, start is when the interval has begun
-#    """
-#    start_index = -int(delta_calcium_sampling / dtNeuron)
-#     Getting the calcium value
-#    vec_spine_head_cai = manager.get_vector(spine.head, 'cai')
-#    vec_spine_head_cali = manager.get_vector(spine.head, 'cali')
-#    
-#    head_cai = vec_spine_head_cai.x[start_index]
-#    head_cali = vec_spine_head_cali.x[start_index]
-#    electrical_ca_start = head_cai + head_cali
-#    
-#    head_cai = vec_spine_head_cai.x[-1]
-#    head_cali = vec_spine_head_cali.x[-1]
-#    electrical_ca_end = head_cai + head_cali
-#    electrical_diff = electrical_ca_end - electrical_ca_start
-#    print "Len vecs: %s start_idx: %s" %(len(vec_spine_head_cali), start_index)
-#    print "Electrical calcium start: %s end: %s difference: %s" %(electrical_ca_start,
-#                                                                  electrical_ca_end,
-#                                                                  electrical_diff)
-#    # Calculating the flux
-#    k_calcium_flux = electrical_diff / delta_calcium_sampling
-#    
-#    return k_calcium_flux
+def get_calcium_flux(dtNeuron, delta_calcium_sampling, spine):
+    """
+    Retrieving the calcium in the interval. end is always -1 because is
+    the last timepoint available, start is when the interval has begun
+    """
+    start_index = -int(delta_calcium_sampling / dtNeuron)
+    # Getting the calcium value
+    vec_spine_head_cai = manager.get_vector(spine.head, 'cai')
+    vec_spine_head_cali = manager.get_vector(spine.head, 'cali')
+    
+    head_cai = vec_spine_head_cai.x[start_index]
+    head_cali = vec_spine_head_cali.x[start_index]
+    electrical_ca_start = head_cai + head_cali
+    
+    head_cai = vec_spine_head_cai.x[-1]
+    head_cali = vec_spine_head_cali.x[-1]
+    electrical_ca_end = head_cai + head_cali
+    electrical_diff = electrical_ca_end - electrical_ca_start
+    print "Len vecs: %s start_idx: %s" %(len(vec_spine_head_cali), start_index)
+    print "Electrical calcium start: %s end: %s difference: %s" %(electrical_ca_start,
+                                                                  electrical_ca_end,
+                                                                  electrical_diff)
+    # Calculating the flux
+    k_calcium_flux = electrical_diff / delta_calcium_sampling
+    
+    return k_calcium_flux
     
 
 def update_synape_weight(spine, baseline):
