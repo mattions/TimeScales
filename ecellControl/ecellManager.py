@@ -30,7 +30,11 @@ class EcellManager():
                            'CaMKIIbar', 
                            'PP1abar', # Active PP1/Total PP1
                            'AMPAR', # 
-                           'AMPAR_P'
+                           'AMPAR_P',
+                           'CBPfastca',
+                           'CBPmediaca',
+                           'CBPslowca',
+                           'CBPvslowca'
                            )
         # Tracking the calcium
         self.ca =  self.ses.createEntityStub( 'Variable:/Spine:ca' )
