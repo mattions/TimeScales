@@ -78,7 +78,7 @@ def advance_ecell(spine, delta_t):
     spine.ecellMan.ses.run(delta_t)
     
   
-def advance_spine(spine, delta_calcium_sampling, t_synch_start, 
+def advance_spine(spine, dtNeuron, delta_calcium_sampling, t_synch_start, 
                   param, weight_baseline):
     """One function to wrap all the advancement of one spine in a
     single process, to speed up the simulation."""
@@ -117,7 +117,7 @@ def synch_simulators(tmp_tstop, stim_spines_id,
             for spine_id in stim_spines_id :
                 spine = nrnSim.spines[spine_id]
                 p = Process(target=advance_spine, 
-                            args=(spine, delta_calcium_sampling, 
+                            args=(spine, dtNeuron, delta_calcium_sampling, 
                                   t_synch_start, param, 
                                   weight_baseline))
                 p.start()
