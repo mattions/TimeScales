@@ -45,7 +45,7 @@ class EcellManager():
         self.ca_pump = self.ses.createEntityStub('Process:/Spine:ca_pump')
         
     def createLoggers(self):
-        """Create the logger to track the speces"""
+        """Create the logger to track the species"""
         loggers = {}
         #log = ecell.LoggerStub()
         
