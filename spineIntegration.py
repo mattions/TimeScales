@@ -25,8 +25,6 @@ from sumatra.external.NeuroTools import parameters
 import tables 
 from extref import ExtRef 
 
-from multiprocessing import Process
-
     
 def build_vecs_to_plot(var, secs, anyRefs):
     """Create the dictionary of section->vectors to plot"""
@@ -77,21 +75,7 @@ def advance_ecell(spine, delta_t):
     Current time len: %s") %(current_time, spine.id, delta_t, len_current_time)
     spine.ecellMan.ses.run(delta_t)
     
-  
-def advance_spine(spine, dtNeuron, delta_calcium_sampling, t_synch_start, 
-                  param, weight_baseline):
-    """One function to wrap all the advancement of one spine in a
-    single process, to speed up the simulation."""
-    sync_calcium(spine, dtNeuron, delta_calcium_sampling)
-    advance_ecell(spine, (h.t - t_synch_start) / 1e3)
-    # Stopping flux from the input.
-    spine.ecellMan.ca_in['k'] = 0
-    # Re-enabling pump and leak. 
-    spine.ecellMan.ca_leak['vmax'] = param['ca_leak_vmax']
-    spine.ecellMan.ca_pump['vmax'] = param['ca_pump_vmax']
-    update_synape_weight(spine, weight_baseline)
     
-        
 
 def synch_simulators(tmp_tstop, stim_spines_id,
                      dtNeuron,
@@ -116,21 +100,14 @@ def synch_simulators(tmp_tstop, stim_spines_id,
         if np.round(h.t, decimals = 4) % delta_calcium_sampling == 0:
             for spine_id in stim_spines_id :
                 spine = nrnSim.spines[spine_id]
-                p = Process(target=advance_spine, 
-                            args=(spine, dtNeuron, delta_calcium_sampling, 
-                                  t_synch_start, param, 
-                                  weight_baseline))
-                p.start()
-                p.join()
-
-#                sync_calcium(spine, dtNeuron, delta_calcium_sampling)
-#                advance_ecell(spine, (h.t - t_synch_start) / 1e3)
-#                # Stopping flux from the input.
-#                spine.ecellMan.ca_in['k'] = 0
-#                # Re-enabling pump and leak. 
-#                spine.ecellMan.ca_leak['vmax'] = param['ca_leak_vmax']
-#                spine.ecellMan.ca_pump['vmax'] = param['ca_pump_vmax']
-#                update_synape_weight(spine, weight_baseline)
+                sync_calcium(spine, dtNeuron, delta_calcium_sampling)
+                advance_ecell(spine, (h.t - t_synch_start) / 1e3)
+                # Stopping flux from the input.
+                spine.ecellMan.ca_in['k'] = 0
+                # Re-enabling pump and leak. 
+                spine.ecellMan.ca_leak['vmax'] = param['ca_leak_vmax']
+                spine.ecellMan.ca_pump['vmax'] = param['ca_pump_vmax']
+                update_synape_weight(spine, weight_baseline)
             t_synch_start = h.t # Resetting the t_start to the new NEURON time.
         
            
