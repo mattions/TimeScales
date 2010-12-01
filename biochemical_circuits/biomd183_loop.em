@@ -193,14 +193,16 @@ System System( /Spine )
 ##80e-6
 	Variable Variable( CBPfasttotal )
 	{
-		MolarConc	80e-6;
-		Value	@(1e-15*6.02e23*80e-6);
+		#MolarConc	80e-6;
+		MolarConc 0;
+		Value	@(0);
 	}
 ##80e-6
 	Variable Variable( CBPmediatotal )
 	{
-		MolarConc	80e-6;
-		Value	@(1e-15*6.02e23*80e-6);
+		#MolarConc	80e-6;
+		MolarConc 0;
+		Value	@(0);
 	}
 ##20e-6
 	Variable Variable( CBPslowtotal )

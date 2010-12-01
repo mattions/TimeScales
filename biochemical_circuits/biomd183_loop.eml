@@ -323,24 +323,24 @@ DE1
 <variable class="Variable" id="CBPfasttotal">
 <property name="MolarConc">
 <value>
-80e-6
+0
 </value>
 </property>
 <property name="Value">
 <value>
-48160.0
+0
 </value>
 </property>
 </variable>
 <variable class="Variable" id="CBPmediatotal">
 <property name="MolarConc">
 <value>
-80e-6
+0
 </value>
 </property>
 <property name="Value">
 <value>
-48160.0
+0
 </value>
 </property>
 </variable>
