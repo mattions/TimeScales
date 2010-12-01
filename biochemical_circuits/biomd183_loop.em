@@ -6333,18 +6333,18 @@ System System( /Spine )
 		StepperID	Passive;
 		VariableReferenceList	[P0 Variable:/Spine:PP1abar 1] [X1 Variable:/Spine:totPP1 0] [X0 Variable:/Spine:totPP1a 0];
 	}
-	Process PythonProcess( add_CBPfastbar )
-	{
-		FireMethod	"P0.Value=X1.Value/X0.Value";
-		StepperID	Passive;
-		VariableReferenceList	[P0 Variable:/Spine:CBPfastbar 1] [X1 Variable:/Spine:CBPfastca 0] [X0 Variable:/Spine:CBPfasttotal 0];
-	}
-	Process PythonProcess( add_CBPmediabar )
-	{
-		FireMethod	"P0.Value=X1.Value/X0.Value";
-		StepperID	Passive;
-		VariableReferenceList	[P0 Variable:/Spine:CBPmediabar 1] [X1 Variable:/Spine:CBPmediaca 0] [X0 Variable:/Spine:CBPmediatotal 0];
-	}
+#	Process PythonProcess( add_CBPfastbar )
+#	{
+#		FireMethod	"P0.Value=X1.Value/X0.Value";
+#		StepperID	Passive;
+#		VariableReferenceList	[P0 Variable:/Spine:CBPfastbar 1] [X1 Variable:/Spine:CBPfastca 0] [X0 Variable:/Spine:CBPfasttotal 0];
+#	}
+#	Process PythonProcess( add_CBPmediabar )
+#	{
+#		FireMethod	"P0.Value=X1.Value/X0.Value";
+#		StepperID	Passive;
+#		VariableReferenceList	[P0 Variable:/Spine:CBPmediabar 1] [X1 Variable:/Spine:CBPmediaca 0] [X0 Variable:/Spine:CBPmediatotal 0];
+#	}
 	Process PythonProcess( add_CBPslowbar )
 	{
 		FireMethod	"P0.Value=X1.Value/X0.Value";
