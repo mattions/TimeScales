@@ -174,14 +174,15 @@ def testChangeCalciumValue(interval, caValue, filename="../biochemical_circuits/
     print "ChangeCalciumValue Test Concluded"
     return ecellManager
 
-def plotTimeCourses(timeCourses, save=False, dir=None, name=None, x_start=None):
+def plotTimeCourses(timeCourses, save=False, dir=None, name=None, x_lims=None):
      """Plot the default timecourses"""
      import matplotlib.pyplot as plt
      ca_tc = timeCourses['ca'] 
      plt.figure()
      plt.plot(ca_tc[:,0], ca_tc[:,1], label="Calcium")
      plt.xlabel("Time [s]")
-     plt.xlim(x_start, )
+     if x_lim:
+         plt.xlim(x_lims)
      plt.legend(loc=0)
      
      if save :

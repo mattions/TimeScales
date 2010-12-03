@@ -381,9 +381,11 @@ if __name__ == "__main__":
         plt.savefig(os.path.join(saving_dir, fig_file))
 
     from ecellControl import ecellManager as eM
+    x_start = param['tEquilibrium_ecell']
+    x_stop = x_start + param['tstop']/1e3
     for stim_spine in param['stimulated_spines']:
         spine = nrnSim.spines[stim_spine]
         eM.plotTimeCourses(spine.ecellMan.timeCourses, save=True, 
                            dir=saving_dir, name=spine.id, 
-                           x_start=param['tEquilibrium_ecell'])
+                           x_lims= [x_start, x_stop])
         eM.plotWeight(spine.ecellMan.timeCourses, dir=saving_dir)
