@@ -181,7 +181,7 @@ def plotTimeCourses(timeCourses, save=False, dir=None, name=None, x_lims=None):
      plt.figure()
      plt.plot(ca_tc[:,0], ca_tc[:,1], label="Calcium")
      plt.xlabel("Time [s]")
-     if x_lim:
+     if x_lims:
          plt.xlim(x_lims)
      plt.legend(loc=0)
      
