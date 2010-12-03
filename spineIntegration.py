@@ -175,6 +175,8 @@ def update_synape_weight(spine, baseline):
             print "Updating synapse weight in %s, time [ms]: %s, weight: %s" %(spine.id,
                                                                                h.t,
                                                                                weight)
+            print "Weight list length. Time: %s Weight: %s" %(len(synapse.weight[0]),
+                                                              len(synapse.weight[1]))
 
 def create_excitatory_inputs(stim_spines_id, neuron_time_interval):
     """
