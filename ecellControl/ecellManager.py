@@ -190,18 +190,19 @@ def plotTimeCourses(timeCourses, save=False, dir=None, name=None, x_lims=None):
          plt.savefig(os.path.join(dir, filename))
          print "figure saved in: %s" % os.path.join(dir, filename)
      
-     bars = ['PP2Bbar', 'CaMKIIbar', 'PP1abar']
-     plt.figure()
-     for bar in bars:
-         bar_tc = timeCourses[bar]
-         plt.plot(bar_tc[:,0], bar_tc[:,1], label=bar)
+     vars = ['PP2Bbar', 'CaMKIIbar', 'PP1abar', 'AMPAR', 'AMPAR_P']
+     
+     for var in vars:
+         plt.figure()
+         var_tc = timeCourses[var]
+         plt.plot(var_tc[:,0], var_tc[:,1], label=bar)
          plt.xlabel("Time [s]")
          if x_lims:
              plt.xlim(x_lims)
          plt.legend(loc=0)
      
      if save :
-         filename = name + "_PP2B_and_CaMKII_activation.png"
+         filename = name + "_" + var + ".png"
          plt.savefig(os.path.join(dir, filename))
          print "figure saved in: %s" % os.path.join(dir, filename) 
                                                     
