@@ -382,7 +382,7 @@ if __name__ == "__main__":
 
     from ecellControl import ecellManager as eM
     x_start = param['tEquilibrium_ecell']
-    x_stop = x_start + param['tstop']/1e3
+    x_stop = x_start + param['tStop']/1e3
     for stim_spine in param['stimulated_spines']:
         spine = nrnSim.spines[stim_spine]
         eM.plotTimeCourses(spine.ecellMan.timeCourses, save=True, 
