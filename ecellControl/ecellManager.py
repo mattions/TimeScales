@@ -195,7 +195,7 @@ def plotTimeCourses(timeCourses, save=False, dir=None, name=None, x_lims=None):
      for var in vars:
          plt.figure()
          var_tc = timeCourses[var]
-         plt.plot(var_tc[:,0], var_tc[:,1], label=bar)
+         plt.plot(var_tc[:,0], var_tc[:,1], label=var)
          plt.xlabel("Time [s]")
          if x_lims:
              plt.xlim(x_lims)
