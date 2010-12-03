@@ -201,10 +201,10 @@ def plotTimeCourses(timeCourses, save=False, dir=None, name=None, x_lims=None):
              plt.xlim(x_lims)
          plt.legend(loc=0)
      
-     if save :
-         filename = name + "_" + var + ".png"
-         plt.savefig(os.path.join(dir, filename))
-         print "figure saved in: %s" % os.path.join(dir, filename) 
+         if save :
+             filename = name + "_" + var + ".png"
+             plt.savefig(os.path.join(dir, filename))
+             print "figure saved in: %s" % os.path.join(dir, filename) 
                                                     
 
 
