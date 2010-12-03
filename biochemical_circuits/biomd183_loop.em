@@ -1342,30 +1342,30 @@ System System( /Spine )
 		Expression	"(vmax*(initial/(initial+km)))*self.getSuperSystem().SizeN_A";
 		VariableReferenceList	 [P0 Variable:/Spine:PKA 1];
 	}
-	Process @(MAIN_PROCESS)( CBPfast_ca_on )
-	{
-		k	1e9;
-		StepperID	@(MAIN_STEPPER);
-		VariableReferenceList	 [S0 Variable:/Spine:CBPfast -1] [S1 Variable:/Spine:ca -1] [P0 Variable:/Spine:CBPfastca 1];
-	}
-	Process @(MAIN_PROCESS)( CBPfast_ca_off )
-	{
-		k	1e3;
-		StepperID	@(MAIN_STEPPER);
-		VariableReferenceList	 [S0 Variable:/Spine:CBPfastca -1] [P0 Variable:/Spine:CBPfast 1] [P1 Variable:/Spine:ca 1];
-	}
-	Process @(MAIN_PROCESS)( CBPmedia_ca_on )
-	{
-		k	1e8;
-		StepperID	@(MAIN_STEPPER);
-		VariableReferenceList	 [S0 Variable:/Spine:CBPmedia -1] [S1 Variable:/Spine:ca -1] [P0 Variable:/Spine:CBPmediaca 1];
-	}
-	Process @(MAIN_PROCESS)( CBPmedia_ca_off )
-	{
-		k	1e2;
-		StepperID	@(MAIN_STEPPER);
-		VariableReferenceList	 [S0 Variable:/Spine:CBPmediaca -1] [P0 Variable:/Spine:CBPmedia 1] [P1 Variable:/Spine:ca 1];
-	}
+#	Process @(MAIN_PROCESS)( CBPfast_ca_on )
+#	{
+#		k	1e9;
+#		StepperID	@(MAIN_STEPPER);
+#		VariableReferenceList	 [S0 Variable:/Spine:CBPfast -1] [S1 Variable:/Spine:ca -1] [P0 Variable:/Spine:CBPfastca 1];
+#	}
+#	Process @(MAIN_PROCESS)( CBPfast_ca_off )
+#	{
+#		k	1e3;
+#		StepperID	@(MAIN_STEPPER);
+#		VariableReferenceList	 [S0 Variable:/Spine:CBPfastca -1] [P0 Variable:/Spine:CBPfast 1] [P1 Variable:/Spine:ca 1];
+#	}
+#	Process @(MAIN_PROCESS)( CBPmedia_ca_on )
+#	{
+#		k	1e8;
+#		StepperID	@(MAIN_STEPPER);
+#		VariableReferenceList	 [S0 Variable:/Spine:CBPmedia -1] [S1 Variable:/Spine:ca -1] [P0 Variable:/Spine:CBPmediaca 1];
+#	}
+#	Process @(MAIN_PROCESS)( CBPmedia_ca_off )
+#	{
+#		k	1e2;
+#		StepperID	@(MAIN_STEPPER);
+#		VariableReferenceList	 [S0 Variable:/Spine:CBPmediaca -1] [P0 Variable:/Spine:CBPmedia 1] [P1 Variable:/Spine:ca 1];
+#	}
 	Process @(MAIN_PROCESS)( CBPslow_ca_on )
 	{
 		k	1e7;
