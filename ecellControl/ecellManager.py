@@ -196,7 +196,8 @@ def plotTimeCourses(timeCourses, save=False, dir=None, name=None, x_lims=None):
          bar_tc = timeCourses[bar]
          plt.plot(bar_tc[:,0], bar_tc[:,1], label=bar)
          plt.xlabel("Time [s]")
-         plt.xlim(x_start, )
+         if x_lims:
+             plt.xlim(x_lims)
          plt.legend(loc=0)
      
      if save :
