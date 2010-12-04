@@ -175,8 +175,6 @@ def update_synape_weight(spine, baseline):
             print "Updating synapse weight in %s, time [ms]: %s, weight: %s" %(spine.id,
                                                                                h.t,
                                                                                weight)
-            print "Weight list length. Time: %s Weight: %s" %(len(synapse.weight[0]),
-                                                              len(synapse.weight[1]))
 
 def create_excitatory_inputs(stim_spines_id, neuron_time_interval):
     """
@@ -211,6 +209,11 @@ def advance_quickly(tmp_tstop, stim_spines_id, weight_baseline):
     Advance the two simulators quickly in an independent way. Synapse weight 
     is synchronized at the end
     """
+    #Update the weight
+    for spine_id in stim_spines_id:
+        spine = nrnSim.spines[spine_id]   
+        update_synape_weight(spine, weight_baseline)
+    
     delta_ecell = tmp_tstop - h.t
     delta_ecell_seconds = delta_ecell / 1e3
     print ("\nAdvance quickly routine.")
