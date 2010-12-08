@@ -190,15 +190,16 @@ def create_excitatory_inputs(stim_spines_id, neuron_time_interval):
         if spine_id in param.keys():
             spine = nrnSim.spines[spine_id]
             for stim_id in param[spine.id]:
-                stim_par = param[stim_id]
-                stim = Stimul((stim_par['t_stim']* 1e3), 
-                              stim_par['numbers'], 
-                              stim_par['delay'], 
-                              stim_par['type'])
-                stims_time = stim.get_stims_time()
-                excitatory_stimuli.extend(stims_time)
-                spine.setStimul(stim, neuron_time_interval)
-                spine.setupBioSim() # Initializing ecell
+                for stim_par_name in param[stim_id]:
+                    stim_par = param[stim_par_name]
+                    stim = Stimul((stim_par['t_stim']* 1e3), 
+                                  stim_par['numbers'], 
+                                  stim_par['delay'], 
+                                  stim_par['type'])
+                    stims_time = stim.get_stims_time()
+                    excitatory_stimuli.extend(stims_time)
+                    spine.setStimul(stim, neuron_time_interval)
+            spine.setupBioSim() # Initializing ecell
     
     excitatory_stimuli.sort()
     return excitatory_stimuli
@@ -310,6 +311,7 @@ if __name__ == "__main__":
     stim_spines_id = param['stimulated_spines']
     excitatory_stims = create_excitatory_inputs(stim_spines_id,
                                                 param['time_resolution_neuron'])
+    print "This are the time of the stims: %s" %excitatory_stims
 
     # Recording the sections
     
