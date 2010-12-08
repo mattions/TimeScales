@@ -190,16 +190,16 @@ def create_excitatory_inputs(stim_spines_id, neuron_time_interval):
         if spine_id in param.keys():
             spine = nrnSim.spines[spine_id]
             for stim_id in param[spine.id]:
-                for stim_par_name in param[stim_id]:
-                    stim_par = param[stim_par_name]
-                    stim = Stimul((stim_par['t_stim']* 1e3), 
-                                  stim_par['numbers'], 
-                                  stim_par['delay'], 
-                                  stim_par['type'])
-                    stims_time = stim.get_stims_time()
-                    excitatory_stimuli.extend(stims_time)
-                    spine.setStimul(stim, neuron_time_interval)
-                    print "Creating stimul t_stim: %s, numbers: %s, delay:%s, type: %s" %(stim.time,
+                
+                stim_dictionary = param[stim_id]
+                stim = Stimul((stim_dictionary['t_stim']* 1e3), 
+                              stim_dictionary['numbers'], 
+                              stim_dictionary['delay'], 
+                              stim_dictionary['type'])
+                stims_time = stim.get_stims_time()
+                excitatory_stimuli.extend(stims_time)
+                spine.setStimul(stim, neuron_time_interval)
+                print "Creating stimul t_stim: %s, numbers: %s, delay:%s, type: %s" %(stim.time,
                                                                                           stim.number, 
                                                                                           stim.chan_type,
                                                                                           stim.interval)
