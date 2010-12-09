@@ -53,7 +53,7 @@ for synapse in spine1.synapses:
     if synapse.chan_type == 'ampa':
         stim = Stimul(time = 200, number = 5, interval = 5, chan_type = 'ampa')
         
-        
+        print "stim array %s" %stim.get_stims_time()
         synapse.createStimul(stim.get_stims_time(), 0.1)
 
 
