@@ -13,8 +13,8 @@ class Synapse(object):
         self.chan = self.createChannel(chan_type, position)
         self.vecs = {} # Dictionary to record all the vectors 
         self.weight =  [[],[]]
-        
-        
+        self.stims = []
+            
     def createChannel(self, chan_type, position):
         """Create the NMDA or AMPA channel"""
         if chan_type == 'ampa':
@@ -26,28 +26,30 @@ class Synapse(object):
             
         return chan    
     
-    def createStimul(self, stim, neuron_time_resolution):
+    def createStimul(self, array_inputs, neuron_time_resolution):
         """Create a netStim object and assign it to the synapse together with 
         a NetConnect one.
         
         :params
-            start -  the initial delivery of the first stimul 
-            number - number of times the stimul has to be delivered
-            noise - noise that want to be introduced"""
+            array_inputs - Array which holds the inputs time
+            neuron_time_resolution - resolution of the vectors when saving results"""
         
         # NetStim obj    
-        netStim = h.NetStim()
-        netStim.number = stim.number
-        netStim.start = stim.time
-        netStim.interval = stim.interval
-        netStim.noise = stim.noise
-        self.netStim = netStim # assign the point to the class as attribute
+#        netStim = h.NetStim()
+#        netStim.number = stim.number
+#        netStim.start = stim.time
+#        netStim.interval = stim.interval
+#        netStim.noise = stim.noise
+#        self.netStimList.append(netStim) # assign the point to the class as attribute
         
+        self.vecStim = h.VecStim()
         # NetCon obj
-        netCon = h.NetCon(netStim, self.chan)
+        netCon = h.NetCon(self.vecStim, self.chan)
+        self.vecStim.play(h.Vector(array_inputs))
         netCon.weight[0] = 1
         self.netCon = netCon # assign the point to the class as attribute
         self.createVec(neuron_time_resolution) # Recording the synapse
+
         
     def createVec(self, neuron_time_resolution):
         """Create the vector to measure the activity of the synapse

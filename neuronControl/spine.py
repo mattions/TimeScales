@@ -76,12 +76,26 @@ class Spine():
         self.ecellMan.ca_pump['vmax'] = 0
         self.ecellMan.ca_leak['vmax'] = 0
     
+    def deploy_stims(self, neuron_time_interval_resolution):
+        """Create the array with the inputs for all the synapses in this spine
         
-    def setStimul(self, stim, neuron_time_interval):
-        '''Set the stimul applied to spine'''
-        for synapse in self.synapses:            
-            synapse.createStimul(stim, neuron_time_interval)
+        :param
+            neuron_time_interval_resolution - Resolution of the vector to record 
+            the synapse"""
+        for synapse in self.synapses:
+            inputs = []
+            for stim in synapse.stims:
+                inputs.extend(stim.get_stims_time())
+            
+            synapse.createStimul(inputs, neuron_time_interval)
         stim.spine = self.id
+        
+        
+#    def setStimul(self, stim, neuron_time_interval):
+#        '''Set the stimul applied to spine'''
+#        for synapse in self.synapses:
+#            synapse.createStimul(stim.get_stims_time(), neuron_time_interval)
+#        stim.spine = self.id
             
     
     def createNeck(self):
