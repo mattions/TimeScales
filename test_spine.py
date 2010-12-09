@@ -51,13 +51,17 @@ spine1 = Spine("spine1",
 # AMPA Syn
 for synapse in spine1.synapses:
     if synapse.chan_type == 'ampa':
-        stim = Stimul(time = 200, number = 5, interval = 5, chan_type = 'ampa', noise = 0)
-        synapse.createStimul(stim, 0.1)
+        stim = Stimul(time = 200, number = 5, interval = 5, chan_type = 'ampa')
+        
+        
+        synapse.createStimul(stim.get_stims_time(), 0.1)
 
-for synapse in spine1.synapses:
-    if synapse.chan_type == 'ampa':
-        stim = Stimul(time = 150, number = 5, interval = 5, chan_type = 'ampa', noise = 0)
-        synapse.createStimul(stim, 0.1)
+
+
+#for synapse in spine1.synapses:
+#    if synapse.chan_type == 'ampa':
+#        stim = Stimul(time = 150, number = 5, interval = 5, chan_type = 'ampa', noise = 0)
+#        synapse.createStimul(stim, 0.1)
 
 #NMDA Syn
 #for synapse in spine1.synapses:
