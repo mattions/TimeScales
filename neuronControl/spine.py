@@ -87,7 +87,7 @@ class Spine():
             for stim in synapse.stims:
                 inputs.extend(stim.get_stims_time())
             
-            synapse.createStimul(inputs, neuron_time_interval)
+            synapse.createStimul(inputs, neuron_time_interval_resolution)
         stim.spine = self.id
         
         
