@@ -10,6 +10,10 @@ Small memory, for testing::
     
     bsub -M 500 -R "rusage[mem=500]" smt run default.param -r "Testing the new synchro mechanism." -t "test, twospines"
 
+Small memory, for testing::
+    
+    bsub -M 500 -R "rusage[mem=500]" smt run short_tstop_double_stim.param -r "Double stims applied for short tstop." -t "test, twospines"
+
 Long tStop test::
 
         bsub -M 4000 -R "rusage[mem=4000]" smt run long_tstop.param -r "Running a long simulation." -t "test, twospines"
