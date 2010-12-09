@@ -199,7 +199,7 @@ def create_excitatory_inputs(stim_spines_id, neuron_time_interval):
                     for syn in spine.synapses:
                         if syn.chan_type == 'ampa':
                             syn.stims.append(stim)
-                elif stim.chan_typ == 'nmda':# more than one stim
+                elif stim.chan_type == 'nmda':# more than one stim
                     for syn in spine.synapses:
                         if syn.chan_type == 'nmda':
                             syn.stims.append(stim)
