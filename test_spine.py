@@ -12,13 +12,13 @@ run test_spine.py"""
 from neuronvisio.controls import Controls
 import os
 import numpy
-import pylab
+import matplotlib.pyplot as plt
 
 from neuron import h
 import neuron
 
 from neuronControl import Synapse, Spine, Stimul
-from helpers.graph import Graph
+#from helpers.graph import Graph
 
 # Starting neuronVisio
 controls = Controls()
@@ -52,9 +52,19 @@ spine1 = Spine("spine1",
 for synapse in spine1.synapses:
     if synapse.chan_type == 'ampa':
         stim = Stimul(time = 200, number = 5, interval = 5, chan_type = 'ampa', noise = 0)
-        synapse.createStimul(stim)
+        synapse.createStimul(stim, 0.1)
+
+for synapse in spine1.synapses:
+    if synapse.chan_type == 'ampa':
+        stim = Stimul(time = 150, number = 5, interval = 5, chan_type = 'ampa', noise = 0)
+        synapse.createStimul(stim, 0.1)
 
 #NMDA Syn
+#for synapse in spine1.synapses:
+#    if synapse.chan_type == 'nmda':
+#        stim = Stimul(time = 110, number = 5, interval = 5, chan_type = 'ampa', noise = 0)
+#        synapse.createStimul(stim, 0.1)
+
 
 
 # Vectors
@@ -80,20 +90,23 @@ h.tstop = 300
 
 def go():
     
-    graph = Graph()
+#    graph = Graph()
     h.run()
     secs = [spine1.neck, spine1.head, spine1.psd]
         
-    cai_vecs = manager.get_vectors(secs, 'cai')
-    cali_vecs = manager.get_vectors(secs, 'cali')
-    v_vecs = manager.get_vectors(secs, 'v')
+    cai_vecs = controls.manager.get_vectors(secs, 'cai')
+    cali_vecs = controls.manager.get_vectors(secs, 'cali')
+    v_vecs = controls.manager.get_vectors(secs, 'v')
     
-    manager.plotVecs(cai_vecs, 'cai')
-    manager.plotVecs(cali_vecs, 'cali')
-    manager.plotVecs(v_vecs, 'v')
+#    controls.manager.plotVecs(cai_vecs, 'cai')
+#    plt.title('cai')
+#    controls.manager.plotVecs(cali_vecs, 'cali')
+#    plt.title('cali')
+#    controls.manager.plotVecs(v_vecs, 'v')
+#    plt.title('voltage')
         
 #    graph.plotVoltage(vecsVolt, spine1.synapses['ampa'].synVecs)
 #    pylab.title("AMPA syn")
 #    graph.plotVoltage(vecsVolt, spine1.synapses['nmda'].synVecs)
 #    pylab.title("NMDA syn")
-    pylab.show()
+    plt.show()
