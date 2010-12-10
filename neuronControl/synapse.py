@@ -46,10 +46,12 @@ class Synapse(object):
         vec = h.Vector(array_inputs)
         vecStim.play(vec)
         self.vecStim = vecStim
+        
         # NetCon obj
         netCon = h.NetCon(vecStim, self.chan)
         netCon.weight[0] = 1
         self.netCon = netCon # assign the point to the class as attribute
+        
         self.createVec(neuron_time_resolution) # Recording the synapse
 
         
