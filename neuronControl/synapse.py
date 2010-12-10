@@ -42,6 +42,11 @@ class Synapse(object):
 #        netStim.noise = stim.noise
 #        self.netStimList.append(netStim) # assign the point to the class as attribute
         
+        # Removing duplicates
+        array_inputs = list(set(array_inputs))
+        # Ordering the inputs
+        array_inputs.sort()
+        print "Creating vecStim for syn. Array input: %s" %array_inputs
         vecStim = h.VecStim()
         vec = h.Vector(array_inputs)
         vecStim.play(vec)
