@@ -24,7 +24,7 @@ class Stimul(object):
                 stims_time.append(self.time + self.interval)
             else: #List contains at least one el. Adding from there.
                 stims_time.append(stims_time[-1] + self.interval)
-        return stims_time
+        return list(set(stims_time)).sort()
             
     
     def to_log(self):
