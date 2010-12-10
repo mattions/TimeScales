@@ -51,10 +51,12 @@ spine1 = Spine("spine1",
 # AMPA Syn
 for synapse in spine1.synapses:
     if synapse.chan_type == 'ampa':
-        stim = Stimul(time = 200, number = 5, interval = 5, chan_type = 'ampa')
+#        stim = Stimul(time = 200, number = 5, interval = 5, chan_type = 'ampa')
         
-        print "stim array %s" %stim.get_stims_time()
-        synapse.createStimul(stim.get_stims_time(), 0.1)
+#        print "stim array %s" %stim.get_stims_time()
+#        synapse.createStimul(stim.get_stims_time(), 0.1)
+        stim_list = [200, 201, 202, 203]
+        synapse.createStimul(stim_list, 0.1)
 
 
 
