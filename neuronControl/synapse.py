@@ -49,6 +49,9 @@ class Synapse(object):
         print "Creating vecStim for syn. Array input: %s" %array_inputs
         vecStim = h.VecStim()
         vec = h.Vector(array_inputs)
+        vec.from_python(array_inputs)
+        print "Inputs in the Vectors:"
+        vec.printf()
         vecStim.play(vec)
         self.vecStim = vecStim
         
