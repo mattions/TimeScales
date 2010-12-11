@@ -5,7 +5,7 @@ import math
 
 from neuron import h, nrn
 
-import ecellControl as eC
+#import ecellControl as eC
 from synapse import Synapse
 
 
