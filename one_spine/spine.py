@@ -93,13 +93,6 @@ class Spine():
             
             synapse.createStimul(inputs, neuron_time_interval_resolution)
         stim.spine = self.id
-        
-        
-#    def setStimul(self, stim, neuron_time_interval):
-#        '''Set the stimul applied to spine'''
-#        for synapse in self.synapses:
-#            synapse.createStimul(stim.get_stims_time(), neuron_time_interval)
-#        stim.spine = self.id
             
     
     def createNeck(self):
