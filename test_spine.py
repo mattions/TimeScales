@@ -61,13 +61,10 @@ for synapse in spine1.synapses:
 for synapse in spine1.synapses:
     if synapse.chan_type == 'ampa':
         stim = Stimul(time = 150, number = 5, interval = 5, chan_type = 'ampa')
-        synapse.createStimul(stim.get_stims_time(), 0.1)
+        synapse.stims.append(stim)
+        stim2 = Stimul(time = 200, number = 10, interval = 1, chan_type = 'ampa')
+        synapse.stims.append(stim2)
 
-
-for synapse in spine1.synapses:
-    if synapse.chan_type == 'ampa':
-        stim = Stimul(time = 200, number = 10, interval = 1, chan_type = 'ampa')
-        synapse.createStimul(stim.get_stims_time(), 0.1)
 
 #NMDA Syn
 #for synapse in spine1.synapses:
@@ -76,6 +73,7 @@ for synapse in spine1.synapses:
 #        synapse.createStimul(stim, 0.1)
 
 
+spine1.deploy_stims(0.1)
 
 # Vectors
 

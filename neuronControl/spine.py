@@ -90,9 +90,9 @@ class Spine():
                 stim_inputs = stim.get_stims_time()
                 #print "inputs: %s" % stim_inputs
                 inputs.extend(stim_inputs)
-            
+                stim.spine = self.id
             synapse.createStimul(inputs, neuron_time_interval_resolution)
-        stim.spine = self.id
+                
         
         
 #    def setStimul(self, stim, neuron_time_interval):
