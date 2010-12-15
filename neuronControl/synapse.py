@@ -48,8 +48,8 @@ class Synapse(object):
         array_inputs.sort()
         print "Creating vecStim for syn. Array input: %s" %array_inputs
         vecStim = h.VecStim()
-        vec = h.Vector(array_inputs)
-        vecStim.play(vec)
+        self.vec = h.Vector(array_inputs)
+        vecStim.play(self.vec)
         self.vecStim = vecStim
         
         # NetCon obj
