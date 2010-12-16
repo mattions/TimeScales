@@ -8,11 +8,11 @@ Storing here for future references::
 
 Small memory, for testing::
     
-    bsub -M 500 -R "rusage[mem=500]" smt run default.param -r "Testing the new synchro mechanism." -t "test, twospines"
+    bsub -M 4000 -R "rusage[mem=4000]" smt run default.param -r "Testing the new synchro mechanism." -t "test, twospines"
 
 Small memory, for testing::
     
-    bsub -M 500 -R "rusage[mem=500]" smt run short_tstop_double_stim.param -r "Double stims applied for short tstop." -t "test, twospines"
+    bsub -M 4000 -R "rusage[mem=4000]" smt run short_tstop_double_stim.param -r "Double stims applied for short tstop." -t "test, twospines"
 
 Long tStop test::
 
@@ -20,6 +20,6 @@ Long tStop test::
     
 This is for the weight checking::
 
-	bsub -R "rusage[mem=500]" smt run -m ecellControl/ecellManager.py ecellControl/ecellControl.param -r "Testing AMPA weight"
+	bsub -M 4000 -R "rusage[mem=4000]" smt run -m ecellControl/ecellManager.py ecellControl/ecellControl.param -r "Testing AMPA weight"
 
 	
