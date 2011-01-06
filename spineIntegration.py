@@ -51,16 +51,6 @@ def iClamptest(delay=10, duration=250, amplititude=0.248):
     iclamp.delay = delay
     iclamp.dur = duration
     iclamp.amp = amplititude
-
-def advance_neuron(tmp_tstop):
-    """
-    Advance Neuron till tmp_tstop.
-       
-    Parameters
-    ----------
-    tmp_stop: Temporary tstop. It has to be expressed in milliseconds.
-    """
-    nrnSim.run(tmp_tstop)
     
 def advance_ecell(spine, delta_t):
     """
@@ -231,7 +221,7 @@ def advance_quickly(tmp_tstop, stim_spines_id, weight_baseline):
     print ("\nAdvance quickly routine.")
     print ("Current Neuron time: %s, aimed tstop[ms]: %s") %(h.t, tmp_tstop)
     print ("Delta applied on Ecell simulator [s]: %s\n") % delta_ecell_seconds
-    advance_neuron(tmp_tstop)
+    nrnSim.run(tmp_tstop)
     for spine_id in stim_spines_id:
         spine = nrnSim.spines[spine_id]
         advance_ecell(spine, delta_ecell_seconds)
@@ -346,7 +336,7 @@ def main(argv):
     # equilibrium
     print ("#--#")
     print ("Equilibrium run for the two simulators") 
-    advance_neuron(t_equilibrium_neuron)
+    nrnSim.run(t_equilibrium_neuron)
     for spine_id in stim_spines_id:
         advance_ecell(nrnSim.spines[spine_id], t_equilibrium_ecell)
     print ("Equilibrium run finished. Starting normal simulation.")
