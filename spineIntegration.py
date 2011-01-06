@@ -18,6 +18,7 @@ import matplotlib.pyplot as plt
 
 from neuronControl import nrnSim, synapse 
 from neuronControl.stimul import Stimul 
+import neuronControl
 
 from neuronvisio.manager import Manager
 from sumatra.external.NeuroTools import parameters
@@ -278,8 +279,6 @@ def run_simulation(tStop_final, t_buffer, dtNeuron,
 
 
 def main(argv):
-    import os
-    import neuronControl
     
     if len(argv) != 2:
         print("No parameter file supplied. Abort.")
