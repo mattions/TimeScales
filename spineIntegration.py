@@ -228,7 +228,7 @@ def advance_quickly(tmp_tstop, stim_spines_id, weight_baseline):
         update_synape_weight(spine, weight_baseline)
     
 def run_simulation(tStop_final, t_buffer, dtNeuron,
-                   delta_calcium_sampling, weight_baseline):
+                   delta_calcium_sampling, weight_baseline, param):
     """
     Run the simulation. If input synchronizes the two simulators, 
     otherwise run each on its own and advance quickly
@@ -343,7 +343,8 @@ def main(argv):
     print ("#--#")
     t_buffer = param['t_buffer']
     run_simulation(tStop_final, t_buffer, 
-                   h.dt, delta_calcium_sampling, param['weight_baseline'])
+                   h.dt, delta_calcium_sampling, param['weight_baseline'],
+                   param)
     
     #------------------------------------
     # Save the Results
