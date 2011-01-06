@@ -277,17 +277,17 @@ def run_simulation(tStop_final, t_buffer, dtNeuron,
         update_synape_weight(spine, weight_baseline) 
 
 
-def main(sys.argv):
-        import os
+def main(argv):
+    import os
     import neuronControl
     
-    if len(sys.argv) != 2:
+    if len(argv) != 2:
         print("No parameter file supplied. Abort.")
         usage = 'python spineIntegration.py parameters_file.param'
         print usage
         sys.exit()
         
-    parameter_file = sys.argv[1]
+    parameter_file = argv[1]
     param = parameters.ParameterSet(parameter_file)
     
     
