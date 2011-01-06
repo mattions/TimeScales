@@ -276,9 +276,9 @@ def run_simulation(tStop_final, t_buffer, dtNeuron,
         spine = nrnSim.spines[spine_id]
         update_synape_weight(spine, weight_baseline) 
 
-if __name__ == "__main__":
 
-    import os
+def main(sys.argv):
+        import os
     import neuronControl
     
     if len(sys.argv) != 2:
@@ -406,3 +406,7 @@ if __name__ == "__main__":
                            dir=saving_dir, name=spine.id, 
                            x_lims= [x_start, x_stop])
         eM.plotWeight(spine.ecellMan.timeCourses, dir=saving_dir)
+
+    
+if __name__ == "__main__":
+    main(sys.argv)
