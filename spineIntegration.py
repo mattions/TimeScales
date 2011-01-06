@@ -267,7 +267,6 @@ def run_simulation(tStop_final, t_buffer, dtNeuron,
         spine = nrnSim.spines[spine_id]
         update_synape_weight(spine, weight_baseline) 
 
-
 def main(argv):
     
     if len(argv) != 2:
@@ -400,3 +399,4 @@ def main(argv):
     
 if __name__ == "__main__":
     main(sys.argv)
+
