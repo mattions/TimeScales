@@ -292,7 +292,7 @@ def main(argv):
     hoc_path = "hoc"
     mod_path="mod"
     
-    nrnSim = neuronControl.NeuronSim(mod_path=mod_path, hoc_path=hoc_path, 
+    neuronsim = neuronControl.NeuronSim(mod_path=mod_path, hoc_path=hoc_path, 
                               spines_dist=param['spines_dist'], 
                               biochemical_filename=param['biochemical_filename']) 
     
@@ -324,21 +324,21 @@ def main(argv):
             
     # Recording the synapses
     for spine_id in stim_spines_id:
-        spine = nrnSim.spines[spine_id]
+        spine = neuronsim.spines[spine_id]
         for syn in spine.synapses:
             manager.add_synVecRef(syn)
     
     
     ##------------------------------------------------------------------------------ 
     ## Experiment
-    nrnSim.init() # Initializing neuron
+    neuronsim.init() # Initializing neuron
     
     # equilibrium
     print ("#--#")
     print ("Equilibrium run for the two simulators") 
-    nrnSim.run(t_equilibrium_neuron)
+    neuronsim.run(t_equilibrium_neuron)
     for spine_id in stim_spines_id:
-        advance_ecell(nrnSim.spines[spine_id], t_equilibrium_ecell)
+        advance_ecell(neuronsim.spines[spine_id], t_equilibrium_ecell)
     print ("Equilibrium run finished. Starting normal simulation.")
     print ("#--#")
     t_buffer = param['t_buffer']
@@ -351,10 +351,10 @@ def main(argv):
     
     # Add timeseries
     extRef = ExtRef()
-    extRef.add_timeseries(manager, param['stimulated_spines'], nrnSim)
+    extRef.add_timeseries(manager, param['stimulated_spines'], neuronsim)
     
     # Saving the weight
-    extRef.add_weights(manager, param['stimulated_spines'], nrnSim)
+    extRef.add_weights(manager, param['stimulated_spines'], neuronsim)
     
     print "Simulation Ended. Saving results"
     saving_dir = manager.create_new_dir(root='Data')
@@ -391,7 +391,7 @@ def main(argv):
     x_start = param['tEquilibrium_ecell']
     x_stop = x_start + param['tStop']/1e3
     for stim_spine in param['stimulated_spines']:
-        spine = nrnSim.spines[stim_spine]
+        spine = neuronsim.spines[stim_spine]
         eM.plotTimeCourses(spine.ecellMan.timeCourses, save=True, 
                            dir=saving_dir, name=spine.id, 
                            x_lims= [x_start, x_stop])
