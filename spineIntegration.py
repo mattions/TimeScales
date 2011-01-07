@@ -232,7 +232,7 @@ def advance_quickly(tmp_tstop, stim_spines_id, weight_baseline,
     
 def run_simulation(tStop_final, t_buffer, dtNeuron,
                    delta_calcium_sampling, weight_baseline, param,
-                   neuronsim, excitatory_stims):
+                   neuronsim, excitatory_stims, stim_spines_id):
     """
     Run the simulation. If input synchronizes the two simulators, 
     otherwise run each on its own and advance quickly
@@ -350,7 +350,7 @@ def main(argv):
     t_buffer = param['t_buffer']
     run_simulation(tStop_final, t_buffer, 
                    h.dt, delta_calcium_sampling, param['weight_baseline'],
-                   param, neuronsim, excitatory_stims)
+                   param, neuronsim, excitatory_stims, stim_spines_id)
     
     #------------------------------------
     # Save the Results
