@@ -167,7 +167,7 @@ def update_synape_weight(spine, baseline):
                                                                                h.t,
                                                                                weight)
 
-def create_excitatory_inputs(stim_spines_id, neuron_time_interval):
+def create_excitatory_inputs(stim_spines_id, neuron_time_interval, param):
     """
     Create the excitatory inputs according to the parametes file.
     
@@ -308,7 +308,8 @@ def main(argv):
     
     stim_spines_id = param['stimulated_spines']
     excitatory_stims = create_excitatory_inputs(stim_spines_id,
-                                                param['time_resolution_neuron'])
+                                                param['time_resolution_neuron'],
+                                                param)
     print "This are the time of the stims: %s" %excitatory_stims
 
     # Recording the sections
