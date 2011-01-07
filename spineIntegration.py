@@ -179,7 +179,7 @@ def create_excitatory_inputs(stim_spines_id, neuron_time_interval, param):
     
     for spine_id in stim_spines_id:
         if spine_id in param.keys():
-            spine = nrnSim.spines[spine_id]
+            spine = neuronsim.spines[spine_id]
             for stim_id in param[spine.id]:
                 stim_dictionary = param[stim_id]
                 stim = Stimul((stim_dictionary['t_stim']* 1e3), 
@@ -213,7 +213,7 @@ def advance_quickly(tmp_tstop, stim_spines_id, weight_baseline):
     """
     #Update the weight
     for spine_id in stim_spines_id:
-        spine = nrnSim.spines[spine_id]   
+        spine = neuronsim.spines[spine_id]   
         update_synape_weight(spine, weight_baseline)
     
     delta_ecell = tmp_tstop - h.t
@@ -221,9 +221,9 @@ def advance_quickly(tmp_tstop, stim_spines_id, weight_baseline):
     print ("\nAdvance quickly routine.")
     print ("Current Neuron time: %s, aimed tstop[ms]: %s") %(h.t, tmp_tstop)
     print ("Delta applied on Ecell simulator [s]: %s\n") % delta_ecell_seconds
-    nrnSim.run(tmp_tstop)
+    neuronsim.run(tmp_tstop)
     for spine_id in stim_spines_id:
-        spine = nrnSim.spines[spine_id]
+        spine = neuronsim.spines[spine_id]
         advance_ecell(spine, delta_ecell_seconds)
         update_synape_weight(spine, weight_baseline)
     
@@ -237,7 +237,7 @@ def run_simulation(tStop_final, t_buffer, dtNeuron,
     
     # Getting the calcium before the stims
     for spine_id in param['stimulated_spines']:
-        spine = nrnSim.spines[spine_id]
+        spine = neuronsim.spines[spine_id]
         update_synape_weight(spine, weight_baseline)
         
     while h.t < tStop_final:
@@ -264,7 +264,7 @@ def run_simulation(tStop_final, t_buffer, dtNeuron,
     
     # Recording last 
     for spine_id in param['stimulated_spines']:
-        spine = nrnSim.spines[spine_id]
+        spine = neuronsim.spines[spine_id]
         update_synape_weight(spine, weight_baseline) 
 
 def main(argv):
