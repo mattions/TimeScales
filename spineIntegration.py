@@ -72,7 +72,7 @@ def synch_simulators(tmp_tstop, stim_spines_id,
                      dtNeuron,
                      delta_calcium_sampling, 
                      weight_baseline,
-                     neuronsim):
+                     neuronsim, manager):
     """
     Calculate the synapse weight, using the calcium in the spine_heads 
     as input.
@@ -92,7 +92,8 @@ def synch_simulators(tmp_tstop, stim_spines_id,
         if np.round(h.t, decimals = 4) % delta_calcium_sampling == 0:
             for spine_id in stim_spines_id :
                 spine = neuronsim.spines[spine_id]
-                sync_calcium(spine, dtNeuron, delta_calcium_sampling)
+                sync_calcium(spine, dtNeuron, delta_calcium_sampling, 
+                             manager)
                 advance_ecell(spine, (h.t - t_synch_start) / 1e3)
                 # Stopping flux from the input.
                 spine.ecellMan.ca_in['k'] = 0
@@ -104,7 +105,7 @@ def synch_simulators(tmp_tstop, stim_spines_id,
         
            
 
-def sync_calcium(spine, dtNeuron, delta_calcium_sampling):
+def sync_calcium(spine, dtNeuron, delta_calcium_sampling, manager):
     """"
     Calculate the flux of the calcium in the spine_head and synch 
     it with ecell. 
@@ -113,11 +114,11 @@ def sync_calcium(spine, dtNeuron, delta_calcium_sampling):
         
         k_ca_flux = get_calcium_flux(dtNeuron, 
                                      delta_calcium_sampling, 
-                                     spine)
+                                     spine, manager)
         # Unit conversion in update_calcium
         spine.update_calcium(k_ca_flux)
 
-def get_calcium_flux(dtNeuron, delta_calcium_sampling, spine):
+def get_calcium_flux(dtNeuron, delta_calcium_sampling, spine, manager):
     """
     Retrieving the calcium in the interval. end is always -1 because is
     the last timepoint available, start is when the interval has begun
@@ -232,7 +233,8 @@ def advance_quickly(tmp_tstop, stim_spines_id, weight_baseline,
     
 def run_simulation(tStop_final, t_buffer, dtNeuron,
                    delta_calcium_sampling, weight_baseline, param,
-                   neuronsim, excitatory_stims, stim_spines_id):
+                   neuronsim, excitatory_stims, stim_spines_id, 
+                   manager):
     """
     Run the simulation. If input synchronizes the two simulators, 
     otherwise run each on its own and advance quickly
@@ -259,7 +261,8 @@ def run_simulation(tStop_final, t_buffer, dtNeuron,
                                  dtNeuron,
                                  delta_calcium_sampling,
                                  weight_baseline,
-                                 neuronsim) 
+                                 neuronsim, 
+                                 manager) 
                 
                     
                 
@@ -350,7 +353,8 @@ def main(argv):
     t_buffer = param['t_buffer']
     run_simulation(tStop_final, t_buffer, 
                    h.dt, delta_calcium_sampling, param['weight_baseline'],
-                   param, neuronsim, excitatory_stims, stim_spines_id)
+                   param, neuronsim, excitatory_stims, stim_spines_id,
+                   manager)
     
     #------------------------------------
     # Save the Results
