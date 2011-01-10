@@ -72,7 +72,7 @@ def synch_simulators(tmp_tstop, stim_spines_id,
                      dtNeuron,
                      delta_calcium_sampling, 
                      weight_baseline,
-                     neurosim):
+                     neuronsim):
     """
     Calculate the synapse weight, using the calcium in the spine_heads 
     as input.
