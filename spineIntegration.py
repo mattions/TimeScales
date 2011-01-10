@@ -72,7 +72,7 @@ def synch_simulators(tmp_tstop, stim_spines_id,
                      dtNeuron,
                      delta_calcium_sampling, 
                      weight_baseline,
-                     neuronsim, manager):
+                     neuronsim, manager, param):
     """
     Calculate the synapse weight, using the calcium in the spine_heads 
     as input.
@@ -234,7 +234,7 @@ def advance_quickly(tmp_tstop, stim_spines_id, weight_baseline,
 def run_simulation(tStop_final, t_buffer, dtNeuron,
                    delta_calcium_sampling, weight_baseline, param,
                    neuronsim, excitatory_stims, stim_spines_id, 
-                   manager):
+                   manager, param):
     """
     Run the simulation. If input synchronizes the two simulators, 
     otherwise run each on its own and advance quickly
@@ -262,7 +262,8 @@ def run_simulation(tStop_final, t_buffer, dtNeuron,
                                  delta_calcium_sampling,
                                  weight_baseline,
                                  neuronsim, 
-                                 manager) 
+                                 manager, 
+                                 param) 
                 
                     
                 
@@ -294,7 +295,7 @@ def main(argv):
     t_equilibrium_neuron = param['tEquilibrium_neuron']
     t_equilibrium_ecell = param['tEquilibrium_ecell']
 
-    tStop_final = param['tStop']
+    tStop_final = param['tStop'] + t_equilibrium_neuron
                                                    
     print("Starting Spine integration")
     
@@ -354,7 +355,7 @@ def main(argv):
     run_simulation(tStop_final, t_buffer, 
                    h.dt, delta_calcium_sampling, param['weight_baseline'],
                    param, neuronsim, excitatory_stims, stim_spines_id,
-                   manager)
+                   manager, param)
     
     #------------------------------------
     # Save the Results
