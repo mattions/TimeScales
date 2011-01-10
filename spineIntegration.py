@@ -269,7 +269,8 @@ def run_simulation(tStop_final, t_buffer, dtNeuron,
                 
         else:
             print "No excitatory input remaining. Quickly to the end"
-            advance_quickly(tStop_final, stim_spines_id, weight_baseline)
+            advance_quickly(tStop_final, stim_spines_id, weight_baseline,
+                            neuronsim)
             h.fadvance() # This is to force the latest step and avoid the infinite loop.
     
     # Recording last 
