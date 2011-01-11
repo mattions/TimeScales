@@ -278,6 +278,7 @@ def run_simulation(tStop_final, t_buffer, dtNeuron,
         spine = neuronsim.spines[spine_id]
         update_synape_weight(spine, weight_baseline) 
 
+@profile
 def main(argv):
     
     if len(argv) != 2:
