@@ -18,7 +18,7 @@ Long tStop test::
 
     bsub -M 4000 -R "rusage[mem=4000]" smt run long_tstop.param -r "Running a long simulation." -t "test, twospines"
 
-    bsub -M 10000 -R "rusage[mem=10000]" smt run long_stop_double_stim_two_spines.param -r "Running a double excitation with two spines." -t "twospines"
+    bsub -M 10000 -R "rusage[mem=10000]" smt run long_tstop_double_stim_two_spines.param -r "Running a double excitation with two spines." -t "twospines"
     
     bsub -M 200000 -R "rusage[mem=200000]" smt run long_stop_double_stim.param -r "Running a double excitation with all the spines. Using 200 Gb of RAM" -t "test, all"    
     
