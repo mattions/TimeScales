@@ -98,6 +98,24 @@ class NeuronSim():
             ## Trying some spines only for test
             spine_positions = [0.3, 0.5]
             self.__populateDend(spine_positions, [h.MSP_Cell[0].dend3_1[1]])
+        elif spine_dist == 'onebranch' :
+            # This one populate one branch only for testing purpose
+            l = Loader()
+            
+            # Mid:
+            spines_pos_mid = l.load('branch_dist/mid_spines_per_branch.pickle')
+            
+            first_half = [h.MSP_Cell[0].dend3_1[0]]
+            
+            self.__populateDend(spines_pos_mid[0], first_half)
+            
+            # Distal:
+            spines_pos_dist = l.load('branch_dist/dist_spines_per_branch.pickle')
+            
+            first_dist = [h.MSP_Cell[0].dend3_1[1]] 
+            
+            self.__populateDend(spines_pos_dist[0], first_dist)
+            
         elif spine_dist == 'all':
             l = Loader()
             
