@@ -13,6 +13,8 @@ Small memory, for testing::
 Small memory, for testing::
     
     bsub -M 4000 -R "rusage[mem=4000]" smt run short_tstop_double_stim.param -r "Double stims applied for short tstop." -t "test, twospines"
+    
+    bsub -M 10000 -R "rusage[mem=10000]" smt run short_tstop_onebranch_several_stimulation.param -r "Short tstop for testing. One branch populated with spines. Using 10 Gb" -t "onebranch"
 
 Long tStop test::
 
@@ -20,7 +22,7 @@ Long tStop test::
 
     bsub -M 10000 -R "rusage[mem=10000]" smt run long_tstop_double_stim_two_spines.param -r "Running a double excitation with two spines." -t "twospines"
     
-    bsub -M 10000 -R "rusage[mem=10000]" smt run long_tstop_onebranch_several_stimulation.param -r "Several stims across one branch pupolated with spines. Using 10 Gb" -t "onebranch"
+    bsub -M 10000 -R "rusage[mem=10000]" smt run long_tstop_onebranch_several_stimulation.param -r "Several stims across one branch populated with spines. Using 10 Gb" -t "onebranch"
     
     bsub -M 200000 -R "rusage[mem=200000]" smt run long_stop_double_stim.param -r "Running a double excitation with all the spines. Using 200 Gb of RAM" -t "test, all"    
     
