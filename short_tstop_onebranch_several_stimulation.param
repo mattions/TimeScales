@@ -13,7 +13,7 @@
     "spines_dist" : "onebranch", #spines_dist = 'all' or spines_dist=zero or onebranch to populate one only#Number of spines
     "weight_baseline" : 0.33,
     "stimulated_spines" : ['spine18', 'spine19', 'spine20', 'spine60', 'spine61', 
-                            'spine61', 'spine62', 'spine94', 'spine95', 'spine96'],
+                            'spine62', 'spine94', 'spine95', 'spine96'],
     
     "spine18" : ['ampa_s1', 'nmda_s1', 'ampa_s4', 'nmda_s4'],
     "spine19" : ['ampa_s1', 'nmda_s1', 'ampa_s4', 'nmda_s4'],
