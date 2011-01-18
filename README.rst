@@ -24,7 +24,7 @@ Long tStop test::
     
     bsub -M 10000 -R "rusage[mem=10000]" smt run long_tstop_onebranch_several_stimulation.param -r "Several stims across one branch populated with spines. Using 10 Gb" -t "onebranch"
     
-    bsub -M 200000 -R "rusage[mem=200000]" smt run long_stop_double_stim.param -r "Running a double excitation with all the spines. Using 200 Gb of RAM" -t "test, all"    
+    bsub -M 20000 -R "rusage[mem=200000]" smt run long_tstop_all_spines_several_stimulation.param -r "Running a double excitation with all the spines. Using 20 Gb of RAM" -t "test, all"    
     
 This is for the weight checking::
 
