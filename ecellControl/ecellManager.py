@@ -173,72 +173,11 @@ def testChangeCalciumValue(interval, caValue, filename="../biochemical_circuits/
     ecellManager.converToTimeCourses()
     print "ChangeCalciumValue Test Concluded"
     return ecellManager
-
-def plotTimeCourses(timeCourses, save=False, dir=None, name=None, x_lims=None):
-     """Plot the default timecourses"""
-     import matplotlib.pyplot as plt
-     ca_tc = timeCourses['ca'] 
-     plt.figure()
-     plt.plot(ca_tc[:,0], ca_tc[:,1], label="Calcium")
-     plt.xlabel("Time [s]")
-     if x_lims:
-         plt.xlim(x_lims)
-     plt.legend(loc=0)
-     
-     if save :
-         filename = name +"_caInput.png"
-         plt.savefig(os.path.join(dir, filename))
-         print "figure saved in: %s" % os.path.join(dir, filename)
-     
-     vars = ['PP2Bbar', 'CaMKIIbar', 'PP1abar', 'AMPAR', 'AMPAR_P']
-     
-     for var in vars:
-         plt.figure()
-         var_tc = timeCourses[var]
-         lbl = name + '_' + var
-         plt.plot(var_tc[:,0], var_tc[:,1], label=lbl)
-         plt.xlabel("Time [s]")
-         if x_lims:
-             plt.xlim(x_lims)
-         plt.legend(loc=0)
-     
-         if save :
-             filename = name + "_" + var + ".png"
-             plt.savefig(os.path.join(dir, filename))
-             print "figure saved in: %s" % os.path.join(dir, filename) 
-                                                    
-
-def plot_var(timeCourses, var):
-    "Plot the variable in the current figure"
-    var_tc = timeCourses[var]
-    lbl = var
-    plt.plot(var_tc[:,0], var_tc[:,1], label=lbl)
-    plt.xlabel("Time [s]")
-    plt.legend(loc=0)
-        
-def plotWeight(timecourses, dir=None):
-    import matplotlib.pyplot as plt
-    scaled_CaMKII = []
-    time = timecourses['AMPAR'][:,0] # time equal for everything
-
-
-
-    plt.figure()
-    plt.plot(time, timecourses['AMPAR_P'][:,1], label='AMPAR_P')
-    #plt.plot(time, weight_baseline, label='w_b')
-    title = "AMPA weight, calculated from E-Cell"
-    plt.title(title)
-    plt.legend(loc=0)
-    if dir is not None:
-        plt.savefig(os.path.join(dir, "weight.png"))
-    plt.plot(time, timecourses['AMPAR'][:,1], label='AMPAR')
-    plt.legend(loc=0)
-    if dir is not None:
-        plt.savefig(os.path.join(dir, "weight_both.png"))
         
 if __name__ == "__main__":
     
     import sys
+    
     if len(sys.argv) != 2:
         print("No parameter file supplied. Abort.")
         usage = 'python ecellManager.py ecellControl.param'
@@ -254,6 +193,7 @@ if __name__ == "__main__":
         matplotlib.use('Agg')
         print "Switching backend to Agg. Batch execution"
     import matplotlib.pyplot as plt
+    from helpers.plotter import EcellPlotter
     import helpers
     loader = helpers.Loader()
 
@@ -264,13 +204,13 @@ if __name__ == "__main__":
                                         param['biochemical_filename'])
     
 
-    
+    ecp = EcellPlotter()
     if param['interactive'] == False:
         dir = loader.create_new_dir(prefix=os.getcwd())
         loader.save(ecellManager.timeCourses,  dir, "timeCourses")
-        plotTimeCourses(ecellManager.timeCourses, save=True, dir=dir)
-        plotWeight(ecellManager.timeCourses, dir=dir)
+        ecp.plotTimeCourses(ecellManager.timeCourses, save=True, dir=dir)
+        ecp.plotWeight(ecellManager.timeCourses, dir=dir)
     else:
-        plotTimeCourses(ecellManager.timeCourses)
-        plotWeight(ecellManager.timeCourses)
+        ecp.plotTimeCourses(ecellManager.timeCourses)
+        ecp.plotWeight(ecellManager.timeCourses)
         plt.show()
