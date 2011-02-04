@@ -208,7 +208,7 @@ def plotTimeCourses(timeCourses, save=False, dir=None, name=None, x_lims=None):
              print "figure saved in: %s" % os.path.join(dir, filename) 
                                                     
 
-def plot_var(var):
+def plot_var(timeCourses, var):
     "Plot the variable in the current figure"
     var_tc = timeCourses[var]
     lbl = var
