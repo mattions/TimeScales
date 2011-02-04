@@ -11,7 +11,8 @@ import ecellControl.ecellManager as eC
 
 class EcellPlotter():
     
-    def plotTimeCourses(timeCourses, save=False, dir=None, name=None, x_lims=None):
+    def plotTimeCourses(self, timeCourses, save=False, 
+                        dir=None, name=None, x_lims=None):
          """Plot the default timecourses"""
          import matplotlib.pyplot as plt
          ca_tc = timeCourses['ca'] 
@@ -44,7 +45,7 @@ class EcellPlotter():
                  plt.savefig(os.path.join(dir, filename))
                  print "figure saved in: %s" % os.path.join(dir, filename) 
     
-    def plotWeight(timecourses, dir=None):
+    def plotWeight(self, timecourses, dir=None):
         import matplotlib.pyplot as plt
         scaled_CaMKII = []
         time = timecourses['AMPAR'][:,0] # time equal for everything
@@ -65,7 +66,7 @@ class EcellPlotter():
             plt.savefig(os.path.join(dir, "weight_both.png"))
             
     
-    def plot_var(timeCourses, var):
+    def plot_var(self, timeCourses, var):
         "Plot the variable in the current figure"
         var_tc = timeCourses[var]
         lbl = var
