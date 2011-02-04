@@ -2,6 +2,7 @@
 # Fri Feb  4 15:03:02 GMT 2011
 
 import sys
+import os
 
 import matplotlib.pyplot as plt
 
