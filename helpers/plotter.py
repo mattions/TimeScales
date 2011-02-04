@@ -12,7 +12,7 @@ import ecellControl.ecellManager as eC
 
 class EcellPlotter():
     
-    def plotTimeCourses(self, timeCourses, save=False, 
+    def plot_timeCourses(self, timeCourses, save=False, 
                         dir=None, name='test_spine', x_lims=None):
          """Plot the default timecourses"""
          import matplotlib.pyplot as plt
@@ -46,7 +46,7 @@ class EcellPlotter():
                  plt.savefig(os.path.join(dir, filename))
                  print "figure saved in: %s" % os.path.join(dir, filename) 
     
-    def plotWeight(self, timecourses, dir=None):
+    def plot_weight(self, timecourses, dir=None):
         import matplotlib.pyplot as plt
         scaled_CaMKII = []
         time = timecourses['AMPAR'][:,0] # time equal for everything
@@ -85,7 +85,7 @@ if __name__ == "__main__":
         l = Loader()
         ecp = EcellPlotter()
         timecourses = l.load(filename)
-        ecp.plotTimeCourses(timecourses, name='test_spine')
+        ecp.plot_timeCourses(timecourses, name='test_spine')
         print "Time courses loaded in 'timecourses' object. Easy plotting \n\
         with 'ecp' object. Have fun."
         plt.show()

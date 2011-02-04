@@ -208,9 +208,9 @@ if __name__ == "__main__":
     if param['interactive'] == False:
         dir = loader.create_new_dir(prefix=os.getcwd())
         loader.save(ecellManager.timeCourses,  dir, "timeCourses")
-        ecp.plotTimeCourses(ecellManager.timeCourses, save=True, dir=dir)
-        ecp.plotWeight(ecellManager.timeCourses, dir=dir)
+        ecp.plot_timeCourses(ecellManager.timeCourses, save=True, dir=dir)
+        ecp.plot_weight(ecellManager.timeCourses, dir=dir)
     else:
-        ecp.plotTimeCourses(ecellManager.timeCourses)
-        ecp.plotWeight(ecellManager.timeCourses)
+        ecp.plot_timeCourses(ecellManager.timeCourses)
+        ecp.plot_weight(ecellManager.timeCourses)
         plt.show()

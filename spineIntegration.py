@@ -400,15 +400,16 @@ def main(argv):
         fig_file = 'plot_' + var
         plt.savefig(os.path.join(saving_dir, fig_file))
 
-    from ecellControl import ecellManager as eM
+    from helpers.plotter import EcellPlotter
+    ecp = EcellPlotter()
     x_start = param['tEquilibrium_ecell']
     x_stop = x_start + param['tStop']/1e3
     for stim_spine in param['stimulated_spines']:
         spine = neuronsim.spines[stim_spine]
-        eM.plotTimeCourses(spine.ecellMan.timeCourses, save=True, 
+        ecp.plot_timeCourses(spine.ecellMan.timeCourses, save=True, 
                            dir=saving_dir, name=spine.id, 
                            x_lims= [x_start, x_stop])
-        eM.plotWeight(spine.ecellMan.timeCourses, dir=saving_dir)
+        ecp.plot_weight(spine.ecellMan.timeCourses, dir=saving_dir)
 
     
 if __name__ == "__main__":
