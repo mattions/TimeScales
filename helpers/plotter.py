@@ -12,7 +12,7 @@ import ecellControl.ecellManager as eC
 class EcellPlotter():
     
     def plotTimeCourses(self, timeCourses, save=False, 
-                        dir=None, name=None, x_lims=None):
+                        dir=None, name='test_spine', x_lims=None):
          """Plot the default timecourses"""
          import matplotlib.pyplot as plt
          ca_tc = timeCourses['ca'] 
