@@ -2,6 +2,13 @@
 How to launch simulation opn the cluster
 ****************************************
 
+
+TimeScales
+==========
+
+Launching the simulations
+-------------------------
+
 Storing here for future references::
 
     bsub -M 20000 -R "rusage[mem=20000]" smt run allspines.param -r "Testing the new synchro mechanism." -t "test, all"
@@ -25,9 +32,26 @@ Long tStop test::
     bsub -M 10000 -R "rusage[mem=10000]" smt run long_tstop_onebranch_several_stimulation.param -r "Several stims across one branch populated with spines. Using 10 Gb" -t "onebranch"
     
     bsub -M 30000 -R "rusage[mem=300000]" smt run long_tstop_all_spines_several_stimulation.param -r "Running a double excitation with all the spines. Using 30 Gb of RAM" -t "test, all"    
-    
+
+Read simulation results
+-----------------------
+
+Reload the storage.h5 file with neuronvisio
+ 
+EcellManager
+============
+
+Launching the simulation
+------------------------
+
 This is for the weight checking::
 
 	bsub -M 4000 -R "rusage[mem=4000]" smt run -m ecellControl/ecellManager.py ecellControl/ecellControl.param -r "Testing AMPA weight"
 
 	
+Read simulations results
+------------------------
+
+Open an ipython and run
+
+run helpers/plotter path/to/TimeCourses
