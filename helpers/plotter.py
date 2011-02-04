@@ -9,7 +9,7 @@ from helpers.loader import Loader
 import ecellControl.ecellManager as eC
 
 
-class EcellPlotter:
+class EcellPlotter():
     
     def plotTimeCourses(timeCourses, save=False, dir=None, name=None, x_lims=None):
          """Plot the default timecourses"""
