@@ -208,8 +208,13 @@ def plotTimeCourses(timeCourses, save=False, dir=None, name=None, x_lims=None):
              print "figure saved in: %s" % os.path.join(dir, filename) 
                                                     
 
-
-
+def plot_var(var):
+    "Plot the variable in the current figure"
+    var_tc = timeCourses[var]
+    lbl = var
+    plt.plot(var_tc[:,0], var_tc[:,1], label=lbl)
+    plt.xlabel("Time [s]")
+    plt.legend(loc=0)
         
 def plotWeight(timecourses, dir=None):
     import matplotlib.pyplot as plt
