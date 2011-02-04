@@ -6371,7 +6371,7 @@ System System( /Spine )
 	}
 	
 	# Calculating the variation of the AMPAR
-	Process ExpressionFluxProcess( AMPAR_Phosphorylation )
+	Process ExpressionFluxProcess( AMPAR_Phosphorylation_831 )
 	{
         	
 		StepperID	@(MAIN_STEPPER);
@@ -6384,15 +6384,15 @@ System System( /Spine )
 		                            [S1 Variable:/Spine:AMPAR -1]
 		                            [P0 Variable:/Spine:AMPAR_P 1];
 	}
-	Process ExpressionFluxProcess( AMPAR_Dephosphorylation )
+	Process ExpressionFluxProcess( AMPAR_Dephosphorylation_831 )
 	{
         	
 		StepperID	@(MAIN_STEPPER);
-        kcat 2; 
-        KM 4.97061e-6; # (transofmring uM in M. From Hayer and Bhalla 2005)
+        kcat 0.5; # s^-1 
+        KM 2e-6; # (transofmring uM in M. From Hayer and Bhalla 2005)
         Expression	"kcat * S0.MolarConc *  (S1.MolarConc / (S1.MolarConc + KM)) *self.getSuperSystem().SizeN_A";
 								
-		VariableReferenceList	 	[S0 Variable:/Spine:total_PP2B_bound 0]
+		VariableReferenceList	 	[S0 Variable:/Spine:totPP1 0]
 		                            [S1 Variable:/Spine:AMPAR_P -1]
 		                            [P0 Variable:/Spine:AMPAR 1];
 	}
