@@ -1294,13 +1294,11 @@ System System( /Spine )
 	}
 	Variable Variable( AMPAR )
 	{
-		MolarConc	0.0092593e-6; # Bulk concentration AMPAR, from Hayer and Bhalla 2005
-		Value	@(1e-15*6.02e23*0.0092593e-6);
-	}	
-	
-	
-	
-	
+	    MolarConc 1.66058e-06; #From Lismann 2007 (1000 AMPA um^2 in PSD cleft)
+	    Value  @(1e-15*6.02e23*1.66058e-06);
+		# MolarConc	0.0092593e-6; # Bulk concentration AMPAR, from Hayer and Bhalla 2005
+		# Value	@(1e-15*6.02e23*0.0092593e-6);
+	}
 	
 	Process ExpressionFluxProcess( ca_pump )
 	{

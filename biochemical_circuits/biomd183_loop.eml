@@ -2951,12 +2951,12 @@ DE1
 <variable class="Variable" id="AMPAR">
 <property name="MolarConc">
 <value>
-0.0092593e-6
+1.66058e-06
 </value>
 </property>
 <property name="Value">
 <value>
-5.5740986
+999.66916
 </value>
 </property>
 </variable>
@@ -41110,7 +41110,7 @@ Variable:/Spine:PKAinmodel
 </value>
 </property>
 </process>
-<process class="ExpressionFluxProcess" id="AMPAR_Phosphorylation">
+<process class="ExpressionFluxProcess" id="AMPAR_Phosphorylation_831">
 <property name="StepperID">
 <value>
 DE1
@@ -41167,7 +41167,7 @@ Variable:/Spine:AMPAR_P
 </value>
 </property>
 </process>
-<process class="ExpressionFluxProcess" id="AMPAR_Dephosphorylation">
+<process class="ExpressionFluxProcess" id="AMPAR_Dephosphorylation_831">
 <property name="StepperID">
 <value>
 DE1
@@ -41175,12 +41175,12 @@ DE1
 </property>
 <property name="kcat">
 <value>
-2
+0.5
 </value>
 </property>
 <property name="KM">
 <value>
-4.97061e-6
+2e-6
 </value>
 </property>
 <property name="Expression">
@@ -41194,7 +41194,7 @@ kcat * S0.MolarConc *  (S1.MolarConc / (S1.MolarConc + KM)) *self.getSuperSystem
 S0
 </value>
 <value>
-Variable:/Spine:total_PP2B_bound
+Variable:/Spine:totPP1
 </value>
 <value>
 0
