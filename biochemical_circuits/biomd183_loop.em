@@ -1287,15 +1287,19 @@ System System( /Spine )
 		MolarConc	0.0;
 		Value	@(1e-15*6.02e23*0);
 	}
+	
+	#From Lismann 2007 (1000 AMPA um^2 in PSD cleft)
+	# From Tolle 2010 # 100 in the PSD
+	
 	Variable Variable( AMPAR_P )
 	{
-		MolarConc	0.0;
-		Value	@(1e-15*6.02e23*0.0);
+		MolarConc	1.6605778811026237e-07; # 100 receptors (tolle2010
+		Value	@(1e-15*6.02e23*1.6605778811026237e-07);
 	}
 	Variable Variable( AMPAR )
 	{
-	    MolarConc 1.66058e-06; #From Lismann 2007 (1000 AMPA um^2 in PSD cleft)
-	    Value  @(1e-15*6.02e23*1.66058e-06);
+	    MolarConc 1.4945200929923614e-06; # From Lismann 2007 (1000 AMPA um^2 total 900 out)
+	    Value  @(1e-15*6.02e23*1.4945200929923614e-06);
 		# MolarConc	0.0092593e-6; # Bulk concentration AMPAR, from Hayer and Bhalla 2005
 		# Value	@(1e-15*6.02e23*0.0092593e-6);
 	}
