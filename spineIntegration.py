@@ -146,9 +146,10 @@ def get_calcium_flux(dtNeuron, delta_calcium_sampling, spine, manager):
     return k_calcium_flux
     
 
-def update_synape_weight(spine, baseline):
+def update_synape_weight(spine):
     """
-    Update the electrical weight's synapses.
+    Update the electrical weight's synapses. Use the baseline calculated
+    just after the equilibrium as reference to estimate the change of the weight
     
     spine : the spine where the weight should be updated
     baseline : the equilibrium concentration of AMPAR-P which we use as reference
@@ -159,7 +160,7 @@ def update_synape_weight(spine, baseline):
     for synapse in spine.synapses:
         if synapse.chan_type == 'ampa':                       
         # Retrieve the value of the weight.
-            weight = spine.ecellMan.ampar_P['Value']/baseline
+            weight = spine.ecellMan.ampar_P['Value']/spine.ampa_equilibrium_conc
             synapse.netCon.weight[0] = weight
             # The weight of the ampa is a double list
             # Check the specs in synapse weight for more info. 
