@@ -70,8 +70,7 @@ def advance_ecell(spine, delta_t):
 
 def synch_simulators(tmp_tstop, stim_spines_id,
                      dtNeuron,
-                     delta_calcium_sampling, 
-                     weight_baseline,
+                     delta_calcium_sampling,
                      neuronsim, manager, param):
     """
     Calculate the synapse weight, using the calcium in the spine_heads 
@@ -100,7 +99,7 @@ def synch_simulators(tmp_tstop, stim_spines_id,
                 # Re-enabling pump and leak. 
                 spine.ecellMan.ca_leak['vmax'] = param['ca_leak_vmax']
                 spine.ecellMan.ca_pump['vmax'] = param['ca_pump_vmax']
-                update_synape_weight(spine, weight_baseline)
+                update_synape_weight(spine)
             t_synch_start = h.t # Resetting the t_start to the new NEURON time.
         
            
