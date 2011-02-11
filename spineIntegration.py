@@ -232,7 +232,7 @@ def advance_quickly(tmp_tstop, stim_spines_id, weight_baseline,
         update_synape_weight(spine, weight_baseline)
     
 def run_simulation(tStop_final, t_buffer, dtNeuron,
-                   delta_calcium_sampling, weight_baseline, param,
+                   delta_calcium_sampling, param,
                    neuronsim, excitatory_stims, stim_spines_id, 
                    manager):
     """
@@ -244,7 +244,7 @@ def run_simulation(tStop_final, t_buffer, dtNeuron,
     # Getting the calcium before the stims
     for spine_id in param['stimulated_spines']:
         spine = neuronsim.spines[spine_id]
-        update_synape_weight(spine, weight_baseline)
+        update_synape_weight(spine)
         
     while h.t < tStop_final:
         
@@ -254,13 +254,13 @@ def run_simulation(tStop_final, t_buffer, dtNeuron,
                                                                                        t_stim,
                                                                                        len(excitatory_stims))
             if h.t < t_stim:
-                advance_quickly(t_stim, stim_spines_id, weight_baseline, 
+                advance_quickly(t_stim, stim_spines_id,  
                                 neuronsim)
                 tmp_tstop = t_stim + t_buffer
                 synch_simulators(tmp_tstop, stim_spines_id,
                                  dtNeuron,
                                  delta_calcium_sampling,
-                                 weight_baseline,
+                                 
                                  neuronsim, 
                                  manager, 
                                  param) 
@@ -269,14 +269,13 @@ def run_simulation(tStop_final, t_buffer, dtNeuron,
                 
         else:
             print "No excitatory input remaining. Quickly to the end"
-            advance_quickly(tStop_final, stim_spines_id, weight_baseline,
-                            neuronsim)
+            advance_quickly(tStop_final, stim_spines_id, neuronsim)
             h.fadvance() # This is to force the latest step and avoid the infinite loop.
     
     # Recording last 
     for spine_id in param['stimulated_spines']:
         spine = neuronsim.spines[spine_id]
-        update_synape_weight(spine, weight_baseline) 
+        update_synape_weight(spine) 
 
 
 def main(argv):
@@ -350,14 +349,17 @@ def main(argv):
     print ("Equilibrium run for the two simulators") 
     neuronsim.run(t_equilibrium_neuron)
     for spine_id in stim_spines_id:
-        advance_ecell(neuronsim.spines[spine_id], t_equilibrium_ecell)
+        spine = neuronsim.spines[spine_id]
+        advance_ecell(spine, t_equilibrium_ecell)
+        spine.set_ampa_equilibrium_baseline()
+            
+    
     print ("Equilibrium run finished. Starting normal simulation.")
     print ("#--#")
     t_buffer = param['t_buffer']
     run_simulation(tStop_final, t_buffer, 
-                   h.dt, delta_calcium_sampling, param['weight_baseline'],
-                   param, neuronsim, excitatory_stims, stim_spines_id,
-                   manager)
+                   h.dt, delta_calcium_sampling, param, neuronsim, 
+                   excitatory_stims, stim_spines_id, manager)
     
     #------------------------------------
     # Save the Results

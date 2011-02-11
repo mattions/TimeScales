@@ -202,3 +202,8 @@ class Spine():
         tot_surf = surface_head_cyl + surface_neck_cyl
         
         return tot_surf
+    
+    def set_ampa_equilibrium_baseline(self):
+        
+        self.ampa_equilibrium_conc = self.ecellMan.ampar_P['Value']
+        print "Number of AMPAR @equilibrium: %s " %self.ampa_equilibrium_conc
