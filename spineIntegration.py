@@ -210,8 +210,7 @@ def create_excitatory_inputs(stim_spines_id, neuron_time_interval, param,
     return excitatory_stimuli
 
 
-def advance_quickly(tmp_tstop, stim_spines_id, weight_baseline,
-                    neuronsim):
+def advance_quickly(tmp_tstop, stim_spines_id, neuronsim):
     """
     Advance the two simulators quickly in an independent way. Synapse weight 
     is synchronized at the end
@@ -219,7 +218,7 @@ def advance_quickly(tmp_tstop, stim_spines_id, weight_baseline,
     #Update the weight
     for spine_id in stim_spines_id:
         spine = neuronsim.spines[spine_id]   
-        update_synape_weight(spine, weight_baseline)
+        update_synape_weight(spine)
     
     delta_ecell = tmp_tstop - h.t
     delta_ecell_seconds = delta_ecell / 1e3
@@ -230,7 +229,7 @@ def advance_quickly(tmp_tstop, stim_spines_id, weight_baseline,
     for spine_id in stim_spines_id:
         spine = neuronsim.spines[spine_id]
         advance_ecell(spine, delta_ecell_seconds)
-        update_synape_weight(spine, weight_baseline)
+        update_synape_weight(spine)
     
 def run_simulation(tStop_final, t_buffer, dtNeuron,
                    delta_calcium_sampling, param,
