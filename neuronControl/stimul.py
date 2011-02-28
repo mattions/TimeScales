@@ -4,12 +4,21 @@
 class Stimul(object):
     """Store the inputs we are going to deliver to the different synapses"""
     def __init__(self, time, number, interval, chan_type, noise=0):
+        """
+        Initialize the stimul class
         
-        self.time = time
+        Params:
+        time: first time the input is deployed, in seconds
+        number: numbers of repetition of the pulses
+        interval: Interval between the pulses. In seconds
+        chan_type: the type (AMPA or NMDA)
+        """
+        
+        self.time = time * 1e3 
         self.number = number
         self.chan_type = chan_type
         self.noise = noise
-        self.interval = interval
+        self.interval = interval * 1e3
         
 #        self.spine = None #Used for logging
     def get_stims_time(self):

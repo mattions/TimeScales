@@ -185,7 +185,7 @@ def create_excitatory_inputs(stim_spines_id, neuron_time_interval, param,
             spine = neuronsim.spines[spine_id]
             for stim_id in param[spine.id]:
                 stim_dictionary = param[stim_id]
-                stim = Stimul((stim_dictionary['t_stim']* 1e3), 
+                stim = Stimul((stim_dictionary['t_stim']), 
                               stim_dictionary['numbers'], 
                               stim_dictionary['delay'], 
                               stim_dictionary['type'])
