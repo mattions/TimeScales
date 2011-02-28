@@ -16,7 +16,7 @@
     
     "spine55" : ['ampa_s1', 'nmda_s1'],
     "spine56" : ['ampa_s1', 'nmda_s1', 'ampa_s4', 'nmda_s4'],
-    "spine57" : ['ampa_s2', 'nmda_s2'],
+    "spine57" : ['ampa_s1', 'nmda_s1'],
     
     "spine60" : ['ampa_s1', 'nmda_s1'],
     "spine61" : ['ampa_s1', 'nmda_s1', 'ampa_s4', 'nmda_s4'],
