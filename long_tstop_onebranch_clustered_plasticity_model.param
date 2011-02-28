@@ -11,8 +11,8 @@
     "time_resolution_neuron" : 0.1, # Recording at every ms
     "weight_sampling" : 50, # Total ms when the weight of the synapses will be updated 
     "spines_dist" : "onebranch", #spines_dist = 'all' or spines_dist=zero or onebranch to populate one only#Number of spines
-    "stimulated_spines" : ['spine18', 'spine19', 'spine20', 'spine60', 'spine61', 
-                            'spine62', 'spine94', 'spine95', 'spine96'],
+    "stimulated_spines" : ['spine55', 'spine56', 'spine57', 'spine60', 'spine61', 
+                            'spine62', 'spine64', 'spine65', 'spine66'],
     
     "spine55" : ['ampa_s1', 'nmda_s1'],
     "spine56" : ['ampa_s1', 'nmda_s1', 'ampa_s4', 'nmda_s4'],
