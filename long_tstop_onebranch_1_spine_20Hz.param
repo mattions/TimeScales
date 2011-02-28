@@ -15,7 +15,7 @@
     
     "spine18" : ['ampa_s1', 'nmda_s1'],
     "spine19" : ['ampa_s1', 'nmda_s1', 'ampa_s2', 'nmda_s2'],
-    "spine20" : ['ampa_s2', 'nmda_s2'],
+    "spine20" : ['ampa_s1', 'nmda_s1'],
     
     "ampa_s1" : 
         {"t_stim" : 2, # t_stim [s]  
