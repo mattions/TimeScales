@@ -33,6 +33,8 @@ Long tStop test::
     
     bsub -M 10000 -R "rusage[mem=10000]" smt run long_tstop_onebranch_1_spine_1Hz.param -r "One branch: One spine double stim. 1Hz. Using 10 Gb" -t "onebranch"
     
+    bsub -M 10000 -R "rusage[mem=10000]" smt run long_tstop_onebranch_1_spine_4Hz.param -r "One branch: One spine double stim. 4Hz. Using 10 Gb" -t "onebranch"
+    
     bsub -M 50000 -R "rusage[mem=50000]" smt run long_tstop_all_spines_several_stimulation.param -r "Running a double excitation with all the spines. Using 30 Gb of RAM" -t "test, all"    
 
 Read simulation results
