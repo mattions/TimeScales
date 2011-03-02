@@ -138,10 +138,10 @@ if __name__ == "__main__":
     plt.figure()
     plt.hist(spines_pos, bins=30)
     plt.title("spines distribution for branch")
-    plt.savefig('spines_distribution.png')
+    #plt.savefig('spines_distribution.png')
     
-    filename = 'spines_pos.pickle'
-    l = Loader()
-    l.save(spines_pos, '.', filename)
+    #filename = 'spines_pos.pickle'
+    #l = Loader()
+    #l.save(spines_pos, '.', filename)
         
     plt.show()
