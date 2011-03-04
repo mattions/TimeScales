@@ -108,7 +108,7 @@ class Spine():
         h("create " + name_sec)
         neck = getattr(h, name_sec)
 
-        neck.nseg = 3
+        neck.nseg = 1
         neck.L = 1.5 # um
         neck.diam = 0.1
         #neck.Ra = 150.0 # Used by Grunditz et al 2008 (see supplemental material)
@@ -134,7 +134,7 @@ class Spine():
         head.L = 1
         head.diam = math.sqrt(head_vol / head.L * math.pi ) * 2
         self.Ra = 150.0
-        head.nseg = 7
+        head.nseg = 1
         head.connect(neck)
         
         #head.insert("pas")
@@ -162,6 +162,8 @@ class Spine():
         psd.L = 0.05        # um, Holmes & Levy 1990
         psd.diam = 0.5      # Wilson 1998 (Shepherd book)
         psd.Ra =100
+        psd.nseg = 1
+        
         psd.connect(head)
         
         psd.insert("caL13")

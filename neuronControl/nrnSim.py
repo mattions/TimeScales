@@ -67,6 +67,7 @@ class NeuronSim():
         for dend in h.MSP_Cell[0].Mid_Dend:
             dend.diam = 1 # um
             dend.L = 20 #um
+            dend.nseg = 5 #Increasing from 1 to 5 for a better spatial resolution to track spines input.
             
         for dend in h.MSP_Cell[0].Dist_Dend:
             dend.diam = 0.5 #um
