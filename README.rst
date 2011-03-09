@@ -41,7 +41,11 @@ Long tStop test::
     
     bsub -M 60000 -R "rusage[mem=60000]" smt run long_tstop_allbranch_cpm_two_branches_stims_8_Hz.param -r "CPM 2 branches, all spine 8 Hz. Using 60 Gb of RAM" -t "all"
     
-    bsub -M 60000 -R "rusage[mem=60000]" smt run long_tstop_allbranch_cpm_two_branches_stims_20_Hz.param -r "CPM 2 branches, all spine 20 Hz. Using 60 Gb of RAM" -t "all"   
+    bsub -M 60000 -R "rusage[mem=60000]" smt run long_tstop_allbranch_cpm_two_branches_stims_20_Hz.param -r "CPM 2 branches, all spine 20 Hz. Using 60 Gb of RAM (5seg med)" -t "all"
+    
+    bsub -M 60000 -R "rusage[mem=60000]" smt run long_tstop_allbranch_cpm_two_branches_stims_40_Hz.param -r "CPM 2 branches, all spine 40 Hz. Using 60 Gb of RAM (5seg med)" -t "all"
+    
+    bsub -M 60000 -R "rusage[mem=60000]" smt run long_tstop_allbranch_cpm_two_branches_stims_50_Hz.param -r "CPM 2 branches, all spine 50 Hz. Using 60 Gb of RAM (5seg med)" -t "all"   
 
 Read simulation results
 -----------------------
