@@ -19,26 +19,26 @@
     
     "ampa_s1" : 
         {"t_stim" : 2, # t_stim [s]  
-         "numbers" : 50, # number
+         "numbers" : 20, # number
          "delay" : 1, # delay [s]
          "type" : "ampa" # , type
          },
     "nmda_s1" :
         {"t_stim" : 2, # t_stim [s]  
-         "numbers" : 50, # number
+         "numbers" : 20, # number
          "delay" : 1, # delay [s]
          "type" : "nmda" # , type
          },
     "ampa_s2" :
         {"t_stim" : 10, # t_stim [s]  
-         "numbers" : 50, # number
+         "numbers" : 20, # number
          "delay" : 1, # delay [s]
          "type" : "ampa" # , type
          },
 
     "nmda_s2" :
         {"t_stim" : 10, # t_stim [s]  
-         "numbers" : 50, # number
+         "numbers" : 20, # number
          "delay" : 1, # delay [s]
          "type" : "nmda" # , type
          },
