@@ -37,7 +37,11 @@ Long tStop test::
     
     bsub -M 10000 -R "rusage[mem=6000]" smt run long_tstop_onebranch_1_spine_8Hz.param -r "One branch: One spine double stim. 8Hz. Using 10 Gb" -t "onebranch"
     
-    bsub -M 10000 -R "rusage[mem=6000]" smt run long_tstop_onebranch_1_spine_20Hz.param -r "One branch: One spine double stim. 8Hz. Using 10 Gb" -t "onebranch"
+    bsub -M 10000 -R "rusage[mem=6000]" smt run long_tstop_onebranch_1_spine_20Hz.param -r "One branch: One spine double stim. 20Hz. Using 10 Gb" -t "onebranch"
+    
+    bsub -M 10000 -R "rusage[mem=6000]" smt run long_tstop_onebranch_1_spine_50Hz.param -r "One branch: One spine double stim. 50Hz. Using 10 Gb" -t "onebranch"
+    
+    bsub -M 10000 -R "rusage[mem=6000]" smt run long_tstop_onebranch_1_spine_100Hz.param -r "One branch: One spine double stim. 100Hz. Using 10 Gb" -t "onebranch"
     
     bsub -M 10000 -R "rusage[mem=6000]" smt run long_tstop_onebranch_clustered_plasticity_model.param -r "One branch: Clustered Plasticity Model. 9 spines stimulated. 20 Hz. Using 10 Gb" -t "onebranch"
     
