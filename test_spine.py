@@ -31,7 +31,7 @@ def test_ampa(itmp, ical, g_tmp_ampa):
         for seg in sec:
             for mech in seg:
                 if mech.name() == 'kir':
-                    mech.gkbar = 0.00014
+                    mech.gkbar = 0.00016
     h.finitialize()
     while h.t < h.tstop:
         h.fadvance()
@@ -40,7 +40,7 @@ def test_ampa(itmp, ical, g_tmp_ampa):
         g_tmp_ampa.append(syn_ampa.chan.g)
     
     old = syn_ampa.netCon.weight[0]
-    syn_ampa.netCon.weight[0] = 2
+    syn_ampa.netCon.weight[0] = 1.5
     print "changing the weight in the synapses. \
     Old: %s, New: %s" %(old, syn_ampa.netCon.weight[0])
     h.tstop = 700

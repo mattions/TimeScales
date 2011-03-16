@@ -3,7 +3,7 @@ TITLE    AMPA synapse for nucleus accumbens model
 
 NEURON {
 	POINT_PROCESS AMPA
-	RANGE gbar, tau_r, tau_d, scale, spkcnt, countflag, i, t1, ca_ratio, ical, itmp, qfact
+	RANGE gbar, tau_r, tau_d, scale, spkcnt, countflag, i, t1, ca_ratio, ical, itmp, qfact, g
 	NONSPECIFIC_CURRENT i
  	USEION cal WRITE ical VALENCE 2
 

@@ -3,7 +3,7 @@ TITLE   NMDA synapse for nucleus accumbens model
 
 NEURON {
 	POINT_PROCESS NMDA
-	RANGE gbar, ca_ratio, tau_r, tau_d, scale, spkcnt, countflag, mg, i, ical, t1, itmp, qfact
+	RANGE gbar, ca_ratio, tau_r, tau_d, scale, spkcnt, countflag, mg, i, ical, t1, itmp, qfact, g
 	NONSPECIFIC_CURRENT i
 	USEION cal WRITE ical VALENCE 2
 }

@@ -6,7 +6,7 @@
         # to be synchronized within ecell and Neuron . 
     "tEquilibrium_neuron" : 100, # in milliseconds
     "tEquilibrium_ecell" : 300, # in seconds
-    "tStop" : 1000, # [ms] Time to stop (NEURON time is the reference) the simulation  
+    "tStop" : 10000, # [ms] Time to stop (NEURON time is the reference) the simulation  
     "t_buffer" : 10, #ms For how long the syncronization should be carried
     "time_resolution_neuron" : 0.1, # Recording at every ms
     "weight_sampling" : 50, # Total ms when the weight of the synapses will be updated 
@@ -23,7 +23,7 @@
          "type" : "ampa" # , type
          },
     "ampa_s2" :
-        {"t_stim" : 1.230, # t_stim [s]  
+        {"t_stim" : 7.0, # t_stim [s]  
          "numbers" : 10, # number
          "delay" : 0.05, # delay [s]
          "type" : "ampa" # , type
@@ -35,7 +35,7 @@
          "type" : "nmda" # , type
          },
     "nmda_s2" :
-        {"t_stim" : 1.230, # t_stim [s]  
+        {"t_stim" : 7.0, # t_stim [s]  
          "numbers" : 10, # number
          "delay" : 0.05, # delay [s]
          "type" : "nmda" # , type
