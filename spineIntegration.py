@@ -16,7 +16,7 @@ backend = 'Agg'
 matplotlib.use(backend)
 import matplotlib.pyplot as plt
 
-from neuronControl import nrnSim, synapse 
+from neuronControl import nrnSim
 from neuronControl.stimul import Stimul 
 import neuronControl
 
@@ -156,18 +156,23 @@ def update_synape_weight(spine):
     """    
     
     # Updating the AMPA synapses
-    for synapse in spine.synapses:
-        if synapse.chan_type == 'ampa':                       
+    for syn in spine.synapses:
+        if syn.chan_type == 'ampa':                       
         # Retrieve the value of the weight.
             weight = spine.ecellMan.ampar_P['Value']/spine.ampa_equilibrium_conc
-            synapse.netCon.weight[0] = weight
+            syn.netCon.weight[0] = weight
             # The weight of the ampa is a double list
             # Check the specs in synapse weight for more info. 
-            synapse.weight[0].append(h.t)
-            synapse.weight[1].append(weight)
+            syn.weight[0].append(h.t)
+            syn.weight[1].append(weight)
             print "Updating synapse weight in %s, time [ms]: %s, weight: %s" %(spine.id,
                                                                                h.t,
                                                                                weight)
+            print "AMPA syn value g: %s itmp: %s ical: %s i: %s ca_ratio: %s " %(syn.chan.g, 
+                                                                                 syn.chan.itmp,
+                                                                                 syn.chan.ical,
+                                                                                 syn.chan.i,
+                                                                                 syn.chan.ca_ratio)
 
 def create_excitatory_inputs(stim_spines_id, neuron_time_interval, param, 
                              neuronsim):
