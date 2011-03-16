@@ -18,6 +18,71 @@ from neuron import h
 import neuron
 
 from neuronControl import Synapse, Spine, Stimul
+
+def test_ampa(itmp, ical, g_tmp_ampa):
+    h.tstop = 300
+    syn_ampa = None
+
+    for syn in spine1.synapses:
+        if syn.chan_type == 'ampa':
+            syn_ampa = syn
+    
+    for sec in h.allsec():  
+        for seg in sec:
+            for mech in seg:
+                if mech.name() == 'kir':
+                    mech.gkbar = 0.00014
+    h.finitialize()
+    while h.t < h.tstop:
+        h.fadvance()
+        itmp.append(syn_ampa.chan.itmp)
+        ical.append(syn_ampa.chan.ical)
+        g_tmp_ampa.append(syn_ampa.chan.g)
+    
+    old = syn_ampa.netCon.weight[0]
+    syn_ampa.netCon.weight[0] = 2
+    print "changing the weight in the synapses. \
+    Old: %s, New: %s" %(old, syn_ampa.netCon.weight[0])
+    h.tstop = 700
+    while h.t < h.tstop:
+        h.fadvance()
+        itmp.append(syn_ampa.chan.itmp)
+        ical.append(syn_ampa.chan.ical)
+        g_tmp_ampa.append(syn_ampa.chan.g)  
+    #h.tstop = 700
+    #h.run()
+    
+
+
+def go():
+    
+#    graph = Graph()
+    h.run()
+    secs = [spine1.neck, spine1.head, spine1.psd]
+        
+    cai_vecs = controls.manager.get_vectors(secs, 'cai')
+    cali_vecs = controls.manager.get_vectors(secs, 'cali')
+    v_vecs = controls.manager.get_vectors(secs, 'v')
+    
+#    controls.manager.plotVecs(cai_vecs, 'cai')
+#    plt.title('cai')
+#    controls.manager.plotVecs(cali_vecs, 'cali')
+#    plt.title('cali')
+#    controls.manager.plotVecs(v_vecs, 'v')
+#    plt.title('voltage')
+        
+#    graph.plotVoltage(vecsVolt, spine1.synapses['ampa'].synVecs)
+#    pylab.title("AMPA syn")
+#    graph.plotVoltage(vecsVolt, spine1.synapses['nmda'].synVecs)
+#    pylab.title("NMDA syn")
+    plt.show()
+
+
+
+
+
+
+
 #from helpers.graph import Graph
 
 # Starting neuronVisio
@@ -60,9 +125,9 @@ for synapse in spine1.synapses:
 
 for synapse in spine1.synapses:
     if synapse.chan_type == 'ampa':
-        stim = Stimul(time = 150, number = 5, interval = 5, chan_type = 'ampa')
+        stim = Stimul(time = 0.100, number = 1, interval = 0.05, chan_type = 'ampa')
         synapse.stims.append(stim)
-        stim2 = Stimul(time = 200, number = 10, interval = 1, chan_type = 'ampa')
+        stim2 = Stimul(time = 0.500, number = 1, interval = 0.05, chan_type = 'ampa')
         synapse.stims.append(stim2)
 
 
@@ -92,29 +157,12 @@ controls.update_tree_view()
 
 #import neuron.gui
 h.v_init = -87.75 # Setting the initial vm
-h.dt = 0.005
+h.dt = 0.025
 
 h.tstop = 300
 
-def go():
-    
-#    graph = Graph()
-    h.run()
-    secs = [spine1.neck, spine1.head, spine1.psd]
-        
-    cai_vecs = controls.manager.get_vectors(secs, 'cai')
-    cali_vecs = controls.manager.get_vectors(secs, 'cali')
-    v_vecs = controls.manager.get_vectors(secs, 'v')
-    
-#    controls.manager.plotVecs(cai_vecs, 'cai')
-#    plt.title('cai')
-#    controls.manager.plotVecs(cali_vecs, 'cali')
-#    plt.title('cali')
-#    controls.manager.plotVecs(v_vecs, 'v')
-#    plt.title('voltage')
-        
-#    graph.plotVoltage(vecsVolt, spine1.synapses['ampa'].synVecs)
-#    pylab.title("AMPA syn")
-#    graph.plotVoltage(vecsVolt, spine1.synapses['nmda'].synVecs)
-#    pylab.title("NMDA syn")
-    plt.show()
+itmp = []
+ical = []
+g_tmp_ampa = []
+
+test_ampa(itmp, ical, g_tmp_ampa)
