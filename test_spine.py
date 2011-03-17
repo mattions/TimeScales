@@ -125,9 +125,9 @@ for synapse in spine1.synapses:
 
 for synapse in spine1.synapses:
     if synapse.chan_type == 'ampa':
-        stim = Stimul(time = 0.100, number = 1, interval = 0.05, chan_type = 'ampa')
+        stim = Stimul(time = 0.100, number = 2, interval = 0.05, chan_type = 'ampa')
         synapse.stims.append(stim)
-        stim2 = Stimul(time = 0.500, number = 1, interval = 0.05, chan_type = 'ampa')
+        stim2 = Stimul(time = 0.500, number = 2, interval = 0.05, chan_type = 'ampa')
         synapse.stims.append(stim2)
 
 
