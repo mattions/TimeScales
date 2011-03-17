@@ -159,7 +159,8 @@ def update_synape_weight(spine):
     for syn in spine.synapses:
         if syn.chan_type == 'ampa':                       
         # Retrieve the value of the weight.
-            weight = spine.ecellMan.ampar_P['Value']/spine.ampa_equilibrium_conc
+            #weight = spine.ecellMan.ampar_P['Value']/spine.ampa_equilibrium_conc
+            weight = 400
             syn.netCon.weight[0] = weight
             # The weight of the ampa is a double list
             # Check the specs in synapse weight for more info. 
