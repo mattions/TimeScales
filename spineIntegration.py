@@ -175,6 +175,8 @@ def update_synape_weight(spine):
                                                                               syn.chan.i,
                                                                               syn.chan.scale,
                                                                               spine.psd.v )
+            itmp = syn.chan.scale * syn.chan.g * spine.psd.v
+            print "itmp in NEURON: %s, itmp calculated: %s" %(syn.chan.itmp, itmp)
 
 def create_excitatory_inputs(stim_spines_id, neuron_time_interval, param, 
                              neuronsim):
