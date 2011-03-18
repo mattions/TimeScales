@@ -169,11 +169,12 @@ def update_synape_weight(spine):
                                                                                h.t,
                                                                                weight,
                                                                                syn.netCon.weight[0])
-            print "AMPA syn value g: %s itmp: %s ical: %s i: %s scale: %s " %(syn.chan.g, 
-                                                                                 syn.chan.itmp,
-                                                                                 syn.chan.ical,
-                                                                                 syn.chan.i,
-                                                                                 syn.chan.scale)
+            print "AMPA syn value g: %s itmp: %s ical: %s i: %s scale: %s voltage: %s" %(syn.chan.g, 
+                                                                              syn.chan.itmp,
+                                                                              syn.chan.ical,
+                                                                              syn.chan.i,
+                                                                              syn.chan.scale,
+                                                                              spine.psd.v )
 
 def create_excitatory_inputs(stim_spines_id, neuron_time_interval, param, 
                              neuronsim):
