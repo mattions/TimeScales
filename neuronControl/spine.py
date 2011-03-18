@@ -85,12 +85,12 @@ class Spine():
         for syn in self.synapses:
             inputs = []
             for stim in syn.stims:
-                print "Creating the stim for spine: %s syn type: %s" %(self.id, 
-                                                                       syn.chan_type)
+
                 stim_inputs = stim.get_stims_time()
                 #print "inputs: %s" % stim_inputs
                 inputs.extend(stim_inputs)
                 stim.spine = self.id
+            print "Creating the stim for spine: %s syn type: %s" %(self.id, syn.chan_type)
             syn.createStimul(inputs, neuron_time_interval_resolution)
                 
         

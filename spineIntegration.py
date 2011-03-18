@@ -166,19 +166,15 @@ def update_synape_weight(spine):
             # Check the specs in synapse weight for more info. 
             syn.weight[0].append(h.t)
             syn.weight[1].append(weight)
-            print "Updating synapse weight in %s, time [ms]: %s, weight: %s" %(spine.id,
+            print "Updating synapse weight in %s, time [ms]: %s, weight: %s, netCon: %s" %(spine.id,
                                                                                h.t,
-                                                                               weight)
+                                                                               weight,
+                                                                               syn.netCon.weight[0])
             print "AMPA syn value g: %s itmp: %s ical: %s i: %s scale: %s " %(syn.chan.g, 
                                                                                  syn.chan.itmp,
                                                                                  syn.chan.ical,
                                                                                  syn.chan.i,
                                                                                  syn.chan.scale)
-            print "AMPA syn value g: %s itmp: %s ical: %s i: %s scale: %s (using ref)" %(syn.chan._ref_g, 
-                                                                                 syn.chan._ref_itmp,
-                                                                                 syn.chan._ref_ical,
-                                                                                 syn.chan._ref_i,
-                                                                                 syn.chan._ref_scale)
 
 def create_excitatory_inputs(stim_spines_id, neuron_time_interval, param, 
                              neuronsim):
