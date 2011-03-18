@@ -46,7 +46,9 @@ class Synapse(object):
         array_inputs = list(set(array_inputs))
         # Ordering the inputs
         array_inputs.sort()
-        print "Creating vecStim for syn. Array input: %s" %array_inputs
+        print "Creating vecStim for syn  Channel %s, %s Array input: %s" %(self.chan,
+                                                                       self.chan_type, 
+                                                                       array_inputs)
         vecStim = h.VecStim()
         self.vec = h.Vector(array_inputs)
         vecStim.play(self.vec)
@@ -83,19 +85,17 @@ class Synapse(object):
         self.vecs[g] = h.Vector()
         self.vecs[itmp] = h.Vector()
         self.vecs[scale] = h.Vector()
-        self.vecs[scale_ref] = h.Vector()
+        
         if neuron_time_resolution is None:
             self.vecs[i].record(self.chan._ref_i)
             self.vecs[g].record(self.chan._ref_g)
             self.vecs[itmp].record(self.chan._ref_itmp)
-            self.vecs[scale].record(self.chan.scale)
-            self.vecs[scale_ref].record(self.chan._ref_scale)
+            self.vecs[scale].record(self.chan._ref_scale)
         else:
             self.vecs[i].record(self.chan._ref_i, neuron_time_resolution)
             self.vecs[g].record(self.chan._ref_g, neuron_time_resolution)
             self.vecs[itmp].record(self.chan._ref_itmp, neuron_time_resolution)
-            self.vecs[scale].record(self.chan.scale, neuron_time_resolution)
-            self.vecs[scale_ref].record(self.chan._ref_scale, neuron_time_resolution)
+            self.vecs[scale].record(self.chan._ref_scale, neuron_time_resolution)
              
         
         

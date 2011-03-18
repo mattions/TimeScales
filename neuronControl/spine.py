@@ -82,16 +82,16 @@ class Spine():
         :param
             neuron_time_interval_resolution - Resolution of the vector to record 
             the synapse"""
-        for synapse in self.synapses:
+        for syn in self.synapses:
             inputs = []
-            for stim in synapse.stims:
+            for stim in syn.stims:
                 print "Creating the stim for spine: %s syn type: %s" %(self.id, 
-                                                                       synapse.chan_type)
+                                                                       syn.chan_type)
                 stim_inputs = stim.get_stims_time()
                 #print "inputs: %s" % stim_inputs
                 inputs.extend(stim_inputs)
                 stim.spine = self.id
-            synapse.createStimul(inputs, neuron_time_interval_resolution)
+            syn.createStimul(inputs, neuron_time_interval_resolution)
                 
         
         
