@@ -26,7 +26,8 @@ class Event():
 
 class NeuronSim():
     """General class to control NEURON"""
-    def __init__(self, hoc_path="hoc", mod_path="mod", msn=True, spines_dist=None,
+    def __init__(self, hoc_path="hoc", mod_path="mod", 
+                 msn=True, spines_dist=None,
                  biochemical_filename="biochemical_circuits/biomd183.eml"):
         """Load and initiate all the hoc and mod file. Can load the model of the neuron
         or otherwise can just expose general method"""

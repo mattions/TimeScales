@@ -19,7 +19,7 @@ import neuron
 
 from neuronControl import Synapse, Spine, Stimul
 
-def test_ampa(itmp, ical, g_tmp_ampa):
+def test_ampa(itmp, ical, g_tmp_ampa, scale):
     h.tstop = 300
     syn_ampa = None
 
@@ -38,6 +38,7 @@ def test_ampa(itmp, ical, g_tmp_ampa):
         itmp.append(syn_ampa.chan.itmp)
         ical.append(syn_ampa.chan.ical)
         g_tmp_ampa.append(syn_ampa.chan.g)
+        scale.append(syn_ampa.chan.scale)
     
     old = syn_ampa.netCon.weight[0]
     syn_ampa.netCon.weight[0] = 1.2
@@ -46,9 +47,11 @@ def test_ampa(itmp, ical, g_tmp_ampa):
     h.tstop = 700
     while h.t < h.tstop:
         h.fadvance()
+        syn_ampa.netCon.weight[0] = h.t
         itmp.append(syn_ampa.chan.itmp)
         ical.append(syn_ampa.chan.ical)
-        g_tmp_ampa.append(syn_ampa.chan.g)  
+        g_tmp_ampa.append(syn_ampa.chan.g)
+        scale.append(syn_ampa.chan.scale)  
     #h.tstop = 700
     #h.run()
     
@@ -125,9 +128,9 @@ for synapse in spine1.synapses:
 
 for synapse in spine1.synapses:
     if synapse.chan_type == 'ampa':
-        stim = Stimul(time = 0.100, number = 2, interval = 0.05, chan_type = 'ampa')
+        stim = Stimul(time = 0.100, number = 4, interval = 0.05, chan_type = 'ampa')
         synapse.stims.append(stim)
-        stim2 = Stimul(time = 0.500, number = 2, interval = 0.05, chan_type = 'ampa')
+        stim2 = Stimul(time = 0.500, number = 4, interval = 0.05, chan_type = 'ampa')
         synapse.stims.append(stim2)
 
 
@@ -164,5 +167,6 @@ h.tstop = 300
 itmp = []
 ical = []
 g_tmp_ampa = []
+scale = []
 
-test_ampa(itmp, ical, g_tmp_ampa)
+test_ampa(itmp, ical, g_tmp_ampa, scale)
