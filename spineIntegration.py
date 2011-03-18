@@ -159,8 +159,7 @@ def update_synape_weight(spine):
     for syn in spine.synapses:
         if syn.chan_type == 'ampa':                       
         # Retrieve the value of the weight.
-            # weight = spine.ecellMan.ampar_P['Value']/spine.ampa_equilibrium_conc
-            weight = h.t # Testing the change of the weigth with the time
+            weight = spine.ecellMan.ampar_P['Value']/spine.ampa_equilibrium_conc
             syn.netCon.weight[0] = weight
             # The weight of the ampa is a double list
             # Check the specs in synapse weight for more info. 
@@ -262,7 +261,9 @@ def run_simulation(tStop_final, t_buffer, dtNeuron,
             if h.t < t_stim:
                 advance_quickly(t_stim, stim_spines_id,  
                                 neuronsim)
+                
                 tmp_tstop = t_stim + t_buffer
+                #update_synapse
                 synch_simulators(tmp_tstop, stim_spines_id,
                                  dtNeuron,
                                  delta_calcium_sampling,

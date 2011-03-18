@@ -19,7 +19,7 @@ import neuron
 
 from neuronControl import Synapse, Spine, Stimul
 
-def test_ampa(itmp, ical, g_tmp_ampa, scale):
+def test_ampa(itmp, ical, g_tmp_ampa, scale, excitatory_stims):
     h.tstop = 300
     syn_ampa = None
 
@@ -35,23 +35,20 @@ def test_ampa(itmp, ical, g_tmp_ampa, scale):
     h.finitialize()
     while h.t < h.tstop:
         h.fadvance()
-        itmp.append(syn_ampa.chan.itmp)
-        ical.append(syn_ampa.chan.ical)
-        g_tmp_ampa.append(syn_ampa.chan.g)
-        scale.append(syn_ampa.chan.scale)
-    
-    old = syn_ampa.netCon.weight[0]
-    syn_ampa.netCon.weight[0] = 1.2
-    print "changing the weight in the synapses. \
-    Old: %s, New: %s" %(old, syn_ampa.netCon.weight[0])
-    h.tstop = 700
-    while h.t < h.tstop:
-        h.fadvance()
         syn_ampa.netCon.weight[0] = h.t
         itmp.append(syn_ampa.chan.itmp)
         ical.append(syn_ampa.chan.ical)
         g_tmp_ampa.append(syn_ampa.chan.g)
-        scale.append(syn_ampa.chan.scale)  
+        scale.append(syn_ampa.chan.scale)
+        if h.t in excitatory_stims:
+            excitatory_stims.pop(0)
+            print "Excitatory stim time! %s" %(h.t)
+            
+        print "time: %s netCon: %s scale: %s" %(h.t, 
+                                                syn_ampa.netCon.weight[0], 
+                                                syn_ampa.chan.scale)
+        
+    return syn_ampa
     #h.tstop = 700
     #h.run()
     
@@ -125,6 +122,7 @@ for synapse in spine1.synapses:
 
 # AMPA Syn
 
+excitatory_stims = []
 
 for synapse in spine1.synapses:
     if synapse.chan_type == 'ampa':
@@ -132,7 +130,10 @@ for synapse in spine1.synapses:
         synapse.stims.append(stim)
         stim2 = Stimul(time = 0.500, number = 4, interval = 0.05, chan_type = 'ampa')
         synapse.stims.append(stim2)
+        excitatory_stims.extend(stim.get_stims_time())
+        excitatory_stims.extend(stim2.get_stims_time())
 
+excitatory_stims = list(set(excitatory_stims))
 
 #NMDA Syn
 #for synapse in spine1.synapses:
@@ -169,4 +170,4 @@ ical = []
 g_tmp_ampa = []
 scale = []
 
-test_ampa(itmp, ical, g_tmp_ampa, scale)
+syn_ampa = test_ampa(itmp, ical, g_tmp_ampa, scale, excitatory_stims)

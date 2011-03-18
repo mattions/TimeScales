@@ -8,7 +8,43 @@ import matplotlib.pyplot as plt
 
 from helpers.loader import Loader
 import ecellControl.ecellManager as eC
+import numpy as np
 
+
+
+class StimulPlotter():
+    """Helps to plot stimuli"""
+    
+    def __init__(self):
+        pass
+    
+    def build_stimul_vec(self, time, stimul, height_in_the_graph):
+        """Return a masked array which has `height_in_the_graph` value
+        for each point recorded in stimul array.
+        
+        time - the time array of the simulation
+        stimul - the synvecRef vectors with the synapstic inputs
+        height_in_graph"""
+        
+        inputs_event = np.zeros_like(time)
+        indxs = np.searchsorted(time, stimul)
+        inputs_event[indxs] = height_in_the_graph
+        masked = np.ma.masked_where(inputs_event == 0, inputs_event)
+        return masked
+    
+    def plot_input(self, spine, manager, style='k.', height_in_the_graph=-88):
+        
+        spine += '_psd'
+        stimul = manager.get_vector(spine, 'stimul_ampa', 'SynVecRef')
+        
+        if stimul is None:
+            print "Error - Stimul not Plotted. No stim found for %s." %spine
+        else:
+            time = manager.groups['t']
+            print "Buiding stim array for %s" %spine
+            m_array = self.build_stimul_vec(time, stimul, height_in_the_graph)
+            plt.plot(time, m_array, 'k.', label = "stimul")
+            return m_array
 
 class EcellPlotter():
     
