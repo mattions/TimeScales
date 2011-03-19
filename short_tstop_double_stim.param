@@ -18,25 +18,25 @@
     #"spine532" : ['ampa_s1', 'nmda_s1'],
     "ampa_s1" : 
         {"t_stim" : 0.130, # t_stim [s]  
-         "numbers" : 10, # number
+         "numbers" : 1, # number
          "delay" : 0.05, # delay [s]
          "type" : "ampa" # , type
          },
     "ampa_s2" :
         {"t_stim" : 7.0, # t_stim [s]  
-         "numbers" : 10, # number
+         "numbers" : 1, # number
          "delay" : 0.05, # delay [s]
          "type" : "ampa" # , type
          },
     "nmda_s1" :
         {"t_stim" : 0.130, # t_stim [s]  
-         "numbers" : 10, # number
+         "numbers" : 1, # number
          "delay" : 0.05, # delay [s]
          "type" : "nmda" # , type
          },
     "nmda_s2" :
         {"t_stim" : 7.0, # t_stim [s]  
-         "numbers" : 10, # number
+         "numbers" : 1, # number
          "delay" : 0.05, # delay [s]
          "type" : "nmda" # , type
          },
