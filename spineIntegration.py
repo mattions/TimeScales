@@ -163,6 +163,55 @@ class Runner():
         k_calcium_flux = electrical_diff / delta_calcium_sampling
         
         return k_calcium_flux
+
+    def equilibrium(self, nrnManager):
+        """Brings both NEURON and Ecell to equilibrium"""  
+        print ("#--#")
+        print ("Equilibrium started.")
+        nrnManager.run(self.param['t_equilibrium_neuron'])
+        for spine_id in stim_spines_id:
+            spine = nrnManager.spines[spine_id]
+            runner.advance_ecell(spine, self.param['t_equilibrium_ecell'])
+            spine.set_ampa_equilibrium_baseline()
+        print ("Equilibrium run finished. Starting normal simulation.")
+        print ("#--#")
+    
+    def main(self):
+        print ("#--#")
+        print ("Equilibrium run for the two simulators")
+        # Neuron Setup -----------------------------------------------------------
+        nrnManager = NeuronManager(runner.param['biochemical_filename'],
+                                   runner.param['big_spine'],
+                                   runner.param['dtNeuron'],
+                                   spines_dist=runner.param['spines_dist'],
+                                   mod_path='mod', 
+                                   hoc_path='hoc') 
+        
+        nrnManager.set_kir_gkbar(param['kir_gkbar'])
+    
+        # Recording -------------------------------------------------------------------------
+        # - Recording and stimul
+        # - Set the stimuls to the synapses
+        # - Initialize Ecell in each spine
+        
+        excitatory_stims = runner.create_excitatory_inputs(nrnManager)
+        print "This are the time of the stims: %s" %excitatory_stims
+    
+        # Recording the sections
+        runner.record_vector(runner.param['var_to_plot'])
+        
+        # Experiment -------------------------------------------------------------------- 
+        nrnManager.init() # Initializing neuron
+        runner.equilibrium(nrnManager)
+        runner.run_simulation(nrnManager, excitatory_stims)
+        
+        # Save the Results ------------------------------------
+        runner.save_results(nrnManager)
+        
+        #Let's save same plot
+        runner.plot_results()
+    
+    
     
     def plot_resutls(self):
         for i, var in enumerate(self.param['var_to_plot']):
@@ -346,8 +395,8 @@ class Runner():
                 itmp = syn.chan.scale * syn.chan.g * spine.psd.v
                 print "itmp in NEURON: %s, itmp calculated: %s" %(syn.chan.itmp, itmp)
 
-def main(argv):
     
+if __name__ == "__main__":
     if len(argv) != 2:
         print("No parameter file supplied. Abort.")
         usage = 'python spineIntegration.py parameters_file.param'
@@ -355,59 +404,6 @@ def main(argv):
         sys.exit()
         
     parameter_file = argv[1]
-    runner = Runner(parameter_file)    
-    print("Starting Spine integration")
-    
-    # Neuron Setup -----------------------------------------------------------
-    nrnManager = NeuronManager(runner.param['biochemical_filename'],
-                               runner.param['big_spine'],
-                               runner.param['dtNeuron'],
-                               spines_dist=runner.param['spines_dist'],
-                               mod_path='mod', 
-                               hoc_path='hoc') 
-    
-    nrnManager.set_kir_gkbar(param['kir_gkbar'])
-
-    # Recording -------------------------------------------------------------------------
-    # - Recording and stimul
-    # - Set the stimuls to the synapses
-    
-    excitatory_stims = runner.create_excitatory_inputs(nrnManager)
-    print "This are the time of the stims: %s" %excitatory_stims
-
-    # Recording the sections
-    
-    runner.record_vector(runner.param['var_to_plot'])
-    
-    
-    # Experiment -------------------------------------------------------------------- 
-    
-    nrnManager.init() # Initializing neuron
-    
-    # equilibrium
-    print ("#--#")
-    print ("Equilibrium run for the two simulators") 
-    nrnManager.run(t_equilibrium_neuron)
-    for spine_id in stim_spines_id:
-        spine = nrnManager.spines[spine_id]
-        runner.advance_ecell(spine, t_equilibrium_ecell)
-        spine.set_ampa_equilibrium_baseline()
-            
-    
-    print ("Equilibrium run finished. Starting normal simulation.")
-    print ("#--#")
-    
-    
-    runner.run_simulation(nrnManager, excitatory_stims)
-    
-    # Save the Results ------------------------------------
-    
-    runner.save_results(nrnManager)
-    
-    #Let's save same plot
-    runner.plot_results()
-
-    
-if __name__ == "__main__":
-    main(sys.argv)
+    runner = Runner(parameter_file)
+    runner.main()
 
