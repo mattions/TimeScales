@@ -20,7 +20,7 @@ vecStim.play(vec)
 # vecStim2.play(vec2)
 
 netCon = h.NetCon(vecStim, ampa)
-netCon.weight[0] = 0
+netCon.weight[0] = 1
 # netCon2 = h.NetCon(vecStim2, nmda)
 # netCon2.weight[0] = 1
 

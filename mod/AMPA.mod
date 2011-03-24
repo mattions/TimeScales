@@ -26,9 +26,13 @@ PARAMETER {
 	saturate = 1.2 			: causes the conductance to saturate - matched to 
 							:    Destexhe's reduced model in [1]
 	qfact = 2				: convert 22 degC to 35 degC
-	ca_ratio = 0.005			: ratio of calcium current to total current
-}							: Burnashev/Sakmann J Phys 1995 485:403-418
+	ca_ratio = 0.005		: ratio of calcium current to total current
+                            : Burnashev/Sakmann J Phys 1995 485:403-418
 							: with Carter/Sabatini Neuron 2004 44:483-493
+    g_factor                : factor used to scale the gbar of the AMPA
+
+}							
+	
 
 
 ASSIGNED {
@@ -60,11 +64,12 @@ INITIAL {
 	countflag = 0
 	t1 = 0
 	y1_loc = 0
+	g_factor = 1
 }
 
 BREAKPOINT {
   	SOLVE betadyn METHOD cnexp
-	g = gbar * y2
+	g = gbar * g_factor * y2
   	itmp = scale * g * (v - Erev)
   	i = (1-ca_ratio) * itmp
   	ical = ca_ratio * itmp
