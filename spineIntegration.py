@@ -176,7 +176,7 @@ class Runner():
         print ("Equilibrium run finished. Starting normal simulation.")
         print ("#--#")
     
-    def main(self):
+    def main(self, argv):
         print ("#--#")
         print ("Equilibrium run for the two simulators")
         # Neuron Setup -----------------------------------------------------------
@@ -397,13 +397,14 @@ class Runner():
 
     
 if __name__ == "__main__":
-    if len(argv) != 2:
+    
+    if len(sys.argv) != 2:
         print("No parameter file supplied. Abort.")
         usage = 'python spineIntegration.py parameters_file.param'
         print usage
         sys.exit()
         
-    parameter_file = argv[1]
+    parameter_file = sys.argv[1]
     runner = Runner(parameter_file)
     runner.main()
 
