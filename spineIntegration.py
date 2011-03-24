@@ -43,7 +43,7 @@ class Runner():
         # Create Neuronvisio Manager
         self.manager = Manager()
     
-    def advance_ecell(spine, delta_t):
+    def advance_ecell(self, spine, delta_t):
         """
         Advance ecell simulator in `spine` of `delta_t`.
         
@@ -57,7 +57,7 @@ class Runner():
         Current time len: %s") %(current_time, spine.id, delta_t, len_current_time)
         spine.ecellMan.ses.run(delta_t)
     
-    def advance_quickly(tmp_tstop, nrnManager):
+    def advance_quickly(self, tmp_tstop, nrnManager):
         """
         Advance the two simulators quickly in an independent way. Synapse weight 
         is synchronized at the end
@@ -80,7 +80,7 @@ class Runner():
             self.update_synape_weight(spine)
     
     
-    def build_vecs_to_plot(var, secs, anyRefs):
+    def build_vecs_to_plot(self, var, secs, anyRefs):
         """Create the dictionary of section->vectors to plot"""
         vecs_to_plot = {}
         for secName in secs:
@@ -90,7 +90,7 @@ class Runner():
                         vecs_to_plot[secName] = ref.vecs[var]
         return vecs_to_plot
         
-    def create_excitatory_inputs(nrnManager):
+    def create_excitatory_inputs(self, nrnManager):
         """
         Create the excitatory inputs according to the parametes file.
         
@@ -134,7 +134,7 @@ class Runner():
         excitatory_stimuli.sort()
         return excitatory_stimuli
     
-    def get_calcium_flux(spine):
+    def get_calcium_flux(self, spine):
         """
         Retrieving the calcium in the interval. end is always -1 because is
         the last timepoint available, start is when the interval has begun
@@ -252,7 +252,7 @@ class Runner():
                 manager.add_all_vecRef(var, 
                                        self.param['time_resolution_neuron'])
 
-    def run_simulation(nrnManager, excitatory_stims):
+    def run_simulation(self, nrnManager, excitatory_stims):
 
         """
         Run the simulation. If input synchronizes the two simulators, 
@@ -260,12 +260,7 @@ class Runner():
             
         """
         # Processing the options
-        delta_calcium_sampling = self.param['delta_calcium_sampling']
-        t_equilibrium_neuron = self.param['tEquilibrium_neuron']
-        t_equilibrium_ecell = self.param['tEquilibrium_ecell']
-        tStop_final = self.param['tStop'] + t_equilibrium_neuron
-        t_buffer = self.param['t_buffer']
-        
+        tStop_final = self.param['tStop'] + t_equilibrium_neuron        
         
         # Getting the calcium before the stims
         for spine_id in self.param['stimulated_spines']:
@@ -276,20 +271,16 @@ class Runner():
             
             if excitatory_stims:
                 t_stim = excitatory_stims.pop(0)
-                s = "Current Neuron time: %s. \
+                s_log = "Current Neuron time: %s. \
                 Current t_stim: %s, remaining input: %s" %(h.t, 
                                                            t_stim,
                                                            len(excitatory_stims))
-                print s
+                print s_log
                 
                 if h.t < t_stim:
                     self.advance_quickly(t_stim, nrnManager)
-                    
-                    tmp_tstop = t_stim + t_buffer
-                    
-                    self.synch_simulators(tmp_tstop,
-                                     delta_calcium_sampling,
-                                     nrnManager)
+                    tmp_tstop = t_stim + self.param['t_buffer']
+                    self.synch_simulators(tmp_tstop, nrnManager)
             else:
                 print "No excitatory input remaining. Quickly to the end"
                 self.advance_quickly(tStop_final, stim_spines_id, nrnManager)
@@ -317,9 +308,7 @@ class Runner():
         # Saving everything
         self.manager.save_to_hdf(filename)
         
-    def synch_simulators(tmp_tstop, 
-                         delta_calcium_sampling,
-                         nrnManager):
+    def synch_simulators(self, tmp_tstop, nrnManager):
         """
         Calculate the synapse weight, using the calcium in the spine_heads 
         as input.
@@ -336,7 +325,7 @@ class Runner():
         while h.t < tmp_tstop:
             h.fadvance() # run Neuron for step
             #for every ms in NEURON we update the ecellMan
-            if np.round(h.t, decimals = 4) % delta_calcium_sampling == 0:
+            if np.round(h.t, decimals = 4) % self.param['delta_calcium_sampling'] == 0:
                 for spine_id in stim_spines_id :
                     spine = nrnManager.spines[spine_id]
                     sync_calcium(spine)
@@ -349,7 +338,7 @@ class Runner():
                     self.update_synape_weight(spine)
                 t_synch_start = h.t # Resetting the t_start to the new NEURON time.
     
-    def sync_calcium(spine):
+    def sync_calcium(self, spine):
         """"
         Calculate the flux of the calcium in the spine_head and synch 
         it with ecell. 
@@ -360,7 +349,7 @@ class Runner():
             # Unit conversion in update_calcium
             spine.update_calcium(k_ca_flux)
             
-    def update_synape_weight(spine):
+    def update_synape_weight(self, spine):
         """
         Update the electrical weight's synapses. Use the baseline calculated
         just after the equilibrium as reference to estimate the change of the weight
