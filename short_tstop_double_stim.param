@@ -4,8 +4,8 @@
     "dtNeuron" : 0.025,  # integration dt [ms]
     "delta_calcium_sampling" : 0.5, # In millisecond [ms]. How often the calcium has 
         # to be synchronized within ecell and Neuron . 
-    "tEquilibrium_neuron" : 100, # in milliseconds
-    "tEquilibrium_ecell" : 300, # in seconds
+    "t_equilibrium_neuron" : 100, # in milliseconds
+    "t_equilibrium_ecell" : 300, # in seconds
     "tStop" : 10, # [ms] Time to stop (NEURON time is the reference) the simulation  
     "t_buffer" : 10, #ms For how long the syncronization should be carried
     "neuron_time_recording_interval" : 0.1, # Recording at every [ms]
