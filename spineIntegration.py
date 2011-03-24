@@ -176,7 +176,7 @@ class Runner():
         print ("Equilibrium run finished. Starting normal simulation.")
         print ("#--#")
     
-    def main(self, argv):
+    def main(self):
         print ("#--#")
         print ("Equilibrium run for the two simulators")
         # Neuron Setup -----------------------------------------------------------
