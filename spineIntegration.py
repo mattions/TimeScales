@@ -101,8 +101,8 @@ class Runner():
         
         excitatory_stimuli = []
         
-        for spine_id in self.param['stim_spines_id']:
-            if spine_id in self.param.keys():
+        for spine_id in self.param['stimulated_spines']:
+            if spine_id in self.param.keys(): # for each spine we list the input
                 spine = nrnManager.spines[spine_id]
                 for stim_id in self.param[spine.id]:
                     stim_dictionary = self.param[stim_id]
