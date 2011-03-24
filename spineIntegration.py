@@ -114,17 +114,11 @@ class Runner():
                         for syn in spine.synapses:
                             if syn.chan_type == 'ampa':
                                 syn.stims.append(stim)
-                                # Recording
-                                self.manager.add_synVecRef(syn,
-                                                           self.param['time_resolution_neuron'])
                                 
                     elif stim.chan_type == 'nmda':# more than one stim
                         for syn in spine.synapses:
                             if syn.chan_type == 'nmda':
                                 syn.stims.append(stim)
-                                # Recording
-                                self.manager.add_synVecRef(syn,
-                                                           self.param['time_resolution_neuron'])
                        
                     stims_time = stim.get_stims_time()
                     excitatory_stimuli.extend(stims_time)
@@ -198,7 +192,7 @@ class Runner():
         print "This are the time of the stims: %s" %excitatory_stims
     
         # Recording the sections
-        self.record_vector(self.param['var_to_plot'])
+        self.record_vector(nrnManager, self.param['var_to_plot'])
         
         # Experiment -------------------------------------------------------------------- 
         nrnManager.init() # Initializing neuron
@@ -246,13 +240,18 @@ class Runner():
                                x_lims= [x_start, x_stop])
             ecp.plot_weight(spine.ecellMan.timeCourses, dir=saving_dir)
             
-    def record_vectors(self, variable_to_rec):
+    def record_vectors(self, nrnManager, variable_to_rec):
         """Add a vecRef to record the vectors"""
         
         for var in variables_to_rec:
             for sec in h.allsec():
                 manager.add_all_vecRef(var, 
                                        self.param['time_resolution_neuron'])
+        # Recording the synapses
+        for spine_id in self.param['stimulated_spines']:
+            spine = nrnManager.spines[spine_id]
+            for syn in spine.synapses:
+                manager.add_synVecRef(syn)
 
     def run_simulation(self, nrnManager, excitatory_stims):
 
