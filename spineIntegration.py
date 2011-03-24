@@ -163,7 +163,7 @@ class Runner():
         print ("#--#")
         print ("Equilibrium started.")
         nrnManager.run(self.param['t_equilibrium_neuron'])
-        for spine_id in stimulated_spines:
+        for spine_id in self.param['stimulated_spines']:
             spine = nrnManager.spines[spine_id]
             runner.advance_ecell(spine, self.param['t_equilibrium_ecell'])
             spine.set_ampa_equilibrium_baseline()
