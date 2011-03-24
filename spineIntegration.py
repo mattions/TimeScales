@@ -90,9 +90,7 @@ class Runner():
                         vecs_to_plot[secName] = ref.vecs[var]
         return vecs_to_plot
         
-    def create_excitatory_inputs(neuron_time_interval, 
-                                 param, 
-                                 nrnManager):
+    def create_excitatory_inputs(nrnManager):
         """
         Create the excitatory inputs according to the parametes file.
         
@@ -194,22 +192,22 @@ class Runner():
         # - Set the stimuls to the synapses
         # - Initialize Ecell in each spine
         
-        excitatory_stims = runner.create_excitatory_inputs(nrnManager)
+        excitatory_stims = self.create_excitatory_inputs(nrnManager)
         print "This are the time of the stims: %s" %excitatory_stims
     
         # Recording the sections
-        runner.record_vector(self.param['var_to_plot'])
+        self.record_vector(self.param['var_to_plot'])
         
         # Experiment -------------------------------------------------------------------- 
         nrnManager.init() # Initializing neuron
-        runner.equilibrium(nrnManager)
-        runner.run_simulation(nrnManager, excitatory_stims)
+        self.equilibrium(nrnManager)
+        self.run_simulation(nrnManager, excitatory_stims)
         
         # Save the Results ------------------------------------
-        runner.save_results(nrnManager)
+        self.save_results(nrnManager)
         
         #Let's save same plot
-        runner.plot_results()
+        self.plot_results()
     
     
     
