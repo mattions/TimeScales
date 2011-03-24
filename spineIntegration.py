@@ -243,16 +243,18 @@ class Runner():
     def record_vectors(self, nrnManager):
         """Add a vecRef to record the vectors"""
         
-        for var in self.param['var_to_rec']:
-            if var == 'all':
-                for sec in h.allsec():
-                    self.manager.add_all_vecRef(var,
-                                           self.param['neuron_time_recording_interval'])
-                    break
-            else:
-                for sec in h.allsec():
-                    if sec.name() in param['section_to_plot']:
-                        self.manager.add_vecRef(var, sec, param['neuron_time_recording_interval'])
+        for var in self.param['var_to_plot']:
+            for sec_rec in self.param['sec_to_rec']:
+                if sec_rec == 'all': 
+                    for sec in h.allsec():
+                        self.manager.add_all_vecRef(var,
+                                                    self.param['neuron_time_recording_interval'])
+                        break
+                else:
+                    for sec in h.allsec():
+                        if sec.name() in param['sec_to_rec']:
+                            self.manager.add_vecRef(var, sec, 
+                                                    param['neuron_time_recording_interval'])
                     
         # Recording the synapses
         for spine_id in self.param['stimulated_spines']:
