@@ -270,7 +270,7 @@ class Runner():
             
         """
         # Processing the options
-        tStop_final = self.param['tStop'] + t_equilibrium_neuron        
+        tStop_final = self.param['tStop'] + self.param['t_equilibrium_neuron']        
         
         # Getting the calcium before the stims
         for spine_id in self.param['stimulated_spines']:
