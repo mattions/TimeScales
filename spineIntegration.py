@@ -338,7 +338,7 @@ class Runner():
             if np.round(h.t, decimals = 4) % self.param['delta_calcium_sampling'] == 0:
                 for spine_id in stimulated_spines :
                     spine = nrnManager.spines[spine_id]
-                    sync_calcium(spine)
+                    self.sync_calcium(spine)
                     self.advance_ecell(spine, (h.t - t_synch_start) / 1e3)
                     # Stopping flux from the input.
                     spine.ecellMan.ca_in['k'] = 0
