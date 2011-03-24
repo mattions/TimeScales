@@ -243,7 +243,7 @@ class Runner():
     def record_vectors(self, nrnManager):
         """Add a vecRef to record the vectors"""
         
-        for var in self.param['variables_to_rec']:
+        for var in self.param['var_to_rec']:
             if var == 'all':
                 for sec in h.allsec():
                     manager.add_all_vecRef(var,
