@@ -103,11 +103,11 @@ class Runner():
         
         excitatory_stimuli = []
         
-        for spine_id in runner.param['stim_spines_id']:
-            if spine_id in param.keys():
+        for spine_id in self.param['stim_spines_id']:
+            if spine_id in self.param.keys():
                 spine = nrnManager.spines[spine_id]
-                for stim_id in param[spine.id]:
-                    stim_dictionary = param[stim_id]
+                for stim_id in self.param[spine.id]:
+                    stim_dictionary = self.param[stim_id]
                     stim = Stimul((stim_dictionary['t_stim']), 
                                   stim_dictionary['numbers'], 
                                   stim_dictionary['delay'], 
@@ -129,7 +129,7 @@ class Runner():
                     stims_time = stim.get_stims_time()
                     excitatory_stimuli.extend(stims_time)
                     
-                spine.deploy_stims(runner.param['neuron_time_interval'])
+                spine.deploy_stims(self.param['neuron_time_interval'])
                 spine.setup_bio_sim() # Initializing ecell
         
         excitatory_stimuli = list(set(excitatory_stimuli))
@@ -180,14 +180,14 @@ class Runner():
         print ("#--#")
         print ("Equilibrium run for the two simulators")
         # Neuron Setup -----------------------------------------------------------
-        nrnManager = NeuronManager(runner.param['biochemical_filename'],
-                                   runner.param['big_spine'],
-                                   runner.param['dtNeuron'],
-                                   spines_dist=runner.param['spines_dist'],
+        nrnManager = NeuronManager(self.param['biochemical_filename'],
+                                   self.param['big_spine'],
+                                   self.param['dtNeuron'],
+                                   spines_dist=self.param['spines_dist'],
                                    mod_path='mod', 
                                    hoc_path='hoc') 
         
-        nrnManager.set_kir_gkbar(param['kir_gkbar'])
+        nrnManager.set_kir_gkbar(self.param['kir_gkbar'])
     
         # Recording -------------------------------------------------------------------------
         # - Recording and stimul
@@ -198,7 +198,7 @@ class Runner():
         print "This are the time of the stims: %s" %excitatory_stims
     
         # Recording the sections
-        runner.record_vector(runner.param['var_to_plot'])
+        runner.record_vector(self.param['var_to_plot'])
         
         # Experiment -------------------------------------------------------------------- 
         nrnManager.init() # Initializing neuron
@@ -237,7 +237,7 @@ class Runner():
     
         from helpers.plotter import EcellPlotter
         ecp = EcellPlotter()
-        x_start = param['tEquilibrium_ecell']
+        x_start = self.param['tEquilibrium_ecell']
         x_stop = x_start + self.param['tStop']/1e3
         for stim_spine in self.param['stimulated_spines']:
             spine = nrnManager.spines[stim_spine]
@@ -298,7 +298,7 @@ class Runner():
                 h.fadvance() # This is to force the latest step and avoid the infinite loop.
         
         # Recording last 
-        for spine_id in param['stimulated_spines']:
+        for spine_id in self.param['stimulated_spines']:
             spine = nrnManager.spines[spine_id]
             self.update_synape_weight(spine)
     
