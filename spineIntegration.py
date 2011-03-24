@@ -361,7 +361,7 @@ def main(argv):
     # Neuron Setup -----------------------------------------------------------
     nrnManager = NeuronManager(runner.param['biochemical_filename'],
                                runner.param['big_spine'],
-                               dt=runner.param['dtNeuron'],
+                               runner.param['dtNeuron'],
                                spines_dist=runner.param['spines_dist'],
                                mod_path='mod', 
                                hoc_path='hoc') 

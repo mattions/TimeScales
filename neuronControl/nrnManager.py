@@ -27,7 +27,7 @@ class Event():
 class NeuronManager():
     """General class to control NEURON"""
     def __init__(self, biochemical_filename, big_spine, 
-                 dt=dt, 
+                 dt, 
                  hoc_path="hoc",
                  mod_path="mod", 
                  msn=True, 
