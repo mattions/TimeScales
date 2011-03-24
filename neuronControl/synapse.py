@@ -34,14 +34,6 @@ class Synapse(object):
             array_inputs - Array which holds the inputs time
             neuron_time_resolution - resolution of the vectors when saving results"""
         
-        # NetStim obj    
-#        netStim = h.NetStim()
-#        netStim.number = stim.number
-#        netStim.start = stim.time
-#        netStim.interval = stim.interval
-#        netStim.noise = stim.noise
-#        self.netStimList.append(netStim) # assign the point to the class as attribute
-        
         # Removing duplicates
         array_inputs = list(set(array_inputs))
         # Ordering the inputs
