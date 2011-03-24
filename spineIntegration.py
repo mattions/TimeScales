@@ -115,14 +115,16 @@ class Runner():
                             if syn.chan_type == 'ampa':
                                 syn.stims.append(stim)
                                 # Recording
-                                self.manager.add_synVecRef(syn)
+                                self.manager.add_synVecRef(syn,
+                                                           self.param['time_resolution_neuron'])
                                 
                     elif stim.chan_type == 'nmda':# more than one stim
                         for syn in spine.synapses:
                             if syn.chan_type == 'nmda':
                                 syn.stims.append(stim)
                                 # Recording
-                                self.manager.add_synVecRef(syn)
+                                self.manager.add_synVecRef(syn,
+                                                           self.param['time_resolution_neuron'])
                        
                     stims_time = stim.get_stims_time()
                     excitatory_stimuli.extend(stims_time)
