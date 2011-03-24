@@ -14,17 +14,16 @@ class Spine():
     Class spine. Create a spine with head neck and psd
     """
     
-    def __init__(self, id, 
-                 filename_bioch_mod="../biochemical_circuits/biomd183_noCalcium.eml"):
+    def __init__(self, id, filename_bioch_mod, big_spine):
         """ Create a spine with a standard volume of ~0.11 um
         the h is the reference to the main hoc interpreter"""
         self.id = id
         self.head_vol = 0.11 #um
-        self.neck = self.createNeck()
-        self.head = self.createHead(self.neck, self.head_vol)
-        self.psd = self.createPSD(self.head)
+        self.neck = self.create_neck()
+        self.head = self.create_head(self.neck, self.head_vol, big_spine)
+        self.psd = self.create_psd(self.head)
         self.parent = None # the parent section connected to the neck
-        self.synapses = self.createSynapses()
+        self.synapses = self.create_synapses()
         self.filename = filename_bioch_mod
         self.k_flux = []
         
@@ -34,7 +33,7 @@ class Spine():
         h.cali0_cal_ion = 0.001        #// mM, Churchill 1998
         h.calo0_cal_ion = 5            #// mM, Churchill 1998 - gives eca = 100 mVh.cao0_ca_ion =
         
-    def setupBioSim(self):
+    def setup_bio_sim(self):
         """Initialize the Biochemical Simulator creating the instance of 
         the object to control the simulation"""
         if not hasattr(self, 'ecellMan'):
@@ -91,18 +90,18 @@ class Spine():
                 inputs.extend(stim_inputs)
                 stim.spine = self.id
             print "Creating the stim for spine: %s syn type: %s" %(self.id, syn.chan_type)
-            syn.createStimul(inputs, neuron_time_interval_resolution)
+            syn.create_stimul(inputs, neuron_time_interval_resolution)
                 
         
         
 #    def setStimul(self, stim, neuron_time_interval):
 #        '''Set the stimul applied to spine'''
 #        for synapse in self.synapses:
-#            synapse.createStimul(stim.get_stims_time(), neuron_time_interval)
+#            synapse.create_stimul(stim.get_stims_time(), neuron_time_interval)
 #        stim.spine = self.id
             
     
-    def createNeck(self):
+    def create_neck(self):
         """ Create the neck with the Grunditz value"""
         name_sec = self.id + "_neck"
         h("create " + name_sec)
@@ -125,16 +124,20 @@ class Spine():
                 
         return neck
         
-    def createHead(self, neck, head_vol):
+    def create_head(self, neck, head_vol, big_spine):
         """Create the head of the spine and populate it with the right channels"""
         name_sec = self.id + "_head"
         h("create " + name_sec)
         head = getattr(h, name_sec)
         
-        head.L = 1
-        head.diam = math.sqrt(head_vol / head.L * math.pi ) * 2
+        head.L = 0.5
+        if big_spine:
+            head.diam = 1.175
+        else:
+            head.diam = math.sqrt(head_vol / (head.L * math.pi) ) * 2
+        
         self.Ra = 150.0
-        head.nseg = 7
+        head.nseg = 1
         head.connect(neck)
         
         #head.insert("pas")
@@ -152,7 +155,7 @@ class Spine():
         
         return head
     
-    def createPSD(self, head):
+    def create_psd(self, head):
         """Create the Post Synaptic Density of the spine to model the different \
         location of the different channel"""
         name_sec = self.id + "_psd"
@@ -177,7 +180,7 @@ class Spine():
         
         return psd
         
-    def createSynapses(self):
+    def create_synapses(self):
         "Create an AMPA and an NMDA synapse in the spine"
         synapses = []
         # AMPA Syn
@@ -197,13 +200,33 @@ class Spine():
         self.parent = parentSec
         self.pos = parentx
     
-    def calc_surface_area(self):
+    def calc_surface_area_spine(self):
         """Calculate the surface of the spine"""
-        surface_neck_cyl = 2 * math.pi * (self.neck.diam/2) * (self.neck.diam/2 + self.neck.L)
-        surface_head_cyl = 2 * math.pi * (self.head.diam/2) * (self.head.diam/2 + self.head.L)
-        tot_surf = surface_head_cyl + surface_neck_cyl
+        surface_lat_neck = self.calc_lateral_area_section(self.neck)
+        surface_lat_head = self.calc_lateral_area_section(self.head)
+        surface_lat_psd = self.calc_lateral_area_section(self.psd)
+        
+        # The top of the psd
+        r_psd = self.psd.diam/2 
+        top_surface_psd = 2 * math.pi * r_psd * r_psd 
+        
+        # Adding all together
+        tot_surf = 0
+        tot_surf += surface_lat_neck 
+        tot_surf += surface_lat_head 
+        tot_surf += surface_lat_psd 
+        tot_surf += top_surface_psd 
         
         return tot_surf
+    
+    def calc_lateral_area_section(self, sec):
+        """Calculate the lateral area of the section"""
+        r = sec.diam/2
+        h = sec.L
+        lateral_area = 2 * math.pi * r * r * h
+         
+        return lateral_area
+    
     
     def set_ampa_equilibrium_baseline(self):
         

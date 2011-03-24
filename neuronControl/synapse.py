@@ -10,12 +10,12 @@ class Synapse(object):
         
         self.chan_type = chan_type
         self.section = section
-        self.chan = self.createChannel(chan_type, position)
+        self.chan = self.create_channel(chan_type, position)
         self.vecs = {} # Dictionary to record all the vectors 
         self.weight =  [[],[]]
         self.stims = []
             
-    def createChannel(self, chan_type, position):
+    def create_channel(self, chan_type, position):
         """Create the NMDA or AMPA channel"""
         if chan_type == 'ampa':
             chan = h.AMPA(position, sec = self.section)
@@ -26,7 +26,7 @@ class Synapse(object):
             
         return chan    
     
-    def createStimul(self, array_inputs, neuron_time_resolution):
+    def create_stimul(self, array_inputs, neuron_time_resolution):
         """Create a netStim object and assign it to the synapse together with 
         a NetConnect one.
         

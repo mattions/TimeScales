@@ -211,7 +211,7 @@ def create_excitatory_inputs(stim_spines_id, neuron_time_interval, param,
                 excitatory_stimuli.extend(stims_time)
                 
             spine.deploy_stims(neuron_time_interval)
-            spine.setupBioSim() # Initializing ecell
+            spine.setup_bio_sim() # Initializing ecell
     
     excitatory_stimuli = list(set(excitatory_stimuli))
     excitatory_stimuli.sort()
@@ -310,12 +310,11 @@ def main(argv):
                                                    
     print("Starting Spine integration")
     
-    hoc_path = "hoc"
-    mod_path="mod"
-    
-    neuronsim = neuronControl.NeuronSim(mod_path=mod_path, hoc_path=hoc_path, 
-                              spines_dist=param['spines_dist'], 
-                              biochemical_filename=param['biochemical_filename']) 
+    neuronsim = neuronControl.NeuronSim(param['biochemical_filename'],
+                                        param['big_spine'],
+                                        mod_path='mod', 
+                                        hoc_path='hoc',
+                                        spines_dist=param['spines_dist']) 
     
     kir_gkbar(param['kir_gkbar'])
 

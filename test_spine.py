@@ -35,7 +35,6 @@ def test_ampa(itmp, ical, g_tmp_ampa, scale, excitatory_stims):
     h.finitialize()
     while h.t < h.tstop:
         h.fadvance()
-        syn_ampa.netCon.weight[0] = h.t
         itmp.append(syn_ampa.chan.itmp)
         ical.append(syn_ampa.chan.ical)
         g_tmp_ampa.append(syn_ampa.chan.g)
@@ -48,8 +47,25 @@ def test_ampa(itmp, ical, g_tmp_ampa, scale, excitatory_stims):
                                                 syn_ampa.netCon.weight[0], 
                                                 syn_ampa.chan.scale)
         
+    h.tstop = 700
+    while h.t < h.tstop:
+        syn_ampa.netCon.weight[0] = 1.2
+        #h.fcurrent()
+        h.fadvance()
+        itmp.append(syn_ampa.chan.itmp)
+        ical.append(syn_ampa.chan.ical)
+        g_tmp_ampa.append(syn_ampa.chan.g)
+        scale.append(syn_ampa.chan.scale)
+        if h.t in excitatory_stims:
+            excitatory_stims.pop(0)
+            print "Excitatory stim time! %s" %(h.t)
+            
+        print "time: %s netCon: %s scale: %s" %(h.t, 
+                                                syn_ampa.netCon.weight[0], 
+                                                syn_ampa.chan.scale)
+
     return syn_ampa
-    #h.tstop = 700
+
     #h.run()
     
 
@@ -170,4 +186,4 @@ ical = []
 g_tmp_ampa = []
 scale = []
 
-syn_ampa = test_ampa(itmp, ical, g_tmp_ampa, scale, excitatory_stims)
+#syn_ampa = test_ampa(itmp, ical, g_tmp_ampa, scale, excitatory_stims)
