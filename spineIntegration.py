@@ -192,7 +192,7 @@ class Runner():
         print "This are the time of the stims: %s" %excitatory_stims
     
         # Recording the sections
-        self.record_vector(nrnManager, self.param['var_to_plot'])
+        self.record_vectors(nrnManager, self.param['var_to_plot'])
         
         # Experiment -------------------------------------------------------------------- 
         nrnManager.init() # Initializing neuron
