@@ -123,7 +123,7 @@ class Runner():
                     stims_time = stim.get_stims_time()
                     excitatory_stimuli.extend(stims_time)
                     
-                spine.deploy_stims(self.param['neuron_time_interval'])
+                spine.deploy_stims(self.param['neuron_time_recording_interval'])
                 spine.setup_bio_sim() # Initializing ecell
         
         excitatory_stimuli = list(set(excitatory_stimuli))
