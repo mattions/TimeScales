@@ -76,7 +76,7 @@ class Runner():
         nrnManager.run(tmp_tstop)
         for spine_id in stimulated_spines:
             spine = nrnManager.spines[spine_id]
-            advance_ecell(spine, delta_ecell_seconds)
+            self.advance_ecell(spine, delta_ecell_seconds)
             self.update_synape_weight(spine)
     
     
