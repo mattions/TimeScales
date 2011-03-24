@@ -62,9 +62,9 @@ class Runner():
         Advance the two simulators quickly in an independent way. Synapse weight 
         is synchronized at the end
         """
-        stim_spines_id = self.param[stim_spines_id]
+        stimulated_spines = self.param[stimulated_spines]
         #Update the weight
-        for spine_id in stim_spines_id:
+        for spine_id in stimulated_spines:
             spine = nrnManager.spines[spine_id]   
             self.update_synape_weight(spine)
         
@@ -74,7 +74,7 @@ class Runner():
         print ("Current Neuron time: %s, aimed tstop[ms]: %s") %(h.t, tmp_tstop)
         print ("Delta applied on Ecell simulator [s]: %s\n") % delta_ecell_seconds
         nrnManager.run(tmp_tstop)
-        for spine_id in stim_spines_id:
+        for spine_id in stimulated_spines:
             spine = nrnManager.spines[spine_id]
             advance_ecell(spine, delta_ecell_seconds)
             self.update_synape_weight(spine)
@@ -163,7 +163,7 @@ class Runner():
         print ("#--#")
         print ("Equilibrium started.")
         nrnManager.run(self.param['t_equilibrium_neuron'])
-        for spine_id in stim_spines_id:
+        for spine_id in stimulated_spines:
             spine = nrnManager.spines[spine_id]
             runner.advance_ecell(spine, self.param['t_equilibrium_ecell'])
             spine.set_ampa_equilibrium_baseline()
@@ -293,7 +293,7 @@ class Runner():
                     self.synch_simulators(tmp_tstop, nrnManager)
             else:
                 print "No excitatory input remaining. Quickly to the end"
-                self.advance_quickly(tStop_final, stim_spines_id, nrnManager)
+                self.advance_quickly(tStop_final, nrnManager)
                 h.fadvance() # This is to force the latest step and avoid the infinite loop.
         
         # Recording last 
@@ -330,13 +330,13 @@ class Runner():
         3. Update the electric weight of the synapses in NEURON
         """
         print ("Synchronizing sims till [ms] %s") %tmp_tstop
-        stim_spines_id = self.param['stim_spines_id']
+        stimulated_spines = self.param['stimulated_spines']
         t_synch_start = h.t
         while h.t < tmp_tstop:
             h.fadvance() # run Neuron for step
             #for every ms in NEURON we update the ecellMan
             if np.round(h.t, decimals = 4) % self.param['delta_calcium_sampling'] == 0:
-                for spine_id in stim_spines_id :
+                for spine_id in stimulated_spines :
                     spine = nrnManager.spines[spine_id]
                     sync_calcium(spine)
                     self.advance_ecell(spine, (h.t - t_synch_start) / 1e3)
