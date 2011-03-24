@@ -246,19 +246,19 @@ class Runner():
         for var in self.param['var_to_rec']:
             if var == 'all':
                 for sec in h.allsec():
-                    manager.add_all_vecRef(var,
+                    self.manager.add_all_vecRef(var,
                                            self.param['neuron_time_recording_interval'])
                     break
             else:
                 for sec in h.allsec():
                     if sec.name() in param['section_to_plot']:
-                        manager.add_vecRef(var, sec, param['neuron_time_recording_interval'])
+                        self.manager.add_vecRef(var, sec, param['neuron_time_recording_interval'])
                     
         # Recording the synapses
         for spine_id in self.param['stimulated_spines']:
             spine = nrnManager.spines[spine_id]
             for syn in spine.synapses:
-                manager.add_synVecRef(syn)
+                self.manager.add_synVecRef(syn)
 
     def run_simulation(self, nrnManager, excitatory_stims):
 
