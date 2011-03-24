@@ -62,7 +62,7 @@ class Runner():
         Advance the two simulators quickly in an independent way. Synapse weight 
         is synchronized at the end
         """
-        stimulated_spines = self.param[stimulated_spines]
+        stimulated_spines = self.param['stimulated_spines']
         #Update the weight
         for spine_id in stimulated_spines:
             spine = nrnManager.spines[spine_id]   
