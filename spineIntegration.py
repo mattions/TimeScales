@@ -240,13 +240,20 @@ class Runner():
                                x_lims= [x_start, x_stop])
             ecp.plot_weight(spine.ecellMan.timeCourses, dir=saving_dir)
             
-    def record_vectors(self, nrnManager, variable_to_rec):
+    def record_vectors(self, nrnManager):
         """Add a vecRef to record the vectors"""
         
-        for var in variables_to_rec:
-            for sec in h.allsec():
-                manager.add_all_vecRef(var, 
-                                       self.param['time_resolution_neuron'])
+        for var in self.param['variables_to_rec']:
+            if var == 'all':
+                for sec in h.allsec():
+                    manager.add_all_vecRef(var,
+                                           self.param['neuron_time_recording_interval'])
+                    break
+            else:
+                for sec in h.allsec():
+                    if sec.name() in param['section_to_plot']:
+                        manager.add_vecRef(var, sec, param['neuron_time_recording_interval'])
+                    
         # Recording the synapses
         for spine_id in self.param['stimulated_spines']:
             spine = nrnManager.spines[spine_id]
