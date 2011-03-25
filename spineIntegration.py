@@ -355,7 +355,7 @@ class Runner():
         """
         if hasattr(spine, 'ecellMan'):
             
-            k_ca_flux = get_calcium_flux(spine)
+            k_ca_flux = self.get_calcium_flux(spine)
             # Unit conversion in update_calcium
             spine.update_calcium(k_ca_flux)
             
