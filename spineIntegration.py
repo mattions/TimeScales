@@ -200,12 +200,14 @@ class Runner():
         self.run_simulation(nrnManager, excitatory_stims)
         
         # Save the Results ------------------------------------
-        saving_dir = self.save_results(nrnManager)
+        saving_dir = self.manager.create_new_dir(root='Data')
+        self.save_results(nrnManager, saving_dir)
+        self.plot_results(nrnManager, saving_dir)
         
     
     
     
-    def plot_results(self, nrnManager):
+    def plot_results(self, nrnManager, saving_dir):
         for i, var in enumerate(self.param['var_to_plot']):
             secs = self.param['section_to_plot']
             vecs_to_plot = self.build_vecs_to_plot(var, 
@@ -301,7 +303,7 @@ class Runner():
             spine = nrnManager.spines[spine_id]
             self.update_synape_weight(spine)
     
-    def save_results(self, nrnManager):
+    def save_results(self, nrnManager, saving_dir):
         """Saving both results"""
             # Add timeseries
         extRef = ExtRef()
@@ -315,7 +317,7 @@ class Runner():
                            nrnManager)
         
         print "Simulation Ended. Saving results"
-        saving_dir = self.manager.create_new_dir(root='Data')
+        
         hdf_name = 'storage.h5'
         filename = os.path.join(saving_dir, hdf_name)
         print "Results will be saved in %s" %filename
