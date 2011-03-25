@@ -233,7 +233,7 @@ class Runner():
     
         from helpers.plotter import EcellPlotter
         ecp = EcellPlotter()
-        x_start = self.param['tEquilibrium_ecell']
+        x_start = self.param['t_equilibrium_ecell']
         x_stop = x_start + self.param['tStop']/1e3
         for stim_spine in self.param['stimulated_spines']:
             spine = nrnManager.spines[stim_spine]
