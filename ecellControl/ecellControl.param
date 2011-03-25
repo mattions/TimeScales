@@ -2,6 +2,7 @@
 # Should be used with ecellManager.py
 {
 	"biochemical_filename" : "biochemical_circuits/biomd183_loop.eml",
+	'sec_to_rec' : ['all'],
     "weight_baseline" : 0,
     "num_spikes" : 200,
     "delay" : 0.020,

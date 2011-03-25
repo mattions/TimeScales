@@ -122,10 +122,12 @@ class Spine():
         h("create " + name_sec)
         head = getattr(h, name_sec)
         
-        head.L = 0.5
+        
         if big_spine:
+            head.L = 1
             head.diam = 1.175
         else:
+            head.L = 0.5
             head.diam = math.sqrt(head_vol / (head.L * math.pi) ) * 2
         
         self.Ra = 150.0

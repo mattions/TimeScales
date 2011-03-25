@@ -4,12 +4,13 @@
     "dtNeuron" : 0.025,  # integration dt [ms]
     "delta_calcium_sampling" : 0.5, # In millisecond [ms]. How often the calcium has 
         # to be synchronized within ecell and Neuron . 
-    "tEquilibrium_neuron" : 100, # in milliseconds
-    "tEquilibrium_ecell" : 300, # in seconds
+    "t_equilibrium_neuron" : 100, # in milliseconds
+    "t_equilibrium_ecell" : 300, # in seconds
     "tStop" : 20000, # [ms] Time to stop (NEURON time is the reference) the simulation  
     "t_buffer" : 10, #ms For how long the syncronization should be carried
-    "time_resolution_neuron" : 0.1, # Recording at every ms
-    "weight_sampling" : 50, # Total ms when the weight of the synapses will be updated 
+    "neuron_time_recording_interval" : 0.1, # Recording at every ms
+    "weight_sampling" : 50, # Total ms when the weight of the synapses will be updated
+	"big_spine" : True, 
     "spines_dist" : "onebranch", #spines_dist = 'all' or spines_dist=zero or onebranch to populate one only#Number of spines
     "stimulated_spines" : ['spine18', 'spine19', 'spine20', 'spine60', 'spine61', 
                             'spine62', 'spine94', 'spine95', 'spine96'],
@@ -80,6 +81,7 @@
          
     "kir_gkbar" : 0.00016, # S/cm2
     "biochemical_filename" : "biochemical_circuits/biomd183_loop.eml",
+	'sec_to_rec' : ['all'],
     "var_to_plot" : ['v','cai','cali','ica'],
     #"section_to_plot" : ['MSP_Cell[0].soma', 'MSP_Cell[0].dend3_1[1]', 
     #'MSP_Cell[0].dend3_1[0]', 'MSP_Cell[0].dend3', 'spine1_head','spine2_head', 

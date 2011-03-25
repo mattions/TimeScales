@@ -127,7 +127,8 @@ h(preface_string)
 h.load_file(os.path.join(hoc_path, "all_tau_vecs.hoc"))
 h.load_file('stdrun.hoc')
 spine1 = Spine("spine1", 
-               filename_bioch_mod ="biochemical_circuits/biomd183_noCalcium.eml")
+               filename_bioch_mod ="biochemical_circuits/biomd183_loop.eml",
+               True)
 
 #Setting the gbar
 for synapse in spine1.synapses:
