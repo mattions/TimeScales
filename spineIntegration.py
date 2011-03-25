@@ -305,10 +305,14 @@ class Runner():
         """Saving both results"""
             # Add timeseries
         extRef = ExtRef()
-        extRef.add_timeseries(manager, self.param['stimulated_spines'], nrnManager)
+        extRef.add_timeseries(self.manager, 
+                              self.param['stimulated_spines'], 
+                              nrnManager)
         
         # Saving the weight
-        extRef.add_weights(manager, self.param['stimulated_spines'], nrnManager)
+        extRef.add_weights(self.manager, 
+                           self.param['stimulated_spines'], 
+                           nrnManager)
         
         print "Simulation Ended. Saving results"
         saving_dir = self.manager.create_new_dir(root='Data')
