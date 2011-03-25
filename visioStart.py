@@ -1,13 +1,20 @@
 from neuronvisio.controls import Controls
 controls = Controls()
 from neuron import h
-import neuronControl
+from neuronControl.nrnManager import NeuronManager 
 import time
 
 
-nrnSim = neuronControl.NeuronSim(mod_path="mod", hoc_path="hoc", 
-                              spines_dist='two', 
-                              biochemical_filename="biochemical_circuits/biomd183_noCalcium.eml")
+bio_filename = "biochemical_circuits/biomd183_loop.eml"
+big_spine = True
+dt_neuron = 0.025
+
+nrnManager =NeuronManager(bio_filename,
+                          big_spine, 
+                          dt_neuron, 
+                          mod_path="mod", 
+                          hoc_path="hoc", 
+                          spines_dist='two')
 
 #start= time.time()
 #                  

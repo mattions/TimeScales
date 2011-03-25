@@ -37,9 +37,9 @@ def iClamptest(delay=10, duration=250, amplititude=0.248):
 
 class Runner():
     """Class to run the two simulator together"""
-    def __init__(self, parameter_file):
+    def __init__(self, param_dict):
         """Read the param and create the manager from neuronvisio"""
-        self.param = parameters.ParameterSet(parameter_file)
+        self.param = param_dict
         # Create Neuronvisio Manager
         self.manager = Manager()
     
@@ -406,8 +406,9 @@ if __name__ == "__main__":
         usage = 'python spineIntegration.py parameters_file.param'
         print usage
         sys.exit()
-        
+    
     parameter_file = sys.argv[1]
-    runner = Runner(parameter_file)
+    param_dict = parameters.ParameterSet(parameter_file)
+    runner = Runner(parameter_dict)
     runner.main()
 
