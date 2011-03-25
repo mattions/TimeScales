@@ -203,15 +203,15 @@ class Runner():
         self.save_results(nrnManager)
         
         #Let's save same plot
-        self.plot_results()
+        self.plot_results(nrnManager)
     
     
     
-    def plot_resutls(self):
+    def plot_results(self, nrnManager):
         for i, var in enumerate(self.param['var_to_plot']):
             secs = self.param['section_to_plot']
             vecs_to_plot = self.build_vecs_to_plot(var, secs, manager.refs['VecRef'])
-            manager.plotVecs(vecs_to_plot, figure_num=i)
+            self.manager.plotVecs(vecs_to_plot, figure_num=i)
             
             if var == 'v':
                 plt.ylabel("Voltage [mV]")
