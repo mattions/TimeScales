@@ -323,7 +323,6 @@ class Runner():
         print "Results will be saved in %s" %filename
         # Saving everything
         self.manager.save_to_hdf(filename)
-        self.plot_results(nrnManager)
         
     def synch_simulators(self, tmp_tstop, nrnManager):
         """
