@@ -9,6 +9,7 @@ bio_filename = "biochemical_circuits/biomd183_loop.eml"
 big_spine = True
 dt_neuron = 0.025
 
+
 nrnManager =NeuronManager(bio_filename,
                           big_spine, 
                           dt_neuron, 

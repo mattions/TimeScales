@@ -408,7 +408,7 @@ if __name__ == "__main__":
         sys.exit()
     
     parameter_file = sys.argv[1]
-    param_dict = parameters.ParameterSet(parameter_file)
+    parameter_dict = parameters.ParameterSet(parameter_file)
     runner = Runner(parameter_dict)
     runner.main()
 
