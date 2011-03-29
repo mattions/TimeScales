@@ -209,7 +209,7 @@ class Runner():
             self.plot_results(nrnManager, saving_dir)
         else:
             # Only Electrical
-            tstop = self.param['t_neuron_equilibrium'] + self.param['tStop']
+            tstop = self.param['t_equilibrium_neuron'] + self.param['tStop']
             nrnManager.run(tstop)
         
     
