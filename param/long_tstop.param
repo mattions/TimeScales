@@ -10,7 +10,8 @@
     "t_buffer" : 10, #ms For how long the syncronization should be carried
     "neuron_time_recording_interval" : 0.1, # Recording at every ms
     "weight_sampling" : 50, # Total ms when the weight of the synapses will be updated
-	"big_spine" : True, 
+	"big_spine" : True,
+	"bio_on" : True, 
     "spines_dist" : "two", #spines_dist = 'all' or spines_dist=zero #Number of spines
     "stimulated_spines" : ['spine1', 'spine2'],
     "spine1" : ['ampa_s1', 'nmda_s1'],

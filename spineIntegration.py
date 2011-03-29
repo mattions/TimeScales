@@ -124,7 +124,9 @@ class Runner():
                     excitatory_stimuli.extend(stims_time)
                     
                 spine.deploy_stims(self.param['neuron_time_recording_interval'])
-                spine.setup_bio_sim() # Initializing ecell
+                if self.param['bio_on']:
+                    spine.setup_bio_sim() # Initializing ecell
+                
         
         excitatory_stimuli = list(set(excitatory_stimuli))
         excitatory_stimuli.sort()
@@ -196,13 +198,19 @@ class Runner():
         
         # Experiment -------------------------------------------------------------------- 
         nrnManager.init() # Initializing neuron
-        self.equilibrium(nrnManager)
-        self.run_simulation(nrnManager, excitatory_stims)
         
-        # Save the Results ------------------------------------
-        saving_dir = self.manager.create_new_dir(root='Data')
-        self.save_results(nrnManager, saving_dir)
-        self.plot_results(nrnManager, saving_dir)
+        if self.param['bio_on']:
+            self.equilibrium(nrnManager)
+            self.run_simulation(nrnManager, excitatory_stims)
+            
+            # Save the Results ------------------------------------
+            saving_dir = self.manager.create_new_dir(root='Data')
+            self.save_results(nrnManager, saving_dir)
+            self.plot_results(nrnManager, saving_dir)
+        else:
+            # Only Electrical
+            tstop = self.param['t_neuron_equilibrium'] + self.param['tStop']
+            nrnManager.run(tstop)
         
     
     
