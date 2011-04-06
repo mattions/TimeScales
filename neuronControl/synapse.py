@@ -51,6 +51,9 @@ class Synapse(object):
         #netCon.weight[0] = 1
         self.netCon = netCon # assign the point to the class as attribute
         
+        #for thread safe reason
+        self.netCon.delay = 1
+        
         self.createVec(neuron_time_resolution) # Recording the synapse
 
         
@@ -79,15 +82,15 @@ class Synapse(object):
         self.vecs[scale] = h.Vector()
         
         if neuron_time_resolution is None:
-            self.vecs[i].record(self.chan._ref_i)
-            self.vecs[g].record(self.chan._ref_g)
-            self.vecs[itmp].record(self.chan._ref_itmp)
-            self.vecs[scale].record(self.chan._ref_scale)
+            self.vecs[i].record(self.chan, self.chan._ref_i)
+            self.vecs[g].record(self.chan, self.chan._ref_g)
+            self.vecs[itmp].record(self.chan, self.chan._ref_itmp)
+            self.vecs[scale].record(self.chan, self.chan._ref_scale)
         else:
-            self.vecs[i].record(self.chan._ref_i, neuron_time_resolution)
-            self.vecs[g].record(self.chan._ref_g, neuron_time_resolution)
-            self.vecs[itmp].record(self.chan._ref_itmp, neuron_time_resolution)
-            self.vecs[scale].record(self.chan._ref_scale, neuron_time_resolution)
+            self.vecs[i].record(self.chan, self.chan._ref_i, neuron_time_resolution)
+            self.vecs[g].record(self.chan, self.chan._ref_g, neuron_time_resolution)
+            self.vecs[itmp].record(self.chan, self.chan._ref_itmp, neuron_time_resolution)
+            self.vecs[scale].record(self.chan, self.chan._ref_scale, neuron_time_resolution)
              
         
         
