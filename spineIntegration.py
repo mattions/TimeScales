@@ -181,9 +181,12 @@ class Runner():
                                    self.param['dtNeuron'],
                                    spines_dist=self.param['spines_dist'],
                                    mod_path='mod', 
-                                   hoc_path='hoc') 
+                                   hoc_path='hoc')
+        # Easier to debug. 
+        self.nrnManager = nrnManager
         
         nrnManager.set_kir_gkbar(self.param['kir_gkbar'])
+
     
         # Recording -------------------------------------------------------------------------
         # - Recording and stimul
@@ -193,6 +196,8 @@ class Runner():
         excitatory_stims = self.create_excitatory_inputs(nrnManager)
         print "This are the time of the stims: %s" %excitatory_stims
     
+        
+        
         # Recording the sections
         self.record_vectors(nrnManager)
         
@@ -210,7 +215,7 @@ class Runner():
         else:
             # Only Electrical
             tstop = self.param['t_equilibrium_neuron'] + self.param['tStop']
-            nrnManager.run(tstop)
+            test_electrical_weight_change(self)
         
     
     
@@ -253,24 +258,35 @@ class Runner():
     def record_vectors(self, nrnManager):
         """Add a vecRef to record the vectors"""
         
+        #We have to pass a POINT_PROCCESS for thread safety
+        # Therefore we get the first synapse on the cell
+        pp = None
+        for spine_id in self.param['stimulated_spines']:
+            spine = nrnManager.spines[spine_id]
+            for syn in spine.synapses:
+                pp = syn.chan
+                break
+        
+                
         for var in self.param['var_to_plot']:
             for sec_rec in self.param['sec_to_rec']:
                 if sec_rec == 'all': 
-                    for sec in h.allsec():
-                        self.manager.add_all_vecRef(var,
-                                                    self.param['neuron_time_recording_interval'])
-                        break
+                    self.manager.add_all_vecRef(var, 
+                                                self.param['neuron_time_recording_interval'],
+                                                point_process=pp)
+                    break
                 else:
                     for sec in h.allsec():
                         if sec.name() in param['sec_to_rec']:
-                            self.manager.add_vecRef(var, sec, 
-                                                    param['neuron_time_recording_interval'])
-                    
+                            self.manager.add_vecRef(var, 
+                                                    sec, 
+                                                    self.param['neuron_time_recording_interval'])
         # Recording the synapses
         for spine_id in self.param['stimulated_spines']:
             spine = nrnManager.spines[spine_id]
             for syn in spine.synapses:
-                self.manager.add_synVecRef(syn)
+                self.manager.add_synVecRef(syn)    
+
 
     def run_simulation(self, nrnManager, excitatory_stims):
 
@@ -406,7 +422,25 @@ class Runner():
                 itmp = syn.chan.scale * syn.chan.g * spine.psd.v
                 print "itmp in NEURON: %s, itmp calculated: %s" %(syn.chan.itmp, itmp)
 
+
+def test_electrical_weight_change(runner):
+    """Run the sims till tstop, and then change the weight"""
+    runner.nrnManager.init_and_run(200)
     
+    sp1 =runner.nrnManager.spines['spine1']
+    syn_a = sp1.synapses[0]
+    syn_a.netCon.weight[0] = 1.2
+    runner.nrnManager.run(300)
+    
+    
+    soma_v = runner.manager.get_vector('MSP_Cell[0].soma', 'v')
+    spine1_v = runner.manager.get_vector('spine1_head', 'v')
+    vecs_to_plot = {'soma' : soma_v,
+                    'spine1_head' : spine1_v
+                    }
+    runner.manager.plot_vecs(vecs_to_plot)
+     
+
 if __name__ == "__main__":
     
     if len(sys.argv) != 2:
@@ -419,4 +453,7 @@ if __name__ == "__main__":
     parameter_dict = parameters.ParameterSet(parameter_file)
     runner = Runner(parameter_dict)
     runner.main()
+    
+    # testing electrical weight change
+    
 
