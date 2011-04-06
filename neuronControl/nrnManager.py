@@ -84,8 +84,16 @@ class NeuronManager():
     def run(self, tStop):
         """Run the simulation until tStop"""
         h.tstop = tStop
-        h.run()
-            # update the plotting system here.
+        while h.t < h.tstop:
+            h.fadvance()
+            
+
+    def enable_threads(self, n_threads, multisplit_on=1):
+        """Enable threads in neuron Using the parall Neuron"""
+        h.load_file('parcom.hoc')
+        pc =h.ParallelComputeTool()
+        pc.nthread(n_threads, 1)
+        pc.multisplit(multisplit_on)
         
     def init(self, v_init=-87.75):
         """Initialize the simulator"""
