@@ -11,19 +11,17 @@ import os
 from neuron import h
 
 import matplotlib
-from ecellControl.ecellManager import EcellManager
 backend = 'Agg'
 matplotlib.use(backend)
 import matplotlib.pyplot as plt
 
-from neuronControl.nrnManager import NeuronManager
-from neuronControl.stimul import Stimul 
-
-
 from neuronvisio.manager import Manager
 from sumatra.external.NeuroTools import parameters
 
-import tables 
+from neuronControl.nrnManager import NeuronManager
+from neuronControl.stimul import Stimul
+
+#import tables 
 from extref import ExtRef 
 
     
@@ -210,8 +208,9 @@ class Runner():
             test_electrical_weight_change(self)
         # Save the Results ------------------------------------
         saving_dir = self.manager.create_new_dir(root='Data')
-        #self.save_results(nrnManager, saving_dir)
         self.plot_results(nrnManager, saving_dir)
+        self.save_results(nrnManager, saving_dir)
+        
         
     
     
@@ -428,7 +427,7 @@ def test_electrical_weight_change(runner):
     sp1 =runner.nrnManager.spines['spine1']
     syn_a = sp1.synapses[0]
     syn_a.netCon.weight[0] = 1.2
-    runner.nrnManager.run(300)
+    runner.nrnManager.run(150)
     
     runner.plot_results
      
@@ -445,7 +444,5 @@ if __name__ == "__main__":
     parameter_dict = parameters.ParameterSet(parameter_file)
     runner = Runner(parameter_dict)
     runner.main()
-    
-    # testing electrical weight change
     
 
