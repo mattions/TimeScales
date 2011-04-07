@@ -420,16 +420,18 @@ class Runner():
                 print "itmp in NEURON: %s, itmp calculated: %s" %(syn.chan.itmp, itmp)
 
 
-def test_electrical_weight_change(runner):
-    """Run the sims till tstop, and then change the weight"""
-    runner.nrnManager.init_and_run(200)
-    
-    sp1 =runner.nrnManager.spines['spine1']
-    syn_a = sp1.synapses[0]
-    syn_a.netCon.weight[0] = 1.2
-    runner.nrnManager.run(150)
-    
-    runner.plot_results
+    def test_electrical_weight_change(self):
+        """Run the sims till tstop, and then change the weight"""
+        t_eq = self.param['t_equilibrium_neuron']
+        runner.nrnManager.run(t_eq)
+        
+        sp1 =runner.nrnManager.spines['spine1']
+        syn_a = sp1.synapses[0]
+        syn_a.netCon.weight[0] = 1.2
+        tStop = self.param['tStop']
+        runner.nrnManager.run(tStop)
+        
+        runner.plot_results
      
 
 if __name__ == "__main__":
