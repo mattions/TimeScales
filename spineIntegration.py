@@ -208,8 +208,8 @@ class Runner():
             test_electrical_weight_change(self)
         # Save the Results ------------------------------------
         saving_dir = self.manager.create_new_dir(root='Data')
-        self.plot_results(nrnManager, saving_dir)
         self.save_results(nrnManager, saving_dir)
+        self.plot_results(nrnManager, saving_dir)
         
         
     
