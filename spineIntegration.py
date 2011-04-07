@@ -205,7 +205,7 @@ class Runner():
         else:
             # Only Electrical
             tstop = self.param['t_equilibrium_neuron'] + self.param['tStop']
-            test_electrical_weight_change(self)
+            self.test_electrical_weight_change()
         # Save the Results ------------------------------------
         saving_dir = self.manager.create_new_dir(root='Data')
         self.save_results(nrnManager, saving_dir)
