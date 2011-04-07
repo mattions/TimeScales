@@ -87,7 +87,8 @@ class Runner():
             for ref in anyRefs:
                 if secName == ref.sec_name:
                     if ref.vecs.has_key(var):
-                        vecs_to_plot[secName] = ref.vecs[var]
+                        key = secName + '_' + var
+                        vecs_to_plot[key] = ref.vecs[var]
         return vecs_to_plot
         
     def create_excitatory_inputs(self, nrnManager):
@@ -187,35 +188,30 @@ class Runner():
         
         nrnManager.set_kir_gkbar(self.param['kir_gkbar'])
 
+        excitatory_stims = self.create_excitatory_inputs(nrnManager)
+        print "This are the time of the stims: %s" %excitatory_stims
     
-        # Recording -------------------------------------------------------------------------
+        # Recording -----------------------------------------------
         # - Recording and stimul
         # - Set the stimuls to the synapses
         # - Initialize Ecell in each spine
         
-        excitatory_stims = self.create_excitatory_inputs(nrnManager)
-        print "This are the time of the stims: %s" %excitatory_stims
-    
-        
-        
-        # Recording the sections
         self.record_vectors(nrnManager)
         
-        # Experiment -------------------------------------------------------------------- 
+        # Experiment ----------------------------------------------- 
         nrnManager.init() # Initializing neuron
         
         if self.param['bio_on']:
             self.equilibrium(nrnManager)
             self.run_simulation(nrnManager, excitatory_stims)
-            
-            # Save the Results ------------------------------------
-            saving_dir = self.manager.create_new_dir(root='Data')
-            self.save_results(nrnManager, saving_dir)
-            self.plot_results(nrnManager, saving_dir)
         else:
             # Only Electrical
             tstop = self.param['t_equilibrium_neuron'] + self.param['tStop']
             test_electrical_weight_change(self)
+        # Save the Results ------------------------------------
+        saving_dir = self.manager.create_new_dir(root='Data')
+        #self.save_results(nrnManager, saving_dir)
+        self.plot_results(nrnManager, saving_dir)
         
     
     
@@ -226,7 +222,8 @@ class Runner():
             vecs_to_plot = self.build_vecs_to_plot(var, 
                                                    secs, 
                                                    self.manager.refs['VecRef'])
-            self.manager.plotVecs(vecs_to_plot, figure_num=i)
+            
+            self.manager.plot_vecs(vecs_to_plot, figure_num=i)
             
             if var == 'v':
                 plt.ylabel("Voltage [mV]")
@@ -240,20 +237,21 @@ class Runner():
             elif var == 'ica':
                 plt.xlabel("Time [ms]")
                 plt.ylabel("Current [nA]")
-                
+#                
             fig_file = 'plot_' + var
             plt.savefig(os.path.join(saving_dir, fig_file))
-    
-        from helpers.plotter import EcellPlotter
-        ecp = EcellPlotter()
-        x_start = self.param['t_equilibrium_ecell']
-        x_stop = x_start + self.param['tStop']/1e3
-        for stim_spine in self.param['stimulated_spines']:
-            spine = nrnManager.spines[stim_spine]
-            ecp.plot_timeCourses(spine.ecellMan.timeCourses, save=True, 
-                               dir=saving_dir, name=spine.id, 
-                               x_lims= [x_start, x_stop])
-            ecp.plot_weight(spine.ecellMan.timeCourses, dir=saving_dir)
+            
+        if self.param['bio_on']:  
+            from helpers.plotter import EcellPlotter
+            ecp = EcellPlotter()
+            x_start = self.param['t_equilibrium_ecell']
+            x_stop = x_start + self.param['tStop']/1e3
+            for stim_spine in self.param['stimulated_spines']:
+                spine = nrnManager.spines[stim_spine]
+                ecp.plot_timeCourses(spine.ecellMan.timeCourses, save=True, 
+                                   dir=saving_dir, name=spine.id, 
+                                   x_lims= [x_start, x_stop])
+                ecp.plot_weight(spine.ecellMan.timeCourses, dir=saving_dir)
             
     def record_vectors(self, nrnManager):
         """Add a vecRef to record the vectors"""
@@ -270,7 +268,7 @@ class Runner():
                 
         for var in self.param['var_to_plot']:
             for sec_rec in self.param['sec_to_rec']:
-                if sec_rec == 'all': 
+                if sec_rec == 'all':
                     self.manager.add_all_vecRef(var, 
                                                 self.param['neuron_time_recording_interval'],
                                                 point_process=pp)
@@ -329,19 +327,19 @@ class Runner():
     
     def save_results(self, nrnManager, saving_dir):
         """Saving both results"""
-            # Add timeseries
-        extRef = ExtRef()
-        extRef.add_timeseries(self.manager, 
-                              self.param['stimulated_spines'], 
-                              nrnManager)
-        
-        # Saving the weight
-        extRef.add_weights(self.manager, 
-                           self.param['stimulated_spines'], 
-                           nrnManager)
-        
+        if self.param['bio_on']:
+                # Add timeseries
+            extRef = ExtRef()
+            extRef.add_timeseries(self.manager, 
+                                  self.param['stimulated_spines'], 
+                                  nrnManager)
+            
+            # Saving the weight
+            extRef.add_weights(self.manager, 
+                               self.param['stimulated_spines'], 
+                               nrnManager)
+            
         print "Simulation Ended. Saving results"
-        
         hdf_name = 'storage.h5'
         filename = os.path.join(saving_dir, hdf_name)
         print "Results will be saved in %s" %filename
@@ -432,13 +430,7 @@ def test_electrical_weight_change(runner):
     syn_a.netCon.weight[0] = 1.2
     runner.nrnManager.run(300)
     
-    
-    soma_v = runner.manager.get_vector('MSP_Cell[0].soma', 'v')
-    spine1_v = runner.manager.get_vector('spine1_head', 'v')
-    vecs_to_plot = {'soma' : soma_v,
-                    'spine1_head' : spine1_v
-                    }
-    runner.manager.plot_vecs(vecs_to_plot)
+    runner.plot_results
      
 
 if __name__ == "__main__":
