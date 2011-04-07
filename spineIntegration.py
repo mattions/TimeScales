@@ -429,6 +429,7 @@ class Runner():
         syn_a = sp1.synapses[0]
         syn_a.netCon.weight[0] = 1.2
         tStop = self.param['tStop']
+        tStop += t_eq
         runner.nrnManager.run(tStop)
         
         runner.plot_results
