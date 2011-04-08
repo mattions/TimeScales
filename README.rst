@@ -29,6 +29,8 @@ Long tStop test::
 
     bsub -M 10000 -R "rusage[mem=6000]" smt run param/long_tstop_double_stim_two_spines.param -r "Running a double excitation with two spines." -t "twospines"
     
+    bsub -M 10000 -R "rusage[mem=6000]" smt run param/long_tstop_one_pulse.param -r "Running one pulse event in one spine." -t "twospines"
+    
     bsub -M 10000 -R "rusage[mem=6000]" smt run param/long_tstop_onebranch_several_stimulation.param -r "Several stims across one branch populated with spines. Using 10 Gb" -t "onebranch"
     
     bsub -M 10000 -R "rusage[mem=6000]" smt run param/long_tstop_onebranch_1_spine_1Hz.param -r "One branch: One spine double stim. 1Hz. Using 10 Gb" -t "onebranch"
