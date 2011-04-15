@@ -207,7 +207,7 @@ class Runner():
         # - Initialize Ecell in each spine
         
         # Threading it!
-        nrnManager.enable_threads(2, multisplit_on=True)
+        nrnManager.enable_threads(self.param['nthreads'], multisplit_on=False)
         
         self.record_vectors(nrnManager)
         
