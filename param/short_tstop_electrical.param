@@ -57,7 +57,7 @@
 #         },
     "kir_gkbar" : 0.00016, # S/cm2
     "biochemical_filename" : "biochemical_circuits/biomd183_loop.eml",
-    'nthreads' : 2,
+	'nthreads' : 2,
 	'sec_to_rec' : ['all'],
     #"var_to_plot" : ['v','cai','cali','ica', 'ical'],
     "var_to_plot" : ['v'],
