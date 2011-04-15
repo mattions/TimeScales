@@ -88,12 +88,13 @@ class NeuronManager():
             h.fadvance()
             
 
-    def enable_threads(self, n_threads, multisplit_on=1):
+    def enable_threads(self, n_threads, multisplit_on=True):
         """Enable threads in neuron Using the parall Neuron"""
         h.load_file('parcom.hoc')
         pc =h.ParallelComputeTool()
         pc.nthread(n_threads, 1)
-        pc.multisplit(multisplit_on)
+        if multisplit_on:
+            pc.multisplit(1)
         
     def init(self, v_init=-87.75):
         """Initialize the simulator"""

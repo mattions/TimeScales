@@ -40,6 +40,7 @@ class Runner():
         self.param = param_dict
         # Create Neuronvisio Manager
         self.manager = Manager()
+        self.vecs = {}
     
     def advance_ecell(self, spine, delta_t):
         """
@@ -131,6 +132,17 @@ class Runner():
         excitatory_stimuli.sort()
         return excitatory_stimuli
     
+    def create_vectors(self):
+        "Vectors to store the resutls"
+        for sec in h.allsec():
+            for var in self.param['var_to_plot']:
+                vec = self.manager.create_record_vector(sec, var, None)
+                sec_name = sec.name()
+                if self.vecs.has_key(sec_name):
+                    self.vecs[sec_name].append(vec)
+                else:
+                    self.vecs[sec_name] = [vec]
+    
     def get_calcium_flux(self, spine):
         """
         Retrieving the calcium in the interval. end is always -1 because is
@@ -194,6 +206,9 @@ class Runner():
         # - Set the stimuls to the synapses
         # - Initialize Ecell in each spine
         
+        # Threading it!
+        nrnManager.enable_threads(2, multisplit_on=True)
+        
         self.record_vectors(nrnManager)
         
         # Experiment ----------------------------------------------- 
@@ -254,31 +269,30 @@ class Runner():
             
     def record_vectors(self, nrnManager):
         """Add a vecRef to record the vectors"""
+        t_i_r = self.param['neuron_time_recording_interval']
         
-        #We have to pass a POINT_PROCCESS for thread safety
-        # Therefore we get the first synapse on the cell
-        pp = None
         for spine_id in self.param['stimulated_spines']:
             spine = nrnManager.spines[spine_id]
             for syn in spine.synapses:
-                pp = syn.chan
-                break
+                pp = syn.chan     
+                self.manager.create_time_record(time_interval_recording=t_i_r,
+                                                point_process=pp)
         
-                
         for var in self.param['var_to_plot']:
             for sec_rec in self.param['sec_to_rec']:
                 if sec_rec == 'all':
                     self.manager.add_all_vecRef(var, 
-                                                self.param['neuron_time_recording_interval'],
-                                                point_process=pp)
+                                                t_i_r)
                     break
                 else:
                     for sec in h.allsec():
                         if sec.name() in param['sec_to_rec']:
                             self.manager.add_vecRef(var, 
                                                     sec, 
-                                                    self.param['neuron_time_recording_interval'])
+                                                    t_i_r)
+
         # Recording the synapses
+        
         for spine_id in self.param['stimulated_spines']:
             spine = nrnManager.spines[spine_id]
             for syn in spine.synapses:
