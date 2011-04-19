@@ -20,38 +20,26 @@
     #"spine532" : ['ampa_s1', 'nmda_s1'],
     "ampa_s1" : 
         {"t_stim" : 0.130, # t_stim [s]  
-         "numbers" : 1, # number
-         "delay" : 0.1, # delay [s]
-         "type" : "ampa" # , type
-         },
-    "ampa_s2" :
-        {"t_stim" : 0.230, # t_stim [s]  
          "numbers" : 20, # number
-         "delay" : 0.1, # delay [s]
+         "delay" : 0.125, # delay [s]
          "type" : "ampa" # , type
          },
     "nmda_s1" :
         {"t_stim" : 0.130, # t_stim [s]  
-         "numbers" : 400, # number
-         "delay" : 0.1, # delay [s]
-         "type" : "nmda" # , type
-         },
-    "nmda_s2" :
-        {"t_stim" : 0.230, # t_stim [s]  
-         "numbers" : 1, # number
-         "delay" : 0.1, # delay [s]
+         "numbers" : 20, # number
+         "delay" : 0.125, # delay [s]
          "type" : "nmda" # , type
          },
     "ampa_s3" : 
         {"t_stim" : 15, # t_stim [s]  
-         "numbers" : 1, # number
-         "delay" : 0.1, # delay [s]
+         "numbers" : 20, # number
+         "delay" : 0.125, # delay [s]
          "type" : "ampa" # , type
          },
     "nmda_s3" :
         {"t_stim" : 15, # t_stim [s]  
-         "numbers" : 1, # number
-         "delay" : 0.1, # delay [s]
+         "numbers" : 20, # number
+         "delay" : 0.125, # delay [s]
          "type" : "nmda" # , type
          },
     "kir_gkbar" : 0.00016, # S/cm2
