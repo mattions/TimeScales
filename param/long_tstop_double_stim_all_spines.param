@@ -17,7 +17,7 @@
     #"spine1" : ['ampa_s1', 'nmda_s1', 'ampa_s3', 'nmda_s3'],
     #"spine2" : ['ampa_s2', 'nmda_s2'],
     #"spine531" : ['ampa_s1', 'nmda_s1'],
-    spine532" : ['ampa_s1', 'nmda_s1', 'ampa_s3', 'nmda_s3'],
+    "spine532" : ['ampa_s1', 'nmda_s1', 'ampa_s3', 'nmda_s3'],
     "ampa_s1" : 
         {"t_stim" : 0.130, # t_stim [s]  
          "numbers" : 2, # number
