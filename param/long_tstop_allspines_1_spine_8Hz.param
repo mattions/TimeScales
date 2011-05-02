@@ -1,0 +1,63 @@
+# Parameters file for simulation.
+# Should be used with spineIntegration.py
+{
+    "dtNeuron" : 0.025,  # integration dt [ms]
+    "delta_calcium_sampling" : 0.5, # In millisecond [ms]. How often the calcium has 
+        # to be synchronized within ecell and Neuron . 
+    "t_equilibrium_neuron" : 100, # in milliseconds
+    "t_equilibrium_ecell" : 300, # in seconds
+    "tStop" : 20000, # [ms] Time to stop (NEURON time is the reference) the simulation  
+    "t_buffer" : 10, #ms For how long the syncronization should be carried
+    "neuron_time_recording_interval" : 0.1, # Recording at every ms
+    "weight_sampling" : 50, # Total ms when the weight of the synapses will be updated
+	"big_spine" : True,
+	"bio_on" : True, 
+    "spines_dist" : "onebranch", #spines_dist = 'all' or spines_dist=zero or onebranch to populate one only#Number of spines
+    "spines_dist" : "all", #spines_dist = 'all' or spines_dist=zero #Number of spines
+    "stimulated_spines" : ['spine532'],
+    #"spine1" : ['ampa_s1', 'nmda_s1', 'ampa_s3', 'nmda_s3'],
+    #"spine2" : ['ampa_s2', 'nmda_s2'],
+    #"spine531" : ['ampa_s1', 'nmda_s1'],
+    "spine532" : ['ampa_s1', 'nmda_s1', 'ampa_s2', 'nmda_s2'],
+    
+    "ampa_s1" : 
+        {"t_stim" : 2, # t_stim [s]  
+         "numbers" : 20, # number
+         "delay" : 0.125, # delay [s]
+         "type" : "ampa" # , type
+         },
+    "nmda_s1" :
+        {"t_stim" : 2, # t_stim [s]  
+         "numbers" : 20, # number
+         "delay" : 0.125, # delay [s]
+         "type" : "nmda" # , type
+         },
+    "ampa_s2" :
+        {"t_stim" : 10, # t_stim [s]  
+         "numbers" : 20, # number
+         "delay" : 0.125, # delay [s]
+         "type" : "ampa" # , type
+         },
+
+    "nmda_s2" :
+        {"t_stim" : 10, # t_stim [s]  
+         "numbers" : 20, # number
+         "delay" : 0.125, # delay [s]
+         "type" : "nmda" # , type
+         },
+         
+    "kir_gkbar" : 0.00016, # S/cm2
+    "biochemical_filename" : "biochemical_circuits/biomd183_loop.eml",
+	'nthreads' : 2,
+	'sec_to_rec' : ['all'],
+    "var_to_plot" : ['v','cai','cali','ica'],
+    #"section_to_plot" : ['MSP_Cell[0].soma', 'MSP_Cell[0].dend3_1[1]', 
+    #'MSP_Cell[0].dend3_1[0]', 'MSP_Cell[0].dend3', 'spine1_head','spine2_head', 
+    #'spine_1_psd', 'spine1_neck', 'spine2_psd', 'spine2_neck', 'spine531_head',
+    #'spine531_psd', 'spine531_neck', 'spine532_head', 'spine532_psd', 'spine532_neck'],
+    "section_to_plot" : ['MSP_Cell[0].soma', 'MSP_Cell[0].dend3_1[1]', 
+    'MSP_Cell[0].dend3_1[0]', 'MSP_Cell[0].dend3', 'spine1_head','spine2_head', 
+    'spine_1_psd', 'spine1_neck', 'spine2_psd', 'spine2_neck'],
+    "ca_leak_vmax" : 4e-3,
+    "ca_pump_vmax" : 4e-3    
+}
