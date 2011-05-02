@@ -29,7 +29,7 @@ Long tStop test
 
     bsub -M 10000 -R "rusage[mem=6000]" smt run param/long_tstop_double_stim_two_spines.param -r "Running a double excitation with two spines." -t "twospines"
     
-    bsub -M 10000 -R "rusage[mem=6000]" smt run param/long_tstop_double_stim_all_spines.param -r "Running a double excitation with two spines." -t "all"
+    bsub -M 60000 -R "rusage[mem=20000]" smt run param/long_tstop_double_stim_all_spines.param -r "Running a double excitation with two spines." -t "all"
     
     bsub -M 10000 -R "rusage[mem=6000]" smt run param/long_tstop_one_pulse.param -r "Running one pulse event in one spine." -t "twospines"
     
@@ -53,17 +53,17 @@ One branch stim
 All Branches - Double stim one spine    
 ------------------------------------
 
-	bsub -M 10000 -R "rusage[mem=6000]" smt run param/long_tstop_allspines_1_spine_1Hz.param -r "All spines: One spine double stim. 1Hz. Using 10 Gb" -t "all"
+	bsub -M 60000 -R "rusage[mem=20000]" smt run param/long_tstop_allspines_1_spine_1Hz.param -r "All spines: One spine double stim. 1Hz. Using 10 Gb" -t "all"
     
-    bsub -M 10000 -R "rusage[mem=6000]" smt run param/long_tstop_allspines_1_spine_4Hz.param -r "All spines: One spine double stim. 4Hz. Using 10 Gb" -t "all"
+    bsub -M 60000 -R "rusage[mem=20000]" smt run param/long_tstop_allspines_1_spine_4Hz.param -r "All spines: One spine double stim. 4Hz. Using 10 Gb" -t "all"
     
-    bsub -M 10000 -R "rusage[mem=6000]" smt run param/long_tstop_allspines_1_spine_8Hz.param -r "All spines: One spine double stim. 8Hz. Using 10 Gb" -t "all"
+    bsub -M 60000 -R "rusage[mem=20000]" smt run param/long_tstop_allspines_1_spine_8Hz.param -r "All spines: One spine double stim. 8Hz. Using 10 Gb" -t "all"
     
-    bsub -M 10000 -R "rusage[mem=6000]" smt run param/long_tstop_allspines_1_spine_20Hz.param -r "All spines: One spine double stim. 20Hz. Using 10 Gb" -t "all"
+    bsub -M 60000 -R "rusage[mem=20000]" smt run param/long_tstop_allspines_1_spine_20Hz.param -r "All spines: One spine double stim. 20Hz. Using 10 Gb" -t "all"
     
-    bsub -M 10000 -R "rusage[mem=6000]" smt run param/long_tstop_allspines_1_spine_50Hz.param -r "All spines: One spine double stim. 50Hz. Using 10 Gb" -t "all"
+    bsub -M 60000 -R "rusage[mem=20000]" smt run param/long_tstop_allspines_1_spine_50Hz.param -r "All spines: One spine double stim. 50Hz. Using 10 Gb" -t "all"
     
-    bsub -M 10000 -R "rusage[mem=6000]" smt run param/long_tstop_allspines_1_spine_100Hz.param -r "All spines: One spine double stim. 100Hz. Using 10 Gb" -t "all"
+    bsub -M 60000 -R "rusage[mem=20000]" smt run param/long_tstop_allspines_1_spine_100Hz.param -r "All spines: One spine double stim. 100Hz. Using 10 Gb" -t "all"
 
 
 
