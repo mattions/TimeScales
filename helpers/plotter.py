@@ -131,7 +131,7 @@ class DoublePlotter():
                     SynVecRef, YourRef)
         """
         ax1 = plt.subplot(111)
-        sec = spine 
+        sec = spine + '_head'
         vec = manager.get_vector(sec, el_var)
         t = manager.groups['t']
         label = sec + "_" + el_var
