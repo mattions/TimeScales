@@ -3,13 +3,15 @@
 
 import sys
 import os
+import numpy as np
 
 import matplotlib.pyplot as plt
 
 from helpers.loader import Loader
-import ecellControl.ecellManager as eC
-import numpy as np
-
+try:
+    import ecellControl.ecellManager as eC
+except ImportError:
+    pass
 
 
 class StimulPlotter():
@@ -112,6 +114,37 @@ class EcellPlotter():
         plt.legend(loc=0)
 
 
+class DoublePlotter():
+    "plot both electrical and biochemical in one graph."
+    def plot_double_axes(self, manager, spine, el_var, bio_var, bio_group):
+        """
+        Plot a double axes figure with the variables as argument, 
+        return a tuple with the two axes used.
+        
+        Param
+        -----
+        manager - neuronvisio manager
+        spine - spine to plot
+        el_var - electrical variable to plot
+        bio_var - biochemical variable to plot
+        bio_group - group where the Ref is part of (e.g VecRef, 
+                    SynVecRef, YourRef)
+        """
+        ax1 = plt.subplot(111)
+        sec = spine 
+        vec = manager.get_vector(sec, el_var)
+        t = manager.groups['t']
+        label = sec + "_" + el_var
+        plt.plot(t, vec, label=label)
+        
+        # plotting the second one
+        vec_bio = manager.get_vector(sec, bio_var, group=bio_group)
+        t2 = manager.groups[bio_group]
+        t2_ms = t2/1e3 #scaling to ms
+        label = sec + "_" + bio_var
+        ax2 = plt.twinx() 
+        plt.plot(t2_ms, vec_bio, label=label)
+        return (ax1, ax2)
 
 if __name__ == "__main__":
 
