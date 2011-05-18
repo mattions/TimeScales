@@ -116,7 +116,8 @@ class EcellPlotter():
 
 class DoublePlotter():
     "plot both electrical and biochemical in one graph."
-    def plot_double_axes(self, manager, spine, el_var, bio_var, bio_group):
+    def plot_double_axes(self, manager, spine, el_var, bio_var, 
+    	bio_group, tstop_bio=300):
         """
         Plot a double axes figure with the variables as argument, 
         return a tuple with the two axes used.
@@ -129,21 +130,43 @@ class DoublePlotter():
         bio_var - biochemical variable to plot
         bio_group - group where the Ref is part of (e.g VecRef, 
                     SynVecRef, YourRef)
+                    
+                    
+        Example:
+		ax1, ax2 = dp.plot_double_axes(controls.manager, 'spine1', 'v', 
+		'AMPAR_P', bio_group='timeSeries_spine1')
         """
         ax1 = plt.subplot(111)
-        sec = spine + '_head'
-        vec = manager.get_vector(sec, el_var)
+        sec_head = spine + '_head'
+        vec = manager.get_vector(sec_head, el_var)
         t = manager.groups['t']
-        label = sec + "_" + el_var
-        plt.plot(t, vec, label=label)
+        label = sec_head + "_" + el_var
+        l1, = ax1.plot(t, vec, label=label)
         
         # plotting the second one
-        vec_bio = manager.get_vector(sec, bio_var, group=bio_group)
+
+        vec_bio = manager.get_vector(spine, bio_var, group=bio_group)
+
         t2 = manager.groups[bio_group]
-        t2_ms = t2/1e3 #scaling to ms
-        label = sec + "_" + bio_var
-        ax2 = plt.twinx() 
-        plt.plot(t2_ms, vec_bio, label=label)
+        t2_ms = (t2.read()- tstop_bio) * 1e3 #scaling to ms
+        label = spine + "_" + bio_var
+        ax2 = ax1.twinx() 
+        l2, = ax2.plot(t2_ms, vec_bio, 'r-', label=label)
+        
+        # Setting the axes and colour.
+        ax1.set_ylabel('v [mV]')
+        ax2.set_ylabel('# molecule')
+        
+        ax1.yaxis.label.set_color(l1.get_color())	
+        ax2.yaxis.label.set_color(l2.get_color())
+        #tkw = dict(size=4, width=1.5)
+    	#ax1.tick_params(axis='y', colors=l1.get_color(), **tkw)
+    	#ax2.tick_params(axis='y', colors=l2.get_color(), **tkw)
+
+        lines = [l1,l2]
+        ax1.legend(lines, [l.get_label() for l in lines], loc='best')
+        ax1.set_xlabel('Time [ms]')
+        ax1.set_xlim(0, 20000)
         return (ax1, ax2)
 
 if __name__ == "__main__":
