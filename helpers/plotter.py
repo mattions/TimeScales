@@ -159,9 +159,9 @@ class DoublePlotter():
         
         ax1.yaxis.label.set_color(l1.get_color())	
         ax2.yaxis.label.set_color(l2.get_color())
-        #tkw = dict(size=4, width=1.5)
-    	#ax1.tick_params(axis='y', colors=l1.get_color(), **tkw)
-    	#ax2.tick_params(axis='y', colors=l2.get_color(), **tkw)
+        tkw = dict(size=4, width=1.5)
+    	ax1.tick_params(axis='y', colors=l1.get_color(), **tkw)
+    	ax2.tick_params(axis='y', colors=l2.get_color(), **tkw)
 
         lines = [l1,l2]
         ax1.legend(lines, [l.get_label() for l in lines], loc='best')
