@@ -24,3 +24,6 @@ build
 
 # Sumatra
 .smt
+
+# Mount point remote data
+Data_rmt
