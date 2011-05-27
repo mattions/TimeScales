@@ -10,10 +10,10 @@ import os
 filename = 'storage.h5'
 
 spine_num = 'spine532'
-dirs = {'1spine_8Hz' : 'Data/05-05-2011/Sim_0/',
-        '1spine_4Hz' : 'Data/04-05-2011/Sim_1/',
-        '1spine_1Hz' : 'Data/03-05-2011/Sim_3/',
-        '1spine_50Hz' : 'Data/03-05-2011/Sim_2/'
+dirs = {'1spine_8Hz' : 'Data_rmt/05-05-2011/Sim_0/',
+        '1spine_4Hz' : 'Data_rmt/04-05-2011/Sim_1/',
+        '1spine_1Hz' : 'Data_rmt/03-05-2011/Sim_3/',
+        '1spine_50Hz' : 'Data_rmt/03-05-2011/Sim_2/'
         }
 
 #spine_num = 'spine1'
