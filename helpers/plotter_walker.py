@@ -13,7 +13,7 @@ filename = 'storage.h5'
 #                     'spine1472', 'spine1473', 'spine1474', 
 #                     'spine1476', 'spine1477', 'spine1478']
 
-stimulated_spines = ['spine532']
+stimulated_spines = ['spine554']
 dirs = {'cpm_8Hz' : 'Data_rmt/30-04-2011/Sim_0/',
         }
 
