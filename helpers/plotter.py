@@ -38,7 +38,7 @@ class StimulPlotter():
                    height_in_the_graph=-88):
         """Plot the built stimuli on the current figure. 
         If an active axes is passed, it will be used to plot.
-        Handy on figure with two axes."
+        Handy on figure with two axes."""
         
         spine += '_psd'
         stimul = manager.get_vector(spine, 'stimul_ampa', 'SynVecRef')

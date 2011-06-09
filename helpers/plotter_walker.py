@@ -26,11 +26,10 @@ for condition, dir in dirs.iteritems():
     man.load_from_hdf(h5_filename)
     dp = DoublePlotter()
     sp = StimulPlotter()
-    biogroup = 'timeSeries_' + spine_num
     
     
     for spine_num in stimulated_spines:
-    
+        biogroup = 'timeSeries_' + spine_num
         fig = plt.figure()
         
         ax1, ax2 = dp.plot_double_axes(man, spine_num, 'v', 
