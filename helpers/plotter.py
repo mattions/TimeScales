@@ -34,7 +34,11 @@ class StimulPlotter():
         masked = np.ma.masked_where(inputs_event == 0, inputs_event)
         return masked
     
-    def plot_input(self, spine, manager, style='k.', height_in_the_graph=-88):
+    def plot_input(self, spine, manager, ax=None, style='k.', 
+                   height_in_the_graph=-88):
+        """Plot the built stimuli on the current figure. 
+        If an active axes is passed, it will be used to plot.
+        Handy on figure with two axes."
         
         spine += '_psd'
         stimul = manager.get_vector(spine, 'stimul_ampa', 'SynVecRef')
@@ -45,7 +49,10 @@ class StimulPlotter():
             time = manager.groups['t']
             print "Buiding stim array for %s" %spine
             m_array = self.build_stimul_vec(time, stimul, height_in_the_graph)
-            plt.plot(time, m_array, 'k.', label = "stimul")
+            if ax:
+                ax.plot(time, m_array, 'k.', label = "stimul")
+            else:
+                plt.plot(time, m_array, 'k.', label = "stimul")
             return m_array
 
 class EcellPlotter():
