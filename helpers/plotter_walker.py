@@ -14,7 +14,7 @@ stimulated_spines = ['spine554', 'spine555', 'spine556',
                      'spine1476', 'spine1477', 'spine1478']
 
 #stimulated_spines = ['spine554']
-dirs = {#'cpm_8Hz' : 'Data_rmt/30-04-2011/Sim_0/',
+dirs = {'cpm_8Hz' : 'Data_rmt/30-04-2011/Sim_0/',
         'cpm_20Hz' : 'Data_rmt/29-04-2011/Sim_2/',
         'cpm_40Hz' : 'Data_rmt/29-04-2011/Sim_1/',
         'cmp_50Hz' : 'Data_rmt/29-04-2011/Sim_0'
