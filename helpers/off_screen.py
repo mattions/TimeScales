@@ -8,19 +8,21 @@ mlab.options.offscreen = True
 import neuronvisio.controls
 from neuronvisio.visio import Visio
 
+prefix = 'Data_rmt/'
 
-dirs = {'cpm_8Hz' : 'Data_rmt/30-04-2011/Sim_0/',
-        'cpm_20Hz' : 'Data_rmt/29-04-2011/Sim_2/',
-        'cpm_40Hz' : 'Data_rmt/29-04-2011/Sim_1/',
-        'cmp_50Hz' : 'Data_rmt/29-04-2011/Sim_0'
+dirs = {'cpm_8Hz' : prefix + '30-04-2011/Sim_0/',
+        'cpm_20Hz' : prefix + '29-04-2011/Sim_2/',
+        'cpm_40Hz' : prefix + '29-04-2011/Sim_1/',
+        'cmp_50Hz' : prefix + '29-04-2011/Sim_0'
         }
+
 
 # Vars
 
 var = 'v'
 start_value = -90
 end_value = 0
-h5_filename = 'medium_model.h5'
+h5_filename = 'storage.h5'
 animation_dir = 'animation'
 screenshot_dir = 'screenshot'
 
@@ -29,7 +31,7 @@ for condition, dir in dirs.iteritems():
     # Loading the file
     neuronvisio.controls = reload(neuronvisio.controls)
     man = neuronvisio.manager.Manager()
-    man.load_from_hdf(h5_filename)
+    man.load_from_hdf(os.path.join(dir, h5_filename))
     
     # Launch Visio
     visio = Visio(None, man)
