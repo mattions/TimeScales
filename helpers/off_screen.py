@@ -49,11 +49,12 @@ for condition, dir in dirs.iteritems():
         figure_filename_animation = '%s%09d.png' %(condition, i)
         
         # Creating the dirs
-        path_animation = path_screenshots = None
-        if not os.path.exists(os.path.join(dir, animation_dir)):
-            path_animation = os.mkdir(os.path.join(dir, animation_dir))
-        if not os.path.exists(screenshot_dir):
-            path_screenshots = os.mkdir(os.path.join(dir, screenshot_dir))
+        path_animation = os.path.join(dir, animation_dir) 
+        path_screenshots = os.path.join(dir, screenshot_dir)
+        if not os.path.exists(path_animation):
+            os.mkdir(path_animation)
+        if not os.path.exists(path_screenshots):
+            os.mkdir(path_screenshots)
         
         print "Saving %s" %figure_filename_screenshot
         mlab.savefig(os.path.join(path_animation, figure_filename_animation), 
