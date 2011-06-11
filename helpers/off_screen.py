@@ -8,7 +8,7 @@ mlab.options.offscreen = True
 import neuronvisio.controls
 from neuronvisio.visio import Visio
 
-prefix = 'Data_rmt/'
+prefix = 'Data/'
 
 dirs = {'cpm_8Hz' : prefix + '30-04-2011/Sim_0/',
         'cpm_20Hz' : prefix + '29-04-2011/Sim_2/',
