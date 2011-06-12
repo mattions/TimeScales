@@ -2,9 +2,6 @@ import os
 from shutil import copyfile
 
 # Getting the qt in before mayavi
-from PyQt4 import QtGui
-app = QtGui.QApplication.instance()
-
 from enthought.mayavi import mlab
 # Offscreen
 mlab.options.offscreen = True
