@@ -2,11 +2,17 @@ import os
 from shutil import copyfile
 
 # Getting the qt in before mayavi
+from PyQt4 import QtGui
+app = QtGui.QApplication.instance()
+
 from enthought.mayavi import mlab
 # Offscreen
 mlab.options.offscreen = True
 
 import neuronvisio.controls
+from neuronvisio.visio import Visio
+
+
 prefix = 'Data/'
 
 #dirs = {'cpm_8Hz' : prefix + '30-04-2011/Sim_0/',
@@ -35,18 +41,18 @@ if __name__ == '__main__' :
     for condition, dir in dirs.iteritems():
         # Loading the file
         neuronvisio.controls = reload(neuronvisio.controls)
-        ctrl = neuronvisio.controls.Controls()
-        ctrl.load_hdf(os.path.join(dir, h5_filename))
+        man = neuronvisio.manager.Manager()
+        man.load_from_hdf(os.path.join(dir, h5_filename))
         
         # Launch Visio
-        ctrl.launch_visio()
-
+        visio = Visio(None, man)
+        visio.draw_model()
         
-        time = ctrl.manager.groups['t']
+        time = man.groups['t']
         for i, time_point in enumerate(time):
         
             
-            ctrl.visio.show_variable_timecourse(var, i, 
+            visio.show_variable_timecourse(var, i, 
                                          start_value, end_value)
             #visio.timelabel.text = str(round(time_point, 3))
             
