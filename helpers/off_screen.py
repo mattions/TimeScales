@@ -10,12 +10,14 @@ from neuronvisio.visio import Visio
 
 prefix = 'Data/'
 
-dirs = {'cpm_8Hz' : prefix + '30-04-2011/Sim_0/',
-        'cpm_20Hz' : prefix + '29-04-2011/Sim_2/',
-        'cpm_40Hz' : prefix + '29-04-2011/Sim_1/',
-        'cmp_50Hz' : prefix + '29-04-2011/Sim_0'
-        }
+#dirs = {'cpm_8Hz' : prefix + '30-04-2011/Sim_0/',
+#        'cpm_20Hz' : prefix + '29-04-2011/Sim_2/',
+#        'cpm_40Hz' : prefix + '29-04-2011/Sim_1/',
+#        'cmp_50Hz' : prefix + '29-04-2011/Sim_0'
+#        }
 
+dirs = {'medium_model' : 'helpers/',
+        }
 
 # Vars
 
