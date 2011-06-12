@@ -5,9 +5,12 @@ from enthought.mayavi import mlab
 # Offscreen
 mlab.options.offscreen = True
 
+from PyQt4 import QtGui
+app = QtGui.QApplication.instance()
+
 import neuronvisio.controls
 from neuronvisio.visio import Visio
-from PyQt4 import QtGui
+
 
 prefix = 'Data/'
 
@@ -32,7 +35,7 @@ screenshot_dir = 'screenshot'
 
 
 if __name__ == '__main__' :
-    app = QtGui.QApplication.instance()
+    
     
     for condition, dir in dirs.iteritems():
         # Loading the file
