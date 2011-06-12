@@ -10,9 +10,6 @@ from enthought.mayavi import mlab
 mlab.options.offscreen = True
 
 import neuronvisio.controls
-from neuronvisio.visio import Visio
-
-
 prefix = 'Data/'
 
 #dirs = {'cpm_8Hz' : prefix + '30-04-2011/Sim_0/',
@@ -41,18 +38,18 @@ if __name__ == '__main__' :
     for condition, dir in dirs.iteritems():
         # Loading the file
         neuronvisio.controls = reload(neuronvisio.controls)
-        man = neuronvisio.manager.Manager()
-        man.load_from_hdf(os.path.join(dir, h5_filename))
+        ctrl = neuronvisio.controls.Controls()
+        ctrl.load_hdf(os.path.join(dir, h5_filename))
         
         # Launch Visio
-        visio = Visio(None, man)
-        visio.draw_model()
+        ctrl.launch_visio()
+
         
-        time = man.groups['t']
+        time = ctrl.manager.groups['t']
         for i, time_point in enumerate(time):
         
             
-            visio.show_variable_timecourse(var, i, 
+            ctrl.visio.show_variable_timecourse(var, i, 
                                          start_value, end_value)
             #visio.timelabel.text = str(round(time_point, 3))
             
