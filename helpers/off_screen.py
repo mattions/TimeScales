@@ -1,5 +1,6 @@
 import os
 from shutil import copyfile
+import numpy as np
 
 # Getting the qt in before mayavi
 from PyQt4 import QtGui
@@ -33,6 +34,11 @@ h5_filename = 'storage.h5'
 animation_dir = 'animation'
 screenshot_dir = 'screenshot'
 
+single_stim_first_train = np.arange(80000, 80601)
+single_stim_second_train = np.arange(162501, 163201)
+
+total_time_index_array = np.hstack((single_stim_first_train,
+                                    single_stim_second_train))
 
 
 if __name__ == '__main__' :
@@ -49,13 +55,14 @@ if __name__ == '__main__' :
         visio.draw_model()
         
         time = man.groups['t']
-        for i, time_point in enumerate(time):
+        
+        for i in total_time_index_array:
         
             
             visio.show_variable_timecourse(var, i, 
                                          start_value, end_value)
             #visio.timelabel.text = str(round(time_point, 3))
-            
+            time_point = time[i]
             figure_filename_screenshot = '%s_%s_%09d.png' %(condition, time_point, i)
             figure_filename_animation = '%s%09d.png' %(condition, i)
             
