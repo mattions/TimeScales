@@ -34,8 +34,8 @@ h5_filename = 'storage.h5'
 animation_dir = 'animation'
 screenshot_dir = 'screenshot'
 
-single_stim_first_train = np.arange(80000, 80601)
-single_stim_second_train = np.arange(162501, 163201)
+single_stim_first_train = np.arange(80000, 80601, 5)
+single_stim_second_train = np.arange(162501, 163201, 5)
 
 total_time_index_array = np.hstack((single_stim_first_train,
                                     single_stim_second_train))
@@ -56,16 +56,7 @@ if __name__ == '__main__' :
         
         time = man.groups['t']
         
-        for i in total_time_index_array:
-        
-            
-            visio.show_variable_timecourse(var, i, 
-                                         start_value, end_value)
-            #visio.timelabel.text = str(round(time_point, 3))
-            time_point = time[i]
-            figure_filename_screenshot = '%s_%s_%09d.png' %(condition, time_point, i)
-            figure_filename_animation = '%s%09d.png' %(condition, i)
-            
+        for i, indx in enumerate(total_time_index_array):
             # Creating the dirs
             path_animation = os.path.join(dir, animation_dir) 
             path_screenshots = os.path.join(dir, screenshot_dir)
@@ -74,9 +65,20 @@ if __name__ == '__main__' :
             if not os.path.exists(path_screenshots):
                 os.mkdir(path_screenshots)
             
-            print "Saving %s" %figure_filename_screenshot
-            mlab.savefig(os.path.join(path_animation, figure_filename_animation), 
-                         size=(1280, 1024))
-            copyfile(os.path.join(path_animation, figure_filename_animation), 
-                     os.path.join(path_screenshots, figure_filename_screenshot))
-            
+            time_point = time[indx]
+            figure_filename_screenshot = '%s_%s_%09d.png' %(condition, time_point, i)
+            figure_filename_animation = '%s%09d.png' %(condition, i)
+            file = os.path.join(path_animation, figure_filename_animation)
+            path_animation_file = os.path.join(path_animation, 
+                                               figure_filename_animation)
+            path_screenshot_file = os.path.join(path_screenshots, 
+                                                figure_filename_screenshot)
+        
+            if not os.path.exists(path_animation_file):
+                visio.show_variable_timecourse(var, indx, 
+                                             start_value, end_value)
+                print "Saving %s" %path_animation_file
+                mlab.savefig(os.path.join(path_animation_file), 
+                             size=(1280, 1024))
+                copyfile(path_animation_file, path_screenshot_file)
+                
