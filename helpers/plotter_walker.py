@@ -17,7 +17,7 @@ stimulated_spines = ['spine554', 'spine555', 'spine556',
 dirs = {'cpm_8Hz' : 'Data_rmt/30-04-2011/Sim_0/',
         'cpm_20Hz' : 'Data_rmt/29-04-2011/Sim_2/',
         'cpm_40Hz' : 'Data_rmt/29-04-2011/Sim_1/',
-        'cmp_50Hz' : 'Data_rmt/29-04-2011/Sim_0'
+        'cmp_50Hz' : 'Data_rmt/29-04-2011/Sim_0/'
         }
 
 
@@ -25,24 +25,36 @@ dirs = {'cpm_8Hz' : 'Data_rmt/30-04-2011/Sim_0/',
 for condition, dir in dirs.iteritems():
     h5_filename = dir + 'storage.h5'
     neuronvisio.manager = reload(neuronvisio.manager)
-    man = neuronvisio.manager.Manager()
-    man.load_from_hdf(h5_filename)
-    dp = DoublePlotter()
-    sp = StimulPlotter()
-    
-    
-    for spine_num in stimulated_spines:
-        biogroup = 'timeSeries_' + spine_num
-        fig = plt.figure()
+    name = 'ele_bio_' + condition + "_" + 'spine1478' + '.png'
+    if not os.path.exists(os.path.join(dir, name)):
+        man = neuronvisio.manager.Manager()
+        man.load_from_hdf(h5_filename)
+        dp = DoublePlotter()
+        sp = StimulPlotter()
         
-        ax1, ax2 = dp.plot_double_axes(man, spine_num, 'v', 
-            'AMPAR_P', bio_group=biogroup)
-        ax1.set_ylim(-90, 0)
-        sp.plot_input(spine_num, man, ax=ax1)
         
-        for ext in ['.png', '.pdf']:
-            name = 'ele_bio_' + condition + "_" + spine_num + ext
+        for spine_num in stimulated_spines:
+            name = None
+            fig_filename = None
+            name = 'ele_bio_' + condition + "_" + spine_num + '.png'
             fig_filename = os.path.join(dir, name)
-            plt.savefig(fig_filename)
-            print "Saved file %s" %fig_filename
-    del man
+    
+            if not os.path.exists(fig_filename):
+                biogroup = 'timeSeries_' + spine_num
+                fig = plt.figure()
+                
+                ax1, ax2 = dp.plot_double_axes(man, spine_num, 'v', 
+                    'AMPAR_P', bio_group=biogroup)
+                ax1.set_ylim(-90, 0)
+                sp.plot_input(spine_num, man, ax=ax1)
+                
+                for ext in ['.png', '.pdf']:            
+                    name = 'ele_bio_' + condition + "_" + spine_num + ext
+                    fig_filename = os.path.join(dir, name)
+                    plt.savefig(fig_filename)
+                    print "Saved file %s" %fig_filename
+            else:
+                print "File %s exist. Skipping" %fig_filename
+        del man
+    else:
+        print "Skipping dir %s" %dir
