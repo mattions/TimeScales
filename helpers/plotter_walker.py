@@ -46,6 +46,7 @@ for condition, dir in dirs.iteritems():
                 ax1, ax2 = dp.plot_double_axes(man, spine_num, 'v', 
                     'AMPAR_P', bio_group=biogroup)
                 ax1.set_ylim(-90, 0)
+                ax2.set_ylim(10, 150) # make space for the legend.
                 sp.plot_input(spine_num, man, ax=ax1)
                 
                 for ext in ['.png', '.pdf']:            

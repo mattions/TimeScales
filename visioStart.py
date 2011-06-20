@@ -1,7 +1,10 @@
 from neuronvisio.controls import Controls
 controls = Controls()
 from neuron import h
-from neuronControl.nrnManager import NeuronManager 
+
+from neuronControl.nrnManager import NeuronManager
+
+ 
 import time
 
 
