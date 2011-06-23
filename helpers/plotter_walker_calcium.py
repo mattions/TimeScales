@@ -30,32 +30,36 @@ def plotting(fig_fil):
 for condition, dir in dirs.iteritems():
     h5_filename = dir + 'storage.h5'
     neuronvisio.manager = reload(neuronvisio.manager)
-    name = 'ele_bio_' + condition + "_" + 'spine1478' + '.png'
+    prefix = 'calcium_'
+    name = prefix + condition + "_" + 'spine1478' + '.png'
     if not os.path.exists(os.path.join(dir, name)):
         man = neuronvisio.manager.Manager()
         man.load_from_hdf(h5_filename)
-        dp = DoublePlotter()
+        #dp = DoublePlotter()
         sp = StimulPlotter()
         
         
         for spine_num in stimulated_spines:
             name = None
             fig_filename = None
-            name = 'ele_bio_' + condition + "_" + spine_num + '.png'
+            name = prefix + condition + "_" + spine_num + '.png'
             fig_filename = os.path.join(dir, name)
     
             if not os.path.exists(fig_filename):
                 biogroup = 'timeSeries_' + spine_num
                 fig = plt.figure()
-                
-                ax1, ax2 = dp.plot_double_axes(man, spine_num, 'v', 
-                    'AMPAR_P', bio_group=biogroup)
-                ax1.set_ylim(-90, 0)
-                ax2.set_ylim(10, 150) # make space for the legend.
-                sp.plot_input(spine_num, man, ax=ax1)
+                sec_name = "%s_head" %spine_num
+                t = man.groups['t']
+                ca = man.get_vector(sec_name, 'cali')
+                label ="%s_ca" %spine_num
+                plt.plot(t, ca, 'g-', label=label)
+                plt.ylim(0, 0010)
+                plt.xlabel('Time [ms]')
+                plt.ylabel('Concentration [mM]')
+                sp.plot_input(spine_num, man, height_in_the_graph=0.0005)
                 
                 for ext in ['.png', '.pdf']:            
-                    name = 'ele_bio_' + condition + "_" + spine_num + ext
+                    name = prefix + condition + "_" + spine_num + ext
                     fig_filename = os.path.join(dir, name)
                     plt.savefig(fig_filename)
                     print "Saved file %s" %fig_filename
