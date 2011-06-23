@@ -286,7 +286,7 @@ class Runner():
                     break
                 else:
                     for sec in h.allsec():
-                        if sec.name() in param['sec_to_rec']:
+                        if sec.name() in self.param['sec_to_rec']:
                             self.manager.add_vecRef(var, 
                                                     sec, 
                                                     t_i_r)
