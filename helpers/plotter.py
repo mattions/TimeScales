@@ -58,12 +58,13 @@ class StimulPlotter():
 class EcellPlotter():
     
     def plot_timeCourses(self, timeCourses, save=False, 
-                        dir=None, name='test_spine', x_lims=None):
+                        dir=None, name='test_spine', x_lims=None, tstop_bio=300):
          """Plot the default timecourses"""
          import matplotlib.pyplot as plt
          ca_tc = timeCourses['ca'] 
          plt.figure()
-         plt.plot(ca_tc[:,0], ca_tc[:,1], label="Calcium")
+         time_ms = (ca_tc[:,0] - tstop_bio) * 1e3 #scaling to ms
+         plt.plot(time_ms, ca_tc[:,1], label="Calcium")
          plt.xlabel("Time [s]")
          if x_lims:
              plt.xlim(x_lims)

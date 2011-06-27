@@ -17,7 +17,8 @@ stimulated_spines = ['spine554', 'spine555', 'spine556',
 dirs = {'cpm_8Hz' : 'Data_rmt/30-04-2011/Sim_0/',
         'cpm_20Hz' : 'Data_rmt/29-04-2011/Sim_2/',
         'cpm_40Hz' : 'Data_rmt/29-04-2011/Sim_1/',
-        'cpm_50Hz' : 'Data_rmt/29-04-2011/Sim_0/'
+        'cpm_50Hz' : 'Data_rmt/29-04-2011/Sim_0/',
+        'cpm_40Hz_long' : 'Data_rmt/25-06-2011/Sim_0/',
         }
 
 
@@ -32,6 +33,7 @@ for condition, dir in dirs.iteritems():
     neuronvisio.manager = reload(neuronvisio.manager)
     prefix = 'calcium_'
     name = prefix + condition + "_" + 'spine1478' + '.png'
+    REWRITE = True
     if not os.path.exists(os.path.join(dir, name)):
         man = neuronvisio.manager.Manager()
         man.load_from_hdf(h5_filename)
@@ -53,10 +55,10 @@ for condition, dir in dirs.iteritems():
                 ca = man.get_vector(sec_name, 'cali')
                 label ="%s_ca" %spine_num
                 plt.plot(t, ca, 'g-', label=label)
-                plt.ylim(0, 0010)
                 plt.xlabel('Time [ms]')
                 plt.ylabel('Concentration [mM]')
                 sp.plot_input(spine_num, man, height_in_the_graph=0.0005)
+                #plt.ylim(0, 0.010)
                 
                 for ext in ['.png', '.pdf']:            
                     name = prefix + condition + "_" + spine_num + ext

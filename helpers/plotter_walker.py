@@ -17,7 +17,8 @@ stimulated_spines = ['spine554', 'spine555', 'spine556',
 dirs = {'cpm_8Hz' : 'Data_rmt/30-04-2011/Sim_0/',
         'cpm_20Hz' : 'Data_rmt/29-04-2011/Sim_2/',
         'cpm_40Hz' : 'Data_rmt/29-04-2011/Sim_1/',
-        'cpm_50Hz' : 'Data_rmt/29-04-2011/Sim_0/'
+        'cpm_50Hz' : 'Data_rmt/29-04-2011/Sim_0/',
+        'cpm_40Hz_long' : 'Data_rmt/25-06-2011/Sim_0/',
         }
 
 
