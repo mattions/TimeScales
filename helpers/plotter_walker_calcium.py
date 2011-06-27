@@ -52,7 +52,9 @@ for condition, dir in dirs.iteritems():
                 fig = plt.figure()
                 sec_name = "%s_head" %spine_num
                 t = man.groups['t']
-                ca = man.get_vector(sec_name, 'cali')
+                cali = man.get_vector(sec_name, 'cali')
+                cai = man.get_vector(sec_name, 'cai')
+                ca = cai+cali
                 label ="%s_ca" %spine_num
                 plt.plot(t, ca, 'g-', label=label)
                 plt.xlabel('Time [ms]')
