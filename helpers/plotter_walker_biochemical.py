@@ -63,7 +63,7 @@ for condition, dir in dirs.iteritems():
                     
                     vec_bio = man.get_vector(spine_num, var, group=bio_group)
                 
-                    plt.plt(t_ms, vec_bio, label=var)
+                    plt.plot(t_ms, vec_bio, label=var)
                     plt.ylabel('Normalized activation')
                     plt.xlabel('Time [ms]')
                     plt.xlim(0,20000)
