@@ -31,8 +31,8 @@ def plotting(fig_fil):
 for condition, dir in dirs.iteritems():
     h5_filename = dir + 'storage.h5'
     neuronvisio.manager = reload(neuronvisio.manager)
-    prefix = 'bio_'
-    name = prefix + condition + "_" + 'spine1478' + '.png'
+    prefix = 'bio_' 
+    name = "%s_enzymes_%s_%s%s" %(prefix, condition, 'spine1478', '.png')
     tstop_bio = 300
     if not os.path.exists(os.path.join(dir, name)):
         man = neuronvisio.manager.Manager()
