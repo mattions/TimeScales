@@ -67,6 +67,8 @@ for condition, dir in dirs.iteritems():
                     plt.ylabel('Normalized activation')
                     plt.xlabel('Time [ms]')
                     plt.xlim(0,20000)
+                    plt.ylim(0, 1.0)
+                    plt.legend()
                     plt.title(spine_num)
                     
                     for ext in ['.png', '.pdf']:            
@@ -79,7 +81,7 @@ for condition, dir in dirs.iteritems():
                 fig = plt.figure()
                 vec_bio = man.get_vector(spine_num, 'ca_conc', group=bio_group)
                 label ="%s_ca" %spine_num
-                plt.plot(t_ms, vec_bio[:]*1e3, 'r-', label=label)
+                plt.plot(t_ms, vec_bio[:], 'r-', label=label)
                 plt.xlabel('Time [ms]')
                 plt.ylabel('Concentration [mM]')
                 plt.xlim(0,20000)
