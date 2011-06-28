@@ -57,7 +57,7 @@ for condition, dir in dirs.iteritems():
                 t_ms = (t.read()- tstop_bio) * 1e3 #scaling to ms
                 
                 # Plotting the vars
-                vars = ['PP2Bbar', 'CaMKIIbar', 'PP1abar']
+                vars = ['PP2Bbar', 'CaMKIIbar', 'PP1abar', 'Dpbar']
                 fig = plt.figure()
                 for var in vars:
                     
