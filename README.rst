@@ -2,12 +2,14 @@
 How to launch simulation opn the cluster
 ****************************************
 
+==========
+TimeScales
+==========
 
-TimeScales - Launching the simulations
-======================================
+Launching the simulations
+=========================
 
-
-
+This is the README to launch TimeScales with the Hybrid model on the EBI cluster
 
 Storing here for future references::
 
@@ -82,24 +84,32 @@ All branches - CPM
     
     bsub -M 60000 -R "rusage[mem=20000]" smt run param/long_tstop_allbranch_cpm_two_branches_stims_40_Hz_long_train.param -r "CPM 2 branches, all spine 40 Hz long stimulation. Using 60 Gb of RAM (5seg med)" -t "all"   
 
-Read simulation results
------------------------
+
+
+Reading simulations' results
+============================
 
 Reload the storage.h5 file with neuronvisio
+
+    run nrnvisio path/to/Sim/storage.h5
  
+ 
+============
 EcellManager
 ============
 
-Launching the simulation
-------------------------
+Used to launch the biochemical alone for testing.
+
+Launching the simulations
+========================
 
 This is for the weight checking::
 
 	bsub -M 4000 -R "rusage[mem=4000]" smt run -m ecellControl/ecellManager.py ecellControl/ecellControl.param -r "Testing AMPA weight"
 
 	
-Read simulations results
-------------------------
+Reading simulations' results
+============================
 
 Open an ipython and run
 
