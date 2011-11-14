@@ -187,7 +187,7 @@ class NeuronManager():
             sys.exit()
     
     def populate_dend(self, spine_positions, dendList, big_spine):
-        """Distribuete the psines among the dends"""
+        """Distribute the psines among the dends"""
         
         for sec in dendList :
             for pos in spine_positions:
@@ -199,7 +199,7 @@ class NeuronManager():
                 spine = Spine(id, self.biochemical_filename, big_spine)
                 spine.attach(sec, pos, 0) # Attaching the spine in the right pos
                 self.spines[spine.id] = spine
-                print "Addedd spine: %s, pos %s, sec %s" % (spine.id, pos, sec.name())
+                #print "Addedd spine: %s, pos %s, sec %s" % (spine.id, pos, sec.name())
                 
     def updateSpines(self):
         "Update the calcium inside the spine"
