@@ -200,16 +200,6 @@ class NeuronManager():
                 spine.attach(sec, pos, 0) # Attaching the spine in the right pos
                 self.spines[spine.id] = spine
                 #print "Addedd spine: %s, pos %s, sec %s" % (spine.id, pos, sec.name())
-                
-    def updateSpines(self):
-        "Update the calcium inside the spine"
-        for spine in self.spines:
-            ca_from_NEURON = spine.vecs['ca'].x[-1] 
-            spine.ecellMan.ca['Value'] = ca_from_NEURON 
-            spine.ecellMan.ses.run(caSamplingInterval)
-            print "Equilibrium for spine: %s, dend: %s, bio sim time: %f" % (spine.head.name(), 
-                                                                     spine.parent.name(),
-                                                                     spine.ecellMan.ses.getCurrentTime())
             
     def set_kir_gkbar(self, gkbar):
         """Set the conductance of kir"""
