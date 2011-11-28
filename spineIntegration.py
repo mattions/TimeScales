@@ -219,7 +219,6 @@ class Runner():
             self.run_simulation(nrnManager, excitatory_stims)
         else:
             # Only Electrical
-            tstop = self.param['t_equilibrium_neuron'] + self.param['tStop']
             self.test_electrical_weight_change()
         # Save the Results ------------------------------------
         saving_dir = self.manager.create_new_dir(root='Data')
@@ -437,11 +436,11 @@ class Runner():
     def test_electrical_weight_change(self):
         """Run the sims till tstop, and then change the weight"""
         t_eq = self.param['t_equilibrium_neuron']
-        runner.nrnManager.run(200) # first input 180
+        runner.nrnManager.run(t_eq) # first input 180
         
         sp1 =runner.nrnManager.spines['spine1']
         syn_a = sp1.synapses[0]
-        syn_a.netCon.weight[0] = 1.5
+        syn_a.netCon.weight[0] = 3
         tStop = self.param['tStop']
         tStop += t_eq
         runner.nrnManager.run(tStop)
