@@ -216,7 +216,7 @@ class Runner():
         
         if self.param['bio_on']:
             self.equilibrium(nrnManager)
-            self.run_simulation(nrnManager, excitatory_stims)
+            self.run_while_sync(nrnManager, excitatory_stims)
         else:
             # Only Electrical
             tstop = self.param['t_equilibrium_neuron'] + self.param['tStop']
@@ -295,6 +295,30 @@ class Runner():
                 self.manager.add_synVecRef(syn)    
 
 
+    def run_while_sync(self, nrnManager, excitatory_stims):
+
+        """
+        Run the simulation. If input synchronizes the two simulators, 
+        otherwise run each on its own and advance quickly
+            
+        """
+        # Processing the options
+        tStop_final = self.param['tStop'] + self.param['t_equilibrium_neuron']        
+        
+        # Getting the calcium before the stims
+        for spine_id in self.param['stimulated_spines']:
+            spine = nrnManager.spines[spine_id]
+            self.update_synape_weight(spine)
+            
+        while h.t < tStop_final:
+            
+            self.synch_simulators(tStop_final, nrnManager)
+        
+        # Recording last 
+        for spine_id in self.param['stimulated_spines']:
+            spine = nrnManager.spines[spine_id]
+            self.update_synape_weight(spine)
+    
     def run_simulation(self, nrnManager, excitatory_stims):
 
         """
@@ -333,6 +357,10 @@ class Runner():
         for spine_id in self.param['stimulated_spines']:
             spine = nrnManager.spines[spine_id]
             self.update_synape_weight(spine)
+    
+    
+    
+    
     
     def save_results(self, nrnManager, saving_dir):
         """Saving both results"""
