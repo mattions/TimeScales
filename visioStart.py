@@ -18,7 +18,7 @@ nrnManager =NeuronManager(bio_filename,
                           dt_neuron, 
                           mod_path="mod", 
                           hoc_path="hoc", 
-                          spines_dist='two')
+                          spines_dist='all')
 
 #start= time.time()
 #                  
