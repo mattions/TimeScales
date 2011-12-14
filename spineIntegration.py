@@ -411,6 +411,7 @@ class Runner():
                     spine.ecellMan.ca_leak['vmax'] = self.param['ca_leak_vmax']
                     spine.ecellMan.ca_pump['vmax'] = self.param['ca_pump_vmax']
                     self.update_synape_weight(spine)
+                    print "Syncing at time: %s" %h.t
                 t_synch_start = h.t # Resetting the t_start to the new NEURON time.
     
     def sync_calcium(self, spine):
