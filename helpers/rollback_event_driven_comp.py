@@ -38,6 +38,18 @@ plt.legend(loc=0)
 plt.xlabel("Number of Events")
 plt.ylabel("Time [min]")
 
+# Time deviation
+
+plt.figure()
+plt.plot([10], [r_10.std()],'bo', label="r_10")
+plt.plot([20], [r_20.std()],'go', label="r_20")
+plt.plot([30], [r_30.std()],'ro', label="r_30")
+plt.plot([40], [r_40.std()],'mo', label="r_40")
+plt.plot([10], [e_10.std()],'b+', label="e_10")
+plt.plot([20], [e_20.std()],'g+', label="e_20")
+plt.plot([30], [e_30.std()],'r+', label="e_30")
+plt.plot([40], [e_40.std()],'m+', label="e_40")
+plt.xlim(5,45)
 
 # Memory Analysis
 mem_event = array([31266, 31462,  31295, 30675])
@@ -57,6 +69,10 @@ plt.plot(x, combined_event, 'o', color='blue')
 plt.legend(loc=0)
 plt.xlabel("Number of Events")
 plt.ylabel("Memory Used [MB]")
+
+
+
+
 
 plt.show()
 
