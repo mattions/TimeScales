@@ -6,7 +6,7 @@
         # to be synchronized within ecell and Neuron . 
     "t_equilibrium_neuron" : 100, # in milliseconds
     "t_equilibrium_ecell" : 300, # in seconds
-    "tStop" : 10, # [ms] Time to stop (NEURON time is the reference) the simulation  
+    "tStop" : 200, # [ms] Time to stop (NEURON time is the reference) the simulation  
     "t_buffer" : 10, #ms For how long the syncronization should be carried
     "neuron_time_recording_interval" : 0.1, # Recording at every [ms]
     "weight_sampling" : 50, # Total ms when the weight of the synapses will be updated
