@@ -13,10 +13,10 @@
 	"big_spine" : True,
 	"bio_on" : True, 
     "spines_dist" : "two", #spines_dist = 'all' or spines_dist=zero #Number of spines
-    "stimulated_spines" : ['spine1'],
+    "stimulated_spines" : ['spine1', 'spine2'],
     "spine1" : ['ampa_s1', 'nmda_s1'],
     #"spine1" : ['ampa_s1', 'nmda_s1', 'ampa_s2', 'nmda_s2'],
-    #"spine2" : ['ampa_s2', 'nmda_s2'],
+    "spine2" : ['ampa_s2', 'nmda_s2'],
     #"spine531" : ['ampa_s1', 'nmda_s1'],
     #"spine532" : ['ampa_s1', 'nmda_s1'],
     "ampa_s1" : 
