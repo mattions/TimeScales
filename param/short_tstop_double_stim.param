@@ -16,7 +16,7 @@
     "stimulated_spines" : ['spine1', 'spine2'],
     "spine1" : ['ampa_s1', 'nmda_s1'],
     #"spine1" : ['ampa_s1', 'nmda_s1', 'ampa_s2', 'nmda_s2'],
-    "spine2" : ['ampa_s2', 'nmda_s2'],
+    "spine2" : ['ampa_s1', 'nmda_s1'],
     #"spine531" : ['ampa_s1', 'nmda_s1'],
     #"spine532" : ['ampa_s1', 'nmda_s1'],
     "ampa_s1" : 
