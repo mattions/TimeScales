@@ -445,18 +445,18 @@ class Runner():
                 # Check the specs in synapse weight for more info. 
                 syn.weight[0].append(h.t)
                 syn.weight[1].append(weight)
-                print "Updating synapse weight in %s, time [ms]: %s, weight: %s, netCon: %s" %(spine.id,
-                                                                                   h.t,
-                                                                                   weight,
-                                                                                   syn.netCon.weight[0])
-                print "AMPA syn value g: %s itmp: %s ical: %s i: %s scale: %s voltage: %s" %(syn.chan.g, 
-                                                                                  syn.chan.itmp,
-                                                                                  syn.chan.ical,
-                                                                                  syn.chan.i,
-                                                                                  syn.chan.scale,
-                                                                                  spine.psd.v )
-                itmp = syn.chan.scale * syn.chan.g * spine.psd.v
-                print "itmp in NEURON: %s, itmp calculated: %s" %(syn.chan.itmp, itmp)
+#                print "Updating synapse weight in %s, time [ms]: %s, weight: %s, netCon: %s" %(spine.id,
+#                                                                                   h.t,
+#                                                                                   weight,
+#                                                                                   syn.netCon.weight[0])
+#                print "AMPA syn value g: %s itmp: %s ical: %s i: %s scale: %s voltage: %s" %(syn.chan.g, 
+#                                                                                  syn.chan.itmp,
+#                                                                                  syn.chan.ical,
+#                                                                                  syn.chan.i,
+#                                                                                  syn.chan.scale,
+#                                                                                  spine.psd.v )
+#                itmp = syn.chan.scale * syn.chan.g * spine.psd.v
+#                print "itmp in NEURON: %s, itmp calculated: %s" %(syn.chan.itmp, itmp)
 
 
     def test_electrical_weight_change(self):
