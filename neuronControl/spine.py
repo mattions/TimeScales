@@ -18,7 +18,7 @@ class Spine():
         """ Create a spine with a standard volume of ~0.11 um
         the h is the reference to the main hoc interpreter"""
         self.id = id
-        self.head_vol = 0.11 #um
+        self.head_vol = None#0.11 #um3 calculated directly from the spine heads
         self.neck = self.create_neck()
         self.head = self.create_head(self.neck, self.head_vol, big_spine)
         self.psd = self.create_psd(self.head)
@@ -126,6 +126,8 @@ class Spine():
         if big_spine:
             head.L = 1
             head.diam = 1.175
+            r = head.diam/2.
+            self.head_vol = math.pi * r * r * head.L
         else:
             head.L = 0.5
             head.diam = math.sqrt(head_vol / (head.L * math.pi) ) * 2
