@@ -2,7 +2,7 @@
 # Should be used with spineIntegration.py
 {
 	# desired biochemical file
-	"biochemical_filename" : "biochemical_circuits/youwei_noCBPs_slowCaM.eml",
+	"biochemical_filename" : "biochemical_circuits/biomd183_loop.eml",
 	
     "dtNeuron" : 0.025,  						# integration dt [ms]
     "delta_calcium_sampling" : 0.5, 			# In millisecond [ms]. 
