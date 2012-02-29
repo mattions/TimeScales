@@ -347,6 +347,10 @@ class Runner():
             extRef.add_weights(self.manager, 
                                self.param['stimulated_spines'], 
                                nrnManager)
+                        # Saving the weight
+            extRef.add_kflux(self.manager, 
+                               self.param['stimulated_spines'], 
+                               nrnManager)
             
         print "Simulation Ended. Saving results"
         hdf_name = 'storage.h5'
