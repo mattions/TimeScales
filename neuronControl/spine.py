@@ -25,7 +25,7 @@ class Spine():
         self.parent = None # the parent section connected to the neck
         self.synapses = self.create_synapses()
         self.filename = filename_bioch_mod
-        self.k_flux = []
+        self.k_flux = [[],[]]
         
         # Reset ions
         h.cai0_ca_ion = 0.001        #// mM, Churchill 1998
@@ -70,7 +70,8 @@ class Spine():
                                                                         k_converted)
         
         self.ecellMan.ca_in['k'] = k_converted
-        self.k_flux.append(k_converted)
+        self.k_flux[0].append(h.t)
+        self.k_flux[1].append(k_converted)
         # Disabling the leak and the pump
         self.ecellMan.ca_pump['vmax'] = 0
         self.ecellMan.ca_leak['vmax'] = 0
