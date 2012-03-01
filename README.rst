@@ -25,6 +25,12 @@ Small memory, for testing
     
     bsub -M 10000 -R "rusage[mem=10000]" -q research-rh6 smt run param/short_tstop_onebranch_several_stimulation.param -r "Short tstop for testing. One branch populated with spines. Using 10 Gb" -t "onebranch"
 
+K flux investigation
+--------------------
+
+    bsub -M 4000 -R "rusage[mem=4000]" smt run param/short_k_flux_investigation.param -r "Testing different calcium sampling" -t "k_flux"
+
+
 Long tStop test
 ---------------
 
