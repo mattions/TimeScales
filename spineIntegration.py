@@ -162,10 +162,10 @@ class Runner():
         head_cali = vec_spine_head_cali.x[-1]
         electrical_ca_end = head_cai + head_cali
         electrical_diff = electrical_ca_end - electrical_ca_start
-        print "Len vecs: %s start_idx: %s" %(len(vec_spine_head_cali), start_index)
-        print "Electrical calcium start: %s end: %s difference: %s" %(electrical_ca_start,
-                                                                      electrical_ca_end,
-                                                                      electrical_diff)
+#        print "Len vecs: %s start_idx: %s" %(len(vec_spine_head_cali), start_index)
+#        print "Electrical calcium start: %s end: %s difference: %s" %(electrical_ca_start,
+#                                                                      electrical_ca_end,
+#                                                                      electrical_diff)
         # Calculating the flux
         k_calcium_flux = electrical_diff / delta_calcium_sampling
         
@@ -256,15 +256,13 @@ class Runner():
             ecp = EcellPlotter()
             x_start = self.param['t_equilibrium_ecell']
             x_stop = x_start + self.param['tStop']/1e3
-            from helpers.plotter import DoublePlotter
-            dp = DoublePlotter()
+
             for stim_spine in self.param['stimulated_spines']:
                 spine = nrnManager.spines[stim_spine]
                 ecp.plot_timeCourses(spine.ecellMan.timeCourses, save=True, 
                                    dir=saving_dir, name=spine.id, 
                                    x_lims= [x_start, x_stop])
                 ecp.plot_weight(spine.ecellMan.timeCourses, dir=saving_dir)
-                dp.plot_bio_and_ele_calcium(self.manager, spine, dir=saving_dir)
             
     def record_vectors(self, nrnManager):
         """Add a vecRef to record the vectors"""
