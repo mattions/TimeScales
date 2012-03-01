@@ -10,9 +10,18 @@ x = Num_inputs * FIRST_TRAIN_STIM + Num_inputs * SECOND_TRAIN_STIM
 
 
 # Time Analysis
+# while_sync organized in dictionary: 
+# Key: numb_inputs, Value: Time [s] 
+while_1ms = {10 : 1706.60,
+             20 : 1609.41, 
+             30 : 2000.67, 
+             40 : 1872.98 }
+while_10ms = {10 : 80233.95, 
+              20 : 107879.38,
+              30 : 113829.47,
+              40:  116230.06}
 
-
-r_10 = array([62171.03, 73263.17, 75811.31])
+while_sync_1ms = array([62171.03, 73263.17, 75811.31])
 r_20 = array([81626.53, 74990.55, 72281.77])
 r_30 = array([71874.88 , 83235.84, 78298.66, 75257.20])
 r_40 = array([83678.98, 78842.45, 85668.27 ])

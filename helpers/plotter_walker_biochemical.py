@@ -6,21 +6,24 @@ import neuronvisio.manager
 
 filename = 'storage.h5'
 
-stimulated_spines = ['spine554', 'spine555', 'spine556', 
-                     'spine558', 'spine559', 'spine560', 
-                     'spine562', 'spine563', 'spine564', 
-                     'spine1468', 'spine1469', 'spine1470', 
-                     'spine1472', 'spine1473', 'spine1474', 
-                     'spine1476', 'spine1477', 'spine1478']
+#stimulated_spines = ['spine554', 'spine555', 'spine556', 
+#                     'spine558', 'spine559', 'spine560', 
+#                     'spine562', 'spine563', 'spine564', 
+#                     'spine1468', 'spine1469', 'spine1470', 
+#                     'spine1472', 'spine1473', 'spine1474', 
+#                     'spine1476', 'spine1477', 'spine1478']
+stimulated_spines = ['spine559', 'spine560']
 
 #stimulated_spines = ['spine554']
-dirs = {'cpm_8Hz' : 'Data_rmt/30-04-2011/Sim_0/',
-        'cpm_20Hz' : 'Data_rmt/29-04-2011/Sim_2/',
-        'cpm_40Hz' : 'Data_rmt/29-04-2011/Sim_1/',
-        'cpm_50Hz' : 'Data_rmt/29-04-2011/Sim_0/',
-        'cpm_40Hz_long' : 'Data_rmt/25-06-2011/Sim_0/',
+#dirs = {'cpm_8Hz' : 'Data_rmt/30-04-2011/Sim_0/',
+#        'cpm_20Hz' : 'Data_rmt/29-04-2011/Sim_2/',
+#        'cpm_40Hz' : 'Data_rmt/29-04-2011/Sim_1/',
+#        'cpm_50Hz' : 'Data_rmt/29-04-2011/Sim_0/',
+#        'cpm_40Hz_long' : 'Data_rmt/25-06-2011/Sim_0/',
+#        }
+dirs = {'small_volume_20Hz' : 'Data_rmt/26-02-2012/Sim_0/',
+        'right_volume_20Hz' : 'Data_rmt/29-02-2012/Sim_0/'
         }
-
 
 
 def plotting(fig_fil):
