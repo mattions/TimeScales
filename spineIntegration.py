@@ -2,6 +2,14 @@
 # Wed Mar 18 17:51:51 GMT 2009
 
 import logging
+import logging
+FORMAT = '%(levelname)s %(name)s %(lineno)s   %(message)s'
+if os.environ.has_key('DEBUG'):
+    logging.basicConfig(level=logging.DEBUG, format=FORMAT)
+else: 
+    logging.basicConfig(level=logging.INFO, format=FORMAT)
+logger = logging.getLogger(__name__)
+
 import numpy as np
 import math
 
@@ -52,7 +60,7 @@ class Runner():
         """
         current_time = spine.ecellMan.ses.getCurrentTime()
         len_current_time = len (spine.ecellMan.loggers['ca'].getData()[:,0])
-        print ("Ecell current time: %s in %s. Advancing of: %s seconds.\
+        logger.debug ("Ecell current time: %s in %s. Advancing of: %s seconds.\
         Current time len: %s") %(current_time, spine.id, delta_t, len_current_time)
         spine.ecellMan.ses.run(delta_t)
     
@@ -69,9 +77,9 @@ class Runner():
         
         delta_ecell = tmp_tstop - h.t
         delta_ecell_seconds = delta_ecell / 1e3
-        print ("\nAdvance quickly routine.")
-        print ("Current Neuron time: %s, aimed tstop[ms]: %s") %(h.t, tmp_tstop)
-        print ("Delta applied on Ecell simulator [s]: %s\n") % delta_ecell_seconds
+        logger.info ("\nAdvance quickly routine.")
+        logger.info ("Current Neuron time: %s, aimed tstop[ms]: %s") %(h.t, tmp_tstop)
+        logger.info ("Delta applied on Ecell simulator [s]: %s\n") % delta_ecell_seconds
         nrnManager.run(tmp_tstop)
         for spine_id in stimulated_spines:
             spine = nrnManager.spines[spine_id]
@@ -162,10 +170,10 @@ class Runner():
         head_cali = vec_spine_head_cali.x[-1]
         electrical_ca_end = head_cai + head_cali
         electrical_diff = electrical_ca_end - electrical_ca_start
-#        print "Len vecs: %s start_idx: %s" %(len(vec_spine_head_cali), start_index)
-#        print "Electrical calcium start: %s end: %s difference: %s" %(electrical_ca_start,
+#        logger.debug( "Len vecs: %s start_idx: %s" %(len(vec_spine_head_cali), start_index))
+#        logger.debug( "Electrical calcium start: %s end: %s difference: %s" %(electrical_ca_start,
 #                                                                      electrical_ca_end,
-#                                                                      electrical_diff)
+#                                                                      electrical_diff))
         # Calculating the flux
         k_calcium_flux = electrical_diff / delta_calcium_sampling
         
@@ -173,19 +181,19 @@ class Runner():
 
     def equilibrium(self, nrnManager):
         """Brings both NEURON and Ecell to equilibrium"""  
-        print ("#--#")
-        print ("Equilibrium started.")
+        logger.info ("#--#")
+        logger.info ("Equilibrium started.")
         nrnManager.run(self.param['t_equilibrium_neuron'])
         for spine_id in self.param['stimulated_spines']:
             spine = nrnManager.spines[spine_id]
             runner.advance_ecell(spine, self.param['t_equilibrium_ecell'])
             spine.set_ampa_equilibrium_baseline()
-        print ("Equilibrium run finished. Starting normal simulation.")
-        print ("#--#")
+        logger.info ("Equilibrium run finished. Starting normal simulation.")
+        logger.info ("#--#")
     
     def main(self):
-        print ("#--#")
-        print ("Equilibrium run for the two simulators")
+        logger.info ("#--#")
+        logger.info ("Equilibrium run for the two simulators")
         # Neuron Setup -----------------------------------------------------------
         nrnManager = NeuronManager(self.param['biochemical_filename'],
                                    self.param['big_spine'],
@@ -199,7 +207,7 @@ class Runner():
         nrnManager.set_kir_gkbar(self.param['kir_gkbar'])
 
         excitatory_stims = self.create_excitatory_inputs(nrnManager)
-        print "This are the time of the stims: %s" %excitatory_stims
+        logger.info "This are the time of the stims: %s" %excitatory_stims
     
         # Recording -----------------------------------------------
         # - Recording and stimul
@@ -319,14 +327,14 @@ class Runner():
                 Current t_stim: %s, remaining input: %s" %(h.t, 
                                                            t_stim,
                                                            len(excitatory_stims))
-                print s_log
+                logger.debug( s_log)
                 
                 if h.t < t_stim:
                     self.advance_quickly(t_stim, nrnManager)
                     tmp_tstop = t_stim + self.param['t_buffer']
                     self.synch_simulators(tmp_tstop, nrnManager)
             else:
-                print "No excitatory input remaining. Quickly to the end"
+                logger.debug( "No excitatory input remaining. Quickly to the end")
                 self.advance_quickly(tStop_final, nrnManager)
                 h.fadvance() # This is to force the latest step and avoid the infinite loop.
         
@@ -353,10 +361,10 @@ class Runner():
                                self.param['stimulated_spines'], 
                                nrnManager)
             
-        print "Simulation Ended. Saving results"
+        logger.info( "Simulation Ended. Saving results")
         hdf_name = 'storage.h5'
         filename = os.path.join(saving_dir, hdf_name)
-        print "Results will be saved in %s" %filename
+        logger.info( "Results will be saved in %s" %filename)
         # Saving everything
         self.manager.save_to_hdf(filename)
         
@@ -371,7 +379,7 @@ class Runner():
         2. Advance ecell for the specified_delta
         3. Update the electric weight of the synapses in NEURON
         """
-        print ("Current time: %f Synchronizing sims till [ms] %s") %(h.t, tmp_tstop)
+        logger.info ("Current time: %f Synchronizing sims till [ms] %s") %(h.t, tmp_tstop)
         
         stimulated_spines = self.param['stimulated_spines']
         t_sync_start = h.t
@@ -386,9 +394,9 @@ class Runner():
                        
             lower_time = t_sync_start + self.param['delta_calcium_sampling']
             upper_time = lower_time + self.param['dtNeuron']
-#            print "Lower time: %.15f h.t: %.15f Upper time: %.15f" %(lower_time, 
+#            logger.debug( "Lower time: %.15f h.t: %.15f Upper time: %.15f" %(lower_time, 
 #                                                            h.t, 
-#                                                            upper_time)
+#                                                            upper_time))
             if lower_time <= h.t <= upper_time: 
                 for spine_id in stimulated_spines :
                     spine = nrnManager.spines[spine_id]
@@ -433,18 +441,18 @@ class Runner():
                 # Check the specs in synapse weight for more info. 
                 syn.weight[0].append(h.t)
                 syn.weight[1].append(weight)
-                print "Updating synapse weight in %s, time [ms]: %s, weight: %s, netCon: %s" %(spine.id,
+                logger.debug( "Updating synapse weight in %s, time [ms]: %s, weight: %s, netCon: %s" %(spine.id,
                                                                                    h.t,
                                                                                    weight,
-                                                                                   syn.netCon.weight[0])
-                print "AMPA syn value g: %s itmp: %s ical: %s i: %s scale: %s voltage: %s" %(syn.chan.g, 
+                                                                                   syn.netCon.weight[0]))
+                logger.debug( "AMPA syn value g: %s itmp: %s ical: %s i: %s scale: %s voltage: %s" %(syn.chan.g, 
                                                                                   syn.chan.itmp,
                                                                                   syn.chan.ical,
                                                                                   syn.chan.i,
                                                                                   syn.chan.scale,
-                                                                                  spine.psd.v )
+                                                                                  spine.psd.v ))
                 itmp = syn.chan.scale * syn.chan.g * spine.psd.v
-                print "itmp in NEURON: %s, itmp calculated: %s" %(syn.chan.itmp, itmp)
+                logger.debug( "itmp in NEURON: %s, itmp calculated: %s" %(syn.chan.itmp, itmp))
 
 
     def test_electrical_weight_change(self):
@@ -465,9 +473,9 @@ class Runner():
 if __name__ == "__main__":
     
     if len(sys.argv) != 2:
-        print("No parameter file supplied. Abort.")
+        logger.warning("No parameter file supplied. Abort.")
         usage = 'python spineIntegration.py parameters_file.param'
-        print usage
+        logger.info( usage)
         sys.exit()
     
     parameter_file = sys.argv[1]
