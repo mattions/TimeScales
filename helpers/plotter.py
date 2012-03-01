@@ -177,7 +177,7 @@ class DoublePlotter():
         ax1.set_xlim(0, 20000)
         return (ax1, ax2)
     
-    def plot_bio_and_ele_calcium(manager, spine, dir=None):
+    def plot_bio_and_ele_calcium(self, manager, spine, dir=None):
         """Plot Calcium from bio and ele with the same scale in 
         two graphs.
         Param:

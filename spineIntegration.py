@@ -264,7 +264,7 @@ class Runner():
                                    dir=saving_dir, name=spine.id, 
                                    x_lims= [x_start, x_stop])
                 ecp.plot_weight(spine.ecellMan.timeCourses, dir=saving_dir)
-                dp.plot_bio_and_ele_calcium(spine, self.manager, dir=saving_dir)
+                dp.plot_bio_and_ele_calcium(self.manager, spine, dir=saving_dir)
             
     def record_vectors(self, nrnManager):
         """Add a vecRef to record the vectors"""
