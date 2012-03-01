@@ -19,7 +19,7 @@ def plot_bio_and_ele_calcium(spine, controls):
 	cai = controls.manager.get_vector(spine_head, 'cai')
     	cali = controls.manager.get_vector(spine_head, 'cali')
 	t = controls.manager.groups['t']
-	plt.figure()
+	#plt.figure()
 	label = "electrical in %s" %spine
 	plt.plot((t.read()-neuron_time_equilibrium), ((cali.read()+cai.read())*1e3), label=label)
 	plt.xlabel('Time [ms]')

@@ -256,12 +256,15 @@ class Runner():
             ecp = EcellPlotter()
             x_start = self.param['t_equilibrium_ecell']
             x_stop = x_start + self.param['tStop']/1e3
+            from helpers.plotter import DoublePlotter
+            dp = DoublePlotter()
             for stim_spine in self.param['stimulated_spines']:
                 spine = nrnManager.spines[stim_spine]
                 ecp.plot_timeCourses(spine.ecellMan.timeCourses, save=True, 
                                    dir=saving_dir, name=spine.id, 
                                    x_lims= [x_start, x_stop])
                 ecp.plot_weight(spine.ecellMan.timeCourses, dir=saving_dir)
+                dp.plot_bio_and_ele_calcium(spine, self.manager, dir=saving_dir)
             
     def record_vectors(self, nrnManager):
         """Add a vecRef to record the vectors"""

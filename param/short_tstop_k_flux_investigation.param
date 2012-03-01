@@ -2,12 +2,12 @@
 # Should be used with spineIntegration.py
 {
     "dtNeuron" : 0.025,  # integration dt [ms]
-    "delta_calcium_sampling" : 0.01, # In millisecond [ms]. How often the calcium has 
+    "delta_calcium_sampling" : 0.1, # In millisecond [ms]. How often the calcium has 
         # to be synchronized within ecell and Neuron . 
     "t_equilibrium_neuron" : 100, # in milliseconds
     "t_equilibrium_ecell" : 300, # in seconds
-    "tStop" : 220, # [ms] Time to stop (NEURON time is the reference) the simulation  
-    "t_buffer" : 30, #ms For how long the syncronization should be carried
+    "tStop" : 10, # [ms] Time to stop (NEURON time is the reference) the simulation  
+    "t_buffer" : 10, #ms For how long the syncronization should be carried
     "neuron_time_recording_interval" : 0.1, # Recording at every [ms]
     "weight_sampling" : 50, # Total ms when the weight of the synapses will be updated
     "big_spine" : True,

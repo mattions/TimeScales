@@ -176,6 +176,54 @@ class DoublePlotter():
         ax1.set_xlabel('Time [ms]')
         ax1.set_xlim(0, 20000)
         return (ax1, ax2)
+    
+    def plot_bio_and_ele_calcium(spine, manager, dir=None):
+        """Plot Calcium from bio and ele with the same scale in 
+        two graphs.
+        Param:
+            spine: Spine which Calcium should be plotted. 
+            manager: classic Neuronvisio manager.
+        Example:
+            dp.plot_bio_and_ele_calcium("spine1", controls.manager)"""
+        timeSeries = "timeSeries_%s" %spine
+        ecell_time_equilibrium = 300 #s
+        t_bio = manager.groups[timeSeries]
+        t_bio_ms = (t_bio.read() - ecell_time_equilibrium) * 1e3 #s_to_ms
+        
+        ca_conc = manager.get_vector(spine, 'ca_conc', group=timeSeries)
+        label = "bio in %s" %spine
+        plt.plot(t_bio_ms, ca_conc.read()*1e6, #M_to_uM 
+                 label=label)
+        plt.title("Bio")
+        plt.xlabel('Time [ms]')
+        plt.ylabel('Concentration [um]')
+            
+        neuron_time_equilibrium = 100 #ms
+        spine_head = "%s_head" %spine
+        cai = manager.get_vector(spine_head, 'cai')
+        cali = manager.get_vector(spine_head, 'cali')
+        t = manager.groups['t']
+        plt.figure()
+        label = "electrical in %s" %spine
+        plt.plot((t.read()-neuron_time_equilibrium), 
+                 ((cali.read()+cai.read())*1e3), #mM_to_uM 
+                 label=label)
+        plt.xlabel('Time [ms]')
+        plt.ylabel('Concentration [um]')
+        plt.title("Ele")
+        xlim = plt.xlim(0,) #starting from zero
+        if dir is not None:
+            for format in [".png", ".pdf"]:
+                filename = spine + "_electrical_calcium" + format
+                plt.savefig(os.path.join(dir, filename))
+        plt.figure(1)
+        plt.xlim(xlim) # Getting bio graph on the electric xlim.
+        if dir is not None:
+            for format in [".png", ".pdf"]:
+                filename = spine + "_biochemical_calcium" + format
+                plt.savefig(os.path.join(dir, filename))
+
+        
 
 if __name__ == "__main__":
 
