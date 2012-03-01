@@ -389,7 +389,7 @@ class Runner():
             upper_time = t_sync_start + \
                          self.param['delta_calcium_sampling'] + \
                          self.param['dtNeuron']
-            print "Lower time: %f h.t: %f Upper time: %f" %(lower_time, 
+            print "Lower time: %.15f h.t: %.15f Upper time: %.15f" %(lower_time, 
                                                             h.t, 
                                                             upper_time)
             if lower_time <= h.t <= upper_time: 
