@@ -370,24 +370,40 @@ class Runner():
         2. Advance ecell for the specified_delta
         3. Update the electric weight of the synapses in NEURON
         """
-        print ("Synchronizing sims till [ms] %s") %tmp_tstop
+        print ("Current time: %f Synchronizing sims till [ms] %s") %(h.t, tmp_tstop)
+        
         stimulated_spines = self.param['stimulated_spines']
-        t_synch_start = h.t
+        t_sync_start = h.t
         while h.t < tmp_tstop:
             h.fadvance() # run Neuron for step
-            #for every ms in NEURON we update the ecellMan
-            if np.round(h.t, decimals = 4) % self.param['delta_calcium_sampling'] == 0:
+            # We are updating the calcium according to our 
+            # delta calcium sampling. 
+            
+            # due to numerical errors we can't use strainght comparison, 
+            # but we need to wrap this into a minor/major boundering 
+            # conditions. 
+            #if np.round(h.t, decimals = 4) % self.param['delta_calcium_sampling'] == 0:
+            # We sum the calcium_samplig to the initial time t_sync_start.
+            
+            lower_time = t_sync_start + self.param['delta_calcium_sampling']
+            upper_time = t_sync_start + \
+                         self.param['delta_calcium_sampling'] + \
+                         self.param['dtNeuron']
+            print "Lower time: %f h.t: %f Upper time: %f" %(lower_time, 
+                                                            h.t, 
+                                                            upper_time)
+            if lower_time <= h.t <= upper_time: 
                 for spine_id in stimulated_spines :
                     spine = nrnManager.spines[spine_id]
                     self.sync_calcium(spine)
-                    self.advance_ecell(spine, (h.t - t_synch_start) / 1e3)
+                    self.advance_ecell(spine, (h.t - t_sync_start) / 1e3)
                     # Stopping flux from the input.
                     spine.ecellMan.ca_in['k'] = 0
                     # Re-enabling pump and leak. 
                     spine.ecellMan.ca_leak['vmax'] = self.param['ca_leak_vmax']
                     spine.ecellMan.ca_pump['vmax'] = self.param['ca_pump_vmax']
                     self.update_synape_weight(spine)
-                t_synch_start = h.t # Resetting the t_start to the new NEURON time.
+                t_sync_start = h.t # Resetting the t_start to the new NEURON time.
     
     def sync_calcium(self, spine):
         """"
