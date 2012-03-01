@@ -1,7 +1,7 @@
 # Author Michele Mattioni
 # Wed Mar 18 17:51:51 GMT 2009
 
-import logging
+import os
 import logging
 FORMAT = '%(levelname)s %(name)s %(lineno)s   %(message)s'
 if os.environ.has_key('DEBUG'):
@@ -14,7 +14,6 @@ import numpy as np
 import math
 
 import sys
-import os
 
 from neuron import h
 
