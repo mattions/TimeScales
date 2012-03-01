@@ -28,7 +28,7 @@ Small memory, for testing
 K flux investigation
 --------------------
 
-    bsub -M 4000 -R "rusage[mem=4000]" smt run param/short_k_flux_investigation.param -r "Testing different calcium sampling" -t "k_flux"
+    bsub -M 4000 -R "rusage[mem=4000]" smt run param/short_tstop_k_flux_investigation.param -r "Testing different calcium sampling" -t "k_flux"
 
 
 Long tStop test
