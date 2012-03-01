@@ -60,7 +60,7 @@ class Runner():
         current_time = spine.ecellMan.ses.getCurrentTime()
         len_current_time = len (spine.ecellMan.loggers['ca'].getData()[:,0])
         logger.debug ("Ecell current time: %s in %s. Advancing of: %s seconds.\
-        Current time len: %s") %(current_time, spine.id, delta_t, len_current_time)
+        Current time len: %s" %(current_time, spine.id, delta_t, len_current_time))
         spine.ecellMan.ses.run(delta_t)
     
     def advance_quickly(self, tmp_tstop, nrnManager):
@@ -77,8 +77,8 @@ class Runner():
         delta_ecell = tmp_tstop - h.t
         delta_ecell_seconds = delta_ecell / 1e3
         logger.info ("\nAdvance quickly routine.")
-        logger.info ("Current Neuron time: %s, aimed tstop[ms]: %s") %(h.t, tmp_tstop)
-        logger.info ("Delta applied on Ecell simulator [s]: %s\n") % delta_ecell_seconds
+        logger.info ("Current Neuron time: %s, aimed tstop[ms]: %s" %(h.t, tmp_tstop))
+        logger.info ("Delta applied on Ecell simulator [s]: %s\n" % delta_ecell_seconds)
         nrnManager.run(tmp_tstop)
         for spine_id in stimulated_spines:
             spine = nrnManager.spines[spine_id]
@@ -378,7 +378,7 @@ class Runner():
         2. Advance ecell for the specified_delta
         3. Update the electric weight of the synapses in NEURON
         """
-        logger.info ("Current time: %f Synchronizing sims till [ms] %s") %(h.t, tmp_tstop)
+        logger.info ("Current time: %f Synchronizing sims till [ms] %s" %(h.t, tmp_tstop))
         
         stimulated_spines = self.param['stimulated_spines']
         t_sync_start = h.t
