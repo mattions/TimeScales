@@ -207,7 +207,7 @@ class Runner():
         nrnManager.set_kir_gkbar(self.param['kir_gkbar'])
 
         excitatory_stims = self.create_excitatory_inputs(nrnManager)
-        logger.info "This are the time of the stims: %s" %excitatory_stims
+        logger.info ("This are the time of the stims: %s" %excitatory_stims)
     
         # Recording -----------------------------------------------
         # - Recording and stimul
