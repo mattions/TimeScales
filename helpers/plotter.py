@@ -177,14 +177,14 @@ class DoublePlotter():
         ax1.set_xlim(0, 20000)
         return (ax1, ax2)
     
-    def plot_bio_and_ele_calcium(spine, manager, dir=None):
+    def plot_bio_and_ele_calcium(manager, spine, dir=None):
         """Plot Calcium from bio and ele with the same scale in 
         two graphs.
         Param:
             spine: Spine which Calcium should be plotted. 
             manager: classic Neuronvisio manager.
         Example:
-            dp.plot_bio_and_ele_calcium("spine1", controls.manager)"""
+            dp.plot_bio_and_ele_calcium(controls.manager, "spine1")"""
         timeSeries = "timeSeries_%s" %spine
         ecell_time_equilibrium = 300 #s
         t_bio = manager.groups[timeSeries]
