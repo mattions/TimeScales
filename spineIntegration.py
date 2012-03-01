@@ -379,19 +379,15 @@ class Runner():
             # We are updating the calcium according to our 
             # delta calcium sampling. 
             
-            # due to numerical errors we can't use strainght comparison, 
-            # but we need to wrap this into a minor/major boundering 
+            # due to numerical errors we can't use straight comparison, 
+            # but we need to wrap this into a lower/upper bounds 
             # conditions. 
-            #if np.round(h.t, decimals = 4) % self.param['delta_calcium_sampling'] == 0:
-            # We sum the calcium_samplig to the initial time t_sync_start.
-            
+                       
             lower_time = t_sync_start + self.param['delta_calcium_sampling']
-            upper_time = t_sync_start + \
-                         self.param['delta_calcium_sampling'] + \
-                         self.param['dtNeuron']
-            print "Lower time: %.15f h.t: %.15f Upper time: %.15f" %(lower_time, 
-                                                            h.t, 
-                                                            upper_time)
+            upper_time = lower_time + self.param['dtNeuron']
+#            print "Lower time: %.15f h.t: %.15f Upper time: %.15f" %(lower_time, 
+#                                                            h.t, 
+#                                                            upper_time)
             if lower_time <= h.t <= upper_time: 
                 for spine_id in stimulated_spines :
                     spine = nrnManager.spines[spine_id]
