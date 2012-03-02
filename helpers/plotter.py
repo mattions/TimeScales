@@ -258,6 +258,19 @@ class DoublePlotter():
             for format in [".png", ".pdf"]:
                 filename = spine + "_biochemical_free_and_buffered_calcium" + format
                 plt.savefig(os.path.join(dir, filename))
+                
+        plt.figure()
+        calcium_bio_and_calcium_calmodulin_buffered_subtracted = ((conc_tot_calcium_bound_to_cam - conc_tot_calcium_bound_to_cam[489]) + ca_conc.read()) * 1e6 
+        plt.plot(t_bio_ms, calcium_bio_and_calcium_calmodulin_buffered_subtracted, label="buffered+free_ca")
+        plt.title("Total Calcium in the biochemical ")
+        plt.xlim(xlim)
+        plt.xlabel("Time [ms]")
+        plt.ylabel("Concentration [uM]")
+        plt.legend()
+        if dir is not None:
+            for format in [".png", ".pdf"]:
+                filename = spine + "_biochemical_free_and_buffered_calcium_subtracted" + format
+                plt.savefig(os.path.join(dir, filename))
 
 if __name__ == "__main__":
 
