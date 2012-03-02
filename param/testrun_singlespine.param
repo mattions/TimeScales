@@ -5,7 +5,7 @@
 	"biochemical_filename" : "biochemical_circuits/biomd183_loop.eml",
 	
     "dtNeuron" : 0.025,  						# integration dt [ms]
-    "delta_calcium_sampling" : 0.5, 			# In millisecond [ms]. 
+    "delta_calcium_sampling" : 0.1, 			# In millisecond [ms]. 
 	# How often the calcium hasto be synchronized within ecell and Neuron . 
     
     "t_equilibrium_neuron" : 100, 				# in milliseconds
