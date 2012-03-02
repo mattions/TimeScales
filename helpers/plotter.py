@@ -261,7 +261,8 @@ class DoublePlotter():
                 
         plt.figure()
         calcium_bio_and_calcium_calmodulin_buffered_subtracted = ((conc_tot_calcium_bound_to_cam - conc_tot_calcium_bound_to_cam[489]) + ca_conc.read()) * 1e6 
-        plt.plot(t_bio_ms, calcium_bio_and_calcium_calmodulin_buffered_subtracted, label="buffered+free_ca")
+        plt.plot(t_bio_ms, calcium_bio_and_calcium_calmodulin_buffered_subtracted, 
+                 label="bio calcium")
         plt.title("Total Calcium in the biochemical ")
         plt.xlim(xlim)
         plt.xlabel("Time [ms]")
