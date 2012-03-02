@@ -194,7 +194,7 @@ class DoublePlotter():
         label = "bio in %s" %spine
         plt.plot(t_bio_ms, ca_conc.read()*1e6, #M_to_uM 
                  label=label)
-        plt.title("Bio")
+        plt.title("Biochemical")
         plt.xlabel('Time [ms]')
         plt.ylabel('Concentration [um]')
             
@@ -210,7 +210,7 @@ class DoublePlotter():
                  label=label)
         plt.xlabel('Time [ms]')
         plt.ylabel('Concentration [um]')
-        plt.title("Ele")
+        plt.title("Electrical")
         xlim = plt.xlim(0,) #starting from zero
         if dir is not None:
             for format in [".png", ".pdf"]:
