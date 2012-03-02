@@ -191,7 +191,7 @@ class DoublePlotter():
         t_bio_ms = (t_bio.read() - ecell_time_equilibrium) * 1e3 #s_to_ms
         
         ca_conc = manager.get_vector(spine, 'ca_conc', group=timeSeries)
-        label = "bio in %s" %spine
+        label = "bio_ca_%s" %spine
         plt.plot(t_bio_ms, ca_conc.read()*1e6, #M_to_uM 
                  label=label)
         plt.title("Biochemical")
@@ -204,7 +204,7 @@ class DoublePlotter():
         cali = manager.get_vector(spine_head, 'cali')
         t = manager.groups['t']
         plt.figure()
-        label = "electrical in %s" %spine
+        label = "ele_ca_%s" %spine
         plt.plot((t.read()-neuron_time_equilibrium), 
                  ((cali.read()+cai.read())*1e3), #mM_to_uM 
                  label=label)
@@ -212,12 +212,14 @@ class DoublePlotter():
         plt.ylabel('Concentration [um]')
         plt.title("Electrical")
         xlim = plt.xlim(0,) #starting from zero
+        plt.legend()
         if dir is not None:
             for format in [".png", ".pdf"]:
                 filename = spine + "_electrical_calcium" + format
                 plt.savefig(os.path.join(dir, filename))
         plt.figure(1)
         plt.xlim(xlim) # Getting bio graph on the electric xlim.
+        plt.legend()
         if dir is not None:
             for format in [".png", ".pdf"]:
                 filename = spine + "_biochemical_calcium" + format
@@ -231,16 +233,31 @@ class DoublePlotter():
         t_bio = manager.groups['timeSeries_spine1']
         conc_tot_calcium_bound_to_cam = moles_bound_ca_per_moles_cam.read() * totcam
         plt.figure()
-        plt.plot(t_bio_ms, conc_tot_calcium_bound_to_cam * 1e6)
+        plt.plot(t_bio_ms, conc_tot_calcium_bound_to_cam * 1e6, label="buffered_ca")
         plt.title("Calcium buffered by Calmodulin")
         plt.xlim(xlim)
         plt.xlabel("Time [ms]")
         plt.ylabel("Concentration [uM]")
+        plt.legend()
         if dir is not None:
             for format in [".png", ".pdf"]:
                 filename = spine + "_biochemical_calcium_buffered_by_Calmodulin" + format
                 plt.savefig(os.path.join(dir, filename))
         
+        ca_conc = manager.get_vector('spine1', 'ca_conc', group='timeSeries_spine1')
+        
+        calcium_bio_and_calcium_calmodulin = (conc_tot_calcium_bound_to_cam + ca_conc.read()) * 1e6
+        plt.figure() 
+        plt.plot(t_bio_ms, calcium_bio_and_calcium_calmodulin, label="buffered+free_ca")
+        plt.title("Total Calcium in the biochemical ")
+        plt.xlim(xlim)
+        plt.xlabel("Time [ms]")
+        plt.ylabel("Concentration [uM]")
+        plt.legend()
+        if dir is not None:
+            for format in [".png", ".pdf"]:
+                filename = spine + "_biochemical_free_and_buffered_calcium" + format
+                plt.savefig(os.path.join(dir, filename))
 
 if __name__ == "__main__":
 
