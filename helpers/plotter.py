@@ -268,6 +268,7 @@ class DoublePlotter():
         plt.xlabel("Time [ms]")
         plt.ylabel("Concentration [uM]")
         plt.legend()
+        plt.ylim(-0.1, 5)
         if dir is not None:
             for format in [".png", ".pdf"]:
                 filename = spine + "_biochemical_free_and_buffered_calcium_subtracted" + format
