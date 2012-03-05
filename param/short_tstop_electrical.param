@@ -2,7 +2,7 @@
 # Should be used with spineIntegration.py
 {
     "dtNeuron" : 0.025,  # integration dt [ms]
-    "delta_calcium_sampling" : 0.1, # In millisecond [ms]. How often the calcium has 
+    "delta_calcium_sampling" : 1, # In millisecond [ms]. How often the calcium has 
         # to be synchronized within ecell and Neuron . 
     "t_equilibrium_neuron" : 100, # in milliseconds
     "t_equilibrium_ecell" : 300, # in seconds
