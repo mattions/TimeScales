@@ -165,7 +165,7 @@ class Runner():
         vec_spine_head_cai = self.manager.get_vector(spine.head, 'cai')
         vec_spine_head_cali = self.manager.get_vector(spine.head, 'cali')
         
-        logger.info("Lenght vec_spine_head_cai: %s" %len(vec_spine_head_cai))
+        logger.info("Length vec_spine_head_cai: %s" %len(vec_spine_head_cai))
         head_cai = vec_spine_head_cai.x[start_index]
         head_cali = vec_spine_head_cali.x[start_index]
         electrical_ca_start = head_cai + head_cali
