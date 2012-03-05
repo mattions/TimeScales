@@ -7,7 +7,8 @@ from neuron import h, nrn
 
 import ecellControl as eC
 from synapse import Synapse
-
+import logging
+logger = logging.getLogger(__name__)
 
 class Spine():
     """
@@ -18,14 +19,14 @@ class Spine():
         """ Create a spine with a standard volume of ~0.11 um
         the h is the reference to the main hoc interpreter"""
         self.id = id
-        self.head_vol = 0.11 #um
+        self.head_vol = None#0.11 #um3 calculated directly from the spine heads
         self.neck = self.create_neck()
         self.head = self.create_head(self.neck, self.head_vol, big_spine)
         self.psd = self.create_psd(self.head)
         self.parent = None # the parent section connected to the neck
         self.synapses = self.create_synapses()
         self.filename = filename_bioch_mod
-        self.k_flux = []
+        self.k_flux = [[],[]]
         
         # Reset ions
         h.cai0_ca_ion = 0.001        #// mM, Churchill 1998
@@ -42,7 +43,7 @@ class Spine():
             # Setting the head volume with the spine head
             ecellMan.ses.vol = self.head_vol * 1e-15 #Converted in l
             self.ecellMan = ecellMan
-            print "Ecell initialized in spine: %s" %self.id
+            logger.info( "Ecell initialized in spine: %s" %self.id)
         
     
     def update_calcium(self, k_ca_flux):
@@ -66,11 +67,12 @@ class Spine():
         milliseconds = 1e-3
         factor = millimolar_to_number / milliseconds
         k_converted = k_ca_flux * factor
-        print "k for the flux before unit convertion: %s and after: %s" %(k_ca_flux,
-                                                                        k_converted)
+        logger.debug( "k for the flux before unit convertion: %s and after: %s" %(k_ca_flux,
+                                                                        k_converted))
         
         self.ecellMan.ca_in['k'] = k_converted
-        self.k_flux.append(k_converted)
+        self.k_flux[0].append(h.t)
+        self.k_flux[1].append(k_converted)
         # Disabling the leak and the pump
         self.ecellMan.ca_pump['vmax'] = 0
         self.ecellMan.ca_leak['vmax'] = 0
@@ -89,7 +91,7 @@ class Spine():
                 #print "inputs: %s" % stim_inputs
                 inputs.extend(stim_inputs)
                 stim.spine = self.id
-            print "Creating the stim for spine: %s syn type: %s" %(self.id, syn.chan_type)
+            logger.info( "Creating the stim for spine: %s syn type: %s" %(self.id, syn.chan_type))
             syn.create_stimul(inputs, neuron_time_interval_resolution)
             
     
@@ -126,6 +128,8 @@ class Spine():
         if big_spine:
             head.L = 1
             head.diam = 1.175
+            r = head.diam/2.
+            self.head_vol = math.pi * r * r * head.L
         else:
             head.L = 0.5
             head.diam = math.sqrt(head_vol / (head.L * math.pi) ) * 2
@@ -225,4 +229,4 @@ class Spine():
     def set_ampa_equilibrium_baseline(self):
         
         self.ampa_equilibrium_conc = self.ecellMan.ampar_P['Value']
-        print "Number of AMPAR @equilibrium: %s " %self.ampa_equilibrium_conc
+        logger.info( "Number of AMPAR @equilibrium: %s " %self.ampa_equilibrium_conc)

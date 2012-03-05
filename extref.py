@@ -29,7 +29,18 @@ class WeightRef(BaseRef):
         self.vecs = vecs
         self.detail = detail
 
-
+class FluxRef(BaseRef):
+    """
+    Extend the classic VecRef from Neuronvisio to allocate 
+    the K flux.
+    """
+    
+    def __init__(self, sec_name=None, vecs=None, detail=None):
+        
+        BaseRef.__init__(self)
+        self.sec_name = sec_name
+        self.vecs = vecs
+        self.detail = detail
 
 class ExtRef(object):
     "Holds all the methods to add new ref to the manager"
@@ -84,8 +95,30 @@ class ExtRef(object):
                         time = syn.weight[0]
                         weight = syn.weight[1]
                         vecs['weight'] = weight
-                        vecs['k_flux'] = spine.k_flux
                         weightRef = WeightRef(sec_name=sec_name,
                                               vecs=vecs,
                                               detail=detail)
                         manager.add_ref(weightRef, time)
+                        
+    def add_kflux(self, manager, stim_spines, nrnSim):
+        """Add the weight to the manager"""
+        for spine_id in stim_spines:
+            spine = nrnSim.spines[spine_id]
+            
+            pos = str(spine.pos)
+            parent = spine.parent.name()
+            detail = parent + "_" + pos
+            sec_name = str(spine.id)
+            
+            vecs = {}
+            time = None
+            
+            for syn in spine.synapses:
+                if syn.chan_type == 'ampa':
+                    if syn.weight[0]:
+                        time = spine.k_flux[0]
+                        vecs['k_flux'] = spine.k_flux[1]
+                        fluxRef = FluxRef(sec_name=sec_name,
+                                              vecs=vecs,
+                                              detail=detail)
+                        manager.add_ref(fluxRef, time)
