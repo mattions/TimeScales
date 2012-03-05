@@ -155,8 +155,12 @@ class Runner():
         Retrieving the calcium in the interval. end is always -1 because is
         the last timepoint available, start is when the interval has begun
         """
-        delta_calcium_sampling = self.param['delta_calcium_sampling'] 
-        start_index = -int(delta_calcium_sampling/ self.param['dtNeuron'])
+        delta_calcium_sampling = self.param['delta_calcium_sampling']
+        
+        ## We use the recorded interval instead of the dt, 'cause we are 
+        ## working directly with the time recording 
+#        start_index = -int(delta_calcium_sampling/ self.param['dtNeuron'])
+        start_index = -int(delta_calcium_sampling/ self.param['neuron_time_recording_interval'])
         # Getting the calcium value
         vec_spine_head_cai = self.manager.get_vector(spine.head, 'cai')
         vec_spine_head_cali = self.manager.get_vector(spine.head, 'cali')
