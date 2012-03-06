@@ -311,13 +311,12 @@ class Runner():
     def run_while_sync(self, nrnManager, excitatory_stims):
 
         """
-        Run the simulation. If input synchronizes the two simulators, 
-        otherwise run each on its own and advance quickly
+        Run the simulation using a while_sync
             
         """
         # Processing the options
         tStop_final = self.param['tStop'] + self.param['t_equilibrium_neuron']        
-        
+        logger.info("While sync")
         # Getting the calcium before the stims
         for spine_id in self.param['stimulated_spines']:
             spine = nrnManager.spines[spine_id]
