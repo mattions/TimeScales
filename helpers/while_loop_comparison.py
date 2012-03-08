@@ -37,6 +37,10 @@ events = {10 : 74833.435,
 
 
 
+while_sync_sparseness =  {2: 18733.74, 4: 21888.38, 16: 29467.67, 32: 45435.57}
+events_sparseness = {4: 15879.96, 16: 19695.96, 32: 18482.28}
+
+
 
 def build_array_time(dict_time):
     "Return the time in frequencies order, scaled to mins"
@@ -95,6 +99,21 @@ def calc_missed_events():
         print "dt %s tot events: %s missed events: %s" %(dt, x, n_events_missed)
         plt.plot(x, n_events_missed, marker='o', linestyle='-', label=str(dt))
 
+
+# sparseness
+def plot_sparseness_comparison():
+    x = events_sparseness.keys()
+    x.sort()
+    y_whi = []
+    y_ev = []
+    for p in x:
+        y_whi.append(while_sync_sparseness[p])
+        y_ev.append(events_sparseness[p])
+    plt.plot(x, y_whi/60., marker='o', linestyle='-', label="while_sync")
+    plt.plot(x, y_ev/60., marker='o', linestyle='-', label="events")
+    plt.ylabel('Time [min]')
+    plt.xlabel("number of spines")
+    plt.title('Sparseness comparison')
 
 
 
