@@ -38,7 +38,7 @@ events = {10 : 74833.435,
 
 
 while_sync_sparseness =  {2: 18733.74, 4: 21888.38, 16: 29467.67, 32: 45435.57}
-events_sparseness = {4: 15879.96, 16: 19695.96, 32: 18482.28}
+events_sparseness = {2: 16722.49, 4: 15879.96, 16: 19695.96, 32: 18482.28}
 
 
 
@@ -109,11 +109,14 @@ def plot_sparseness_comparison():
     for p in x:
         y_whi.append(while_sync_sparseness[p])
         y_ev.append(events_sparseness[p])
-    plt.plot(x, y_whi/60., marker='o', linestyle='-', label="while_sync")
-    plt.plot(x, y_ev/60., marker='o', linestyle='-', label="events")
+    plt.figure()
+
+    plt.plot(x, np.array(y_whi)/60., marker='o', linestyle='-', label="while_sync")
+    plt.plot(x, np.array(y_ev)/60., marker='o', linestyle='-', label="events")
     plt.ylabel('Time [min]')
     plt.xlabel("number of spines")
     plt.title('Sparseness comparison')
+    plt.legend(loc=0)
 
 
 
@@ -140,43 +143,4 @@ plt.ylabel("Time [min]")
 plt.ylim(-100, 6000)
 
 
-
-
-## Time deviation
-#
-#plt.figure()
-#plt.plot([10], [r_10.std()],'bo', label="r_10")
-#plt.plot([20], [r_20.std()],'go', label="r_20")
-#plt.plot([30], [r_30.std()],'ro', label="r_30")
-#plt.plot([40], [r_40.std()],'mo', label="r_40")
-#plt.plot([10], [e_10.std()],'b+', label="e_10")
-#plt.plot([20], [e_20.std()],'g+', label="e_20")
-#plt.plot([30], [e_30.std()],'r+', label="e_30")
-#plt.plot([40], [e_40.std()],'m+', label="e_40")
-#plt.xlim(5,45)
-#
-## Memory Analysis
-#mem_event = array([31266, 31462,  31295, 30675])
-#swap_event = array([51485, 51282,  51200, 51215])
-#
-#mem_rollback = array([31266, 31269, 31020, 31256])
-#swap_rollback = array([51485, 63096, 63384, 63624])
-#
-#combined_rollback = mem_rollback + swap_rollback
-#combined_event = mem_event + swap_event
-#
-#plt.figure()
-#plt.plot(x, combined_rollback, label='rollback', color='green')
-#plt.plot(x, combined_rollback, 'o', color='green') 
-#plt.plot(x, combined_event, label='event', color='blue')
-#plt.plot(x, combined_event, 'o', color='blue')
-#plt.legend(loc=0)
-#plt.xlabel("Number of Events")
-#plt.ylabel("Memory Used [MB]")
-
-
-
-
-
-plt.show()
-
+plot_sparseness_comparison()
