@@ -97,7 +97,9 @@ class Runner():
             
             # Injecting the bio_ondemand spine in the stimulated, so we sink them at events 
             # time as well
-            logger.info(self.param['stimulated_spines'], bio_ondemand)
+            logger.info(self.param)
+            logger.info(self.param['stimulated_spines'])
+            logger.info(bio_ondemand)
             self.param['stimulated_spines'] = self.param['stimulated_spines'].extend(bio_ondemand)
             logger.info("After the extension: %s" %(self.param['stimulated_spines']))
                         
