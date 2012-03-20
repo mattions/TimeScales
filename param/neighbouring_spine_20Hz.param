@@ -17,11 +17,12 @@
                             "spine557", "spine559", "spine560", "spine562"],
     "spine558" : ['ampa_s1', 'nmda_s1', 'ampa_s2', 'nmda_s2'],
     "spine561" : ['ampa_s1', 'nmda_s1', 'ampa_s2', 'nmda_s2'],
-    "spine557" : [],
-    "spine559" : [],
-    "spine560" : [],
-    "spine562" : [],
+    "spine557" : ['ampa_non_stim'],
+    "spine559" : ['ampa_non_stim'],
+    "spine560" : ['ampa_non_stim'],
+    "spine562" : ['ampa_non_stim'],
     
+    "ampa_non_stim" : {}, # Empty dictionary to have the bio on, but not stim deployed.
     "ampa_s1" : 
         {"t_stim" : 2, # t_stim [s]  
          "numbers" : 50, # number

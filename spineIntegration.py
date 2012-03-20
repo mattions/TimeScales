@@ -112,10 +112,14 @@ class Runner():
                 spine = nrnManager.spines[spine_id]
                 for stim_id in self.param[spine.id]:
                     stim_dictionary = self.param[stim_id]
-                    stim = Stimul((stim_dictionary['t_stim']), 
-                                  stim_dictionary['numbers'], 
-                                  stim_dictionary['delay'], 
-                                  stim_dictionary['type'])
+                    try:
+                        stim = Stimul((stim_dictionary['t_stim']), 
+                                      stim_dictionary['numbers'], 
+                                      stim_dictionary['delay'], 
+                                      stim_dictionary['type'])
+                    except KeyError:
+                        logger.info("No input applied for spine: %s" %spine_id)
+                        
                     if stim.chan_type == 'ampa':
                         for syn in spine.synapses:
                             if syn.chan_type == 'ampa':
