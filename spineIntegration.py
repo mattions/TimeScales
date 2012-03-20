@@ -95,9 +95,12 @@ class Runner():
                 if self.param['bio_on']:
                     spine.setup_bio_sim() # Initializing ecell
             
-            # Injecting thebioondemand spine in the stimulated, so we sink them at events 
+            # Injecting the bio_ondemand spine in the stimulated, so we sink them at events 
             # time as well
+            logger.info(self.param['stimulated_spines'], bio_ondemand)
             self.param['stimulated_spines'] = self.param['stimulated_spines'].extend(bio_ondemand)
+            logger.info("After the extension: %s" %(self.param['stimulated_spines']))
+                        
         except KeyError:
             logger.info("Parameter: bio_ondemand not found, therefore only stimulated spine \
             will have biochemical simulator.")
