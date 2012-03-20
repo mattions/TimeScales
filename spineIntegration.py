@@ -229,7 +229,7 @@ class Runner():
         excitatory_stims = self.create_excitatory_inputs(nrnManager)
         
         # Allowing to have bio on in non stimulated spine.
-        self.bio_on_demand()
+        self.bio_ondemand()
         
         logger.info ("This are the time of the stims: %s" %excitatory_stims)
     
