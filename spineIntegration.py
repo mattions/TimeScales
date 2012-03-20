@@ -91,7 +91,7 @@ class Runner():
         try:
             bio_ondemand =  self.param['bio_ondemand']
             for spine_id in bio_ondemand:
-                spine = nrnManager.spines[spine_id]
+                spine = self.nrnManager.spines[spine_id]
                 if self.param['bio_on']:
                     spine.setup_bio_sim() # Initializing ecell
             
