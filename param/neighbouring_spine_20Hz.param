@@ -16,7 +16,7 @@
     "stimulated_spines" : ["spine558", "spine561"],
     "spine558" : ['ampa_s1', 'nmda_s1', 'ampa_s2', 'nmda_s2'],
     "spine561" : ['ampa_s1', 'nmda_s1', 'ampa_s2', 'nmda_s2'],
-    "bio_ondemand" : ["spine557", "spine559", "spine560", "spine561"], 
+    "bio_ondemand" : ["spine557", "spine559", "spine560", "spine562"], 
     
     "ampa_s1" : 
         {"t_stim" : 2, # t_stim [s]  
