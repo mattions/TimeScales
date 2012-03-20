@@ -83,26 +83,7 @@ class Runner():
         for spine_id in stimulated_spines:
             spine = nrnManager.spines[spine_id]
             self.advance_ecell(spine, delta_ecell_seconds)
-            self.update_synape_weight(spine)
-    
-    def bio_ondemand(self):
-        """ Set the biochemical simulator up in non stimulated spine, but taken from the 
-        bio_ondemand parameter"""
-        try:
-            bio_ondemand =  self.param['bio_ondemand']
-            for spine_id in bio_ondemand:
-                spine = self.nrnManager.spines[spine_id]
-                if self.param['bio_on']:
-                    spine.setup_bio_sim() # Initializing ecell
-            
-            # Injecting the bio_ondemand spine in the stimulated, so we sink them at events 
-            # time as well
-            self.param['stimulated_spines'].extend(bio_ondemand)
-                        
-        except KeyError:
-            logger.info("Parameter: bio_ondemand not found, therefore only stimulated spine \
-            will have biochemical simulator.")
-        
+            self.update_synape_weight(spine)     
         
     def build_vecs_to_plot(self, var, secs, anyRefs):
         """Create the dictionary of section->vectors to plot"""
@@ -228,9 +209,6 @@ class Runner():
         nrnManager.set_kir_gkbar(self.param['kir_gkbar'])
 
         excitatory_stims = self.create_excitatory_inputs(nrnManager)
-        
-        # Allowing to have bio on in non stimulated spine.
-        self.bio_ondemand()
         
         logger.info ("This are the time of the stims: %s" %excitatory_stims)
     
