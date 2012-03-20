@@ -14,7 +14,7 @@
     "bio_on" : True, 
     "spines_dist" : "all", #spines_dist = 'all' or spines_dist=zero or onebranch to populate one only#Number of spines
     "stimulated_spines" : ["spine558", "spine561", 
-                            "spine557", "spine559", "spine560", "spine562"],
+                           "spine557", "spine559", "spine560", "spine562"], #not stim
     "spine558" : ['ampa_s1', 'nmda_s1', 'ampa_s2', 'nmda_s2'],
     "spine561" : ['ampa_s1', 'nmda_s1', 'ampa_s2', 'nmda_s2'],
     "spine557" : ['ampa_non_stim'],

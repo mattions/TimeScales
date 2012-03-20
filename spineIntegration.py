@@ -112,27 +112,26 @@ class Runner():
                 spine = nrnManager.spines[spine_id]
                 for stim_id in self.param[spine.id]:
                     stim_dictionary = self.param[stim_id]
-                    logger.info("Stim_dicitionary %s" %stim_dictionary)
-                    try:
+                    
+                    if stim_dictionary.has_key('t_stim'):
                         stim = Stimul((stim_dictionary['t_stim']), 
                                       stim_dictionary['numbers'], 
                                       stim_dictionary['delay'], 
-                                      stim_dictionary['type'])
-                    except KeyError:
-                        logger.info("No input applied for spine: %s" %spine_id)
-                    logger.info(stim)
-                    if stim.chan_type == 'ampa':
-                        for syn in spine.synapses:
-                            if syn.chan_type == 'ampa':
-                                syn.stims.append(stim)
-                                
-                    elif stim.chan_type == 'nmda':# more than one stim
-                        for syn in spine.synapses:
-                            if syn.chan_type == 'nmda':
-                                syn.stims.append(stim)
-                       
-                    stims_time = stim.get_stims_time()
-                    excitatory_stimuli.extend(stims_time)
+                                      stim_dictionary['type'])   
+                        if stim.chan_type == 'ampa':
+                            for syn in spine.synapses:
+                                if syn.chan_type == 'ampa':
+                                    syn.stims.append(stim)
+                                    
+                        elif stim.chan_type == 'nmda':# more than one stim
+                            for syn in spine.synapses:
+                                if syn.chan_type == 'nmda':
+                                    syn.stims.append(stim)
+                           
+                        stims_time = stim.get_stims_time()
+                        excitatory_stimuli.extend(stims_time)
+                    else:
+                        logger.info("No stim applied to spine: %s" %spine_id)
                     
                 spine.deploy_stims(self.param['neuron_time_recording_interval'])
                 if self.param['bio_on']:
