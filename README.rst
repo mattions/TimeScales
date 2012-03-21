@@ -102,6 +102,13 @@ bsub -M 60000 -R "rusage[mem=20000]" -q research-rh6 smt run param/long_tstop_al
 
 bsub -M 60000 -R "rusage[mem=20000]" -q research-rh6 smt run param/long_tstop_allbranch_cpm_two_branches_stims_20_Hz.param -r "Kir Investigation kir_gkbar=0.00020" -t "all" kir_gkbar=0.00020
 
+Neighbours psine investigation
+------------------------------
+
+bsub -M 60000 -R "rusage[mem=20000]" -q research-rh6 smt run param/neighbouring_spine_20Hz.param -r "Neighboring spine with bio on" -t "all, neighbouring"
+
+
+
 
 Reading simulations' results
 ============================
