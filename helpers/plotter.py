@@ -246,7 +246,7 @@ class DoublePlotter():
                 filename = spine + "_biochemical_calcium_buffered_by_Calmodulin" + format
                 plt.savefig(os.path.join(dir, filename))
         
-        ca_conc = manager.get_vector('spine1', 'ca_conc', group='timeSeries_spine1')
+        ca_conc = manager.get_vector('spine1', 'ca_conc', group=timeSeries)
         
         calcium_bio_and_calcium_calmodulin = (conc_tot_calcium_bound_to_cam + ca_conc.read()) * 1e6
         plt.figure() 
