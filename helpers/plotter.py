@@ -226,7 +226,9 @@ class DoublePlotter():
                 plt.savefig(os.path.join(dir, filename))
         # calcium buffered by the Calmodulin
         
-        moles_bound_ca_per_moles_cam = manager.get_vector('spine1', 'moles_bound_ca_per_moles_cam', group='timeSeries_spine1')
+        moles_bound_ca_per_moles_cam = manager.get_vector(spine, 
+                                                          'moles_bound_ca_per_moles_cam', 
+                                                          group=timeSeries)
         camR = 1.45e-9
         camT = 3e-5
         totcam = camT + camR
