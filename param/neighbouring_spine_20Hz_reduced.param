@@ -16,7 +16,7 @@
     "stimulated_spines" : ["spine1", 
                            "spine2",], #not stim
     "spine1" : ['ampa_s1', 'nmda_s1', 'ampa_s2', 'nmda_s2'],
-    "spine1" : ['ampa_non_stim'],
+    "spine2" : ['ampa_non_stim'],
     
     "ampa_non_stim" : {}, # Empty dictionary to have the bio on, but not stim deployed.
     "ampa_s1" : 
