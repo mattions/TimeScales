@@ -251,7 +251,7 @@ class DoublePlotter():
         calcium_bio_and_calcium_calmodulin = (conc_tot_calcium_bound_to_cam + ca_conc) * 1e6
         plt.figure() 
         lab = "buffered+free_ca_%s" %spine
-        plt.plot(t_bio_ms, calcium_bio_and_calcium_calmodulin, label="buffered+free_ca")
+        plt.plot(t_bio_ms, calcium_bio_and_calcium_calmodulin, label=lab)
         plt.title("Total Calcium in the biochemical ")
         plt.xlim(xlim)
         plt.xlabel("Time [ms]")
