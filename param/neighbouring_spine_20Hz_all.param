@@ -13,14 +13,12 @@
     "big_spine" : True,
     "bio_on" : True, 
     "spines_dist" : "all", #spines_dist = 'all' or spines_dist=zero or onebranch to populate one only#Number of spines
-    "stimulated_spines" : ["spine558", "spine561", 
-                           "spine557", "spine559", "spine560", "spine562"], #not stim
-    "spine558" : ['ampa_s1', 'nmda_s1', 'ampa_s2', 'nmda_s2'],
-    "spine561" : ['ampa_s1', 'nmda_s1', 'ampa_s2', 'nmda_s2'],
-    "spine557" : ['ampa_non_stim'],
-    "spine559" : ['ampa_non_stim'],
-    "spine560" : ['ampa_non_stim'],
-    "spine562" : ['ampa_non_stim'],
+    "stimulated_spines" : ["spine97", 
+                           "spine96", "spine98", "spine75"], #not stim
+    "spine97" : ['ampa_s1', 'nmda_s1', 'ampa_s2', 'nmda_s2'],
+    "spine96" : ['ampa_non_stim'],
+    "spine98" : ['ampa_non_stim'],
+    "spine75" : ['ampa_non_stim'],
     
     "ampa_non_stim" : {}, # Empty dictionary to have the bio on, but not stim deployed.
     "ampa_s1" : 
