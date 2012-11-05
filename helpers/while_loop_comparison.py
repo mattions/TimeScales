@@ -110,9 +110,17 @@ def plot_sparseness_comparison():
         y_whi.append(while_sync_sparseness[p])
         y_ev.append(events_sparseness[p])
     plt.figure()
-
-    plt.plot(x, np.array(y_whi)/60., marker='o', linestyle='-', label="while_sync")
-    plt.plot(x, np.array(y_ev)/60., marker='o', linestyle='-', label="events")
+    y_whi_array = np.array(y_whi)/60.
+    y_ev_array = np.array(y_ev)/60.
+    plt.plot(x, y_whi_array, marker='o', linestyle='-', label="while_sync")
+    plt.plot(x, y_ev_array, marker='o', linestyle='-', label="events")
+    print "Sparseness comparison report:"
+    print "Standard deviation [min]: while loop: %s, event-algorithm: %s" %(y_whi_array.std(), 
+                                                                      y_ev_array.std()
+                                                                      )
+    print "Mean: while loop [min]: %s, event-aglorithm: %s" %(y_whi_array.mean(), 
+                                                        y_ev_array.mean()
+                                                        )
     plt.ylabel('Time [min]')
     plt.xlabel("number of spines")
     plt.title('Sparseness comparison')
