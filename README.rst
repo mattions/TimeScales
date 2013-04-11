@@ -22,23 +22,23 @@ Package structure
 
 These are the directories of the package:
 
-- `biochemical_circuits` contains all the biochemical network which have been used at different stage 
-of the development of the model.
-- `branch_dist` contains the code to calculate the spine distribution as explained in the paper 
-	and in the thesis
-- `ecellControl` is the module with the ecellManager class, which controls the E-Cell simulator 
-and it's used ae entry-point in the main synchronization script (`spineIntegration.py`)
-- `helpers` is a directory where there are some utilities script used to plot and explore the data
-- `hoc` contains the hoc file to instantiate the MSN without any spines based on the model of 
-- `mod` contains the NMODL file which needs to be compiled and than can be loaded into section in the 
-Neuron model. 
-- `neuroControl` is the module with the NeuronManager class, which is used to control NEURON. In this module
-there are also the class to create the hybrid spine, which has both electrical and biochemical nature.
-- `param` contains the parameters file used to run the simulations.
-- `spineIntegration.py` is the main script which runs the multiscale model.
-- `extref.py` contains the class to extend Neuronvisio storage format to accept the biochemical results 
-	on top of the electrical one. 
-- `visioStart.py` instantiate the model and loads it in the Neuronvisio software.
+- *biochemical_circuits* contains all the biochemical network which have been used at different stage 
+  of the development of the model.
+- *branch_dist* contains the code to calculate the spine distribution as explained in the paper 
+  and in the thesis
+- *ecellControl* is the module with the ecellManager class, which controls the E-Cell simulator 
+  and it's used ae entry-point in the main synchronization script (`spineIntegration.py`)
+- *helpers* is a directory where there are some utilities script used to plot and explore the data
+- *hoc* contains the hoc file to instantiate the MSN without any spines based on the model of 
+- *mod* contains the NMODL file which needs to be compiled and than can be loaded into section in the 
+  Neuron model. 
+- *neuroControl* is the module with the NeuronManager class, which is used to control NEURON. In this module
+  there are also the class to create the hybrid spine, which has both electrical and biochemical nature.
+- *param* contains the parameters file used to run the simulations.
+- *spineIntegration.py* is the main script which runs the multiscale model.
+- *extref.py* contains the class to extend Neuronvisio storage format to accept the biochemical results 
+  on top of the electrical one. 
+- *visioStart.py* instantiate the model and loads it in the Neuronvisio software.
 
 ****************************************
 How to launch simulation on the EBI cluster
