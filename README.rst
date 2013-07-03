@@ -11,10 +11,18 @@ accepts a certain amount of parameters (described in the source code).
 
 The code is licensed under BSD.
 
-A paper describing the framework and the model has been submitted, meanwhile it is 
-possible to read more on Michele Mattioni PhD Thesis: 
-"Multiscale Modelling In Neuroscience: Integration of Computer Simulations of Biochemical
-and Electrical Signalling in The Medium Spiny Neuron Of The Striatum"
+********
+Citation
+********
+
+::
+
+    Mattioni M, Le Novère N (2013) Integration of Biochemical and Electrical 
+    Signaling-Multiscale Model of the Medium Spiny Neuron of the Striatum. 
+    PLoS ONE 8(7): e66811. doi:10.1371/journal.pone.0066811
+    
+The paper is online at http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0066811
+    
 
 *****************
 Package structure
