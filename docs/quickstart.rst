@@ -26,8 +26,8 @@ These are the directories of the package:
 - *visioStart.py* instantiate the model and loads it in the Neuronvisio software.
 
 
-Dependencies:
-=============
+Dependencies
+============
 
 Ecell
 -----
