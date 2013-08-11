@@ -1,13 +1,24 @@
 Launching the simulations
 =========================
 
-This is the README to launch TimeScales with the Hybrid model on the EBI cluster
+This describe how to launch the simulation of the Hybrid Model on the EBI cluster, using sumatra.
+You can run the same simulation just passing the param file if you are not using Sumatra, 
+to the main script `spineIntegration.py`.
 
+For example the following simulation:
 
-Storing here for future references::
+::
 
     bsub -M 20000 -R "rusage[mem=20000]" smt run param/allspines.param -r "Testing the new synchro mechanism." -t "test, all"
 
+becomes
+
+::
+	
+	python spineIntegration.py param/allspines.param
+	
+All the rest is used for the LSF Cluster (`bsub` and options), and to record the 
+simulation with sumatra and the reason to describe it.
 
 Small memory, for testing
 -------------------------
