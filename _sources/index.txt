@@ -15,7 +15,7 @@ integrating electrical signalling with biochemical pathways.
 The main script to launch the simulation is `spinesIntegration.py`, which 
 accepts a certain amount of parameters.
 
-The code is licensed under BSD.
+The code is licensed under BSD, and it's on github: https://github.com/mattions/TimeScales
 
 Citation
 ========
