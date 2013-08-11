@@ -50,10 +50,17 @@
         
   <div class="section" id="launching-the-simulations">
 <h1>Launching the simulations<a class="headerlink" href="#launching-the-simulations" title="Permalink to this headline">¶</a></h1>
-<p>This is the README to launch TimeScales with the Hybrid model on the EBI cluster</p>
-<p>Storing here for future references:</p>
+<p>This describe how to launch the simulation of the Hybrid Model on the EBI cluster, using sumatra.
+You can run the same simulation just passing the param file if you are not using Sumatra,
+to the main script <cite>spineIntegration.py</cite>.</p>
+<p>For example the following simulation:</p>
 <div class="highlight-python"><pre>bsub -M 20000 -R "rusage[mem=20000]" smt run param/allspines.param -r "Testing the new synchro mechanism." -t "test, all"</pre>
 </div>
+<p>becomes</p>
+<div class="highlight-python"><pre>python spineIntegration.py param/allspines.param</pre>
+</div>
+<p>All the rest is used for the LSF Cluster (<cite>bsub</cite> and options), and to record the
+simulation with sumatra and the reason to describe it.</p>
 <div class="section" id="small-memory-for-testing">
 <h2>Small memory, for testing<a class="headerlink" href="#small-memory-for-testing" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python"><pre>bsub -M 4000 -R "rusage[mem=4000]" smt run param/default.param -r "Testing the new synchro mechanism." -t "test, twospines"
