@@ -1,11 +1,17 @@
 # Author Michele Mattioni
 # Fri Jan 30 15:57:01 GMT 2009
 
-import ecell.Session as Session
-#import mySession as Session
-import ecell.ecs
-import ecell.config
-import ecell.emc
+#import ecell.Session as Session
+#from ecell.Session import Session
+
+try:
+    from mySession import Session
+    import ecell.ecs
+    import ecell.config
+    import ecell.emc
+except ImportError, e:
+    print "IMPORT ERROR: Ecell not available. Run the model the `bio_on` set as False."
+    
 import os
 import numpy
 from sumatra.external.NeuroTools import parameters
@@ -17,9 +23,9 @@ class EcellManager():
         ecell.ecs.setDMSearchPath( os.pathsep.join( ecell.config.dm_path ) )
         self.sim = ecell.emc.Simulator()
         if ecell.config.version < '3.2.0':
-            self.ses = Session.Session(self.sim, changeDirectory=False)
+            self.ses = Session(self.sim, changeDirectory=False)
         else:
-            self.ses = Session.Session(self.sim)
+            self.ses = Session(self.sim)
         
         # Load the model
         self.ses.loadModel(filename)
@@ -49,7 +55,6 @@ class EcellManager():
         #log = ecell.LoggerStub()
         
         for mol in self.molToTrack:
-            
             loggers[mol]  = self.ses.createLoggerStub( "Variable:/Spine:" + mol 
                                                        + ":Value" )
             loggers[mol].create() # This creat the Logger Object in the backend
