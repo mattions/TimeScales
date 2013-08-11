@@ -1,0 +1,238 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Launching the simulations &mdash; TimeScales 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="TimeScales 1.0 documentation" href="index.html" />
+    <link rel="prev" title="Quickstart" href="quickstart.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="quickstart.html" title="Quickstart"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">TimeScales 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="launching-the-simulations">
+<h1>Launching the simulations<a class="headerlink" href="#launching-the-simulations" title="Permalink to this headline">¶</a></h1>
+<p>This is the README to launch TimeScales with the Hybrid model on the EBI cluster</p>
+<p>Storing here for future references:</p>
+<div class="highlight-python"><pre>bsub -M 20000 -R "rusage[mem=20000]" smt run param/allspines.param -r "Testing the new synchro mechanism." -t "test, all"</pre>
+</div>
+<div class="section" id="small-memory-for-testing">
+<h2>Small memory, for testing<a class="headerlink" href="#small-memory-for-testing" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre>bsub -M 4000 -R "rusage[mem=4000]" smt run param/default.param -r "Testing the new synchro mechanism." -t "test, twospines"
+
+bsub -M 4000 -R "rusage[mem=4000]" -q research-rh6 smt run param/short_tstop_double_stim.param -r "Double stims applied for short tstop." -t "test, twospines"
+
+bsub -M 10000 -R "rusage[mem=10000]" -q research-rh6 smt run param/short_tstop_onebranch_several_stimulation.param -r "Short tstop for testing. One branch populated with spines. Using 10 Gb" -t "onebranch"</pre>
+</div>
+</div>
+<div class="section" id="k-flux-investigation">
+<h2>K flux investigation<a class="headerlink" href="#k-flux-investigation" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre>bsub -M 4000 -R "rusage[mem=4000]" smt run param/short_tstop_k_flux_investigation.param -r "Testing different calcium sampling" -t "k_flux"</pre>
+</div>
+</div>
+<div class="section" id="long-tstop-test">
+<h2>Long tStop test<a class="headerlink" href="#long-tstop-test" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre>    bsub -M 4000 -R "rusage[mem=4000]" -q research-rh6 smt run param/long_tstop.param -r "Running a long simulation." -t "test, twospines"
+
+bsub -M 10000 -R "rusage[mem=6000]" -q research-rh6 smt run param/long_tstop_double_stim_two_spines.param -r "Running a double excitation with two spines." -t "twospines"
+
+bsub -M 60000 -R "rusage[mem=20000]" -q research-rh6 smt run param/long_tstop_double_stim_all_spines.param -r "Running a double excitation with two spines." -t "all"
+
+bsub -M 10000 -R "rusage[mem=6000]" -q research-rh6 smt run param/long_tstop_one_pulse.param -r "Running one pulse event in one spine." -t "twospines"</pre>
+</div>
+</div>
+<div class="section" id="one-branch-stim">
+<h2>One branch stim<a class="headerlink" href="#one-branch-stim" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre>bsub -M 10000 -R "rusage[mem=6000]" -q research-rh6 smt run param/long_tstop_onebranch_several_stimulation.param -r "Several stims across one branch populated with spines. Using 10 Gb" -t "onebranch"
+
+bsub -M 10000 -R "rusage[mem=6000]" -q research-rh6 smt run param/long_tstop_onebranch_1_spine_1Hz.param -r "One branch: One spine double stim. 1Hz. Using 10 Gb" -t "onebranch"
+
+bsub -M 10000 -R "rusage[mem=6000]" -q research-rh6 smt run param/long_tstop_onebranch_1_spine_4Hz.param -r "One branch: One spine double stim. 4Hz. Using 10 Gb" -t "onebranch"
+
+bsub -M 10000 -R "rusage[mem=6000]" -q research-rh6 smt run param/long_tstop_onebranch_1_spine_8Hz.param -r "One branch: One spine double stim. 8Hz. Using 10 Gb" -t "onebranch"
+
+bsub -M 10000 -R "rusage[mem=6000]" -q research-rh6 smt run param/long_tstop_onebranch_1_spine_20Hz.param -r "One branch: One spine double stim. 20Hz. Using 10 Gb" -t "onebranch"
+
+bsub -M 10000 -R "rusage[mem=6000]" -q research-rh6 smt run param/long_tstop_onebranch_1_spine_50Hz.param -r "One branch: One spine double stim. 50Hz. Using 10 Gb" -t "onebranch"
+
+bsub -M 10000 -R "rusage[mem=6000]" -q research-rh6 smt run param/long_tstop_onebranch_1_spine_100Hz.param -r "One branch: One spine double stim. 100Hz. Using 10 Gb" -t "onebranch"</pre>
+</div>
+</div>
+<div class="section" id="all-branches-double-stim-one-spine">
+<h2>All Branches - Double stim one spine<a class="headerlink" href="#all-branches-double-stim-one-spine" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre>bsub -M 60000 -R "rusage[mem=20000]" -q research-rh6 smt run param/long_tstop_allspines_1_spine_1Hz.param -r "All spines: One spine double stim. 1Hz. Using 10 Gb" -t "all"
+
+bsub -M 60000 -R "rusage[mem=20000]" -q research-rh6 smt run param/long_tstop_allspines_1_spine_4Hz.param -r "All spines: One spine double stim. 4Hz. Using 10 Gb" -t "all"
+
+bsub -M 60000 -R "rusage[mem=20000]" -q research-rh6 smt run param/long_tstop_allspines_1_spine_8Hz.param -r "All spines: One spine double stim. 8Hz. Using 10 Gb" -t "all"
+
+bsub -M 60000 -R "rusage[mem=20000]" -q research-rh6 smt run param/long_tstop_allspines_1_spine_20Hz.param -r "All spines: One spine double stim. 20Hz. Using 10 Gb" -t "all"
+
+bsub -M 60000 -R "rusage[mem=20000]" -q research-rh6 smt run param/long_tstop_allspines_1_spine_50Hz.param -r "All spines: One spine double stim. 50Hz. Using 10 Gb" -t "all"
+
+bsub -M 60000 -R "rusage[mem=20000]" -q research-rh6 smt run param/long_tstop_allspines_1_spine_100Hz.param -r "All spines: One spine double stim. 100Hz. Using 10 Gb" -t "all"</pre>
+</div>
+</div>
+<div class="section" id="all-branches-cpm">
+<h2>All branches - CPM<a class="headerlink" href="#all-branches-cpm" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre>bsub -M 10000 -R "rusage[mem=6000]" -q research-rh6 smt run param/long_tstop_onebranch_clustered_plasticity_model.param -r "One branch: Clustered Plasticity Model. 9 spines stimulated. 20 Hz. Using 10 Gb" -t "onebranch"
+
+bsub -M 60000 -R "rusage[mem=20000]" -q research-rh6 smt run param/long_tstop_allbranch_cpm_two_branches_stims_8_Hz.param -r "CPM 2 branches, all spine 8 Hz. Using 60 Gb of RAM" -t "all"
+
+bsub -M 60000 -R "rusage[mem=20000]" -q research-rh6 smt run param/long_tstop_allbranch_cpm_two_branches_stims_20_Hz.param -r "CPM 2 branches, all spine 20 Hz. Using 60 Gb of RAM (5seg med)" -t "all"
+
+bsub -M 60000 -R "rusage[mem=20000]" -q research-rh6 smt run param/long_tstop_allbranch_cpm_two_branches_stims_40_Hz.param -r "CPM 2 branches, all spine 40 Hz. Using 60 Gb of RAM (5seg med)" -t "all"
+
+bsub -M 60000 -R "rusage[mem=20000]" -q research-rh6 smt run param/long_tstop_allbranch_cpm_two_branches_stims_50_Hz.param -r "CPM 2 branches, all spine 50 Hz. Using 60 Gb of RAM (5seg med)" -t "all"
+
+bsub -M 60000 -R "rusage[mem=20000]" -q research-rh6 smt run param/long_tstop_allbranch_cpm_two_branches_stims_40_Hz_long_train.param -r "CPM 2 branches, all spine 40 Hz long stimulation. Using 60 Gb of RAM (5seg med)" -t "all"</pre>
+</div>
+</div>
+<div class="section" id="kir-investigation">
+<h2>Kir_investigation<a class="headerlink" href="#kir-investigation" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre>bsub -M 60000 -R "rusage[mem=20000]" -q research-rh6 smt run param/long_tstop_allbranch_cpm_two_branches_stims_20_Hz.param -r "Kir Investigation kir_gkbar=0.00014" -t "all" kir_gkbar=0.00014
+
+bsub -M 60000 -R "rusage[mem=20000]" -q research-rh6 smt run param/long_tstop_allbranch_cpm_two_branches_stims_20_Hz.param -r "Kir Investigation kir_gkbar=0.00018" -t "all" kir_gkbar=0.00018
+
+bsub -M 60000 -R "rusage[mem=20000]" -q research-rh6 smt run param/long_tstop_allbranch_cpm_two_branches_stims_20_Hz.param -r "Kir Investigation kir_gkbar=0.00012" -t "all" kir_gkbar=0.00012
+
+bsub -M 60000 -R "rusage[mem=20000]" -q research-rh6 smt run param/long_tstop_allbranch_cpm_two_branches_stims_20_Hz.param -r "Kir Investigation kir_gkbar=0.00020" -t "all" kir_gkbar=0.00020</pre>
+</div>
+</div>
+<div class="section" id="neighbours-spine-investigation">
+<h2>Neighbours spine investigation<a class="headerlink" href="#neighbours-spine-investigation" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python"><pre>bsub -M 60000 -R "rusage[mem=20000]" -q research-rh6 smt run param/neighbouring_spine_20Hz.param -r "Neighboring spine with bio on" -t "all, neighbouring"</pre>
+</div>
+</div>
+<div class="section" id="reading-simulations-results">
+<h2>Reading simulations&#8217; results<a class="headerlink" href="#reading-simulations-results" title="Permalink to this headline">¶</a></h2>
+<p>Reload the storage.h5 file with neuronvisio:</p>
+<div class="highlight-python"><pre>run nrnvisio path/to/Sim/storage.h5</pre>
+</div>
+</div>
+</div>
+<div class="section" id="ecellmanager">
+<h1>EcellManager<a class="headerlink" href="#ecellmanager" title="Permalink to this headline">¶</a></h1>
+<p>Used to launch the biochemical alone for testing.</p>
+<div class="section" id="id1">
+<h2>Launching the simulations<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>This is for the weight checking:</p>
+<div class="highlight-python"><pre>bsub -M 4000 -R "rusage[mem=4000]" smt run -m ecellControl/ecellManager.py ecellControl/ecellControl.param -r "Testing AMPA weight"</pre>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>Reading simulations&#8217; results<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>Open an ipython and run:</p>
+<div class="highlight-python"><pre>run helpers/plotter path/to/TimeCourses</pre>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Launching the simulations</a><ul>
+<li><a class="reference internal" href="#small-memory-for-testing">Small memory, for testing</a></li>
+<li><a class="reference internal" href="#k-flux-investigation">K flux investigation</a></li>
+<li><a class="reference internal" href="#long-tstop-test">Long tStop test</a></li>
+<li><a class="reference internal" href="#one-branch-stim">One branch stim</a></li>
+<li><a class="reference internal" href="#all-branches-double-stim-one-spine">All Branches - Double stim one spine</a></li>
+<li><a class="reference internal" href="#all-branches-cpm">All branches - CPM</a></li>
+<li><a class="reference internal" href="#kir-investigation">Kir_investigation</a></li>
+<li><a class="reference internal" href="#neighbours-spine-investigation">Neighbours spine investigation</a></li>
+<li><a class="reference internal" href="#reading-simulations-results">Reading simulations&#8217; results</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#ecellmanager">EcellManager</a><ul>
+<li><a class="reference internal" href="#id1">Launching the simulations</a></li>
+<li><a class="reference internal" href="#id2">Reading simulations&#8217; results</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="quickstart.html"
+                        title="previous chapter">Quickstart</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/how_to_run_simulations_on_the_ebi_cluster.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="quickstart.html" title="Quickstart"
+             >previous</a> |</li>
+        <li><a href="index.html">TimeScales 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Michele Mattioni.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>

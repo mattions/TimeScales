@@ -1,0 +1,215 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Quickstart &mdash; TimeScales 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="TimeScales 1.0 documentation" href="index.html" />
+    <link rel="next" title="Launching the simulations" href="how_to_run_simulations_on_the_ebi_cluster.html" />
+    <link rel="prev" title="TimeScales documentation" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="how_to_run_simulations_on_the_ebi_cluster.html" title="Launching the simulations"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="TimeScales documentation"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">TimeScales 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="quickstart">
+<h1>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="package-structure">
+<h2>Package structure<a class="headerlink" href="#package-structure" title="Permalink to this headline">¶</a></h2>
+<p>These are the directories of the package:</p>
+<ul class="simple">
+<li><em>biochemical_circuits</em> contains all the biochemical network which have been used at different stage
+of the development of the model.</li>
+<li><em>branch_dist</em> contains the code to calculate the spine distribution as explained in the paper
+and in the thesis</li>
+<li><em>ecellControl</em> is the module with the ecellManager class, which controls the E-Cell simulator
+and it&#8217;s used ae entry-point in the main synchronization script (<cite>spineIntegration.py</cite>)</li>
+<li><em>helpers</em> is a directory where there are some utilities script used to plot and explore the data</li>
+<li><em>hoc</em> contains the hoc file to instantiate the MSN without any spines based on the model of</li>
+<li><em>mod</em> contains the NMODL file which needs to be compiled and than can be loaded into section in the
+Neuron model.</li>
+<li><em>neuroControl</em> is the module with the NeuronManager class, which is used to control NEURON. In this module
+there are also the class to create the hybrid spine, which has both electrical and biochemical nature.</li>
+<li><em>param</em> contains the parameters file used to run the simulations.</li>
+<li><em>spineIntegration.py</em> is the main script which runs the multiscale model.</li>
+<li><em>extref.py</em> contains the class to extend Neuronvisio storage format to accept the biochemical results
+on top of the electrical one.</li>
+<li><em>visioStart.py</em> instantiate the model and loads it in the Neuronvisio software.</li>
+</ul>
+</div>
+<div class="section" id="dependencies">
+<h2>Dependencies:<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="ecell">
+<h3>Ecell<a class="headerlink" href="#ecell" title="Permalink to this headline">¶</a></h3>
+<p>To run the model you need to install E-cell3 (3.106.1) version, which you can download
+from <a class="reference external" href="https://sourceforge.net/projects/binaryfiles/files/latest/download">https://sourceforge.net/projects/binaryfiles/files/latest/download</a> and compile it
+with the python support.</p>
+</div>
+<div class="section" id="neuron">
+<h3>Neuron<a class="headerlink" href="#neuron" title="Permalink to this headline">¶</a></h3>
+<p>Neuron is available from <a class="reference external" href="http://www.neuron.yale.edu/neuron/">http://www.neuron.yale.edu/neuron/</a>, and it has to be compiled with python support</p>
+</div>
+<div class="section" id="neuronvisio">
+<h3>Neuronvisio<a class="headerlink" href="#neuronvisio" title="Permalink to this headline">¶</a></h3>
+<p>Neuronvisio is needed to save the simulation and can be obtained from <a class="reference external" href="http://neuronvisio.org/">http://neuronvisio.org/</a></p>
+</div>
+</div>
+<div class="section" id="running-the-model">
+<h2>Running the model<a class="headerlink" href="#running-the-model" title="Permalink to this headline">¶</a></h2>
+<p>To run the model you need to run it as:</p>
+<div class="highlight-python"><pre>python spineIntegration.py parameter_file.param</pre>
+</div>
+<p>where the <cite>parameter_file.param</cite> is the file you want to use to run the model.</p>
+<p>In the <cite>params</cite> directory there are the files to run the model in different ways:</p>
+<p>The most important parameters are:</p>
+<ol class="arabic">
+<li><dl class="first docutils">
+<dt><cite>spines_dist</cite>, which can be:</dt>
+<dd><ol class="first last loweralpha">
+<li><p class="first"><cite>zero</cite> for no spines</p>
+</li>
+<li><p class="first"><cite>two</cite> for only two spines</p>
+</li>
+<li><dl class="first docutils">
+<dt><cite>onebranch</cite> to instantiate all the spines in one branch (one medial and two distal</dt>
+<dd><p class="first last">dendrites)</p>
+</dd>
+</dl>
+</li>
+<li><p class="first"><cite>all</cite> to instantiate all the spines</p>
+</li>
+</ol>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><cite>bio_on</cite> If <cite>True</cite> the biochemical integration will be used, if <cite>False</cite></dt>
+<dd><p class="first last">no biochemical integration will be used (If you are only interested in the
+electrical behaviour set it to <cite>False</cite>).</p>
+</dd>
+</dl>
+</li>
+</ol>
+<p>For example to run a the model with just two spines, for a very short time do:</p>
+<div class="highlight-python"><pre>python spineIntegration.py param/two_spines_stim.param</pre>
+</div>
+<p>To run a longer period, do:</p>
+<div class="highlight-python"><pre>python spineIntegration.py param/long_tstop_double_stim_two_spines.param</pre>
+</div>
+<p>If you want to run the model with all the spines, you can run (this is very big.
+I&#8217;ve ran it with 60GB of RAM on the EBI Cluster:</p>
+<div class="highlight-python"><pre>python spineIntegration.py param/long_tstop_allbranch_cpm_two_branches_stims_20_Hz.param</pre>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Quickstart</a><ul>
+<li><a class="reference internal" href="#package-structure">Package structure</a></li>
+<li><a class="reference internal" href="#dependencies">Dependencies:</a><ul>
+<li><a class="reference internal" href="#ecell">Ecell</a></li>
+<li><a class="reference internal" href="#neuron">Neuron</a></li>
+<li><a class="reference internal" href="#neuronvisio">Neuronvisio</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#running-the-model">Running the model</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">TimeScales documentation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="how_to_run_simulations_on_the_ebi_cluster.html"
+                        title="next chapter">Launching the simulations</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/quickstart.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="how_to_run_simulations_on_the_ebi_cluster.html" title="Launching the simulations"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="TimeScales documentation"
+             >previous</a> |</li>
+        <li><a href="index.html">TimeScales 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Michele Mattioni.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
