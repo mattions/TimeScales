@@ -8,6 +8,13 @@
 ses
 dfiles
 
+# Not including the built doc in the repo
+
+docs/_static
+docs/_templates
+docs/_build
+docs/*.log
+
 # The compiled mod of NEURON
 mod/x86_64
 mod/i686
