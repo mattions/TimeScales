@@ -32,7 +32,7 @@ Dependencies:
 Ecell
 -----
 
-To run the model you need to install E-cell3 (3.106.1) version, which you can download 
+To run the model you need to install E-cell3 (3.1.106) version, which you can download 
 from https://sourceforge.net/projects/binaryfiles/files/latest/download and compile it 
 with the python support.
 
