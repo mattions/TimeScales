@@ -10,8 +10,9 @@
     
     <title>Launching the simulations &mdash; TimeScales 1.0 documentation</title>
     
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/print.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
@@ -26,28 +27,27 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="_static/theme_extras.js"></script>
     <link rel="top" title="TimeScales 1.0 documentation" href="index.html" />
     <link rel="prev" title="Quickstart" href="quickstart.html" /> 
   </head>
   <body>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="quickstart.html" title="Quickstart"
-             accesskey="P">previous</a> |</li>
-        <li><a href="index.html">TimeScales 1.0 documentation</a> &raquo;</li> 
-      </ul>
-    </div>  
+      <div class="header"><h1 class="heading"><a href="index.html">
+          <span>TimeScales 1.0 documentation</span></a></h1>
+        <h2 class="heading"><span>Launching the simulations</span></h2>
+      </div>
+      <div class="topnav">
+      
+        <p>
+        «&#160;&#160;<a href="quickstart.html">Quickstart</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        </p>
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body">
-            
+      </div>
+      <div class="content">
+        
+        
   <div class="section" id="launching-the-simulations">
 <h1>Launching the simulations<a class="headerlink" href="#launching-the-simulations" title="Permalink to this headline">¶</a></h1>
 <p>This is the README to launch TimeScales with the Hybrid model on the EBI cluster</p>
@@ -167,69 +167,17 @@ bsub -M 60000 -R "rusage[mem=20000]" -q research-rh6 smt run param/long_tstop_al
 </div>
 
 
-          </div>
-        </div>
       </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Launching the simulations</a><ul>
-<li><a class="reference internal" href="#small-memory-for-testing">Small memory, for testing</a></li>
-<li><a class="reference internal" href="#k-flux-investigation">K flux investigation</a></li>
-<li><a class="reference internal" href="#long-tstop-test">Long tStop test</a></li>
-<li><a class="reference internal" href="#one-branch-stim">One branch stim</a></li>
-<li><a class="reference internal" href="#all-branches-double-stim-one-spine">All Branches - Double stim one spine</a></li>
-<li><a class="reference internal" href="#all-branches-cpm">All branches - CPM</a></li>
-<li><a class="reference internal" href="#kir-investigation">Kir_investigation</a></li>
-<li><a class="reference internal" href="#neighbours-spine-investigation">Neighbours spine investigation</a></li>
-<li><a class="reference internal" href="#reading-simulations-results">Reading simulations&#8217; results</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#ecellmanager">EcellManager</a><ul>
-<li><a class="reference internal" href="#id1">Launching the simulations</a></li>
-<li><a class="reference internal" href="#id2">Reading simulations&#8217; results</a></li>
-</ul>
-</li>
-</ul>
+      <div class="bottomnav">
+      
+        <p>
+        «&#160;&#160;<a href="quickstart.html">Quickstart</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        </p>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="quickstart.html"
-                        title="previous chapter">Quickstart</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/how_to_run_simulations_on_the_ebi_cluster.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
-        </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="quickstart.html" title="Quickstart"
-             >previous</a> |</li>
-        <li><a href="index.html">TimeScales 1.0 documentation</a> &raquo;</li> 
-      </ul>
-    </div>
+
     <div class="footer">
         &copy; Copyright 2013, Michele Mattioni.
       Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
