@@ -83,3 +83,7 @@ If you want to run the model with all the spines, you can run (this is very big.
 I've ran it with 60GB of RAM on the EBI Cluster::
 
 	python spineIntegration.py param/long_tstop_allbranch_cpm_two_branches_stims_20_Hz.param
+	
+An example of how to run the model using only the electrical part is possible with the param file::
+    
+    python spineIntegration.py param/short_tstop_electrical.param
